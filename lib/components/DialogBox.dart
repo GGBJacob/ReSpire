@@ -35,7 +35,7 @@ class _DialogBoxState extends State<DialogBox>
   Widget build(BuildContext context) {
     return AlertDialog(
       content: Container(
-        height: 120,
+        height: 400,
         child: Column(
           children: [
 
@@ -49,12 +49,12 @@ class _DialogBoxState extends State<DialogBox>
               controller: widget.titleController,
             ),
 
-            Text("Title"),
+            Text("Breaths"),
             Slider(
               value: _currentBreathCount,
               min: widget.min,
               max: widget.max,
-              divisions: widget.min.toInt() - widget.max.toInt() + 1,
+              divisions: widget.max.toInt() - widget.min.toInt() + 1,
               onChanged: (double newValue) {
                setState(() {
                  _currentBreathCount = newValue;

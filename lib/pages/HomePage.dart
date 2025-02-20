@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/AddPresetTile.dart';
+import 'package:respire/components/DialogBox.dart';
 import 'package:respire/components/PresetEntry.dart';
 import 'package:respire/components/PresetTile.dart';
 
@@ -19,7 +20,11 @@ class _HomePageState extends State<HomePage>
   final List<PresetEntry>presetList = [
     PresetEntry(title: "Breathing hard", breathCount: 30, inhaleTime: 3, exhaleTime: 3, retentionTime: 1),
     PresetEntry(title: "Not breathing", breathCount: 1, inhaleTime: 10, exhaleTime: 0, retentionTime: 9999),
-    ];
+  ];
+
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  double breathCount = 10;
 
   void addPreset()
   {
@@ -31,6 +36,17 @@ class _HomePageState extends State<HomePage>
 
   }
 
+
+  void showPresetDialog(BuildContext context)
+  {
+    showDialog(context: context, builder: (BuildContext context)
+    {
+      return DialogBox(
+        titleController: titleController, 
+        descriptionController: descriptionController, 
+        breathCount: breathCount);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +74,7 @@ class _HomePageState extends State<HomePage>
                 deleteTile: (context) => deletePreset(),
               ) :
             
-              AddPresetTile(onClick: () => ())
+              AddPresetTile(onClick: () => showPresetDialog(context))
             );
           }
         )
