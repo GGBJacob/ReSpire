@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_slidable: ^4.0.0
+  numberpicker: ^2.1.2
 
 dev_dependencies:
   flutter_test:

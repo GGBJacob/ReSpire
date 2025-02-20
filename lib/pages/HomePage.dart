@@ -24,16 +24,24 @@ class _HomePageState extends State<HomePage>
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
-  double breathCount = 10;
+  int breathCount = 10;
+  double inhaleTime = 3;
+  double exhaleTime = 3;
+  double retentionTime = 5;
 
   void addPreset()
   {
-    
+    // Implement hive saving
   }
 
-  void deletePreset()
+  void deletePreset(index)
   {
+    presetList.removeAt(index);
+    setState(() {
+      
+    });
 
+    //Update the hive box!
   }
 
 
@@ -44,7 +52,12 @@ class _HomePageState extends State<HomePage>
       return DialogBox(
         titleController: titleController, 
         descriptionController: descriptionController, 
-        breathCount: breathCount);
+        breathCount: breathCount,
+        inhaleTime: inhaleTime,
+        exhaleTime: exhaleTime,
+        retentionTime: retentionTime,
+        savePreset: addPreset,
+        );
     });
   }
 
@@ -71,7 +84,7 @@ class _HomePageState extends State<HomePage>
               PresetTile(
                 values: presetList[index],
                 onClick: () => (),
-                deleteTile: (context) => deletePreset(),
+                deleteTile: (context) => deletePreset(index),
               ) :
             
               AddPresetTile(onClick: () => showPresetDialog(context))
