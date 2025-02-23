@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class DialogBox extends StatefulWidget
@@ -8,7 +7,7 @@ class DialogBox extends StatefulWidget
   final TextEditingController titleController;
   final TextEditingController descriptionController;
 
-  int breathCount;
+  final int breathCount;
   final int minBreaths;
   final int maxBreaths;
 
@@ -26,7 +25,7 @@ class DialogBox extends StatefulWidget
   final int maxRetentionTime;
 
 
-  DialogBox({
+  const DialogBox({
     super.key,
     required this.titleController,
     required this.descriptionController,
@@ -138,7 +137,6 @@ class _DialogBoxState extends State<DialogBox>
                 onChanged: (int newValue) {
                 setState(() {
                   _currentBreathCount = newValue;
-                  widget.breathCount = newValue;
                 }); 
                 }),
 
