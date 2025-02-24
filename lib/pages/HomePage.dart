@@ -3,6 +3,7 @@ import 'package:respire/components/AddPresetTile.dart';
 import 'package:respire/components/DialogBox.dart';
 import 'package:respire/components/PresetEntry.dart';
 import 'package:respire/components/PresetTile.dart';
+import 'package:respire/services/PresetDataBase.dart';
 
 class HomePage extends StatefulWidget{
   
@@ -11,27 +12,27 @@ class HomePage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _HomePageState();
 
-
 }
 
 class _HomePageState extends State<HomePage>
 {
-  final List<PresetEntry>presetList = [
-    PresetEntry(title: "Breathing hard", description: "", breathCount: 30, inhaleTime: 3, exhaleTime: 3, retentionTime: 5),
-    PresetEntry(title: "Not breathing", description: "", breathCount: 10, inhaleTime: 3, exhaleTime: 3, retentionTime: 15),
-  ];
-
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final PresetDataBase db = PresetDataBase();
   int breathCount = 10;
   int inhaleTime = 3;
   int exhaleTime = 3;
   int retentionTime = 3;
 
+  @override
+  void initState() {
+    db.initialize();
+    super.initState();
+  }
 
   void loadValues(int index)
   {
-    PresetEntry entry = presetList[index];
+    PresetEntry entry = db.presetList[index];
 
     titleController.text = entry.title;
     descriptionController.text = entry.description;
@@ -39,13 +40,6 @@ class _HomePageState extends State<HomePage>
     inhaleTime = entry.inhaleTime;
     exhaleTime = entry.exhaleTime;
     retentionTime = entry.retentionTime;
-
-    print(entry.title);
-    print(entry.description);
-    print(entry.breathCount);
-    print(entry.inhaleTime);
-    print(entry.exhaleTime);
-    print(entry.retentionTime);
   }
 
   void clearValues()
@@ -60,33 +54,33 @@ class _HomePageState extends State<HomePage>
 
   void addPreset()
   {
-    presetList.add(PresetEntry(title: titleController.text, description: descriptionController.text, breathCount: breathCount, inhaleTime: inhaleTime, exhaleTime: exhaleTime, retentionTime: retentionTime));
+    db.presetList.add(PresetEntry(title: titleController.text, description: descriptionController.text, breathCount: breathCount, inhaleTime: inhaleTime, exhaleTime: exhaleTime, retentionTime: retentionTime));
     setState(() {
 
     });
     clearValues();
-    // Implement hive saving
+    db.updateDataBase();
   }
 
   void editPreset(int index)
   {
-    presetList[index] = PresetEntry(title: titleController.text, description: descriptionController.text, breathCount: breathCount, inhaleTime: inhaleTime, exhaleTime: exhaleTime, retentionTime: retentionTime);
+    db.presetList[index] = PresetEntry(title: titleController.text, description: descriptionController.text, breathCount: breathCount, inhaleTime: inhaleTime, exhaleTime: exhaleTime, retentionTime: retentionTime);
     setState(() {
       
     });
     clearValues();
+    db.updateDataBase();
   }
 
   void deletePreset(int index)
   {
-    presetList.removeAt(index);
+    db.presetList.removeAt(index);
     setState(() {
       
     });
 
-    //Update the hive box!
+    db.updateDataBase();
   }
-
 
   void showNewPresetDialog({
     required BuildContext context
@@ -169,15 +163,15 @@ class _HomePageState extends State<HomePage>
       Center( 
         child:
         ListView.builder(
-          itemCount: presetList.length + 1,
+          itemCount: db.presetList.length + 1,
           itemBuilder: (context, index)
           {
             return Padding(
               padding: EdgeInsets.all(15), // padding between elements / screen
-              child: index < presetList.length ?
+              child: index < db.presetList.length ?
               
               PresetTile(
-                values: presetList[index],
+                values: db.presetList[index],
                 onClick: () => (),
                 deleteTile: (context) => deletePreset(index),
                 editTile: (context) => showEditPresetDialog(context: context, index: index),

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/pages/HomePage.dart';
+import 'components/PresetEntry.dart';
 
-void main() {
+void main() async{
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(PresetEntryAdapter());
+  await Hive.openBox('respire');
+
   runApp(const MainApp());
 }
 
