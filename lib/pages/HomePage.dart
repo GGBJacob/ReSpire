@@ -3,6 +3,7 @@ import 'package:respire/components/AddPresetTile.dart';
 import 'package:respire/components/DialogBox.dart';
 import 'package:respire/components/PresetEntry.dart';
 import 'package:respire/components/PresetTile.dart';
+import 'package:respire/pages/BreathingPage.dart';
 
 class HomePage extends StatefulWidget{
   
@@ -178,7 +179,10 @@ class _HomePageState extends State<HomePage>
               
               PresetTile(
                 values: presetList[index],
-                onClick: () => (),
+                onClick: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BreathingPage(tile: presetList[index])),
+                ),
                 deleteTile: (context) => deletePreset(index),
                 editTile: (context) => showEditPresetDialog(context: context, index: index),
               ) :
