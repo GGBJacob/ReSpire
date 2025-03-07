@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:respire/components/PresetEntry.dart';
+import 'package:respire/components/Global/PresetEntry.dart';
 import 'dart:async';
 
 class Circle extends StatefulWidget {

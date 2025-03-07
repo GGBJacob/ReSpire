@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:respire/components/BaseTile.dart';
-import 'package:respire/components/PresetEntry.dart';
+import 'package:respire/components/HomePage/BaseTile.dart';
+import 'package:respire/components/Global/PresetEntry.dart';
 
 class PresetTile extends StatelessWidget
 {

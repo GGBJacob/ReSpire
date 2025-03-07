@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/pages/HomePage.dart';
-import 'components/PresetEntry.dart';
+import 'components/Global/PresetEntry.dart';
 
 void main() async{
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:respire/components/Circle.dart';
-import 'package:respire/components/PresetEntry.dart';
+import 'package:respire/components/BreathingPage/Circle.dart';
+import 'package:respire/components/Global/PresetEntry.dart';
 
 class BreathingPage extends StatefulWidget{
   final PresetEntry tile;

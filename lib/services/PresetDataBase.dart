@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:respire/components/PresetEntry.dart';
+import 'package:respire/components/Global/PresetEntry.dart';
 
 class PresetDataBase {
 

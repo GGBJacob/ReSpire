@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:respire/components/BaseTile.dart';
+import 'package:respire/components/HomePage/BaseTile.dart';
 
 class AddPresetTile extends StatelessWidget
 {
