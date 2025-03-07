@@ -10,7 +10,7 @@ class Phase {
   int reps;
   
   @HiveField(1)
-  final int doneRepsCounter = 0;
+  int doneRepsCounter = 0;
   
   @HiveField(2)
   List<Step> steps;
@@ -19,4 +19,14 @@ class Phase {
     required this.reps,
     required this.steps
   });
+
+  void resetProgression()
+  {
+    doneRepsCounter = 0;
+  }
+
+  void addStep(Step step)
+  {
+    steps.add(step);
+  }
 }

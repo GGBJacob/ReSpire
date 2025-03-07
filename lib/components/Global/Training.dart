@@ -16,4 +16,13 @@ class Training {
     required this.title,
     required this.phases
   });
+
+  void prepareTraining()
+  {
+    // Reset the phases' rep count
+    for(Phase phase in phases)
+    {
+      phase.resetProgression();
+    }
+  }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
-import 'package:respire/components/Global/PresetEntry.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/services/PresetDataBase.dart';

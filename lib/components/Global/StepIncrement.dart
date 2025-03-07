@@ -12,6 +12,7 @@ enum IncrementType {
 }
 
 @HiveType(typeId: 8)
+///In order to edit step incrementation, simply replace the old object with a new one
 class StepIncrement {
   
   @HiveField(0)

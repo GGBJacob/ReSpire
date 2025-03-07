@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/StepIncrement.dart';
 
@@ -42,6 +43,9 @@ enum BreathDepth {
   deep,
 
   @HiveField(1)
+  normal,
+
+  @HiveField(2)
   shallow 
 }
 
@@ -68,7 +72,29 @@ class Step {
     required this.duration,
     this.increment,
     this.stepType = StepType.inhale,
-    this.breathType = BreathType.clavicular,
-    this.breathDepth = BreathDepth.deep
+    this.breathType,
+    this.breathDepth
     });
+
+    ///Calculate the Step's duration in `rep` repetition
+    double getStepDuration(int rep)
+    {
+      if (increment == null || increment!.value == 0)
+      {
+        return duration;
+      }
+
+      switch(increment!.type)
+      {
+        case IncrementType.percentage:
+        {
+          return duration * (pow(increment!.value, rep));
+        }
+
+        case IncrementType.value:
+        {
+          return duration + (rep*increment!.value);
+        }
+      }
+    }
 }

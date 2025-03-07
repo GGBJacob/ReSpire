@@ -165,6 +165,8 @@ class BreathDepthAdapter extends TypeAdapter<BreathDepth> {
       case 0:
         return BreathDepth.deep;
       case 1:
+        return BreathDepth.normal;
+      case 2:
         return BreathDepth.shallow;
       default:
         return BreathDepth.deep;
@@ -177,8 +179,11 @@ class BreathDepthAdapter extends TypeAdapter<BreathDepth> {
       case BreathDepth.deep:
         writer.writeByte(0);
         break;
-      case BreathDepth.shallow:
+      case BreathDepth.normal:
         writer.writeByte(1);
+        break;
+      case BreathDepth.shallow:
+        writer.writeByte(2);
         break;
     }
   }
