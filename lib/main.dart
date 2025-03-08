@@ -3,8 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/pages/HomePage.dart';
 import 'components/Global/PresetEntry.dart';
 
-void main() async{
-
+void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(PresetEntryAdapter());
   await Hive.openBox('respire');
@@ -18,8 +17,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage()
-    );
+        debugShowCheckedModeBanner: false, home: HomePage());
   }
 }
