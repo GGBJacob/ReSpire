@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
-import 'package:respire/components/Global/PresetEntry.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/SettingsPage.dart';
@@ -16,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
   final PresetDataBase db = PresetDataBase();
   int breathCount = 10;
   int inhaleTime = 3;
@@ -29,48 +28,44 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  void loadValues(int index) {
-    PresetEntry entry = db.presetList[index];
+
+  void loadValues(int index)
+  {
+    Training entry = db.presetList[index];
 
     titleController.text = entry.title;
-    descriptionController.text = entry.description;
-    breathCount = entry.breathCount;
-    inhaleTime = entry.inhaleTime;
-    exhaleTime = entry.exhaleTime;
-    retentionTime = entry.retentionTime;
+
+    //TODO: Load other values
   }
 
   void clearValues() {
     titleController.text = "";
-    descriptionController.text = "";
     breathCount = 10;
     inhaleTime = 3;
     exhaleTime = 3;
     retentionTime = 3;
   }
 
-  void addPreset() {
-    db.presetList.add(PresetEntry(
-        title: titleController.text,
-        description: descriptionController.text,
-        breathCount: breathCount,
-        inhaleTime: inhaleTime,
-        exhaleTime: exhaleTime,
-        retentionTime: retentionTime));
-    setState(() {});
+
+  void addPreset()
+  {
+    //TODO: Implement preset adding (dedicated page + controllers)
+    db.presetList.add(Training(title: titleController.text, phases: List.empty()));
+    setState(() {
+
+    });
     clearValues();
     db.updateDataBase();
   }
 
-  void editPreset(int index) {
-    db.presetList[index] = PresetEntry(
-        title: titleController.text,
-        description: descriptionController.text,
-        breathCount: breathCount,
-        inhaleTime: inhaleTime,
-        exhaleTime: exhaleTime,
-        retentionTime: retentionTime);
-    setState(() {});
+
+  void editPreset(int index)
+  {
+    //TODO: Implement preset editing (dedicated page + controllers)
+    db.presetList[index] = Training(title: titleController.text, phases: List.empty());
+    setState(() {
+      
+    });
     clearValues();
     db.updateDataBase();
   }
@@ -84,17 +79,27 @@ class _HomePageState extends State<HomePage> {
 
   void showNewPresetDialog({required BuildContext context}) async {
     final result = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogBox(
-            titleController: titleController,
-            descriptionController: descriptionController,
-            breathCount: breathCount,
-            inhaleTime: inhaleTime,
-            exhaleTime: exhaleTime,
-            retentionTime: retentionTime,
-            onCancel: clearValues,
+
+      context: context, 
+      builder: (BuildContext context)
+      {
+        return DialogBox(
+          titleController: titleController,
+          breathCount: breathCount,
+          inhaleTime: inhaleTime,
+          exhaleTime: exhaleTime,
+          retentionTime: retentionTime,
+          onCancel: clearValues,
           );
+      });
+
+      if (result != null) {
+        setState(() {
+          titleController.text = result['title'];
+          breathCount = result['breathCount'];
+          inhaleTime = result['inhaleTime'];
+          exhaleTime = result['exhaleTime'];
+          retentionTime = result['retentionTime'];
         });
 
     if (result != null) {
@@ -115,17 +120,28 @@ class _HomePageState extends State<HomePage> {
     loadValues(index); // Loads values to variables before showing the dialog
 
     final result = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogBox(
-            titleController: titleController,
-            descriptionController: descriptionController,
-            breathCount: breathCount,
-            inhaleTime: inhaleTime,
-            exhaleTime: exhaleTime,
-            retentionTime: retentionTime,
-            onCancel: clearValues,
+
+      context: context, 
+      builder: (BuildContext context)
+      {
+        
+        return DialogBox(
+          titleController: titleController, 
+          breathCount: breathCount,
+          inhaleTime: inhaleTime,
+          exhaleTime: exhaleTime,
+          retentionTime: retentionTime,
+          onCancel: clearValues,
           );
+      });
+
+      if (result != null) {
+        setState(() {
+          titleController.text = result['title'];
+          breathCount = result['breathCount'];
+          inhaleTime = result['inhaleTime'];
+          exhaleTime = result['exhaleTime'];
+          retentionTime = result['retentionTime'];
         });
 
     if (result != null) {

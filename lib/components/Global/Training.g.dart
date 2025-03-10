@@ -1,47 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'PresetEntry.dart';
+part of 'Training.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PresetEntryAdapter extends TypeAdapter<PresetEntry> {
+class TrainingAdapter extends TypeAdapter<Training> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  PresetEntry read(BinaryReader reader) {
+  Training read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PresetEntry(
+    return Training(
       title: fields[0] as String,
-      description: fields[1] as String,
-      breathCount: fields[2] as int,
-      inhaleTime: fields[3] as int,
-      exhaleTime: fields[4] as int,
-      retentionTime: fields[5] as int,
+      phases: (fields[1] as List).cast<Phase>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, PresetEntry obj) {
+  void write(BinaryWriter writer, Training obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
-      ..write(obj.description)
-      ..writeByte(2)
-      ..write(obj.breathCount)
-      ..writeByte(3)
-      ..write(obj.inhaleTime)
-      ..writeByte(4)
-      ..write(obj.exhaleTime)
-      ..writeByte(5)
-      ..write(obj.retentionTime);
+      ..write(obj.phases);
   }
 
   @override
@@ -50,7 +38,7 @@ class PresetEntryAdapter extends TypeAdapter<PresetEntry> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PresetEntryAdapter &&
+      other is TrainingAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

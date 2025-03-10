@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/HomePage/BaseTile.dart';
-import 'package:respire/components/Global/PresetEntry.dart';
 
 class PresetTile extends StatelessWidget
 {
@@ -10,7 +10,7 @@ class PresetTile extends StatelessWidget
   final Function(BuildContext)? deleteTile;
   final Function(BuildContext)? editTile;
   final Color color;
-  final PresetEntry values;
+  final Training values;
 
   const PresetTile({
     super.key,
@@ -58,10 +58,6 @@ class PresetTile extends StatelessWidget
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Text(
-                  "Breaths: ${values.breathCount}, Exhale time: ${values.exhaleTime}s, Inhale time: ${values.inhaleTime}s, Retention: ${values.retentionTime}s",
-                  maxLines: 1,
-                  style: TextStyle(fontSize: 12),)
               ],
             )
       )

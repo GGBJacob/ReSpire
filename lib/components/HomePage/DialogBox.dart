@@ -5,7 +5,6 @@ class DialogBox extends StatefulWidget
 {
 
   final TextEditingController titleController;
-  final TextEditingController descriptionController;
 
   final int breathCount;
   final int minBreaths;
@@ -30,7 +29,6 @@ class DialogBox extends StatefulWidget
   const DialogBox({
     super.key,
     required this.titleController,
-    required this.descriptionController,
     required this.breathCount,
     required this.inhaleTime,
     required this.exhaleTime,
@@ -83,7 +81,6 @@ class _DialogBoxState extends State<DialogBox>
               
             Navigator.pop(context, {
               'title': widget.titleController.text,
-              'description': widget.descriptionController.text,
               'breathCount': _currentBreathCount,
               'inhaleTime': _currentInhaleTime,
               'exhaleTime': _currentExhaleTime,
@@ -117,15 +114,6 @@ class _DialogBoxState extends State<DialogBox>
               ),
 
               SizedBox(height: 25),
-
-              Text("Description"),
-              TextFormField(
-                controller: widget.descriptionController,
-              ),
-
-              SizedBox(height: 25),
-
-
 
               Text("Breaths"),
               SizedBox(height: 10),

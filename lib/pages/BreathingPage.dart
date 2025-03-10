@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/BreathingPage/Circle.dart';
-import 'package:respire/components/Global/PresetEntry.dart';
+import 'package:respire/components/Global/Training.dart';
 
 class BreathingPage extends StatefulWidget{
-  final PresetEntry tile;
+  final Training tile;
   
   const BreathingPage({super.key, required this.tile});
 
@@ -38,31 +38,6 @@ void _showConfirmationDialog(BuildContext context) {
   );
 }
 
-Widget descriptionSection(PresetEntry tile) {
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          tile.title, 
-          style: TextStyle(
-            fontSize: 28, 
-            fontWeight: FontWeight.bold
-          ),
-        ),
-        SizedBox(height: 8),
-        Text(
-          "Breaths: ${tile.breathCount}   |   Retention: ${tile.retentionTime} sec\nInhale: ${tile.inhaleTime} sec   |   Exhale: ${tile.exhaleTime} sec",
-          style: TextStyle(
-            fontSize: 16 
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
 
 class _BreathingPageState extends State<BreathingPage>
 {
@@ -81,8 +56,7 @@ class _BreathingPageState extends State<BreathingPage>
       ),
       body: Column (
          children: [
-          descriptionSection(widget.tile),
-          Circle(tile: widget.tile)
+          //Circle(tile: widget.tile)  //TODO: Uncomment and fix
          ]
       ),
     );

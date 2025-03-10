@@ -1,9 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:respire/components/Global/PresetEntry.dart';
+import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/Step.dart';
+import 'package:respire/components/Global/StepIncrement.dart';
+import 'package:respire/components/Global/Training.dart';
 
 class PresetDataBase {
 
-  List<PresetEntry> presetList = [];
+  List<Training> presetList = [];
 
   final _box = Hive.box('respire');
 
@@ -22,9 +25,56 @@ class PresetDataBase {
   void createInitialData()
   {
     presetList = [
-      PresetEntry(title: "Deep Serenity", description: "", breathCount: 30, inhaleTime: 5, exhaleTime: 7, retentionTime: 10),
-      PresetEntry(title: "Vital Energy", description: "", breathCount: 10, inhaleTime: 3, exhaleTime: 3, retentionTime: 15),
-      PresetEntry(title: "Breath Mastery", description: "Wim Hof's breathing technique", breathCount: 40, inhaleTime: 3, exhaleTime: 3, retentionTime: 15)
+      Training(
+        title: "Deep Serenity",
+        phases: [
+          Phase(
+            reps: 5,
+            steps:[
+              Step(duration: 5, stepType: StepType.inhale),
+              Step(duration: 4, stepType: StepType.retention),
+              Step(duration: 3, stepType: StepType.exhale),
+              Step(duration: 1, stepType: StepType.recovery),
+            ]
+          )
+        ]
+      ),
+      Training(
+        title: "Vital Energy",
+        phases: [
+          Phase(reps: 3, 
+          steps: [
+            Step(duration: 2.5, stepType: StepType.inhale, increment: StepIncrement(value: 10, type: IncrementType.percentage), breathDepth: BreathDepth.shallow, breathType: BreathType.costal),
+            Step(duration: 3.14, stepType: StepType.retention),
+            Step(duration: 3, stepType: StepType.exhale, increment: StepIncrement(value: 50, type: IncrementType.percentage)),
+            Step(duration: 3, stepType: StepType.recovery),
+          ]
+          )
+        ]
+         ),
+      Training(
+      title: "Breath Mastery",
+      phases: [
+        Phase(
+          reps: 2,
+          steps: [
+            Step(duration: 2.5,stepType: StepType.inhale,increment: StepIncrement(value: 10, type: IncrementType.percentage),breathDepth: BreathDepth.deep, breathType: BreathType.diaphragmatic),
+            Step(duration: 3.5, stepType: StepType.retention),
+            Step(duration: 3, stepType: StepType.exhale, increment: StepIncrement(value: 1, type: IncrementType.value)),
+            Step(duration: 3, stepType: StepType.recovery),
+          ],
+        ),
+        Phase(
+          reps: 1,
+          steps: [
+            Step(duration: 5.0, stepType: StepType.inhale, increment: StepIncrement(value: 15, type: IncrementType.percentage), breathDepth: BreathDepth.deep, breathType: BreathType.diaphragmatic),
+            Step(duration: 4, stepType: StepType.retention),
+            Step(duration: 3, stepType: StepType.exhale, increment: StepIncrement(value: 50, type: IncrementType.percentage)),
+            Step(duration: 3, stepType: StepType.recovery),
+          ],
+        ),
+      ],
+    ),
     ];
   }
 
@@ -32,7 +82,7 @@ class PresetDataBase {
   {
     final storedList = _box.get('presets');
     if (storedList != null) {
-      presetList = (storedList as List).cast<PresetEntry>();
+      presetList = (storedList as List).cast<Training>();
     }
   }
 
