@@ -101,18 +101,7 @@ class _HomePageState extends State<HomePage> {
           exhaleTime = result['exhaleTime'];
           retentionTime = result['retentionTime'];
         });
-
-    if (result != null) {
-      setState(() {
-        titleController.text = result['title'];
-        descriptionController.text = result['description'];
-        breathCount = result['breathCount'];
-        inhaleTime = result['inhaleTime'];
-        exhaleTime = result['exhaleTime'];
-        retentionTime = result['retentionTime'];
-      });
-      addPreset();
-    }
+      }
   }
 
   void showEditPresetDialog(
@@ -143,18 +132,7 @@ class _HomePageState extends State<HomePage> {
           exhaleTime = result['exhaleTime'];
           retentionTime = result['retentionTime'];
         });
-
-    if (result != null) {
-      setState(() {
-        titleController.text = result['title'];
-        descriptionController.text = result['description'];
-        breathCount = result['breathCount'];
-        inhaleTime = result['inhaleTime'];
-        exhaleTime = result['exhaleTime'];
-        retentionTime = result['retentionTime'];
-      });
-      editPreset(index);
-    }
+      }
   }
 
   @override
