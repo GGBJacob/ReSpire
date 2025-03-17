@@ -58,60 +58,65 @@ class _CircleState extends State<Circle> with SingleTickerProviderStateMixin {
   void startTraining() {
     timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       setState(() {
-
         //time
         if (remainingTime > 0) {
           remainingTime--;
-
+          return;
+        } 
+        
         //starting step (not in training)
-        } else if (stepID==-1) {
-          stepID==0;
+        if (stepID==-1) {
+          stepID = 0;
           remainingTime = remainingTimeValue(currentStep.duration);
           currentInstruction = currentStep.stepType.name;
-        
-        //checking if training ends
-        } else if (phaseID == widget.training.phases.length){
-            currentInstruction = "Finished";
-            timer.cancel();
-
-        } else {
-          //Next step
-          breathCount++;
-          if (stepID == currentPhase.steps.length) {
-            stepID==0;
-            if (currentPhase.doneRepsCounter < currentPhase.reps) {
-                currentPhase.doneRepsCounter++;
-            } else {
-            phaseID++;
-            currentPhase = widget.training.phases[phaseID];
-            }
-          }
-        
-          currentStep = currentPhase.steps[stepID];
-          currentInstruction = currentStep.stepType.name;
-
-          //Duration
-          remainingTime = remainingTimeValue(currentStep.duration);
-          
-
-          //Animation
-          switch (currentStep.stepType) {
-            case training_step.StepType.inhale:
-              _animationController.duration = Duration(seconds: remainingTime.toInt());
-              _animationController.forward(from: 0.0);
-              circleSize = 225.0;
-              break;
-            case training_step.StepType.exhale:
-              _animationController.duration = Duration(seconds: remainingTime.toInt());
-              _animationController.reverse(from: 1.0);
-              circleSize = 125.0;
-              break;
-            default:
-              break;
-          }
-
-          stepID++;
         }
+
+        //Next step
+        breathCount++;
+        if (stepID == currentPhase.steps.length) {
+          stepID = 0;
+          currentPhase.doneRepsCounter++;
+          if (currentPhase.doneRepsCounter == currentPhase.reps) 
+          {
+            phaseID++;
+            //checking if training ends
+            if (phaseID == widget.training.phases.length)
+            {
+              currentInstruction = "Finished";
+              timer.cancel();
+              return;
+            }
+            else
+            {  
+              currentPhase = widget.training.phases[phaseID];
+            }
+          } 
+        }
+      
+        currentStep = currentPhase.steps[stepID];
+        currentInstruction = currentStep.stepType.name;
+
+        //Duration
+        remainingTime = remainingTimeValue(currentStep.duration);
+        
+
+        //Animation
+        switch (currentStep.stepType) {
+          case training_step.StepType.inhale:
+            _animationController.duration = Duration(seconds: remainingTime.toInt());
+            _animationController.forward(from: 0.0);
+            circleSize = 225.0;
+            break;
+          case training_step.StepType.exhale:
+            _animationController.duration = Duration(seconds: remainingTime.toInt());
+            _animationController.reverse(from: 1.0);
+            circleSize = 125.0;
+            break;
+          default:
+            break;
+        }
+
+        stepID++;
 
       });
     });
