@@ -4,6 +4,7 @@ import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/BreathingPage.dart';
+import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 
 class HomePage extends StatefulWidget{
@@ -171,7 +172,10 @@ class _HomePageState extends State<HomePage>
                   MaterialPageRoute(builder: (context) => BreathingPage(tile: db.presetList[index])),
                 ),
                 deleteTile: (context) => deletePreset(index),
-                editTile: (context) => showEditPresetDialog(context: context, index: index),
+                editTile: (context) => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TrainingEditorPage(training: db.presetList[index])),
+                ),
               ) :
             
               AddPresetTile(onClick: () => showNewPresetDialog(context:context))
