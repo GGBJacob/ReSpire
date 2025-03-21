@@ -1,69 +1,81 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:respire/components/BreathingPage/Circle.dart';
-import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/Global/Training.dart';
-import 'package:respire/components/TrainingEditorPage/AddPhaseButton.dart';
+import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 
-class TrainingEditorPage extends StatefulWidget{
+class TrainingEditorPage extends StatefulWidget {
   final Training training;
-  
-  const TrainingEditorPage({super.key, required this.training});
+
+  const TrainingEditorPage({
+    Key? key,
+    required this.training,
+  }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _TrainingEditorPageState(training: training);
+  _TrainingEditorPageState createState() => _TrainingEditorPageState();
 }
 
-class _TrainingEditorPageState extends State<TrainingEditorPage>
-{
-  final Training training;
-  _TrainingEditorPageState({required this.training});
-  
+class _TrainingEditorPageState extends State<TrainingEditorPage> {
+  late List<Phase> phases;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Pobieramy fazy z przekazanego treningu
+    phases = widget.training.phases;
+  }
+
+  void addPhase() {
+    setState(() {
+      phases.add(Phase(reps: 3, steps: []));
+    });
+    // Po krótkiej zwłoce (aby lista zaktualizowała się) przewijamy do końca listy.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  void removePhase(int index) {
+    setState(() {
+      phases.removeAt(index);
+    });
+  }
+
+  void reorderPhase(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) newIndex -= 1;
+      final phase = phases.removeAt(oldIndex);
+      phases.insert(newIndex, phase);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), 
-          onPressed: () {
-            //Navigator.pop(context); 
-            Navigator.pop(context);
-          },
-        ),
-        title: Center(child: Row(children: [
-          Text(training.title, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(" editing ", style: TextStyle(fontWeight: FontWeight.w400),),
-        ],)),
-        backgroundColor: Colors.grey,
+      appBar: AppBar(title: Text("Edytor treningu")),
+      body: ReorderableListView(
+        scrollController: _scrollController,
+        onReorder: reorderPhase,
+        padding: EdgeInsets.only(bottom: 80),
+        children: [
+          for (int index = 0; index < phases.length; index++)
+            PhaseTile(
+              key: ValueKey('phase_$index'),
+              phase: phases[index],
+              onDelete: () => removePhase(index),
+              onUpdate: () => setState(() {}),
+            ),
+        ],
       ),
-      body: Center(child: 
-        ListView.builder(
-          itemCount: training.phases.length + 1,
-          itemBuilder: (context, index)
-          {
-            return Padding(
-              padding: EdgeInsets.all(5), // padding between elements / screen
-              child: index < training.phases.length ?
-              
-              PhaseTile(
-                phase: training.phases[index],
-                deleteTile: (context) => {
-                        training.phases.removeAt(index),
-                        setState(() {
-                    }),
-                },
-              ) :
-            
-              AddPhaseButton(onClick: () {
-                training.phases.add(Phase(reps: 1, steps: []));
-                setState(() {});
-              })
-            );
-          }
-        )
-      ,)
+      floatingActionButton: FloatingActionButton(
+        onPressed: addPhase,
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

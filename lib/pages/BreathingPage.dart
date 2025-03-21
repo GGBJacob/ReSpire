@@ -48,7 +48,8 @@ class _BreathingPageState extends State<BreathingPage>
         leading: IconButton(
           icon: Icon(Icons.arrow_back), 
           onPressed: () {
-            _showConfirmationDialog(context);
+            //_showConfirmationDialog(context);
+            Navigator.pop(context);
           },
         ),
         title: Text("ReSpire"),
