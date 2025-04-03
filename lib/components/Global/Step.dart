@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/StepIncrement.dart';
 
@@ -84,11 +83,12 @@ class Step {
         return duration;
       }
 
+      
       switch(increment!.type)
       {
         case IncrementType.percentage:
         {
-          return duration * (pow(increment!.value, rep));
+          return duration + (increment!.value * duration * rep);
         }
 
         case IncrementType.value:
