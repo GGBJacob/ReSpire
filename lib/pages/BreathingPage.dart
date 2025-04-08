@@ -71,14 +71,14 @@ class _BreathingPageState extends State<BreathingPage> {
   }
 
   void _startTraining() {
-    int previousSecond = _remainingTime~/1000;
+    int previousSecond = _remainingTime~/1000; // subtracting one to skip the first second and audio bugging
      _stopwatch.start();
     _timer = Timer.periodic(Duration(milliseconds: _minimumDurationTime),
         (Timer timer) {
       setState(() {
         // Whenever the second changes, might want to change the calculations
         // if we decide to switch to seconds instead of milliseconds!
-        if(previousSecond != _remainingTime~/1000)
+        if(previousSecond > _remainingTime~/1000)
         {
           previousSecond = _remainingTime~/1000;
           TextToSpeechService().speak(previousSecond+1);
@@ -98,6 +98,7 @@ class _BreathingPageState extends State<BreathingPage> {
           _previousStep = _currentStep;
           _currentStep = _nextStep;
           _remainingTime = _nextStepRemainingTime;
+          previousSecond = _remainingTime~/1000;
           _fetchNextStep();
           _stepsCount++;
           _pause = true;
