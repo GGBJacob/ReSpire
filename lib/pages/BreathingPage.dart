@@ -53,14 +53,16 @@ class _BreathingPageState extends State<BreathingPage> {
   training_step.Step? _currentStep;
   training_step.Step? _nextStep;
   int _remainingTime = 3000; //in milliseconds
+  int _pauseRemainingTime = 600;
   int _nextStepRemainingTime = 0;
   int _stepsCount = 0;
   final int _minimumDurationTime = 100; //in milliseconds
   bool _finished = false;
   bool _pause = true;
-  final int _pauseDuration = 300;  //in milliseconds
+  final int _pauseDuration = 600;  //in milliseconds
 // Dodajemy GlobalKey do InstructionBlocks
   final GlobalKey<InstructionBlocksState> _instructionBlocksKey = GlobalKey();
+  bool readingName = false;
 
   @override
   void initState() {
@@ -71,7 +73,7 @@ class _BreathingPageState extends State<BreathingPage> {
     _startTraining();
   }
 
-  void _startTraining() {
+  void _startTraining() async{
     int previousSecond = _remainingTime~/1000; // subtracting one to skip the first second and audio bugging
      _stopwatch.start();
     _timer = Timer.periodic(Duration(milliseconds: _minimumDurationTime),
@@ -82,16 +84,20 @@ class _BreathingPageState extends State<BreathingPage> {
         if(previousSecond > _remainingTime~/1000)
         {
           previousSecond = _remainingTime~/1000;
-          TextToSpeechService().speak(previousSecond+1);
+          TextToSpeechService().readNumber(previousSecond+1);
         }
 
         if (_remainingTime >= _minimumDurationTime) {
           _remainingTime -= _minimumDurationTime;
-        } else if(_pause) {
-            _instructionBlocksKey.currentState?.animation();
-            _remainingTime = _pauseDuration;
-            _pause = false; 
-        } else if (_finished) {
+         
+        }
+        else if(_pause) {
+          _instructionBlocksKey.currentState?.animation();
+          TextToSpeechService().speak(_nextStep!.stepType.name);
+          _pause = false; 
+        }  else if(_pauseRemainingTime >= _minimumDurationTime){
+          _pauseRemainingTime -= _minimumDurationTime;
+        }else if (_finished) {
           _previousStep = _currentStep;
           _currentStep = null;
           pauseTimer();
@@ -103,6 +109,7 @@ class _BreathingPageState extends State<BreathingPage> {
           _fetchNextStep();
           _stepsCount++;
           _pause = true;
+          _pauseRemainingTime = _pauseDuration;
         }
       });
     });
