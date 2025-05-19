@@ -14,9 +14,9 @@ class TextToSpeechService {
   Future<void> init() async{
     var settings = SettingsProvider();
     settings.addListener(() async {
-    String newVoice = settings.getVoiceType();
-    await _flutterTts.setLanguage(newVoice);
-    log("Voice changed to: $newVoice");
+      String newVoice = settings.getVoiceType();
+      await _flutterTts.setLanguage(newVoice);
+      log("Voice changed to: $newVoice");
     });
     await settings.init();
     await _flutterTts.setLanguage(SettingsProvider().getVoiceType());
@@ -25,9 +25,22 @@ class TextToSpeechService {
     });
   }
 
-  Future<dynamic> getVoices() async {
-    var voices = await _flutterTts.getVoices;
-    return voices;
+  Future<List<Map<String, dynamic>>> getVoices() async {
+    final Map<String, String> supportedLanguages = {"en-US":"English", "pl-PL":"Polski", "de-DE":"Deustsh", "fr-FR":"Français", "es-ES":"Español", "it-IT":"Italiano", "pt-PT":"Português", "ru-RU":"Русский", "tr-TR":"Türkçe", "ja-JP":"日本語", "zh-CN":"中文"};
+    final rawVoices = await _flutterTts.getVoices;
+
+    final List<Map<String, dynamic>> voices = rawVoices
+        .map<Map<String, dynamic>>((v) => Map<String, dynamic>.from(v))
+        .toList();
+
+    final List<Map<String, dynamic>> filteredVoices = voices
+        .where((v) => supportedLanguages.containsKey(v['locale']))
+        .map((v) {
+          v['languageName'] = supportedLanguages[v['locale']];
+          return v;
+        })
+        .toList();
+    return filteredVoices;
   }
 
   Future<void>readNumber(int number) async

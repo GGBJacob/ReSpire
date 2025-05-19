@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:respire/services/SettingsProvider.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 
@@ -27,53 +26,50 @@ class _VoiceSelectorState extends State<VoiceSelector> {
 void initState() {
   super.initState();
   loadVoices();
+  selectedLocale = settingsProvider.getVoiceType();
 }
 
 Future<void> loadVoices() async {
-  var voices = await ttsService.getVoices();
+  List<Map<String,dynamic>> voices = await ttsService.getVoices();
   setState(() {
-    allVoices = voices.map<Map<String, dynamic>>((v) => Map<String, dynamic>.from(v)).toList();
+    allVoices = voices;
   });
 }
 
 @override
 Widget build(BuildContext context) {
-  final locales = allVoices.map((v) => v['locale'] as String).toSet().toList();
+  final Map<String, String> languages = {
+    for (var voice in allVoices) voice['locale']: voice['languageName']
+  };
 
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      DropdownButton<String>(
-        value: selectedLocale,
-        hint: Text("Wybierz język"),
-        items: locales.map((locale) {
-          return DropdownMenuItem(value: locale, child: Text(locale));
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            selectedLocale = value;
-            filteredVoices = allVoices.where((v) => v['locale'] == value).toList();
-            selectedVoice = null; // reset głosu
-          });
-        },
-      ),
-      DropdownButton<String>(
-        value: selectedVoice,
-        hint: Text("Wybierz głos"),
-        items: filteredVoices.map((voice) {
-          return DropdownMenuItem(
-            value: voice['name'].toString(),
-            child: Text(voice['name']),
-          );
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            selectedVoice = value;
-            final selected = filteredVoices.firstWhere((v) => v['name'] == value);
-            settingsProvider.setVoiceType(selected['locale']);
-          });
-        },
-      )
-    ],
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 10,
+        children: [
+        Text(
+          "Language:",
+          style: TextStyle(fontSize: 18),
+        ),
+        DropdownButton<String>(
+          value: selectedLocale,
+          hint: Text("Select language"),
+          items: languages.entries.map((language) {
+            return DropdownMenuItem(value: language.key, child: Text(language.value));
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              selectedLocale = value;
+              filteredVoices = allVoices.where((v) => v['languageName'] == value).toList();
+              selectedVoice = null;
+              settingsProvider.setVoiceType(value!);
+            });
+          },
+        )
+      ])
+    ]
   );
 }
 }

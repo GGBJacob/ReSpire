@@ -175,6 +175,13 @@ Widget _buildBlock({required double positionX, required double scale, required S
     _controller.forward(from: 0.0);
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    _animation.removeListener(() {});
+    super.dispose();
+  }
+
 }
 
 class BoxWidget extends StatelessWidget {
