@@ -24,6 +24,12 @@ class StepIncrement {
   const StepIncrement({
     required this.value,
     required this.type
-    });
-
+    }): assert(
+      type != IncrementType.percentage || (value >= 0 && value <= 100),
+      "Invalid StepIncrement: For percentage, value must be between 0 and 100."
+      ),
+      assert(
+      type != IncrementType.value || value > 0,
+      "Invalid StepIncrement: For value, it must be positive."
+      );
 }

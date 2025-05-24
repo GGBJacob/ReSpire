@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:respire/components/Settings/VoiceSelectors.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -64,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _secondBox(double screenWidth) {
     return Container(
       width: screenWidth * 0.9,
-      height: 200,
+      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Colors.grey,
@@ -98,7 +99,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (value) => value,
               )
             ],
-          )
+          ),
+
+          VoiceSelector(),
         ],
       ),
     );

@@ -1,171 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:respire/components/Global/Step.dart' as training_step;
 
-//TODO: Fix this class
-// import 'package:flutter/material.dart';
-// import 'dart:async';
+class Circle extends StatefulWidget {
+  final training_step.Step? step;
+  final Widget? child;
 
-// import 'package:respire/components/Global/Training.dart';
+  const Circle({super.key, required this.step, this.child});
 
-// class Circle extends StatefulWidget {
-//   final Training training;
+  @override
+  State<StatefulWidget> createState() => _CircleState();
+}
 
-//   const Circle({super.key, required this.training});
+class _CircleState extends State<Circle> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _circleAnimation;
+  int duration = 0;
 
-//   @override
-//   State<StatefulWidget> createState() => _CircleState();
-// }
+  @override
+  void initState() {
+    super.initState();
 
-// class _CircleState extends State<Circle> with SingleTickerProviderStateMixin {
-//   late int remainingTime;
-//   late int currentBreathCycle;
-//   late Timer timer;
-//   String currentInstruction = "Inhale";
-//   int cycle = 1;
-//   double circleSize = 125.0;
-//   late AnimationController _animationController;
-//   late Animation<double> _circleAnimation;
+    duration = widget.step == null ? 0 : (widget.step!.duration * 1000).toInt();
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     remainingTime = widget.training.inhaleTime;
-//     currentBreathCycle = widget.training.breathCount;
-//     _animationController = AnimationController(
-//       vsync: this,
-//       duration:
-//           Duration(seconds: widget.training.inhaleTime),
-//     );
+    _controller = AnimationController(
+      duration: Duration(milliseconds: duration),
+      vsync: this,
+    );
 
-//     _circleAnimation = Tween<double>(begin: 125.0, end: 225.0).animate(
-//       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-//     );
-//      _animationController.forward();
-//     startTimer();
-//   }
+    _circleAnimation = Tween<double>(begin: 125.0, end: 225.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _controller.duration = Duration(milliseconds: duration);
 
-//   @override
-//   void dispose() {
-//     timer.cancel();
-//     _animationController.dispose();
-//     super.dispose();
-//   }
+    _controller.forward(from: 0.0);
+    
+  
+  }
 
-//   //Function that set the timer and manage the animation
-//   void startTimer() {
-//     timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-//       setState(() {
-//         if (remainingTime > 0) {
-//           remainingTime--;
-//         } else {
-//           if (currentInstruction == "Inhale") {
-//             //Change to Retention
-//             currentInstruction = "Retention";
-//             remainingTime = widget.training.retentionTime;
+  @override
+  void didUpdateWidget(covariant Circle oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-//           } else if (currentInstruction == "Retention") {
-//             //Change to Exhale
-//             currentInstruction = "Exhale";
-//             remainingTime = widget.training.exhaleTime;
-//             //Exhale animation parameters
-//             _animationController.duration = Duration(seconds: widget.training.exhaleTime);
-//             _animationController.reverse(from: 1.0);
-//             circleSize = 125.0;
-            
-//           } else if (currentInstruction == "Exhale") {
-//             //Check cycles
-//             if (cycle == widget.training.breathCount) {
-//               currentInstruction = "Finished";
-//             }
-//             else {
-//             //Change to Inhale
-//             cycle++;
-//             currentInstruction = "Inhale";
-//             remainingTime = widget.training.inhaleTime;
-//             //Inhale animation parameters
-//             _animationController.duration = Duration(seconds: widget.training.inhaleTime);
-//             _animationController.forward(from: 0.0);
-//             circleSize = 225.0;
-//             }
-//           } else if (currentInstruction == "Finished") {
-//             //End of the session
-//             timer.cancel();
-//           }
-//         }
-//       });
-//     });
-//   }
+    duration = widget.step == null ? 0 : (widget.step!.duration * 1000).toInt();
+    _controller.duration = Duration(milliseconds: duration);
 
-//   Widget textInCircle() {
-//     return Center(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           //Instruction
-//           Text(
-//             currentInstruction,
-//             style: TextStyle(
-//               fontSize: (currentInstruction=="Finished" ? 24 : 16 ),
-//               fontWeight: FontWeight.bold,
-//               color: Colors.white,
-//             ),
-//           ),
-//           SizedBox(height: 10),
-//           //Time
-//           Text(
-//             '$remainingTime',
-//             style: TextStyle(
-//               fontSize: (currentInstruction=="Finished" ? 0 : 32),
-//               fontWeight: FontWeight.bold,
-//               color: Colors.white,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+    if (widget.step?.stepType == training_step.StepType.inhale) {
+      _controller.forward(from: 0.0);
+    } else if (widget.step?.stepType == training_step.StepType.exhale) {
+      _controller.reverse(from: 1.0);
+    }
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center, 
-//           children: [
-//             SizedBox(
-//               width: 250, 
-//               height: 250,
-//               child: Stack(
-//                 alignment: Alignment.center, 
-//                 children: [
-//                   //Animated Circle
-//                   AnimatedBuilder(
-//                     animation: _animationController,
-//                     builder: (context, child) {
-//                       return Container(
-//                         width: _circleAnimation.value,
-//                         height: _circleAnimation.value,
-//                         decoration: BoxDecoration(
-//                           shape: BoxShape.circle,
-//                           color: Colors.blue,
-//                         ),
-//                         child: textInCircle(),
-//                       );
-//                     },
-//                   ),
-//                 ],
-//               ),
-//             ),
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
-//             //Cycles
-//             Padding(
-//               padding: const EdgeInsets.all(16.0),
-//               child: Text(
-//                 '$cycle / ${widget.training.breathCount}',
-//                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//           ],
-//         )
-//       )
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _circleAnimation,
+      builder: (context, child) {
+        return Container(
+          width: _circleAnimation.value,
+          height: _circleAnimation.value,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blue,
+          ),
+          child: widget.child,
+        );
+      },
+    );
+  }
+}

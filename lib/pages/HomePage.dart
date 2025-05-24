@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => BreathingPage(
-                                      tile: db.presetList[index])),
+                                      training: db.presetList[index])),
                             ),
                             deleteTile: (context) => deletePreset(index),
                             editTile: (context) => showEditPresetDialog(
