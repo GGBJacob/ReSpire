@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Settings/VoiceSelectors.dart';
+import 'package:respire/components/TrainingEditorPage/SoundPicker.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -102,6 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
 
           VoiceSelector(),
+          SoundPicker()
         ],
       ),
     );

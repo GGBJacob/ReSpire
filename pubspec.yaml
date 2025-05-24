@@ -7,6 +7,7 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
+  audioplayers: ^6.4.0
   build_runner: ^2.4.15
   flutter:
     sdk: flutter
@@ -33,6 +34,7 @@ flutter:
     - assets/logo_biale_tlo.png
     - assets/logo_poziom.png
     - assets/logo_bez_tla.png
+    - assets/sounds/
 
   fonts:
     - family: Glacial
