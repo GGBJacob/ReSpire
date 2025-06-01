@@ -83,11 +83,12 @@ class Step {
         return duration;
       }
 
+      
       switch(increment!.type)
       {
         case IncrementType.percentage:
         {
-            return duration * (1 + (increment!.value / 100) * rep);
+           return duration * (1 + (increment!.value / 100) * rep);
         }
 
         case IncrementType.value:

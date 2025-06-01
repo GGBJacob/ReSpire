@@ -10,20 +10,12 @@ class Phase {
   int reps;
   
   @HiveField(1)
-  int doneRepsCounter = 0;
-  
-  @HiveField(2)
   List<Step> steps;
 
   Phase({
     required this.reps,
     required this.steps
   });
-
-  void resetProgression()
-  {
-    doneRepsCounter = 0;
-  }
 
   void addStep(Step step)
   {
