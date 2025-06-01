@@ -75,10 +75,10 @@ class Step {
     this.breathDepth
     });
 
-    ///Calculate the Step's duration in `rep` repetition
+    ///Calculate the Step's duration in `rep` repetition. The returned value is in seconds.
     double getStepDuration(int rep)
     {
-      if (increment == null || increment!.value == 0)
+      if (increment == null || increment!.value == 0 || rep == 0)
       {
         return duration;
       }
@@ -88,7 +88,7 @@ class Step {
       {
         case IncrementType.percentage:
         {
-          return duration + (increment!.value * duration * rep);
+           return duration * (1 + (increment!.value / 100) * rep);
         }
 
         case IncrementType.value:

@@ -4,19 +4,17 @@ import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/BreathingPage.dart';
+import 'package:respire/pages/SettingsPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 
-class HomePage extends StatefulWidget{
-  
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomePageState();
-
 }
 
-class _HomePageState extends State<HomePage>
-{
+class _HomePageState extends State<HomePage> {
   final titleController = TextEditingController();
   final PresetDataBase db = PresetDataBase();
   int breathCount = 10;
@@ -30,6 +28,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
   }
 
+
   void loadValues(int index)
   {
     Training entry = db.presetList[index];
@@ -39,14 +38,14 @@ class _HomePageState extends State<HomePage>
     //TODO: Load other values
   }
 
-  void clearValues()
-  {
+  void clearValues() {
     titleController.text = "";
     breathCount = 10;
     inhaleTime = 3;
     exhaleTime = 3;
     retentionTime = 3;
   }
+
 
   void addPreset()
   {
@@ -59,6 +58,7 @@ class _HomePageState extends State<HomePage>
     db.updateDataBase();
   }
 
+
   void editPreset(int index)
   {
     //TODO: Implement preset editing (dedicated page + controllers)
@@ -70,21 +70,16 @@ class _HomePageState extends State<HomePage>
     db.updateDataBase();
   }
 
-  void deletePreset(int index)
-  {
+  void deletePreset(int index) {
     db.presetList.removeAt(index);
-    setState(() {
-      
-    });
+    setState(() {});
 
     db.updateDataBase();
   }
 
-  void showNewPresetDialog({
-    required BuildContext context
-    }) async
-  {
+  void showNewPresetDialog({required BuildContext context}) async {
     final result = await showDialog(
+
       context: context, 
       builder: (BuildContext context)
       {
@@ -106,18 +101,15 @@ class _HomePageState extends State<HomePage>
           exhaleTime = result['exhaleTime'];
           retentionTime = result['retentionTime'];
         });
-        addPreset();
       }
   }
 
-  void showEditPresetDialog({
-    required BuildContext context,
-    required int index
-    }) async
-  {
+  void showEditPresetDialog(
+      {required BuildContext context, required int index}) async {
     loadValues(index); // Loads values to variables before showing the dialog
 
     final result = await showDialog(
+
       context: context, 
       builder: (BuildContext context)
       {
@@ -140,47 +132,56 @@ class _HomePageState extends State<HomePage>
           exhaleTime = result['exhaleTime'];
           retentionTime = result['retentionTime'];
         });
-        editPreset(index);
       }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        title: Text("ReSpire"),
+        leading: IconButton(
+          icon: Icon(Icons.info_outline),
+          onPressed: () => {},
+        ),
+        title: Text("ReSpire", style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
+        ],
         backgroundColor: Colors.grey,
       ),
-
-      body: 
-      Center( 
-        child:
-        ListView.builder(
-          itemCount: db.presetList.length + 1,
-          itemBuilder: (context, index)
-          {
-            return Padding(
-              padding: EdgeInsets.all(15), // padding between elements / screen
-              child: index < db.presetList.length ?
-              
-              PresetTile(
-                values: db.presetList[index],
-                onClick: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BreathingPage(tile: db.presetList[index])),
-                ),
-                deleteTile: (context) => deletePreset(index),
-                editTile: (context) => showEditPresetDialog(context: context, index: index),
-              ) :
-            
-              AddPresetTile(onClick: () => showNewPresetDialog(context:context))
-            );
-          }
-        )
-      
-      ),
+      body: Center(
+          child: ListView.builder(
+              itemCount: db.presetList.length + 1,
+              itemBuilder: (context, index) {
+                return Padding(
+                    padding:
+                        EdgeInsets.all(15), // padding between elements / screen
+                    child: index < db.presetList.length
+                        ? PresetTile(
+                            values: db.presetList[index],
+                            onClick: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BreathingPage(
+                                      training: db.presetList[index])),
+                            ),
+                            deleteTile: (context) => deletePreset(index),
+                            editTile: (context) => showEditPresetDialog(
+                                context: context, index: index),
+                          )
+                        : AddPresetTile(
+                            onClick: () =>
+                                showNewPresetDialog(context: context)));
+              })),
     );
   }
-  
 }
