@@ -5,6 +5,7 @@ import 'package:respire/components/Global/Training.dart';
 class TrainingParser {
   int phaseID = 0;
   int stepID = -1;
+  int doneReps = 0;
 
   Training training;
   Phase currentPhase;
@@ -17,9 +18,9 @@ class TrainingParser {
 
       if (stepID == currentPhase.steps.length - 1) {
         stepID = 0;
-        currentPhase.doneRepsCounter++;
+        doneReps++;
 
-        if (currentPhase.doneRepsCounter == currentPhase.reps) {
+        if (doneReps == currentPhase.reps) {
           phaseID++;
 
           if (phaseID == training.phases.length) {
@@ -36,7 +37,7 @@ class TrainingParser {
 
     return {
       "step": currentStep,
-      "remainingTime": (currentStep.getStepDuration(currentPhase.doneRepsCounter) * 1000).truncate(),
+      "remainingTime": (currentStep.getStepDuration(doneReps) * 1000).truncate(),
     };
 }
 

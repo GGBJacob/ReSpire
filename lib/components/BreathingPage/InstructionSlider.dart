@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
 
@@ -10,7 +13,10 @@ class InstructionBlock {
 
 class InstructionSlider extends StatefulWidget {
 
-  const InstructionSlider({super.key});
+  Queue<training_step.Step?> stepsQueue = Queue<training_step.Step?>();
+  int change; 
+
+  InstructionSlider({super.key, required this.stepsQueue, required this.change});
 
   @override
   State<InstructionSlider> createState() => InstructionSliderState();
@@ -20,10 +26,11 @@ class InstructionSliderState extends State<InstructionSlider>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  final double spacing = 160.0;
+  final double spacing = 140.0;
   final Duration duration = Duration(milliseconds: 400);
 
   List<InstructionBlock> _blocks = [];
+  int i = 1;
 
   @override
   void initState() {
@@ -40,6 +47,10 @@ class InstructionSliderState extends State<InstructionSlider>
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
+    addNewStep(widget.stepsQueue.elementAt(1), 1.0);
+    addNewStep(widget.stepsQueue.elementAt(2), 2.0);
+
+
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _controller.reset();
@@ -53,18 +64,30 @@ class InstructionSliderState extends State<InstructionSlider>
     });
   }
 
-  void next() {
-    if (!_controller.isAnimating) {
+  @override
+  void didUpdateWidget(covariant InstructionSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if(oldWidget.change != widget.change) {
       _controller.forward();
+      if(_blocks.last.text!="The end") {
+        addNewStep(widget.stepsQueue.elementAt(2), 2.0);
+      }
     }
   }
 
-  void addNewStep(training_step.Step? step, bool isFirstStep) {
+  // void next() {
+  //   if (!_controller.isAnimating) {
+  //     _controller.forward();
+  //   }
+  // }
+
+  void addNewStep(training_step.Step? step, double position) {
     String stepName = step==null ? "The end": _stepType(step);
     _blocks.add(
       InstructionBlock(
         text: stepName, 
-        position: isFirstStep ? 1.0 : 2.0)
+        position: position)
     );
   }
 
@@ -126,22 +149,27 @@ class InstructionSliderState extends State<InstructionSlider>
       {required double positionX,
       required double scale,
       required String text}) {
+
+      final isCenter = (positionX / spacing).round() == 0;
+
     return Positioned(
       left: 200 + positionX - 60, // offset to center + half block width
       top: 50,
       child: Transform.scale(
         scale: scale,
         child: Container(
-          width: 120,
-          height: 120,
+          width: 130,
+          height: 130,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Colors.blueAccent,
+            color: isCenter 
+            ? Color.fromRGBO(44, 173, 196, 1)
+            : Color.fromRGBO(50, 183, 207, 1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
             text,
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(fontSize: 18, color: Colors.white,),
             textAlign: TextAlign.center,
           ),
         ),
