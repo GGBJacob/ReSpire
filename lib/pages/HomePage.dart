@@ -6,6 +6,7 @@ import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
+import 'package:respire/theme/Colors.dart';
 
 class HomePage extends StatefulWidget{
   
@@ -150,10 +151,14 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
 
       appBar: AppBar(
-        title: Text("ReSpire"),
-        backgroundColor: Colors.grey,
+        centerTitle: true,
+        title: Image.asset(
+          'assets/logo_poziom.png', 
+          height: 36,       
+        ),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
-
+      backgroundColor: mediumblue,
       body: 
       Center( 
         child:

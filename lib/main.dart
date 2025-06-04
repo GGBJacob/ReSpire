@@ -10,7 +10,7 @@ void main() async{
   await Hive.initFlutter();
   // If any changes in loaded data occur, uncomment the following
   // line to delete the data and load it again
-  // await Hive.deleteBoxFromDisk('respire');
+  await Hive.deleteBoxFromDisk('respire');
   Hive.registerAdapter(StepTypeAdapter());
   Hive.registerAdapter(BreathTypeAdapter());
   Hive.registerAdapter(BreathDepthAdapter());

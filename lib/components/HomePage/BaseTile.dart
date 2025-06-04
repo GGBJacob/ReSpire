@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:respire/theme/Colors.dart';
 
 class BaseTile extends StatelessWidget
 {
@@ -12,7 +13,7 @@ class BaseTile extends StatelessWidget
     super.key,
     required this.child,
     required this.onClick,
-    this.color = const Color.fromRGBO(0, 195, 255, 1)}
+    this.color = const Color.fromARGB(255, 255, 255, 255)}
     );
 
 
@@ -27,7 +28,8 @@ class BaseTile extends StatelessWidget
         padding: EdgeInsets.all(30),
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(15)
+          //borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70), bottomRight: Radius.circular(35), topLeft: Radius.circular(35), topRight: Radius.circular(70)),
         ),
         child: child,
       ),

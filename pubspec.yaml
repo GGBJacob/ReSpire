@@ -23,3 +23,26 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/logo_biale_tlo.png
+    - assets/logo_poziom.png
+    - assets/kropki_1.png
+    - assets/kropki_2.png
+
+  fonts:
+    - family: Mouldy
+      fonts:
+        - asset: fonts/MouldyCheese.ttf
+    - family: Oblata
+      fonts:
+        - asset: fonts/OblataDisplay.otf
+    - family: Yeasty
+      fonts:
+        - asset: fonts/YeastyFlavors.ttf
+    - family: Guavine
+      fonts:
+        - asset: fonts/GuavineDemo.otf
+    - family: Cinzel
+      fonts:
+        - asset: fonts/Cinzel-Bold.otf
