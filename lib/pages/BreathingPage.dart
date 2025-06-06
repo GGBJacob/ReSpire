@@ -69,6 +69,7 @@ class _BreathingPageState extends State<BreathingPage> {
     );
   }
 
+
   Widget textInCircle() {
     return ValueListenableBuilder<int>(
       valueListenable: controller.second,
@@ -112,6 +113,19 @@ class _BreathingPageState extends State<BreathingPage> {
             );
           },
         ),
+        actions: [
+          ValueListenableBuilder<bool>(
+            valueListenable: controller.isPaused,
+            builder: (context, isPaused, _) {
+              return IconButton(
+                icon: isPaused ? Icon(Icons.play_arrow) : Icon(Icons.pause),
+                onPressed: () {
+                  isPaused ? controller.resume() : controller.pause();
+                },
+              );
+            },
+          )
+        ],
         title: Text(widget.training.title),
         centerTitle: true,
         backgroundColor: Color.fromRGBO(50, 183, 207, 1),
