@@ -3,8 +3,8 @@ import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
-import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
+import 'package:respire/pages/TrainingPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/theme/Colors.dart';
 
@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                 values: db.presetList[index],
                 onClick: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BreathingPage(training: db.presetList[index])),
+                  MaterialPageRoute(builder: (context) => TrainingPage(training: db.presetList[index])),
                 ),
                 deleteTile: (context) => deletePreset(index),
                 editTile: (context) async {
