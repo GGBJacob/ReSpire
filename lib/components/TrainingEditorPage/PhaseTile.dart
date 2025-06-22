@@ -105,11 +105,7 @@ class _PhaseTileState extends State<PhaseTile> {
                 controller: repsController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8.0),
                   border: InputBorder.none,
-                  fillColor: Colors.white,
-                  filled: true,
                 ),
                 onChanged: (value) {
                   int? newReps = int.tryParse(value);
@@ -131,15 +127,11 @@ class _PhaseTileState extends State<PhaseTile> {
                 controller: incrementController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8.0),
                   suffixText: '%',
                    suffixStyle: TextStyle(
                     color: darkerblue,
                   ),
                   border: InputBorder.none,
-                  fillColor: Colors.white,
-                  filled: true,
                 ),
                 onChanged: (value) {
                   int? newIncrement = int.tryParse(value);
