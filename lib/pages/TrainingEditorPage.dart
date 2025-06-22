@@ -6,6 +6,7 @@ import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class TrainingEditorPage extends StatefulWidget {
   final Training training;
@@ -148,14 +149,14 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomSlidingSegmentedControl<int>(
                   children: {
-                    0: Text('Training', style: TextStyle(color: _selectedTab==0?darkerblue:darkblue)),
-                    1: Text('Sound', style: TextStyle(color: _selectedTab==1?darkerblue:darkblue)),
-                    2: Text('Other', style: TextStyle(color: _selectedTab==2?darkerblue:darkblue)),
+                    0: Text('Training', style: TextStyle(color: _selectedTab==0?darkerblue:Colors.black, fontWeight:  _selectedTab==0?FontWeight.bold:FontWeight.normal)),
+                    1: Text('Sound', style: TextStyle(color: _selectedTab==1?darkerblue:Colors.black, fontWeight:  _selectedTab==1?FontWeight.bold:FontWeight.normal)),
+                    2: Text('Other', style: TextStyle(color: _selectedTab==2?darkerblue:Colors.black, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
                   },
                   initialValue: _selectedTab,
                   onValueChanged: (val) => setState(() => _selectedTab = val),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: grey,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   thumbDecoration: BoxDecoration(
@@ -178,7 +179,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                     ? ReorderableListView(
                         scrollController: _scrollController,
                         onReorder: reorderPhase,
-                        proxyDecorator: (child, idx, anim) => Material(color: Colors.transparent, child: child),
+                        proxyDecorator: (child, idx, anim) => Material(color: Colors.transparent, child: child), //removes shadow when dragging tile
                         padding: EdgeInsets.only(bottom: 80),
                         children: [
                           for (int index = 0; index < phases.length; index++)
@@ -198,7 +199,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                         child: _selectedTab == 1 ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Training sounds', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
+                            Text('Training sounds', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
                             SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -209,18 +210,42 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Background sound'), DropdownButton<String>(value: _backgroundSound, items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _backgroundSound = v!))],
+                                      children: [Text('Background sound'), 
+                                        DropdownButton2<String>(
+                                          underline: SizedBox(), 
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                            dropdownStyleData: DropdownStyleData(
+                                              //isOverButton: true,         
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                          value: _backgroundSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _backgroundSound = v!))],
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Next step sound'), DropdownButton<String>(value: _nextSound, items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _nextSound = v!))],
+                                      children: [Text('Next step sound'), 
+                                        DropdownButton2<String>(
+                                          underline: SizedBox(),
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                            dropdownStyleData: DropdownStyleData(
+                                              //isOverButton: true,         
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ), 
+                                          value: _nextSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _nextSound = v!))],
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                             SizedBox(height: 16),
-                            Text('Step type sounds', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
+                            Text('Step type sounds', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
                             SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -229,10 +254,58 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 padding: EdgeInsets.all(12),
                                 child: Column(
                                   children: [
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale'), DropdownButton<String>(value: _inhaleSound, items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _inhaleSound = v!))]),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), DropdownButton<String>(value: _retentionSound, items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _retentionSound = v!))]),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), DropdownButton<String>(value: _exhaleSound, items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _exhaleSound = v!))]),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery'), DropdownButton<String>(value: _recoverySound, items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _recoverySound = v!))]),
+                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale'), 
+                                        DropdownButton2<String>(
+                                          underline: SizedBox(), 
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                            dropdownStyleData: DropdownStyleData(
+                                              //isOverButton: true,         
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                          value: _inhaleSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _inhaleSound = v!))]),
+                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), 
+                                      DropdownButton2<String>(
+                                        underline: SizedBox(), 
+                                        iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                          dropdownStyleData: DropdownStyleData(
+                                            //isOverButton: true,         
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        value: _retentionSound, 
+                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _retentionSound = v!))]),
+                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), 
+                                      DropdownButton2<String>(
+                                        underline: SizedBox(), 
+                                        iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                          dropdownStyleData: DropdownStyleData(
+                                            //isOverButton: true,         
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        value: _exhaleSound, 
+                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _exhaleSound = v!))]),
+                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery'), 
+                                      DropdownButton2<String>(
+                                        underline: SizedBox(),
+                                        iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                          dropdownStyleData: DropdownStyleData(
+                                            //isOverButton: true,         
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ), 
+                                        value: _recoverySound, 
+                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _recoverySound = v!))]),
                                   ],
                                 ),
                               ),

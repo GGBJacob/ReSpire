@@ -5,3 +5,4 @@ const Color mediumblue = Color.fromARGB(255, 50, 184, 207);
 const Color darkerblue = Color.fromARGB(255, 26, 147, 168);
 const Color greenblue = Color.fromARGB(255, 32, 112, 125);
 const Color darkblue = Color.fromARGB(255, 6, 38, 44);
+Color grey = Colors.grey.shade200;

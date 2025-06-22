@@ -115,9 +115,10 @@ class _StepTileState extends State<StepTile> {
           SizedBox(width: 12),
           DropdownButton2<respire.StepType>(
             value: widget.step.stepType,
+            underline: SizedBox(), //removes grey underline
             iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
             dropdownStyleData: DropdownStyleData(
-              isOverButton: true,         
+              //isOverButton: true,         
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
