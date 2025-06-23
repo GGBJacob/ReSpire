@@ -67,12 +67,16 @@ class Step {
   @HiveField(4)
   BreathDepth? breathDepth;
 
+  @HiveField(5)
+  String sound;
+
   Step({
     required this.duration,
     this.increment,
     this.stepType = StepType.inhale,
     this.breathType,
-    this.breathDepth
+    this.breathDepth,
+    this.sound = "None"
     });
 
     ///Calculate the Step's duration in `rep` repetition. The returned value is in seconds.

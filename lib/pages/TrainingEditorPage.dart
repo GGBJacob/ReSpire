@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:respire/components/Global/Sounds.dart';
 import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
+import 'package:respire/services/SoundManager.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
@@ -28,13 +30,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
 
   int _selectedTab = 0;
   // Sound tab state
-  final List<String> _soundOptions = ['None', 'Birds', 'Ding', 'Dong', 'Bum', 'Bam'];
-  String _backgroundSound = 'Birds';
-  String _nextSound = 'None';
-  String _inhaleSound = 'Ding';
-  String _retentionSound = 'Dong';
-  String _exhaleSound = 'Bum';
-  String _recoverySound = 'Bam';
+  final List<String> _soundOptions = SoundManager().getAvailableSounds();
+  late Sounds _sounds;
+  
   // Other tab state
   bool _showNextStepToggle = true;
   bool _showChartToggle = false;
@@ -44,6 +42,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   void initState() {
     super.initState();
     phases = widget.training.phases;
+    _sounds = widget.training.sounds;
     trainingNameController.text = widget.training.title;
   }
 
@@ -221,8 +220,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                             ),
-                                          value: _backgroundSound, 
-                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _backgroundSound = v!))],
+                                          value: _sounds.backgroundSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.backgroundSound = v!))],
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -237,8 +236,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                             ), 
-                                          value: _nextSound, 
-                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _nextSound = v!))],
+                                          value: _sounds.nextSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.nextSound = v!))],
                                     ),
                                   ],
                                 ),
@@ -265,8 +264,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                             ),
-                                          value: _inhaleSound, 
-                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _inhaleSound = v!))]),
+                                          value: _sounds.inhaleSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.inhaleSound = v!))]),
                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), 
                                       DropdownButton2<String>(
                                         underline: SizedBox(), 
@@ -278,8 +277,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                           ),
-                                        value: _retentionSound, 
-                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _retentionSound = v!))]),
+                                        value: _sounds.retentionSound, 
+                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.retentionSound = v!))]),
                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), 
                                       DropdownButton2<String>(
                                         underline: SizedBox(), 
@@ -291,8 +290,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                           ),
-                                        value: _exhaleSound, 
-                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _exhaleSound = v!))]),
+                                        value: _sounds.exhaleSound, 
+                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.exhaleSound = v!))]),
                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery'), 
                                       DropdownButton2<String>(
                                         underline: SizedBox(),
@@ -304,8 +303,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                           ), 
-                                        value: _recoverySound, 
-                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _recoverySound = v!))]),
+                                        value: _sounds.recoverySound, 
+                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.recoverySound = v!))]),
                                   ],
                                 ),
                               ),

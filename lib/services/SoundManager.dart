@@ -15,8 +15,12 @@ class SoundManager{
   ///
   // MAKE SURE TO ADD YOUR SOUNDS TO THIS MAP!
   static const Map<String,String> _availableSounds = {
-    "birds":"sounds/birds.mp3",
-    "Ainsa":"sounds/Ainsa.mp3"
+    "None":"",
+    "Birds":"sounds/birds.mp3",
+    "Ainsa":"sounds/Ainsa.mp3",
+    "Rain":"sounds/rain.mp3",
+    "Ocean":"sounds/ocean-waves.mp3",
+    
   };
 
   final HashMap<String,AudioPlayer> _audioPlayers = HashMap<String,AudioPlayer>();
@@ -24,10 +28,14 @@ class SoundManager{
   ///Loads a sound from a file in the assets folder.\
   ///[soundName] is the name of the sound file returned by **getLoadedSounds()**.
   Future<bool> loadSound(String soundName) async{
+    if(soundName == "None") {
+      log("No sound to load.");
+      return false;
+    }
     if (_audioPlayers.containsKey(soundName)) {
       return true;
     }
-    else if (!_availableSounds.containsKey(soundName)){
+    else if (!_availableSounds.containsKey(soundName)) {
       log("Sound $soundName is not available in the assets folder.");
       return false;
     }
@@ -55,6 +63,10 @@ class SoundManager{
 
   ///Plays a sound from a file in the assets folder.
   Future<void> playSound(String soundName) async{
+    if(soundName == "None") {
+      log("No sound to play.");
+      return;
+    }
     if (!_audioPlayers.containsKey(soundName)) {
       log("Sound $soundName is not loaded. Loading now...");
       if(await loadSound(soundName)){
@@ -68,26 +80,38 @@ class SoundManager{
 
   ///Plays a sound from a file in the assets folder with a fade-in effect.\
   ///[fadeInDuration] is the duration of the effect in milliseconds.
-  void playSoundFadeIn(String soundName, int fadeInDuration) async{
+  Future<void> playSoundFadeIn(String soundName, int fadeInDuration) async{
+    if(soundName == "None") {
+      return;
+    }
+
     await loadSound(soundName);
     var player = _audioPlayers[soundName]!;
     final int stepDuration = 50;
     player.setVolume(0.0);
+
+    int steps = (fadeInDuration / stepDuration).ceil();
+    double volumeStep = 1.0 / steps;
+
     await playSound(soundName);
-    Timer.periodic(Duration(milliseconds: stepDuration), (timer){
-      if (player.volume < 1.0){
-        double newVolume = player.volume + (stepDuration / fadeInDuration);
-        if (newVolume > 1.0) newVolume = 1.0;
-        player.setVolume(newVolume);
-      } else {
-        timer.cancel();
-      }
-    });
+
+    for (int i=0; i<steps; i++)
+    {
+      double newVolume = player.volume + volumeStep;
+      if (newVolume > 1.0) newVolume = 1.0;
+      log("Fade in: Volume step: $newVolume");
+      await player.setVolume(newVolume);
+      await Future.delayed(Duration(milliseconds: stepDuration));
+    }
   }
 
 
   ///Pauses a sound from a file in the assets folder if playing.
   Future<void> pauseSound(String soundName) async {
+    if(soundName == "None") {
+      log("No sound to pause.");
+      return;
+    }
     if (!_audioPlayers.containsKey(soundName)) {
       log("Sound $soundName is not loaded. Cannot pause.");
       return;
@@ -98,24 +122,26 @@ class SoundManager{
 
   ///Pauses the provided sound with a fade-out effect.\
   ///[fadeOutDuration] is the duration of the effect in milliseconds.
-  void pauseSoundFadeOut(String soundName, int fadeOutDuration) async{
-    if (!_audioPlayers.containsKey(soundName)) {
-      log("Sound $soundName is not loaded. Cannot pause.");
+  Future<void> pauseSoundFadeOut(String soundName, int fadeOutDuration) async{
+    if(soundName == "None" || !_audioPlayers.containsKey(soundName)) {
       return;
     }
+    
     var player = _audioPlayers[soundName]!;
     final int stepDuration = 50;
-    await playSound(soundName);
-    Timer.periodic(Duration(milliseconds: stepDuration), (timer) async{
-      if (player.volume > 0.0){
-        double newVolume = player.volume - (stepDuration / fadeOutDuration);
-        if (newVolume < 0.0) newVolume = 0.0;
-        player.setVolume(newVolume);
-      } else {
-        await pauseSound(soundName);
-        timer.cancel();
-      }
-    });
+
+    int steps = (fadeOutDuration / stepDuration).ceil();
+    double volumeStep = 1.0 / steps;
+
+    for(int i=0; i<steps; i++)
+    {
+      double newVolume = player.volume - volumeStep;
+      if (newVolume < 0.0) newVolume = 0.0;
+      log("Fade out: Volume step: $newVolume");
+      await player.setVolume(newVolume);
+      await Future.delayed(Duration(milliseconds: stepDuration));
+    }
+
     await player.setVolume(1.0);
   }
 

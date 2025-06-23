@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/Step.dart';
 import 'package:respire/components/Global/StepIncrement.dart';
 import 'package:respire/components/Global/Training.dart';
@@ -27,6 +28,7 @@ Future<void> initialize() async
   Hive.registerAdapter(StepAdapter());
   Hive.registerAdapter(PhaseAdapter());
   Hive.registerAdapter(TrainingAdapter());
+  Hive.registerAdapter(SoundsAdapter());
   await Hive.openBox('respire');
   await TextToSpeechService().init();
 }

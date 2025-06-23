@@ -18,18 +18,24 @@ class TrainingAdapter extends TypeAdapter<Training> {
     };
     return Training(
       title: fields[0] as String,
-      phases: (fields[1] as List).cast<Phase>(),
-    );
+      phases: (fields[2] as List).cast<Phase>(),
+    )
+      ..description = fields[1] as String?
+      ..sounds = fields[3] as Sounds;
   }
 
   @override
   void write(BinaryWriter writer, Training obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
-      ..write(obj.phases);
+      ..write(obj.description)
+      ..writeByte(2)
+      ..write(obj.phases)
+      ..writeByte(3)
+      ..write(obj.sounds);
   }
 
   @override

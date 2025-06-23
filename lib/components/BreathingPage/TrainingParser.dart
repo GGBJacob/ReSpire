@@ -35,6 +35,21 @@ class TrainingParser {
 
     currentStep = currentPhase.steps[stepID];
 
+    switch (currentStep.stepType) {
+      case training_step.StepType.inhale:
+        currentStep.sound = training.sounds.inhaleSound;
+        break;
+      case training_step.StepType.retention:
+        currentStep.sound = training.sounds.retentionSound;
+        break;
+      case training_step.StepType.exhale:
+        currentStep.sound = training.sounds.exhaleSound;
+        break;
+      case training_step.StepType.recovery:
+        currentStep.sound = training.sounds.recoverySound;
+        break;
+    }
+
     return {
       "step": currentStep,
       "remainingTime": (currentStep.getStepDuration(doneReps) * 1000).truncate(),

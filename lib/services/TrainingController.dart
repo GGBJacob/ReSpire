@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:respire/components/BreathingPage/TrainingParser.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
+import 'package:respire/services/SoundManager.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 
 class TrainingController{
 
-   Timer? _timer;
+  Timer? _timer;
   final TrainingParser parser;
   final ValueNotifier<Queue<training_step.Step?>> stepsQueue = ValueNotifier(Queue<training_step.Step?>());
   final ValueNotifier<int> second = ValueNotifier(3);
@@ -27,8 +29,10 @@ class TrainingController{
   bool _stepDelay = true;
   int _stopTimer = 2;
 
+  String _currentSound = "";
 
   TrainingController(this.parser) {
+    SoundManager().stopAllSounds();
     _preloadSteps();
     _start();
   }
@@ -58,12 +62,21 @@ class TrainingController{
 
   void pause() {
     isPaused.value = true;
+    SoundManager().pauseSound(_currentSound);
     _timer?.cancel();
   }
 
   void resume() {
     isPaused.value = false;
+    SoundManager().playSound(_currentSound);
     _start();
+  }
+
+
+  Future<void> handleStepChange(training_step.Step step) async{
+    await SoundManager().pauseSoundFadeOut(_currentSound, (_stepDelayDuration/2).toInt());
+    _currentSound = step.sound;
+    await SoundManager().playSoundFadeIn(_currentSound, (_stepDelayDuration/2).toInt());
   }
 
   void _start()
@@ -81,7 +94,7 @@ class TrainingController{
         }
 
         //time update
-         if (_remainingTime >= _updateInterval) {
+        if (_remainingTime >= _updateInterval) {
           _remainingTime -= _updateInterval;
         }
 
@@ -90,7 +103,9 @@ class TrainingController{
           stepsCount.value++;
           if (stepsQueue.value.elementAt(1)!=null) {
             second.value = 0;
-            TextToSpeechService().speak(stepsQueue.value.elementAt(1)!.stepType.name);
+            training_step.Step _step = stepsQueue.value.elementAt(1)!;
+            handleStepChange(_step);
+            TextToSpeechService().speak(_step.stepType.name);
           }
           _stepDelay = false; 
 
@@ -134,6 +149,7 @@ class TrainingController{
   }
   void dispose() {
     TextToSpeechService().stopSpeaking();
+    SoundManager().stopAllSounds();
     _timer?.cancel();
   }
 }
