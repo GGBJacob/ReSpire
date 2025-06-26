@@ -8,6 +8,13 @@ class PresetDataBase {
 
   List<Training> presetList = [];
 
+  static final PresetDataBase _instance = PresetDataBase._internal();
+  PresetDataBase._internal();
+
+  factory PresetDataBase() {
+    return _instance;
+  }
+
   final _box = Hive.box('respire');
 
   void initialize() {
@@ -36,6 +43,7 @@ class PresetDataBase {
     presetList = [
       Training(
         title: "Deep Serenity",
+        description: "A calming routine to enhance relaxation and mindfulness.",
         phases: [
           Phase(
             reps: 5,
@@ -89,6 +97,11 @@ class PresetDataBase {
       ],
     ),
     ];
+  }
+
+  void deletePreset(int index) {
+    presetList.removeAt(index);
+    updateDataBase();
   }
 
   void loadData()

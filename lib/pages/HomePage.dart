@@ -3,8 +3,8 @@ import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
-import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
+import 'package:respire/pages/TrainingPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/theme/Colors.dart';
 
@@ -68,13 +68,6 @@ class _HomePageState extends State<HomePage> {
       
     });
     clearValues();
-    db.updateDataBase();
-  }
-
-  void deletePreset(int index) {
-    db.presetList.removeAt(index);
-    setState(() {});
-
     db.updateDataBase();
   }
 
@@ -169,11 +162,18 @@ class _HomePageState extends State<HomePage> {
               
               PresetTile(
                 values: db.presetList[index],
-                onClick: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BreathingPage(training: db.presetList[index])),
-                ),
-                deleteTile: (context) => deletePreset(index),
+                onClick: () async { 
+                  final updated = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TrainingPage(index: index)));
+
+                  // If the user updated (removed) the training, refresh the state
+                  if (updated)
+                  {
+                    setState(() {});
+                  }
+                  },
+                deleteTile: (context) { db.deletePreset(index); setState(() {}); },
                 editTile: (context) async {
                   final updated = await Navigator.push<Training>(
                     context,
