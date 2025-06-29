@@ -141,7 +141,7 @@ class SoundManager{
       await player.setVolume(newVolume);
       await Future.delayed(Duration(milliseconds: stepDuration));
     }
-
+    await pauseSound(soundName);
     await player.setVolume(1.0);
   }
 
