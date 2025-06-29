@@ -10,6 +10,8 @@ class SoundManager{
     return _instance;
   }
 
+  String currentSound = "None";
+
   ///A map of available sounds in the assets folder.\
   ///The keys are the sound names, and the values are the paths to the sound files.
   ///
@@ -76,6 +78,7 @@ class SoundManager{
     }
     log("Playing sound: $soundName");
     await _audioPlayers[soundName]!.resume();
+    currentSound = soundName;
   }
 
   ///Plays a sound from a file in the assets folder with a fade-in effect.\
@@ -118,6 +121,32 @@ class SoundManager{
     }
     log("Pausing sound: $soundName");
     await _audioPlayers[soundName]!.pause();
+    currentSound = "None";
+  }
+
+  ///Stops a sound from a file in the assets folder if playing.
+  ///This will stop the sound and reset it to the beginning.
+  Future<void> stopSound(String soundName) async{
+    if(soundName == "None") {
+      log("No sound to stop.");
+      return;
+    }
+
+    if (!_audioPlayers.containsKey(soundName)) {
+      log("Sound $soundName is not loaded. Cannot stop.");
+      return;
+    }
+
+    log("Stopping sound: $soundName");
+    await _audioPlayers[soundName]!.stop();
+
+    try {
+      await _audioPlayers[soundName]!.setSource(AssetSource(_availableSounds[soundName]!));
+    } catch (e) {
+      log("Error resetting source after stop: $e");
+    }
+    
+    currentSound = "None";
   }
 
   ///Pauses the provided sound with a fade-out effect.\

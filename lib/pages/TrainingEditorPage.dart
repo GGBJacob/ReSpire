@@ -3,7 +3,9 @@ import 'package:respire/components/Global/Sounds.dart';
 import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/TrainingEditorPage/AudioSelectionDropdown.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
+import 'package:respire/components/TrainingEditorPage/SoundDropdownItem.dart';
 import 'package:respire/services/SoundManager.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -270,18 +272,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                           value: _sounds.inhaleSound, 
                                           items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.inhaleSound = v!))]),
                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), 
-                                      DropdownButton2<String>(
-                                        underline: SizedBox(), 
-                                        iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                          dropdownStyleData: DropdownStyleData(
-                                            //isOverButton: true,         
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        value: _sounds.retentionSound, 
-                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.retentionSound = v!))]),
+                                    AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => setState(() => _sounds.retentionSound = v!))
+                                    ]),
                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), 
                                       DropdownButton2<String>(
                                         underline: SizedBox(), 
