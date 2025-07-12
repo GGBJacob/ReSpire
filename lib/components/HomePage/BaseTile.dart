@@ -23,16 +23,20 @@ class BaseTile extends StatelessWidget
     // Core of the tile
     return GestureDetector(
       onTap: onClick,
-      child: Container(
-        width: double.infinity, // necessary for slidable elements to render expanded
-        padding: EdgeInsets.all(30),
-        decoration: BoxDecoration(
-          color: color,
-          //borderRadius: BorderRadius.circular(20),
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70), bottomRight: Radius.circular(35), topLeft: Radius.circular(35), topRight: Radius.circular(70)),
-        ),
-        child: child,
+      child: Center(
+        child:
+        Container(
+          //width: double.infinity, // necessary for slidable elements to render expanded
+          width: MediaQuery.of(context).size.width * 0.7,
+          padding: EdgeInsets.all(25),
+          decoration: BoxDecoration(
+            color: color,
+            //borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70), bottomRight: Radius.circular(35), topLeft: Radius.circular(35), topRight: Radius.circular(70)),
+          ),
+          child: child,
       ),
+      )
     );
 
   }
