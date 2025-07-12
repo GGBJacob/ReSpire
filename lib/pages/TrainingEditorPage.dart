@@ -258,48 +258,22 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 padding: EdgeInsets.all(12),
                                 child: Column(
                                   children: [
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale'), 
-                                        DropdownButton2<String>(
-                                          underline: SizedBox(), 
-                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                            dropdownStyleData: DropdownStyleData(
-                                              //isOverButton: true,         
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                          value: _sounds.inhaleSound, 
-                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.inhaleSound = v!))]),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), 
-                                    AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => setState(() => _sounds.retentionSound = v!))
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale'),  
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.inhaleSound, onChanged: (v) => setState(() { _sounds.inhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), 
-                                      DropdownButton2<String>(
-                                        underline: SizedBox(), 
-                                        iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                          dropdownStyleData: DropdownStyleData(
-                                            //isOverButton: true,         
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        value: _sounds.exhaleSound, 
-                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.exhaleSound = v!))]),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery'), 
-                                      DropdownButton2<String>(
-                                        underline: SizedBox(),
-                                        iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                          dropdownStyleData: DropdownStyleData(
-                                            //isOverButton: true,         
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                          ), 
-                                        value: _sounds.recoverySound, 
-                                        items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.recoverySound = v!))]),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => setState(() { _sounds.retentionSound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.exhaleSound, onChanged: (v) => setState(() { _sounds.exhaleSound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery'), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.recoverySound, onChanged: (v) => setState(() { _sounds.recoverySound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
                                   ],
                                 ),
                               ),

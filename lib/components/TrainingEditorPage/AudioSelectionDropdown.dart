@@ -33,14 +33,16 @@ class _AudioSelectionDropdownState extends State<AudioSelectionDropdown> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-    width: 140,
     child:
     DropdownButton2<String>(
       onChanged: widget.onChanged,
-      underline: SizedBox(), 
+      alignment: AlignmentDirectional.center,
+      underline: SizedBox(),
       iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
         dropdownStyleData: DropdownStyleData(
-          //isOverButton: true,         
+          //isOverButton: true,   
+          width: 150,
+          direction: DropdownDirection.left,      
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),

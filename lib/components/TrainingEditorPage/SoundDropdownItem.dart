@@ -21,20 +21,19 @@ class _SoundDropdownItemState extends State<SoundDropdownItem> {
   void initState() {
     super.initState();
     _icon = _playIcon;
+    SoundManager().currentlyPlaying.addListener(_onCurrentlyPlayingChanged);
   }
 
 
-  Future<void> onPressed() async {
-    final isPlaying = SoundManager().currentSound == widget.value;
+  Future<void> onIconPressed() async {
+    final isPlaying = SoundManager().currentlyPlaying.value == widget.value;
     if (isPlaying)
     {
-      //widget.handleValueChange("");
       SoundManager().stopSound(widget.value);
       _icon = _playIcon;
     }
     else
     {
-      //widget.handleValueChange(widget.value);
       SoundManager().playSound(widget.value);
       _icon = _stopIcon;
     }
@@ -45,7 +44,7 @@ class _SoundDropdownItemState extends State<SoundDropdownItem> {
   void didUpdateWidget(covariant SoundDropdownItem oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final bool isNowPlaying = SoundManager().currentSound == widget.value;
+    final bool isNowPlaying = SoundManager().currentlyPlaying.value == widget.value;
 
     if (!isNowPlaying) {
       SoundManager().stopSound(widget.value);
@@ -60,20 +59,31 @@ class _SoundDropdownItemState extends State<SoundDropdownItem> {
     //   valueListenable: widget.currentlyPlayingNotifier,
     //   builder: (context, currentlyPlaying, child) {
         return Row(
-          spacing: 6.0,
           children: [
             if (widget.value == "None")
               const Icon(Icons.volume_off, color: Colors.grey)
             else
             GestureDetector(
-              onTap: onPressed,
+              onTap: onIconPressed,
               child: _icon,
             ),
-            
+            SizedBox(width: 8),
             Text(widget.value),
           ],
         );
     //   },
     // );
+  }
+
+  void _onCurrentlyPlayingChanged() {
+    setState(() {
+      _icon = SoundManager().currentlyPlaying.value == widget.value ? _stopIcon : _playIcon;
+    });
+  }
+
+  @override
+  void dispose() {
+    SoundManager().currentlyPlaying.removeListener(_onCurrentlyPlayingChanged);
+    super.dispose();
   }
 }

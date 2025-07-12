@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 
 class SoundManager{
   static final SoundManager _instance = SoundManager._internal();
@@ -10,7 +11,7 @@ class SoundManager{
     return _instance;
   }
 
-  String currentSound = "None";
+  ValueNotifier<String> currentlyPlaying = ValueNotifier<String>("");
 
   ///A map of available sounds in the assets folder.\
   ///The keys are the sound names, and the values are the paths to the sound files.
@@ -69,6 +70,11 @@ class SoundManager{
       log("No sound to play.");
       return;
     }
+    if (currentlyPlaying.value != "") {
+      await stopSound(currentlyPlaying.value);
+    }
+    
+    currentlyPlaying.value = soundName;
     if (!_audioPlayers.containsKey(soundName)) {
       log("Sound $soundName is not loaded. Loading now...");
       if(await loadSound(soundName)){
@@ -78,7 +84,6 @@ class SoundManager{
     }
     log("Playing sound: $soundName");
     await _audioPlayers[soundName]!.resume();
-    currentSound = soundName;
   }
 
   ///Plays a sound from a file in the assets folder with a fade-in effect.\
@@ -121,7 +126,7 @@ class SoundManager{
     }
     log("Pausing sound: $soundName");
     await _audioPlayers[soundName]!.pause();
-    currentSound = "None";
+    currentlyPlaying.value = "";
   }
 
   ///Stops a sound from a file in the assets folder if playing.
@@ -145,8 +150,8 @@ class SoundManager{
     } catch (e) {
       log("Error resetting source after stop: $e");
     }
-    
-    currentSound = "None";
+
+    currentlyPlaying.value = "";
   }
 
   ///Pauses the provided sound with a fade-out effect.\
