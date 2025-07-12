@@ -55,6 +55,7 @@ class _TrainingPageState extends State<TrainingPage> {
                     style: IconButton.styleFrom(backgroundColor: Colors.white),
                     onPressed: () => {}),
               ),
+              Spacer(),
               Padding(
                 padding: EdgeInsets.all(10),
                 child: IconButton(
@@ -76,18 +77,16 @@ class _TrainingPageState extends State<TrainingPage> {
                           widget.db.updateDataBase();
                         });
                       }
-                    }
-                  ),
+                    }),
               ),
               Padding(
-                padding: EdgeInsets.all(10),
-                child: IconButton(
+                  padding: EdgeInsets.all(10),
+                  child: IconButton(
                     icon: Icon(Icons.delete_rounded,
                         color: Color.fromARGB(255, 26, 147, 168)),
                     style: IconButton.styleFrom(backgroundColor: Colors.white),
                     onPressed: removeTraining,
-                )
-              ),
+                  )),
             ],
           ),
           Padding(
@@ -95,52 +94,57 @@ class _TrainingPageState extends State<TrainingPage> {
               child: Container(
                 width: screenWidth - 20,
                 constraints: BoxConstraints(
-                  minHeight: 120,
+                  minHeight: 80,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Column(children: [
-                  Padding(
-                    padding: EdgeInsets.only(top:10),
-                    child: Text(
-                      "Description",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 26, 147, 168),
-                        fontSize: 32,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Container(
-                        width: screenWidth - 40,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 123, 222, 240),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              training.description ?? "No description provided.",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 26, 147, 168)),
-                            ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, left: 20),
+                        child: Text(
+                          "Description",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 26, 147, 168),
+                            fontSize: 12,
                           ),
-                        )))
-                  ]),
-                )),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      Padding(
+                          padding:
+                              EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                          child: Container(
+                              width: screenWidth - 40,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 123, 222, 240),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    training.description == ''
+                                        ? "No description provided."
+                                        : training.description,
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 26, 147, 168)),
+                                  ),
+                                ),
+                              )))
+                    ]),
+              )),
           Padding(
               padding: EdgeInsets.all(10),
               child: TextButton(
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        BreathingPage(training: training),
+                    builder: (context) => BreathingPage(training: training),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -160,28 +164,28 @@ class _TrainingPageState extends State<TrainingPage> {
   }
 
   Future<void> removeTraining() async {
-
-    showDialog(context: context, builder:  (context) {
-      return AlertDialog(
-        title: Text("Delete Training"),
-        content: Text("Are you sure you want to delete this training?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              widget.db.deletePreset(widget.index); 
-              Navigator.pop(context);
-              setState(() {});
-              Navigator.pop(context, true);
-            },
-            child: Text("Delete"),
-          ),
-        ],
-      );
-    });
-
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Delete Training"),
+            content: Text("Are you sure you want to delete this training?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  widget.db.deletePreset(widget.index);
+                  Navigator.pop(context);
+                  setState(() {});
+                  Navigator.pop(context, true);
+                },
+                child: Text("Delete"),
+              ),
+            ],
+          );
+        });
   }
 }
