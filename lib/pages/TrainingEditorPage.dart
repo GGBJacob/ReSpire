@@ -29,6 +29,10 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   TextEditingController trainingNameController = TextEditingController();
   Timer? _debounce;
 
+  // Focus management
+  final FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _descriptionFocusNode = FocusNode();
+
   int _selectedTab = 0;
   // Sound tab state
   final List<String> _soundOptions = SoundManager().getAvailableSounds();
@@ -63,6 +67,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
         duration: Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
+      // Clear any active focus when adding new phase to prevent keyboard issues
+      FocusScope.of(context).unfocus();
     });
     saveTraining();
   }
@@ -113,6 +119,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   void dispose() {
     trainingNameController.dispose();
     descriptionController.dispose();
+    _titleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -129,6 +137,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
         appBar: AppBar(
           title: TextField(
             controller: trainingNameController,
+            focusNode: _titleFocusNode,
             decoration: InputDecoration(border: InputBorder.none),
             style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
             onChanged: (value) {
@@ -156,7 +165,11 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                     2: Text('Other', style: TextStyle(color: _selectedTab==2?darkerblue:Colors.black, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
                   },
                   initialValue: _selectedTab,
-                  onValueChanged: (val) => setState(() => _selectedTab = val),
+                  onValueChanged: (val) {
+                    setState(() => _selectedTab = val);
+                    // Clear focus when switching tabs to prevent focus issues
+                    FocusScope.of(context).unfocus();
+                  },
                   decoration: BoxDecoration(
                     color: grey,
                     borderRadius: BorderRadius.circular(16),
@@ -327,19 +340,19 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text('Description', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
-                                    ),
-                                    TextField(
-                                      controller: descriptionController,
-                                      maxLines: 3,
-                                      decoration: InputDecoration(
-                                        hintText: 'Enter training description...',
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                                      ),
-                                      onChanged: (value) {
-                                        widget.training.description = value;
-                                        saveTraining();
-                                      },
-                                    ),
+                                    ),                    TextField(
+                      controller: descriptionController,
+                      focusNode: _descriptionFocusNode,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: 'Enter training description...',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onChanged: (value) {
+                        widget.training.description = value;
+                        saveTraining();
+                      },
+                    ),
                                     SizedBox(height: 12),
                                     SwitchListTile(title: Text('Next step'), value: _showNextStepToggle, onChanged: (v) => setState(() => _showNextStepToggle = v)),
                                     SwitchListTile(title: Text('Chart'), value: _showChartToggle, onChanged: (v) => setState(() => _showChartToggle = v)),

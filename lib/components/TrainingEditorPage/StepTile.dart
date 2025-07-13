@@ -23,6 +23,7 @@ class StepTile extends StatefulWidget {
 
 class _StepTileState extends State<StepTile> {
   late TextEditingController durationController;
+  final FocusNode _durationFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _StepTileState extends State<StepTile> {
   @override
   void dispose() {
     durationController.dispose();
+    _durationFocusNode.dispose();
     super.dispose();
   }
 
@@ -91,6 +93,7 @@ class _StepTileState extends State<StepTile> {
           Expanded(
             child: TextField(
               controller: durationController,
+              focusNode: _durationFocusNode,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: "Time (s)",

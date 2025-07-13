@@ -23,6 +23,8 @@ class PhaseTile extends StatefulWidget {
 class _PhaseTileState extends State<PhaseTile> {
   late TextEditingController repsController;
   late TextEditingController incrementController;
+  final FocusNode _repsFocusNode = FocusNode();
+  final FocusNode _incrementFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -35,6 +37,8 @@ class _PhaseTileState extends State<PhaseTile> {
   void dispose() {
     repsController.dispose();
     incrementController.dispose();
+    _repsFocusNode.dispose();
+    _incrementFocusNode.dispose();
     super.dispose();
   }
 
@@ -47,6 +51,8 @@ class _PhaseTileState extends State<PhaseTile> {
         ),
       );
     });
+    // Clear focus when adding new step to prevent keyboard conflicts
+    FocusScope.of(context).unfocus();
     widget.onUpdate();
   }
 
@@ -103,6 +109,7 @@ class _PhaseTileState extends State<PhaseTile> {
               width: 50,
               child: TextField(
                 controller: repsController,
+                focusNode: _repsFocusNode,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -125,6 +132,7 @@ class _PhaseTileState extends State<PhaseTile> {
               width: 50,
               child: TextField(
                 controller: incrementController,
+                focusNode: _incrementFocusNode,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   suffixText: '%',
