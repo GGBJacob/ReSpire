@@ -7,6 +7,7 @@ import 'package:respire/components/Global/StepIncrement.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/pages/HomePage.dart';
 import 'package:respire/services/TextToSpeechService.dart';
+import 'package:respire/services/TranslationProvider.dart';
 import 'theme/Colors.dart';
 
 void main() async{
@@ -31,6 +32,7 @@ Future<void> initialize() async
   Hive.registerAdapter(SoundsAdapter());
   await Hive.openBox('respire');
   await TextToSpeechService().init();
+  TranslationProvider();
 }
 
 class MainApp extends StatelessWidget {
