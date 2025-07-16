@@ -7,7 +7,7 @@ import 'package:respire/components/Global/StepIncrement.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/pages/HomePage.dart';
 import 'package:respire/services/TextToSpeechService.dart';
-import 'package:respire/services/TranslationProvider.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'theme/Colors.dart';
 
 void main() async{

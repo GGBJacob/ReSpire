@@ -1,31 +1,42 @@
-
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
+import 'package:respire/services/TranslationProvider/AppLanguage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider extends ChangeNotifier {
   static final SettingsProvider _instance = SettingsProvider._internal();
   factory SettingsProvider() => _instance;
 
-  SettingsProvider._internal();
+  SettingsProvider._internal(){init();}
 
-  String voiceType = "";
+  AppLanguage currentLanguage = AppLanguage.polish;
 
   Future<void> init() async {
     var sharedPreferences = await SharedPreferences.getInstance();
-    voiceType = sharedPreferences.getString("voiceType") ?? "en-US";
-    log("Loaded voice type: $voiceType");
+    currentLanguage = AppLanguage.fromCode(sharedPreferences.getString('selectedLanguageCode'));
+    log("Loaded voice type: ${currentLanguage.name}");
   }
 
   Future<void> setVoiceType(String newVoiceType) async {
     var sharedPreferences = await SharedPreferences.getInstance();
-    voiceType = newVoiceType;
-    await sharedPreferences.setString("voiceType", newVoiceType);
+    currentLanguage = AppLanguage.fromCode(newVoiceType);
+    await sharedPreferences.setString('selectedLanguageCode', currentLanguage.code);
     notifyListeners();
   } 
 
-  String getVoiceType() {
-    return voiceType;
+  Future<void> setLanguage(AppLanguage language) async {
+    if (AppLanguage.supportedLanguages.contains(language)) {
+      currentLanguage = language;
+      var sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString('selectedLanguageCode', language.code);
+      notifyListeners();
+    } else {
+      log("Unsupported language: ${language.code}");
+    }
+  }
+
+  String getVoiceCode() {
+    return currentLanguage.code;
   }
 }

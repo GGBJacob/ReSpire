@@ -14,12 +14,11 @@ class TextToSpeechService {
   Future<void> init() async{
     var settings = SettingsProvider();
     settings.addListener(() async {
-      String newVoice = settings.getVoiceType();
+      String newVoice = settings.getVoiceCode();
       await _flutterTts.setLanguage(newVoice);
       log("Voice changed to: $newVoice");
     });
-    await settings.init();
-    await _flutterTts.setLanguage(SettingsProvider().getVoiceType());
+    await _flutterTts.setLanguage(SettingsProvider().getVoiceCode());
     _flutterTts.setErrorHandler((error) {
       log("TTS Error: $error");
     });

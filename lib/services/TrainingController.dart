@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:respire/components/BreathingPage/TrainingParser.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
 import 'package:respire/services/SoundManager.dart';
 import 'package:respire/services/TextToSpeechService.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 class TrainingController{
 
@@ -105,7 +105,8 @@ class TrainingController{
             second.value = 0;
             training_step.Step _step = stepsQueue.value.elementAt(1)!;
             handleStepChange(_step);
-            TextToSpeechService().speak(_step.stepType.name);
+            String stepName = TranslationProvider().getTranslation(_step.stepType.name);
+            TextToSpeechService().speak(stepName);
           }
           _stepDelay = false; 
 
