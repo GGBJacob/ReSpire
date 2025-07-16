@@ -52,8 +52,8 @@ class _TrainingPageState extends State<TrainingPage> {
                 padding: EdgeInsets.all(10),
                 child: IconButton(
                     icon: Icon(Icons.share_rounded,
-                        color: grey),
-                    style: IconButton.styleFrom(backgroundColor: darkgrey),
+                        color: darkgrey),
+                    style: IconButton.styleFrom(backgroundColor: const Color.fromARGB(255, 207, 206, 206)),
                     onPressed: () => {}),
               ),
               Spacer(),

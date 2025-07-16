@@ -6,6 +6,7 @@ import 'package:respire/components/BreathingPage/TrainingParser.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
 import 'package:respire/services/TrainingController.dart';
+import 'package:respire/theme/Colors.dart';
 
 class BreathingPage extends StatefulWidget {
   final Training training;
@@ -43,22 +44,22 @@ class _BreathingPageState extends State<BreathingPage> {
         return AlertDialog(
           title: Text("Exit"),
           content: Text(
-              "Are you sure you want exit?\nIf you click \"Yes\" your session will end.",
-              textAlign: TextAlign.center),
+              "Are you sure you want exit?\nIf you click \"Yes\" your session will end."),
+              //textAlign: TextAlign.center),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 controller.resume();
               },
-              child: Text("No"),
+              child: Text("No", style: TextStyle(color: darkerblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text("Yes"),
+              child: Text("Yes", style: TextStyle(color: darkerblue)),
             ),
           ],
         );

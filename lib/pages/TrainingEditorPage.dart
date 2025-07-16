@@ -37,7 +37,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   
   // Other tab state
   bool _showNextStepToggle = true;
-  bool _showChartToggle = false;
+  bool _showChartToggle = true;
   bool _showStepColorsToggle = true;
 
   @override
