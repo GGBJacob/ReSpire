@@ -65,10 +65,10 @@ class PresetTile extends StatelessWidget
                     child: Icon(
                       Icons.air,
                       color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 24.0,
+                      size: 22.0,
                     ),
                   ),
-                  const SizedBox(width: 8), 
+                  const SizedBox(width: 6), //span between icons and text
                   Text(
                     values.title,
                     //values.title.toUpperCase(),
@@ -76,16 +76,16 @@ class PresetTile extends StatelessWidget
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: 'Glacial',
-                      fontSize: 25,
+                      fontSize: 23,
                       fontWeight: FontWeight.w500,
                       color: const Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
-                  const SizedBox(width: 8), 
+                  const SizedBox(width: 6), 
                   Icon(
                     Icons.air,
                     color: const Color.fromARGB(255, 0, 0, 0),
-                    size: 24.0,
+                    size: 22.0,
                   ),
                 ],
               )

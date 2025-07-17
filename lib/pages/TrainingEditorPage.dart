@@ -30,6 +30,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   final ScrollController _scrollController = ScrollController();
   TextEditingController trainingNameController = TextEditingController();
   Timer? _debounce;
+  String title = "New training";
 
   int _selectedTab = 0;
   // Sound tab state
@@ -119,6 +120,67 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     super.dispose();
   }
 
+  
+  void showEditTitleDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white, 
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text('Edit training title', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue)),
+        content: TextField(
+          controller: trainingNameController,
+          autofocus: true,
+          decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12), 
+              borderSide: BorderSide(
+                color: darkerblue,
+                width: 2.0, 
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12), 
+              borderSide: BorderSide(
+                color: darkerblue,
+                width: 2.0, 
+              ),
+            ),
+            hintText: 'Enter training title',
+          ),
+          // onChanged: (value) {
+          //   if (_debounce?.isActive ?? false) _debounce!.cancel();
+          //   _debounce = Timer(Duration(milliseconds: 500), () {
+          //     setState(() {
+          //       widget.training.title = value;
+          //     });
+          //     saveTraining();
+          //   });
+          // },
+        ),
+        actions: [
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: darkerblue)),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          ElevatedButton(
+            child: Text('Save', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
+            onPressed: () {
+              setState(() {
+                widget.training.title = trainingNameController.text;
+              });
+              saveTraining();
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -129,18 +191,29 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: TextField(
-            controller: trainingNameController,
-            decoration: InputDecoration(border: InputBorder.none),
-            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
-            onChanged: (value) {
-              widget.training.title = value;
-              if (_debounce?.isActive ?? false) _debounce!.cancel();
-              _debounce = Timer(Duration(milliseconds: 500), () {
-                saveTraining();
-              });
-            },
+          title: Text(
+            trainingNameController.text,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.edit, color: darkerblue), // zmiana koloru ikony
+              onPressed: () => showEditTitleDialog(context),
+              splashRadius: 20, // opcjonalnie: zmniejsza efekt nacisku
+            ),
+          ],
+          // title: TextField(
+          //   controller: trainingNameController,
+          //   decoration: InputDecoration(border: InputBorder.none),
+          //   style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
+          //   onChanged: (value) {
+          //     widget.training.title = value;
+          //     if (_debounce?.isActive ?? false) _debounce!.cancel();
+          //     _debounce = Timer(Duration(milliseconds: 500), () {
+          //       saveTraining();
+          //     });
+          //   },
+          // ),
           backgroundColor: Colors.white,
         ),
         backgroundColor: Colors.white,
@@ -153,14 +226,14 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomSlidingSegmentedControl<int>(
                   children: {
-                    0: Text('Training', style: TextStyle(color: _selectedTab==0?darkerblue:Colors.black, fontWeight:  _selectedTab==0?FontWeight.bold:FontWeight.normal)),
-                    1: Text('Sound', style: TextStyle(color: _selectedTab==1?darkerblue:Colors.black, fontWeight:  _selectedTab==1?FontWeight.bold:FontWeight.normal)),
-                    2: Text('Other', style: TextStyle(color: _selectedTab==2?darkerblue:Colors.black, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
+                    0: Text('Training', style: TextStyle(color: _selectedTab==0?darkerblue:Colors.white, fontWeight:  _selectedTab==0?FontWeight.bold:FontWeight.normal)),
+                    1: Text('Sound', style: TextStyle(color: _selectedTab==1?darkerblue:Colors.white, fontWeight:  _selectedTab==1?FontWeight.bold:FontWeight.normal)),
+                    2: Text('Other', style: TextStyle(color: _selectedTab==2?darkerblue:Colors.white, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
                   },
                   initialValue: _selectedTab,
                   onValueChanged: (val) => setState(() => _selectedTab = val),
                   decoration: BoxDecoration(
-                    color: grey,
+                    color: darkerblue,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   thumbDecoration: BoxDecoration(
@@ -208,6 +281,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
+                              color: Colors.white,
                               child: Padding(
                                 padding: EdgeInsets.all(12),
                                 child: Column(
@@ -254,6 +328,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
+                              color: Colors.white,
                               child: Padding(
                                 padding: EdgeInsets.all(12),
                                 child: Column(
@@ -285,6 +360,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
+                              color: Colors.white,
                               child: Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Column(
@@ -292,14 +368,27 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     // Description field
                                     Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text('Description', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
+                                      child: Text('Description', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
                                     ),
                                     TextField(
                                       controller: descriptionController,
                                       maxLines: 3,
                                       decoration: InputDecoration(
                                         hintText: 'Enter training description...',
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8), 
+                                          borderSide: BorderSide(
+                                            color: darkgrey,
+                                            width: 1.0, 
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8), 
+                                          borderSide: BorderSide(
+                                            color: darkerblue,
+                                            width: 1.0, 
+                                          ),
+                                        ),
                                       ),
                                       onChanged: (value) {
                                         widget.training.description = value;
@@ -307,9 +396,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                       },
                                     ),
                                     SizedBox(height: 12),
-                                    SwitchListTile(title: Text('Next step'), value: _showNextStepToggle, onChanged: (v) => setState(() => _showNextStepToggle = v)),
-                                    SwitchListTile(title: Text('Chart'), value: _showChartToggle, onChanged: (v) => setState(() => _showChartToggle = v)),
-                                    SwitchListTile(title: Text('Step colors'), value: _showStepColorsToggle, onChanged: (v) => setState(() => _showStepColorsToggle = v)),
+                                    SwitchListTile(title: Text('Next step'), value: _showNextStepToggle, activeColor: darkerblue, onChanged: null), // (v) => setState(() => _showNextStepToggle = v)),
+                                    SwitchListTile(title: Text('Chart'), value: _showChartToggle, activeColor: darkerblue, onChanged: null), //(v) => setState(() => _showChartToggle = v)),
+                                    SwitchListTile(title: Text('Step colors'), value: _showStepColorsToggle, activeColor: darkerblue,  onChanged: null),//(v) => setState(() => _showStepColorsToggle = v)),
                                   ],
                                 ),
                               ),
@@ -332,3 +421,4 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     );
   }
 }
+

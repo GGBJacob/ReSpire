@@ -137,6 +137,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -153,11 +154,12 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: mediumblue,
         edgeOffset: 16,
         child: ListView.builder(
+          padding: EdgeInsets.only(top: size*0.022),
           itemCount: db.presetList.length + 1,
           itemBuilder: (context, index)
           {
             return Padding(
-              padding: EdgeInsets.all(15), // padding between elements / screen
+              padding: EdgeInsets.all(size*0.022), // padding between elements / screen
               child: index < db.presetList.length ?
               
               PresetTile(

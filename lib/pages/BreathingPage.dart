@@ -66,7 +66,6 @@ class _BreathingPageState extends State<BreathingPage> {
     );
   }
 
-
   Widget textInCircle() {
     return ValueListenableBuilder<int>(
       valueListenable: controller.second,
@@ -158,48 +157,65 @@ class _BreathingPageState extends State<BreathingPage> {
           ),
 
           //circles
-          Expanded(
-            child: Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  //background circle, max value
-                  Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromRGBO(183, 244, 255, 1),
+          ValueListenableBuilder<bool>(
+              valueListenable: controller.isPaused,
+              builder: (context, isPaused, _) {
+                return Expanded(
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: isPaused ? controller.resume : controller.pause,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          //background circle, max value
+                          Container(
+                            width: 300,
+                            height: 300,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromRGBO(183, 244, 255, 1),
+                            ),
+                          ),
+
+                          //animated circle
+                          ValueListenableBuilder<Queue<training_step.Step?>>(
+                              valueListenable: controller.stepsQueue,
+                              builder: (context, steps, _) {
+                                return ValueListenableBuilder<bool>(
+                                    valueListenable: controller.isPaused,
+                                    builder: (context, isPaused, _) {
+                                      return AnimatedCircle(
+                                          step: steps.first,
+                                          isPaused: isPaused);
+                                    });
+                              }),
+
+                          //foreground circle, min value
+                          Container(
+                            width: 125,
+                            height: 125,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromRGBO(44, 173, 196, 1),
+                            ),
+                          ),
+
+                          isPaused
+                              ? Text(
+                                  "Resume",
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : textInCircle()
+                        ],
+                      ),
                     ),
                   ),
-
-                  //animated circle
-                  ValueListenableBuilder<Queue<training_step.Step?>>(
-                      valueListenable: controller.stepsQueue,
-                      builder: (context, steps, _) {
-                        return ValueListenableBuilder<bool>(
-                            valueListenable: controller.isPaused,
-                            builder: (context, isPaused, _) {
-                              return AnimatedCircle(
-                                  step: steps.first, isPaused: isPaused);
-                            });
-                      }),
-
-                  //foreground circle, min value
-                  Container(
-                    width: 125,
-                    height: 125,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromRGBO(44, 173, 196, 1),
-                    ),
-                  ),
-
-                  textInCircle()
-                ],
-              ),
-            ),
-          ),
+                );
+              })
         ],
       ),
     );

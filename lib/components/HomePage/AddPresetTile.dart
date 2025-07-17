@@ -15,20 +15,21 @@ class AddPresetTile extends StatelessWidget
     );
 
 Widget build(BuildContext context) {
+  double size = MediaQuery.of(context).size.width;
   return GestureDetector(
     onTap: onClick,
     child: SizedBox(
-      width: 120,
-      height: 120,
+      //width: 120,
+      //height: 120,
       child: Stack(
         alignment: Alignment.center,
         children: [
           //additional semi-hidden dot
           Transform.translate(
-            offset: const Offset(16, -10),
+            offset: const Offset(16, -8),
             child: Container(
-              width: 55,
-              height: 55,
+              width: size * 0.125,
+              height: size * 0.125,
               decoration: const BoxDecoration(
                 color: lightblue,
                 shape: BoxShape.circle,
@@ -37,16 +38,16 @@ Widget build(BuildContext context) {
           ),
           //white circle with +
           Container(
-            width: 65,
-            height: 65,
+            width: size * 0.14,
+            height: size * 0.14,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: const Center(
+            child: Center(
               child: Icon(
                 Icons.add,
-                size: 36,
+                size: size * 0.07,
                 color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
