@@ -117,72 +117,237 @@ class _PhaseTileState extends State<PhaseTile> {
               index: 0,
               child: Icon(Icons.drag_handle, color: darkerblue),
             ),
-            SizedBox(width: 8),
-            Text("Reps: ", style: TextStyle(fontWeight: FontWeight.bold, color: darkerblue)),
-            Container(
-              width: 50,
-              child: TextField(
-                key: ValueKey('reps_${widget.phase.hashCode}'),
-                controller: repsController,
-                focusNode: repsFocusNode,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                ),
-                onChanged: (value) {
-                  int? newReps = int.tryParse(value);
-                  if (newReps != null) {
-                    widget.phase.reps = newReps;
-                  }
-                },
-                onEditingComplete: () {
-                  widget.onUpdate();
-                },
-                onTapOutside: (event) {
-                  FocusScope.of(context).unfocus();
-                  widget.onUpdate();
-                },
-                style: TextStyle(color: darkerblue),
-              ),
-            ),
-            SizedBox(width: 8),
-            Text("Inc: ",  style: TextStyle(fontWeight: FontWeight.bold, color: darkerblue)),
-            Container(
-              width: 50,
-              child: TextField(
-                key: ValueKey('increment_${widget.phase.hashCode}'),
-                controller: incrementController,
-                focusNode: incrementFocusNode,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  suffixText: '%',
-                   suffixStyle: TextStyle(
+            
+            // Repetitions Section
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Reps",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     color: darkerblue,
+                    fontSize: 12,
                   ),
-                  border: InputBorder.none,
                 ),
-                onChanged: (value) {
-                  int? newIncrement = int.tryParse(value);
-                  if (newIncrement != null && newIncrement >= 0 && newIncrement <= 100) {
-                    widget.phase.increment = newIncrement;
-                  }
-                },
-                onEditingComplete: () {
-                  widget.onUpdate();
-                },
-                onTapOutside: (event) {
-                  FocusScope.of(context).unfocus();
-                  widget.onUpdate();
-                },
-                style: TextStyle(color: darkerblue),
-              ),
+                SizedBox(height: 2),
+                Container(
+                  width: 80,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: darkerblue, width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () {
+                            int currentValue = int.tryParse(repsController.text) ?? 1;
+                            int newValue = (currentValue - 1).clamp(1, 999);
+                            repsController.text = newValue.toString();
+                            setState(() {
+                              widget.phase.reps = newValue;
+                            });
+                            widget.onUpdate();
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 35,
+                            child: Icon(
+                              Icons.remove,
+                              color: darkerblue,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          key: ValueKey('reps_${widget.phase.hashCode}'),
+                          controller: repsController,
+                          focusNode: repsFocusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                          ),
+                          style: TextStyle(
+                            color: darkerblue,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                          onChanged: (value) {
+                            int? newReps = int.tryParse(value);
+                            if (newReps != null && newReps > 0) {
+                              setState(() {
+                                widget.phase.reps = newReps;
+                              });
+                            }
+                          },
+                          onEditingComplete: () {
+                            widget.onUpdate();
+                          },
+                          onTapOutside: (event) {
+                            FocusScope.of(context).unfocus();
+                            widget.onUpdate();
+                          },
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () {
+                            int currentValue = int.tryParse(repsController.text) ?? 1;
+                            int newValue = (currentValue + 1).clamp(1, 999);
+                            repsController.text = newValue.toString();
+                            setState(() {
+                              widget.phase.reps = newValue;
+                            });
+                            widget.onUpdate();
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 35,
+                            child: Icon(
+                              Icons.add,
+                              color: darkerblue,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
+            
+            SizedBox(width: 12),
+            
+            // Increment Section
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Inc %",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: darkerblue,
+                    fontSize: 12,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Container(
+                  width: 80,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: darkerblue, width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () {
+                            int currentValue = int.tryParse(incrementController.text) ?? 0;
+                            int newValue = (currentValue - 1).clamp(0, 100);
+                            incrementController.text = newValue.toString();
+                            setState(() {
+                              widget.phase.increment = newValue;
+                            });
+                            widget.onUpdate();
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 35,
+                            child: Icon(
+                              Icons.remove,
+                              color: darkerblue,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          key: ValueKey('increment_${widget.phase.hashCode}'),
+                          controller: incrementController,
+                          focusNode: incrementFocusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                          ),
+                          style: TextStyle(
+                            color: darkerblue,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                          onChanged: (value) {
+                            int? newIncrement = int.tryParse(value);
+                            if (newIncrement != null && newIncrement >= 0 && newIncrement <= 100) {
+                              setState(() {
+                                widget.phase.increment = newIncrement;
+                              });
+                            }
+                          },
+                          onEditingComplete: () {
+                            widget.onUpdate();
+                          },
+                          onTapOutside: (event) {
+                            FocusScope.of(context).unfocus();
+                            widget.onUpdate();
+                          },
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () {
+                            int currentValue = int.tryParse(incrementController.text) ?? 0;
+                            int newValue = (currentValue + 1).clamp(0, 100);
+                            incrementController.text = newValue.toString();
+                            setState(() {
+                              widget.phase.increment = newValue;
+                            });
+                            widget.onUpdate();
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 35,
+                            child: Icon(
+                              Icons.add,
+                              color: darkerblue,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
             Spacer(),
             IconButton(
               icon: Icon(Icons.delete, color: darkerblue),
