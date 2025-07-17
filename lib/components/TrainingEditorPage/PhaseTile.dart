@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/Global/Step.dart' as respire;
 import 'package:respire/components/TrainingEditorPage/StepTile.dart';
@@ -23,22 +24,35 @@ class PhaseTile extends StatefulWidget {
 class _PhaseTileState extends State<PhaseTile> {
   late TextEditingController repsController;
   late TextEditingController incrementController;
-  final FocusNode _repsFocusNode = FocusNode();
-  final FocusNode _incrementFocusNode = FocusNode();
+  FocusNode? repsFocusNode;
+  FocusNode? incrementFocusNode;
 
   @override
   void initState() {
     super.initState();
     repsController = TextEditingController(text: widget.phase.reps.toString());
     incrementController = TextEditingController(text: widget.phase.increment.toString());
+    repsFocusNode = FocusNode();
+    incrementFocusNode = FocusNode();
+  }
+
+  @override
+  void didUpdateWidget(PhaseTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.phase.reps != widget.phase.reps && !repsFocusNode!.hasFocus) {
+      repsController.text = widget.phase.reps.toString();
+    }
+    if (oldWidget.phase.increment != widget.phase.increment && !incrementFocusNode!.hasFocus) {
+      incrementController.text = widget.phase.increment.toString();
+    }
   }
 
   @override
   void dispose() {
     repsController.dispose();
     incrementController.dispose();
-    _repsFocusNode.dispose();
-    _incrementFocusNode.dispose();
+    repsFocusNode?.dispose();
+    incrementFocusNode?.dispose();
     super.dispose();
   }
 
@@ -108,20 +122,28 @@ class _PhaseTileState extends State<PhaseTile> {
             Container(
               width: 50,
               child: TextField(
+                key: ValueKey('reps_${widget.phase.hashCode}'),
                 controller: repsController,
-                focusNode: _repsFocusNode,
+                focusNode: repsFocusNode,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 decoration: InputDecoration(
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
                   int? newReps = int.tryParse(value);
                   if (newReps != null) {
-                    setState(() {
-                      widget.phase.reps = newReps;
-                    });
-                    widget.onUpdate();
+                    widget.phase.reps = newReps;
                   }
+                },
+                onEditingComplete: () {
+                  widget.onUpdate();
+                },
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                  widget.onUpdate();
                 },
                 style: TextStyle(color: darkerblue),
               ),
@@ -131,9 +153,13 @@ class _PhaseTileState extends State<PhaseTile> {
             Container(
               width: 50,
               child: TextField(
+                key: ValueKey('increment_${widget.phase.hashCode}'),
                 controller: incrementController,
-                focusNode: _incrementFocusNode,
+                focusNode: incrementFocusNode,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 decoration: InputDecoration(
                   suffixText: '%',
                    suffixStyle: TextStyle(
@@ -144,11 +170,15 @@ class _PhaseTileState extends State<PhaseTile> {
                 onChanged: (value) {
                   int? newIncrement = int.tryParse(value);
                   if (newIncrement != null && newIncrement >= 0 && newIncrement <= 100) {
-                    setState(() {
-                      widget.phase.increment = newIncrement;
-                    });
-                    widget.onUpdate();
+                    widget.phase.increment = newIncrement;
                   }
+                },
+                onEditingComplete: () {
+                  widget.onUpdate();
+                },
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                  widget.onUpdate();
                 },
                 style: TextStyle(color: darkerblue),
               ),

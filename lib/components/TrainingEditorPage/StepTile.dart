@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:respire/components/Global/Step.dart' as respire;
 import 'package:respire/theme/Colors.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+
+class CommaToDecimalFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String newText = newValue.text.replaceAll(',', '.');
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
 
 class StepTile extends StatefulWidget {
   final respire.Step step;
@@ -23,35 +38,58 @@ class StepTile extends StatefulWidget {
 
 class _StepTileState extends State<StepTile> {
   late TextEditingController durationController;
-  final FocusNode _durationFocusNode = FocusNode();
+  FocusNode? durationFocusNode;
+  late double currentDuration;
 
   @override
   void initState() {
     super.initState();
+    currentDuration = widget.step.duration;
     durationController =
-        TextEditingController(text: widget.step.duration.toString());
+        TextEditingController(text: currentDuration.toString());
+    durationFocusNode = FocusNode();
+  }
+
+  @override
+  void didUpdateWidget(StepTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.step.duration != widget.step.duration && !(durationFocusNode?.hasFocus ?? false)) {
+      currentDuration = widget.step.duration;
+      durationController.text = currentDuration.toString();
+    }
   }
 
   @override
   void dispose() {
     durationController.dispose();
-    _durationFocusNode.dispose();
+    durationFocusNode?.dispose();
     super.dispose();
   }
 
   void updateDuration(String value) {
-    double? newDuration = double.tryParse(value);
+    String normalizedValue = value.replaceAll(',', '.');
+    
+    double? newDuration = double.tryParse(normalizedValue);
     if (newDuration != null && newDuration >= 0.1) {
-      double roundedDuration = (newDuration * 10).roundToDouble() / 10;
-      respire.Step newStep = respire.Step(
-        duration: roundedDuration,
-        increment: widget.step.increment,
-        stepType: widget.step.stepType,
-        breathType: widget.step.breathType,
-        breathDepth: widget.step.breathDepth,
-      );
-      widget.onStepChanged(newStep);
+      currentDuration = (newDuration * 10).roundToDouble() / 10;
     }
+  }
+
+  void commitDurationChange() {
+    String currentText = durationController.text.replaceAll(',', '.');
+    if (currentText != durationController.text) {
+      durationController.text = currentText;
+    }
+    
+    respire.Step newStep = respire.Step(
+      duration: currentDuration,
+      increment: widget.step.increment,
+      stepType: widget.step.stepType,
+      breathType: widget.step.breathType,
+      breathDepth: widget.step.breathDepth,
+    );
+    widget.onStepChanged(newStep);
+    widget.onUpdate();
   }
 
   void updateStepType(respire.StepType? newType) {
@@ -69,32 +107,45 @@ class _StepTileState extends State<StepTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: lightblue, 
-        borderRadius: BorderRadius.circular(30), 
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
+    return GestureDetector(
+      onTap: () {
+        // Ukryj klawiaturę gdy klikniesz poza polem
+        FocusScope.of(context).unfocus();
+        // Zapisz zmiany gdy klikniesz poza polem
+        commitDurationChange();
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: lightblue, 
+          borderRadius: BorderRadius.circular(30), 
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
         children: [
-          ReorderableDragStartListener(
-            index: 0,
-            child: Icon(Icons.drag_handle, color: darkerblue),
-          ),
+          // ReorderableDragStartListener(
+          //   index: 0,
+          //   child: Icon(Icons.drag_handle, color: darkerblue),
+          // ),
+          Icon(Icons.drag_handle, color: darkerblue),
           SizedBox(width: 12),
           Expanded(
             child: TextField(
+              // key: ValueKey('duration_${widget.step.stepType}_${widget.step.breathType}'),
               controller: durationController,
-              focusNode: _durationFocusNode,
+              focusNode: durationFocusNode,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                CommaToDecimalFormatter(),
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               decoration: InputDecoration(
                 labelText: "Time (s)",
                 labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
@@ -111,7 +162,16 @@ class _StepTileState extends State<StepTile> {
               ),
               onChanged: (value) {
                 updateDuration(value);
-                widget.onUpdate();
+              },
+              onEditingComplete: () {
+                commitDurationChange();
+              },
+              onSubmitted: (value) {
+                commitDurationChange();
+              },
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+                commitDurationChange();
               },
             ),
           ),
@@ -134,9 +194,7 @@ class _StepTileState extends State<StepTile> {
                     ))
                 .toList(),
             onChanged: (newType) {
-              setState(() {
-                updateStepType(newType);
-              });
+              updateStepType(newType);
               widget.onUpdate();
             },
           ),
@@ -146,6 +204,7 @@ class _StepTileState extends State<StepTile> {
             onPressed: widget.onDelete,
           )
         ],
+        ),
       ),
     );
   }
