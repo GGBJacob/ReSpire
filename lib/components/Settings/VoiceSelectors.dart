@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:respire/services/SettingsProvider.dart';
 import 'package:respire/services/TextToSpeechService.dart';
+import 'package:respire/services/TranslationProvider/AppLanguage.dart';
 
 String? selectedLocale;
 String? selectedVoice;
@@ -26,7 +27,7 @@ class _VoiceSelectorState extends State<VoiceSelector> {
 void initState() {
   super.initState();
   loadVoices();
-  selectedLocale = settingsProvider.getVoiceType();
+  selectedLocale = settingsProvider.getVoiceCode();
 }
 
 Future<void> loadVoices() async {
@@ -64,7 +65,7 @@ Widget build(BuildContext context) {
               selectedLocale = value;
               filteredVoices = allVoices.where((v) => v['languageName'] == value).toList();
               selectedVoice = null;
-              settingsProvider.setVoiceType(value!);
+              settingsProvider.setLanguage(AppLanguage.fromCode(value!));
             });
           },
         )
