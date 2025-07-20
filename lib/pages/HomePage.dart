@@ -4,6 +4,7 @@ import 'package:respire/components/HomePage/AddPresetTile.dart';
 import 'package:respire/components/HomePage/DialogBox.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/ProfilePage.dart';
+import 'package:respire/pages/SettingsPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/pages/TrainingPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
@@ -128,21 +129,33 @@ class _HomePageState extends State<HomePage> {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          title: Image.asset(
-            'assets/logo_poziom.png',
-            height: 36,
-          ),
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          leading: IconButton(
-            icon: Icon(Icons.person, color: darkerblue),
+        centerTitle: true,
+        title: Image.asset(
+          'assets/logo_poziom.png',
+          height: 36,
+        ),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.person, color: darkerblue),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings, color: darkerblue),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
+                MaterialPageRoute(builder: (context) => SettingsPage()),
               );
             },
-          )),
+          ),
+        ],
+      ),
       backgroundColor: mediumblue,
       body: RefreshIndicator(
           onRefresh: _refreshPresets,
