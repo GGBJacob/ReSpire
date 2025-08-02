@@ -42,11 +42,34 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: darkerblue,             
           selectionColor: lightblue, 
           selectionHandleColor: darkerblue,    
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+          ),
+        ),
+        dialogBackgroundColor: Colors.white,
+        dialogTheme: DialogTheme(
+          backgroundColor: Colors.white, 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), 
+          ),
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          contentTextStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+    ),
       ),
       debugShowCheckedModeBanner: false,
       home: HomePage()

@@ -13,7 +13,7 @@ class Phase {
   int doneRepsCounter = 0;
 
   @HiveField(2)
-  int increment = 0; // percentage 0-100
+  int increment = 0; // in seconds
   
   @HiveField(3)
   List<Step> steps;

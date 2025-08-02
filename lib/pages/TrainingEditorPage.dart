@@ -39,11 +39,15 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   // Sound tab state
   final List<String> _soundOptions = SoundManager().getAvailableSounds();
   late Sounds _sounds;
+
+  //Next step sound state
+  final List<String> _showNextStepSoundOptions = ["None", "Global", "For each phase"];
   
   // Other tab state
   bool _showNextStepToggle = false;
   bool _showChartToggle = false;
   bool _showStepColorsToggle = false;
+  bool _countingSounds = true;
 
   @override
   void initState() {
@@ -80,20 +84,21 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Remove phase?'),
-          content: Text('Are you sure you want to remove this phase?'),
+          title: Text('Remove step?'),
+          backgroundColor: Colors.white,
+          content: Text('Are you sure you want to remove this step?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: darkerblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Remove'),
+              child: Text('Remove', style: TextStyle(color: darkerblue)),
             ),
           ],
         );
@@ -157,15 +162,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
             ),
             hintText: 'Enter training title',
           ),
-          // onChanged: (value) {
-          //   if (_debounce?.isActive ?? false) _debounce!.cancel();
-          //   _debounce = Timer(Duration(milliseconds: 500), () {
-          //     setState(() {
-          //       widget.training.title = value;
-          //     });
-          //     saveTraining();
-          //   });
-          // },
         ),
         actions: [
           TextButton(
@@ -213,9 +209,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.edit, color: darkerblue), // zmiana koloru ikony
+              icon: Icon(Icons.edit, color: darkerblue),
               onPressed: () => showEditTitleDialog(context),
-              splashRadius: 20, // opcjonalnie: zmniejsza efekt nacisku
+              splashRadius: 20, 
             ),
           ],
           backgroundColor: Colors.white,
@@ -284,22 +280,28 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                         child: _selectedTab == 1 ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Training sounds', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Text(
+                                'Training sounds',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                              ),
+                            ),
                             SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
                               color: Colors.white,
                               child: Padding(
-                                padding: EdgeInsets.all(12),
+                                padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                                 child: Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Background sound'), 
+                                      children: [Text('Background sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),), 
                                         DropdownButton2<String>(
                                           underline: SizedBox(), 
-                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: Colors.white )),//darkerblue)),
                                             dropdownStyleData: DropdownStyleData(        
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
@@ -307,12 +309,85 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               ),
                                             ),
                                           value: _sounds.backgroundSound, 
-                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.backgroundSound = v!))],
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: null)],//(v) => setState(() => _sounds.backgroundSound = v!))],
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Next step sound'), 
+                                      children: [Text('Preparation sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
                                         DropdownButton2<String>(
+                                          underline: SizedBox(),
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: Colors.white)),
+                                            dropdownStyleData: DropdownStyleData(       
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ), 
+                                          value: _sounds.preparationSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: null)],//(v) => setState(() => _sounds.preparationSound = v!))],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Text(
+                                'Step type sounds',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              elevation: 2,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)),  
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.inhaleSound, onChanged: (v) => setState(() { _sounds.inhaleSound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => setState(() { _sounds.retentionSound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.exhaleSound, onChanged: (v) => setState(() { _sounds.exhaleSound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.recoverySound, onChanged: (v) => setState(() { _sounds.recoverySound = v!; SoundManager().stopAllSounds();})),
+                                    ]),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Next step sounds',
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                                  ),
+                                  SizedBox(width: 8),
+                                  DropdownButton2<String>(
+                                    buttonStyleData: ButtonStyleData(
+                                      height: 40,
+                                      width: 160,
+                                      elevation: 2,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.white,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    ),
                                           underline: SizedBox(),
                                           iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
                                             dropdownStyleData: DropdownStyleData(       
@@ -322,43 +397,58 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               ),
                                             ), 
                                           value: _sounds.nextSound, 
-                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.nextSound = v!))],
-                                    ),
-                                  ],
-                                ),
+                                          items: _showNextStepSoundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.nextSound = v!))],
                               ),
                             ),
-                            SizedBox(height: 16),
-                            Text('Step type sounds', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
-                            SizedBox(height: 8),
+                            if (_sounds.nextSound !="None")...[
+                              SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
                               color: Colors.white,
                               child: Padding(
-                                padding: EdgeInsets.all(12),
+                                padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                                 child: Column(
                                   children: [
+                                    if(_sounds.nextSound=="Global") ...[
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale'),  
-                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.inhaleSound, onChanged: (v) => setState(() { _sounds.inhaleSound = v!; SoundManager().stopAllSounds();})),
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [Text('Next step sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                        DropdownButton2<String>(
+                                          underline: SizedBox(),
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: Colors.white)),
+                                            dropdownStyleData: DropdownStyleData(       
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ), 
+                                          value: _sounds.nextGlobalSound, 
+                                          items: _soundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: null)],//(v) => setState(() => _sounds.nextGlobalSound = v!))],
+                                    ),
+                                    ] 
+                                    else
+                                    ...[Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),  
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.inhaleSound, onChanged: (v) => null),//setState(() { _sounds.nextInhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention'), 
-                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => setState(() { _sounds.retentionSound = v!; SoundManager().stopAllSounds();})),
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => null),//setState(() { _sounds.nextRetentionSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale'), 
-                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.exhaleSound, onChanged: (v) => setState(() { _sounds.exhaleSound = v!; SoundManager().stopAllSounds();})),
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.exhaleSound, onChanged: (v) => null),//setState(() { _sounds.nextExhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery'), 
-                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.recoverySound, onChanged: (v) => setState(() { _sounds.recoverySound = v!; SoundManager().stopAllSounds();})),
-                                    ]),
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.recoverySound, onChanged: (v) => null), //setState(() { _sounds.nextRecoverySound = v!; SoundManager().stopAllSounds();})),
+                                    ]),],
                                   ],
                                 ),
                               ),
                             ),
+                            ]
                           ],
                         ) : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,7 +464,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     // Description field
                                     Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text('Description', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
+                                      child: Text('Training description', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
                                     ),
                                     TextField(
                                       controller: descriptionController,
@@ -421,6 +511,12 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                           return mediumblue;
                                         } return null;}),
                                       onChanged: null),//(v) => setState(() => _showStepColorsToggle = v)),
+                                    SwitchListTile(title: Text('Counting sound'), value: _countingSounds, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
+                                    WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+                                      if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
+                                        return mediumblue;
+                                      } return null;}),
+                                    onChanged: (v) => setState(() => _countingSounds = v)),
                                   ],
                                 ),
                               ),
@@ -433,10 +529,11 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
           ),
         ),
         floatingActionButton: _selectedTab == 0
-             ? FloatingActionButton(
+             ? FloatingActionButton.extended(
                  onPressed: addPhase,
                  backgroundColor: darkerblue,
-                 child: Icon(Icons.add, color: Colors.white),
+                 label: const Text('Add phase', style: TextStyle(color: Colors.white)),
+                 icon: Icon(Icons.add, color: Colors.white),
                )
              : null,
       ),

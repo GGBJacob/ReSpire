@@ -215,7 +215,7 @@ class _TrainingPageState extends State<TrainingPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Reps: ${phase.reps} Inc: ${phase.increment} %',
+                                'Reps: ${phase.reps} Inc: ${phase.increment} [s]',
                                 style: TextStyle(
                                     color: darkerblue,
                                     fontWeight: FontWeight.bold),
@@ -293,11 +293,12 @@ class _TrainingPageState extends State<TrainingPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(training.title,
-              style: TextStyle(
-                  color: darkerblue,
-                  fontFamily: 'Glacial',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800)),
+          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800)),
+              // style: TextStyle(
+              //     color: darkerblue,
+              //     fontFamily: 'Glacial',
+              //     fontSize: 20,
+              //     fontWeight: FontWeight.w800)),
           backgroundColor: Colors.white,
           leading: IconButton(
               icon: const Icon(
@@ -326,11 +327,12 @@ class _TrainingPageState extends State<TrainingPage> {
         builder: (context) {
           return AlertDialog(
             title: Text("Delete Training"),
+            backgroundColor: Colors.white,
             content: Text("Are you sure you want to delete this training?"),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("Cancel"),
+                child: Text("Cancel", style: TextStyle(color: darkerblue)),
               ),
               TextButton(
                 onPressed: () {
@@ -339,7 +341,7 @@ class _TrainingPageState extends State<TrainingPage> {
                   setState(() {});
                   Navigator.pop(context, true);
                 },
-                child: Text("Delete"),
+                child: Text("Delete", style: TextStyle(color: darkerblue)),
               ),
             ],
           );

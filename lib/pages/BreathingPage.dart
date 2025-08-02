@@ -43,9 +43,9 @@ class _BreathingPageState extends State<BreathingPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Exit"),
+          backgroundColor: Colors.white,
           content: Text(
               "Are you sure you want exit?\nIf you click \"Yes\" your session will end."),
-              //textAlign: TextAlign.center),
           actions: [
             TextButton(
               onPressed: () {

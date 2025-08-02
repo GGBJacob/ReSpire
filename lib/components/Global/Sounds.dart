@@ -22,4 +22,22 @@ class Sounds {
   
   @HiveField(5)
   String recoverySound = 'None';
+
+  @HiveField(6)
+  String preparationSound = 'None';
+
+  @HiveField(7)
+  String nextInhaleSound = 'None';
+
+  @HiveField(8)
+  String nextRetentionSound = 'None';
+
+  @HiveField(9)
+  String nextExhaleSound = 'None';
+
+  @HiveField(10)
+  String nextRecoverySound = 'None';
+
+  @HiveField(11)
+  String nextGlobalSound = 'None';
 }
