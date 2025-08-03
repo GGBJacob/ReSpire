@@ -4,7 +4,8 @@
         "save":"Save",
         "yes":"Yes",
         "no":"No",
-        "remove":"Remove"
+        "remove":"Remove",
+        "delete":"Delete"
     },
 
     "HomePage":{
@@ -18,7 +19,15 @@
     },
 
     "TrainingPage":{
-        "start_button_label":"Start training"
+        "start_button_label":"Start training",
+        "description_placeholder":"No description provided.",
+        "TrainingOverview":{
+            "title":"Training Overview",
+            "reps":"Reps",
+            "increment":"Inc"
+        },
+        "delete_training_dialog_title":"Delete Training",
+        "delete_training_dialog_content":"Are you sure you want to delete this training?"
     },
 
     "TrainingEditorPage":{
@@ -34,6 +43,7 @@
             "edit_title_dialog_hint":"Enter training title",
             "remove_phase_dialog_title":"Remove phase?",
             "remove_phase_dialog_content":"Are you sure you want to remove this phase?",
+            "add_phase_button_label":"Add phase",
 
             "PhaseTile":{
                 "reps":"Reps",
@@ -48,11 +58,32 @@
         },
 
         "SoundsTab":{
-            
+            "TrainingSounds":{
+                "title":"Training sounds",
+                "background_sound":"Background sound",
+                "preparation_sound":"Preparation sound"
+            },
+
+            "StepSounds":{
+                "title":"Step sounds"
+            },
+
+            "NextStepSounds":{
+                "title":"Next step sounds",
+                "none":"None",
+                "global":"Global",
+                "for_each_phase":"For each phase",
+                "next_step_sound_label":"Next step sound"
+            }
         },
 
         "OtherTab":{
-
+            "training_description_label":"Training description",
+            "training_description_hint":"Describe your training...",
+            "next_step_label":"Next step",
+            "chart_label":"Chart",
+            "step_colors_label":"Step colors",
+            "counting_sound_label":"Counting sound"
         }
     },
 
@@ -68,9 +99,9 @@
     },
 
     "StepType":{
-        "inhale":"inhale",
-        "exhale":"exhale",
-        "retention":"retention",
-        "recovery":"recovery"
+        "inhale":"Inhale",
+        "exhale":"Exhale",
+        "retention":"Retention",
+        "recovery":"Recovery"
     }
 }

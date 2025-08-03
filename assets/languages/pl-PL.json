@@ -4,7 +4,8 @@
         "save":"Zapisz",
         "yes":"Tak",
         "no":"Nie",
-        "remove":"Usuń"
+        "remove":"Usuń",
+        "delete":"Usuń"
     },
 
     "HomePage":{
@@ -18,7 +19,15 @@
     },
 
     "TrainingPage":{
-        "start_button_label":"Rozpocznij trening"
+        "start_button_label":"Rozpocznij trening",
+        "description_placeholder":"Brak opisu.",
+        "TrainingOverview":{
+            "title":"Przegląd treningu",
+            "reps":"Powtórzenia",
+            "increment":"Przyrost"
+        },
+        "delete_training_dialog_title":"Usuwanie Treningu",
+        "delete_training_dialog_content":"Na pewno chcesz usunąć ten trening?"
     },
 
     "TrainingEditorPage":{
@@ -34,6 +43,7 @@
             "edit_title_dialog_hint":"Wpisz nazwę treningu",
             "remove_phase_dialog_title":"Usunąć fazę?",
             "remove_phase_dialog_content":"Na pewno chcesz usunąć fazę?",
+            "add_phase_button_label":"Dodaj fazę",
             
             "PhaseTile":{
                 "reps":"Powtórzenia",
@@ -48,11 +58,32 @@
         },
 
         "SoundsTab":{
-            
+            "TrainingSounds":{
+                "title":"Dźwięki treningu",
+                "background_sound":"Dźwięk w tle",
+                "preparation_sound":"Dźwięk przygotowania"
+            },
+
+            "StepSounds":{
+                "title":"Dźwięki kroków"
+            },
+
+            "NextStepSounds":{
+                "title":"Dźwięki kolejnej fazy",
+                "none":"Brak",
+                "global":"Globalny",
+                "for_each_phase":"Dla każdej fazy",
+                "next_step_sound_label":"Dźwięk następnej fazy"
+            }
         },
 
         "OtherTab":{
-
+            "training_description_label":"Opis treningu",
+            "training_description_hint":"Wpisz opis treningu...",
+            "next_step_label":"Kolejny krok",
+            "chart_label":"Wykres",
+            "step_colors_label":"Kolory kroków",
+            "counting_sound_label":"Dźwięk odliczania"
         }
     },
 
@@ -68,9 +99,9 @@
     },
     
     "StepType":{
-        "inhale":"wdech",
-        "exhale":"wydech",
-        "retention":"wstrzymanie",
-        "recovery":"regeneracja"
+        "inhale":"Wdech",
+        "exhale":"Wydech",
+        "retention":"Wstrzymanie",
+        "recovery":"Regeneracja"
     }
 }

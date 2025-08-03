@@ -112,7 +112,7 @@ class InstructionSliderState extends State<InstructionSlider>
   String _stepType(training_step.Step? step) {
     if (step == null) return "";
 
-    String str = _firstToUpperCase(translationProvider.getTranslation("StepType.${step.stepType.name}"));
+    String str = translationProvider.getTranslation("StepType.${step.stepType.name}");
 
     switch (step.stepType) {
 

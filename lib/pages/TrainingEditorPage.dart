@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Sounds.dart';
+import 'package:respire/components/Global/Step.dart';
 import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
@@ -30,7 +31,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   final ScrollController _scrollController = ScrollController();
   TextEditingController trainingNameController = TextEditingController();
   Timer? _debounce;
-  String title = "New training";
 
   // Focus management
   final FocusNode _titleFocusNode = FocusNode();
@@ -87,20 +87,20 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Remove phase?'),
-          content: Text('Are you sure you want to remove this phase?'),
+          title: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.remove_phase_dialog_title")),
+          content: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.remove_phase_dialog_content")),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: Text(translationProvider.getTranslation("PopupButton.cancel")),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Remove'),
+              child: Text(translationProvider.getTranslation("PopupButton.remove")),
             ),
           ],
         );
@@ -285,7 +285,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 6),
                               child: Text(
-                                'Training sounds',
+                                translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.title"),
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                               ),
                             ),
@@ -300,7 +300,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Background sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),), 
+                                      children: [Text(translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.background_sound"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),), 
                                         DropdownButton2<String>(
                                           underline: SizedBox(), 
                                           iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: Colors.white )),//darkerblue)),
@@ -315,7 +315,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Preparation sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      children: [Text(translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.preparation_sound"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
                                         DropdownButton2<String>(
                                           underline: SizedBox(),
                                           iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: Colors.white)),
@@ -336,7 +336,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 6),
                               child: Text(
-                                'Step type sounds',
+                                translationProvider.getTranslation("TrainingEditorPage.SoundsTab.StepSounds.title"),
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                               ),
                             ),
@@ -350,19 +350,19 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 child: Column(
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)),  
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.inhale"), style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)),  
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.inhaleSound, onChanged: (v) => setState(() { _sounds.inhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.retention"), style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => setState(() { _sounds.retentionSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.exhale"), style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.exhaleSound, onChanged: (v) => setState(() { _sounds.exhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery', style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.recovery"), style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)), 
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.recoverySound, onChanged: (v) => setState(() { _sounds.recoverySound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                   ],
@@ -375,7 +375,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                               child: Row(
                                 children: [
                                   Text(
-                                    'Next step sounds',
+                                    translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextStepSounds.title"),
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                                   ),
                                   SizedBox(width: 8),
@@ -431,19 +431,19 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     ] 
                                     else
                                     ...[Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Inhale', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),  
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.inhale"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),  
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.inhaleSound, onChanged: (v) => null),//setState(() { _sounds.nextInhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Retention', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.retention"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.retentionSound, onChanged: (v) => null),//setState(() { _sounds.nextRetentionSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Exhale', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.exhale"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.exhaleSound, onChanged: (v) => null),//setState(() { _sounds.nextExhaleSound = v!; SoundManager().stopAllSounds();})),
                                     ]),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Recovery', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(translationProvider.getTranslation("StepType.recovery"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
                                       AudioSelectionDropdown(items: _soundOptions, selectedValue: _sounds.recoverySound, onChanged: (v) => null), //setState(() { _sounds.nextRecoverySound = v!; SoundManager().stopAllSounds();})),
                                     ]),],
                                   ],
@@ -466,14 +466,14 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     // Description field
                                     Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text('Training description', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
+                                      child: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.training_description_label"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
                                     ),
                                     TextField(
                                       controller: descriptionController,
                                       focusNode: _descriptionFocusNode,
                                       maxLines: 3,
                                       decoration: InputDecoration(
-                                        hintText: 'Enter training description...',
+                                        hintText: translationProvider.getTranslation("TrainingEditorPage.OtherTab.training_description_hint"),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(8), 
                                           borderSide: BorderSide(
@@ -495,25 +495,25 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                       },
                                     ),
                                     SizedBox(height: 12),
-                                    SwitchListTile(title: Text('Next step'), value: _showNextStepToggle, activeColor: darkerblue, inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
+                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.next_step_label")), value: _showNextStepToggle, activeColor: darkerblue, inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
                                       WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
                                         if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
                                           return mediumblue;
                                         } return null;}), 
                                       onChanged: null),//(v) => setState(() => _showNextStepToggle = v)),
-                                    SwitchListTile(title: Text('Chart'), value: _showChartToggle, activeColor: darkerblue, inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
+                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.chart_label")), value: _showChartToggle, activeColor: darkerblue, inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
                                       WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
                                         if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
                                           return mediumblue;
                                         } return null;}),
                                       onChanged: null), //(v) => setState(() => _showChartToggle = v)),
-                                    SwitchListTile(title: Text('Step colors'), value: _showStepColorsToggle, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
+                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.step_colors_label")), value: _showStepColorsToggle, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
                                       WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
                                         if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
                                           return mediumblue;
                                         } return null;}),
                                       onChanged: null),//(v) => setState(() => _showStepColorsToggle = v)),
-                                    SwitchListTile(title: Text('Counting sound'), value: _countingSounds, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
+                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.counting_sound_label")), value: _countingSounds, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
                                     WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
                                       if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
                                         return mediumblue;
@@ -534,7 +534,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
              ? FloatingActionButton.extended(
                  onPressed: addPhase,
                  backgroundColor: darkerblue,
-                 label: const Text('Add phase', style: TextStyle(color: Colors.white)),
+                 label: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.add_phase_button_label"), style: TextStyle(color: Colors.white)),
                  icon: Icon(Icons.add, color: Colors.white),
                )
              : null,

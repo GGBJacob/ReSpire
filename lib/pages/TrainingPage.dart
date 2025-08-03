@@ -102,7 +102,7 @@ class _TrainingPageState extends State<TrainingPage> {
                     padding: EdgeInsets.all(10),
                     child: Text(
                       training.description == ''
-                          ? "No description provided."
+                          ? translationProvider.getTranslation("TrainingPage.description_placeholder")
                           : training.description,
                       style: TextStyle(color: greenblue),
                     ),
@@ -175,7 +175,7 @@ class _TrainingPageState extends State<TrainingPage> {
         child: Row(
           children: [
             Text(
-              "Training Overview",
+              translationProvider.getTranslation("TrainingPage.TrainingOverview.title"),
               style: TextStyle(
                   fontSize: 18, color: darkerblue, fontWeight: FontWeight.w500),
             ),
@@ -217,7 +217,7 @@ class _TrainingPageState extends State<TrainingPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Reps: ${phase.reps} Inc: ${phase.increment} [s]',
+                                '${translationProvider.getTranslation("TrainingPage.TrainingOverview.reps")}: ${phase.reps} ${translationProvider.getTranslation("TrainingPage.TrainingOverview.increment")}: ${phase.increment} [s]',
                                 style: TextStyle(
                                     color: darkerblue,
                                     fontWeight: FontWeight.bold),
@@ -238,7 +238,7 @@ class _TrainingPageState extends State<TrainingPage> {
                                             child: Row(
                                           children: [
                                             Text(
-                                              capitalize(step.stepType.name),
+                                              translationProvider.getTranslation("StepType.${step.stepType.name}"),
                                               style: TextStyle(
                                                   color: darkerblue,
                                                   fontWeight: FontWeight.bold),
@@ -328,13 +328,13 @@ class _TrainingPageState extends State<TrainingPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Delete Training"),
+            title: Text(translationProvider.getTranslation("TrainingPage.delete_training_dialog_title")),
             backgroundColor: Colors.white,
-            content: Text("Are you sure you want to delete this training?"),
+            content: Text(translationProvider.getTranslation("TrainingPage.delete_training_dialog_content")),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("Cancel", style: TextStyle(color: darkerblue)),
+                child: Text(translationProvider.getTranslation("PopupButton.cancel"), style: TextStyle(color: darkerblue)),
               ),
               TextButton(
                 onPressed: () {
@@ -343,7 +343,7 @@ class _TrainingPageState extends State<TrainingPage> {
                   setState(() {});
                   Navigator.pop(context, true);
                 },
-                child: Text("Delete", style: TextStyle(color: darkerblue)),
+                child: Text(translationProvider.getTranslation("PopupButton.delete"), style: TextStyle(color: darkerblue)),
               ),
             ],
           );
