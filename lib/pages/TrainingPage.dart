@@ -3,6 +3,7 @@ import 'package:respire/components/Global/Training.dart';
 import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -154,7 +155,7 @@ class _TrainingPageState extends State<TrainingPage> {
                   minimumSize: Size(screenWidth, 48),
                 ),
                 child: Text(
-                  "Start training",
+                  TranslationProvider().getTranslation("TrainingPage.start_button_label"),
                   style: TextStyle(
                     color: darkerblue,
                     fontSize: 24,

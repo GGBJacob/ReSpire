@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:respire/services/TranslationProvider/AppLanguage.dart';
 import 'package:respire/services/SettingsProvider.dart';
@@ -12,6 +13,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  TranslationProvider translationProvider = TranslationProvider();
   bool photoAdded = false;
 
   Widget _firstBox(double screenWidth) {
@@ -25,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           SizedBox(height: 10),
           Text(
-            "Application",
+            translationProvider.getTranslation("SettingsPage.app_section_title"),
             style: TextStyle(fontSize: 30, fontFamily: 'Glacial'),
           ),
           SizedBox(height: 10),
@@ -39,14 +41,14 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Language'),
+                  Text(translationProvider.getTranslation("SettingsPage.language_label")),
                   DropdownButton2<AppLanguage>(
                     underline: SizedBox(),
                     value: SettingsProvider().currentLanguage,
-                    onChanged: (value) {
-                      setState(() {
-                        SettingsProvider().setLanguage(value!);
-                      });
+                    onChanged: (value) async {
+                      SettingsProvider().setLanguage(value!);
+                      await translationProvider.loadLanguage(value);
+                      setState(() {});
                     },
                     items: AppLanguage.supportedLanguages
                         .map((lang) => DropdownMenuItem<AppLanguage>(
@@ -86,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
         title: Text(
-          "Settings",
+          translationProvider.getTranslation("SettingsPage.page_title"),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: 'Glacial',

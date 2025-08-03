@@ -1,0 +1,76 @@
+{
+    "PopupButton":{
+        "cancel":"Anuluj",
+        "save":"Zapisz",
+        "yes":"Tak",
+        "no":"Nie",
+        "remove":"Usuń"
+    },
+
+    "HomePage":{
+        "default_training_title":"Mój Trening"
+    },
+
+    "SettingsPage":{
+        "page_title":"Ustawienia",
+        "app_section_title":"Aplikacja",
+        "language_label":"Język"
+    },
+
+    "TrainingPage":{
+        "start_button_label":"Rozpocznij trening"
+    },
+
+    "TrainingEditorPage":{
+        
+        "tab":{
+            "training":"Trening",
+            "sounds":"Dźwięki",
+            "other":"Inne"
+        },
+
+        "TrainingTab":{
+            "edit_title_dialog_title":"Edytuj nazwę treningu",
+            "edit_title_dialog_hint":"Wpisz nazwę treningu",
+            "remove_phase_dialog_title":"Usunąć fazę?",
+            "remove_phase_dialog_content":"Na pewno chcesz usunąć fazę?",
+            
+            "PhaseTile":{
+                "reps":"Powtórzenia",
+                "increment":"Przyrost (s)",
+                "add_step_button_label":"Dodaj krok"
+            },
+
+            "StepTile":{
+                "time":"Czas (s)",
+                "type":"Typ"
+            }
+        },
+
+        "SoundsTab":{
+            
+        },
+
+        "OtherTab":{
+
+        }
+    },
+
+    "BreathingPage":{
+        "exit_popup_title":"Wyjdź",
+        "exit_popup_message":"Zakończyć trening?\nJeśli naciśniesz \"Tak\" twój trening zostanie przerwany.",
+        "circle_paused_text":"Wznów",
+        
+        "InstructionSlider":{
+            "get_ready_block_text":"Przygotuj się",
+            "ending_tile_text":"Koniec"
+        }
+    },
+    
+    "StepType":{
+        "inhale":"wdech",
+        "exhale":"wydech",
+        "retention":"wstrzymanie",
+        "recovery":"regeneracja"
+    }
+}

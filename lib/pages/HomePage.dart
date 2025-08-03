@@ -8,6 +8,7 @@ import 'package:respire/pages/SettingsPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/pages/TrainingPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   int inhaleTime = 3;
   int exhaleTime = 3;
   int retentionTime = 3;
+
+  TranslationProvider translationProvider = TranslationProvider();
 
   @override
   void initState() {
@@ -210,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                               MaterialPageRoute(
                                 builder: (context) => TrainingEditorPage(
                                   training:
-                                      Training(title: 'Training', phases: []),
+                                      Training(title: translationProvider.getTranslation("HomePage.default_training_title"), phases: []),
                                 ),
                               ),
                             );

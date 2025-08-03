@@ -10,7 +10,7 @@ class SettingsProvider extends ChangeNotifier {
 
   SettingsProvider._internal(){init();}
 
-  AppLanguage currentLanguage = AppLanguage.polish;
+  AppLanguage currentLanguage = AppLanguage.english;
 
   Future<void> init() async {
     var sharedPreferences = await SharedPreferences.getInstance();

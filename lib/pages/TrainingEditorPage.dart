@@ -6,6 +6,7 @@ import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/TrainingEditorPage/AudioSelectionDropdown.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 import 'package:respire/services/SoundManager.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
@@ -45,6 +46,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   bool _showChartToggle = true;
   bool _showStepColorsToggle = true;
 
+  TranslationProvider translationProvider = TranslationProvider();
+
   @override
   void initState() {
     super.initState();
@@ -80,20 +83,20 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Remove phase?'),
-          content: Text('Are you sure you want to remove this phase?'),
+          title: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.remove_phase_dialog_title")),
+          content: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.remove_phase_dialog_content")),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: Text(translationProvider.getTranslation("PopupButton.cancel")),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Remove'),
+              child: Text(translationProvider.getTranslation("PopupButton.remove")),
             ),
           ],
         );
@@ -136,7 +139,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        title: Text('Edit training title', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue)),
+        title: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_title"), style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue)),
         content: TextField(
           controller: trainingNameController,
           autofocus: true,
@@ -155,7 +158,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                 width: 2.0, 
               ),
             ),
-            hintText: 'Enter training title',
+            hintText: translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_hint"),
           ),
           // onChanged: (value) {
           //   if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -169,11 +172,11 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
         ),
         actions: [
           TextButton(
-            child: Text('Cancel', style: TextStyle(color: darkerblue)),
+            child: Text(translationProvider.getTranslation("PopupButton.cancel"), style: TextStyle(color: darkerblue)),
             onPressed: () => Navigator.of(context).pop(),
           ),
           ElevatedButton(
-            child: Text('Save', style: TextStyle(color: Colors.white)),
+            child: Text(translationProvider.getTranslation("PopupButton.save"), style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
             onPressed: () {
               setState(() {
@@ -230,9 +233,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomSlidingSegmentedControl<int>(
                   children: {
-                    0: Text('Training', style: TextStyle(color: _selectedTab==0?darkerblue:Colors.white, fontWeight:  _selectedTab==0?FontWeight.bold:FontWeight.normal)),
-                    1: Text('Sound', style: TextStyle(color: _selectedTab==1?darkerblue:Colors.white, fontWeight:  _selectedTab==1?FontWeight.bold:FontWeight.normal)),
-                    2: Text('Other', style: TextStyle(color: _selectedTab==2?darkerblue:Colors.white, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
+                    0: Text(translationProvider.getTranslation("TrainingEditorPage.tab.training"), style: TextStyle(color: _selectedTab==0?darkerblue:Colors.white, fontWeight:  _selectedTab==0?FontWeight.bold:FontWeight.normal)),
+                    1: Text(translationProvider.getTranslation("TrainingEditorPage.tab.sounds"), style: TextStyle(color: _selectedTab==1?darkerblue:Colors.white, fontWeight:  _selectedTab==1?FontWeight.bold:FontWeight.normal)),
+                    2: Text(translationProvider.getTranslation("TrainingEditorPage.tab.other"), style: TextStyle(color: _selectedTab==2?darkerblue:Colors.white, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
                   },
                   initialValue: _selectedTab,
                   onValueChanged: (val) {

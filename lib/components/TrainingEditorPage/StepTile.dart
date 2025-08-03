@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:respire/components/Global/Step.dart' as respire;
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -40,6 +41,7 @@ class _StepTileState extends State<StepTile> {
   late TextEditingController durationController;
   FocusNode? durationFocusNode;
   late double currentDuration;
+  TranslationProvider translationProvider = TranslationProvider();
 
   @override
   void initState() {
@@ -139,7 +141,7 @@ class _StepTileState extends State<StepTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Time (s)",
+                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.StepTile.time"),
                   style: TextStyle(
                     color: darkerblue,
                     fontWeight: FontWeight.bold,
@@ -252,7 +254,7 @@ class _StepTileState extends State<StepTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Type",
+                    translationProvider.getTranslation("TrainingEditorPage.TrainingTab.StepTile.type"),
                     style: TextStyle(
                       color: darkerblue,
                       fontWeight: FontWeight.bold,
@@ -288,7 +290,8 @@ class _StepTileState extends State<StepTile> {
                       items: respire.StepType.values
                           .map((e) => DropdownMenuItem(
                                 child: Text(
-                                  e.toString().split('.').last,
+                                  translationProvider.getTranslation("StepType.${e.toString().split('.').last}"),
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 13),
                                 ),
                                 value: e,

@@ -1,0 +1,76 @@
+{ 
+    "PopupButton":{
+        "cancel":"Cancel",
+        "save":"Save",
+        "yes":"Yes",
+        "no":"No",
+        "remove":"Remove"
+    },
+
+    "HomePage":{
+        "default_training_title":"My Training"
+    },
+
+    "SettingsPage":{
+        "page_title":"Settings",
+        "app_section_title":"Application",
+        "language_label":"Language"
+    },
+
+    "TrainingPage":{
+        "start_button_label":"Start training"
+    },
+
+    "TrainingEditorPage":{
+        
+        "tab":{
+            "training":"Trening",
+            "sounds":"Dźwięki",
+            "other":"Inne"
+        },
+
+        "TrainingTab":{
+            "edit_title_dialog_title":"Edit training title",
+            "edit_title_dialog_hint":"Enter training title",
+            "remove_phase_dialog_title":"Remove phase?",
+            "remove_phase_dialog_content":"Are you sure you want to remove this phase?",
+
+            "PhaseTile":{
+                "reps":"Reps",
+                "increment":"Inc (s)",
+                "add_step_button_label":"Add step"
+            },
+
+            "StepTile":{
+                "time":"Time (s)",
+                "type":"Type"
+            }
+        },
+
+        "SoundsTab":{
+            
+        },
+
+        "OtherTab":{
+
+        }
+    },
+
+    "BreathingPage":{
+        "exit_popup_title":"Exit",
+        "exit_popup_message":"Are you sure you want exit?\nIf you click \"Yes\" your session will end.",
+        "circle_paused_text":"Resume",
+        
+        "InstructionSlider":{
+            "get_ready_block_text":"Get ready",
+            "ending_tile_text":"The end"
+        }
+    },
+
+    "StepType":{
+        "inhale":"inhale",
+        "exhale":"exhale",
+        "retention":"retention",
+        "recovery":"recovery"
+    }
+}

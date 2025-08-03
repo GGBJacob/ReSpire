@@ -5,33 +5,28 @@ import 'package:respire/services/TranslationProvider/AppLanguage.dart';
 
 class TranslationProvider {
 
-  TranslationProvider._privateConstructor(){init();}
+  TranslationProvider._privateConstructor(){
+    loadLanguage(SettingsProvider().currentLanguage);
+  }
   // Singleton instance
   static final TranslationProvider _instance = TranslationProvider._privateConstructor();
   factory TranslationProvider() {
     return _instance;
   }
 
-  void init() { //TODO: Remove this line when we finally bring back the language selection
-    SettingsProvider().addListener(() {
-      loadLanguage(SettingsProvider().currentLanguage);
-    });
-    loadLanguage(SettingsProvider().currentLanguage);
-  }
-
-  Map<String, String> _translations = {};
+  Map<String, dynamic> _translations = {};
 
   List<AppLanguage> get supportedLanguages => AppLanguage.supportedLanguages;
 
-  void loadLanguage(AppLanguage language) async{
+  Future<void> loadLanguage(AppLanguage language) async{
 
     if (supportedLanguages.contains(language) == false) {
       throw Exception("Language not supported: ${language.code}");
     }
     try{
       String loadingFile = "${language.localeCode}.json";
-      String jsonContent = await rootBundle.loadString("assets/translations/$loadingFile");
-      _translations = Map<String, String>.from(json.decode(jsonContent));
+      String jsonContent = await rootBundle.loadString("assets/languages/$loadingFile");
+      _translations = Map<String, dynamic>.from(json.decode(jsonContent));
       print("Loading language: $language");
     } catch (e) {
       _translations = {};
@@ -39,8 +34,21 @@ class TranslationProvider {
   }
 
   String getTranslation(String key) {
-    var searchKey = key.toLowerCase();
-    String value = _translations.containsKey(searchKey) ? _translations[searchKey]! : key;
-    return value;
+    if (_translations.isEmpty) {
+      return key;
+    }
+
+    List<String> parts = key.split('.');
+    dynamic value = _translations;
+
+    for(String part in parts){
+      if (value is Map<String, dynamic> && value.containsKey(part)) {
+        value = value[part];
+      } else {
+        return key;
+      }
+    }
+
+    return value is String ? value : key;
   }
 }

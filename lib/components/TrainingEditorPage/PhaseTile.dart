@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/Global/Step.dart' as respire;
 import 'package:respire/components/TrainingEditorPage/StepTile.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart'; 
 
 class PhaseTile extends StatefulWidget {
@@ -26,6 +27,7 @@ class _PhaseTileState extends State<PhaseTile> {
   late TextEditingController incrementController;
   FocusNode? repsFocusNode;
   FocusNode? incrementFocusNode;
+  TranslationProvider translationProvider = TranslationProvider();
 
   @override
   void initState() {
@@ -123,7 +125,7 @@ class _PhaseTileState extends State<PhaseTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Reps",
+                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.PhaseTile.reps"),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: darkerblue,
@@ -239,7 +241,7 @@ class _PhaseTileState extends State<PhaseTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Inc %",
+                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.PhaseTile.increment"),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: darkerblue,
@@ -384,7 +386,7 @@ class _PhaseTileState extends State<PhaseTile> {
             onPressed: addStep,
             icon: Icon(Icons.add, color: darkerblue),
             label: Text(
-              "Add step",
+              translationProvider.getTranslation("TrainingEditorPage.TrainingTab.PhaseTile.add_step_button_label"),
               style: TextStyle(
                 color: darkerblue,
                 fontWeight: FontWeight.bold,

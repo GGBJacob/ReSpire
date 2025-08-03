@@ -31,6 +31,8 @@ class TrainingController{
 
   String _currentSound = "";
 
+  TranslationProvider translationProvider = TranslationProvider();
+
   TrainingController(this.parser) {
     SoundManager().stopAllSounds();
     _preloadSteps();
@@ -105,7 +107,7 @@ class TrainingController{
             second.value = 0;
             training_step.Step _step = stepsQueue.value.elementAt(1)!;
             handleStepChange(_step);
-            String stepName = TranslationProvider().getTranslation(_step.stepType.name);
+            String stepName = translationProvider.getTranslation("StepType.${_step.stepType.name}");
             TextToSpeechService().speak(stepName);
           }
           _stepDelay = false; 

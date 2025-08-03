@@ -35,7 +35,7 @@ flutter:
     - assets/logo_poziom.png
     - assets/logo_bez_tla.png
     - assets/sounds/
-    - assets/translations/
+    - assets/languages/
 
   fonts:
     - family: Glacial

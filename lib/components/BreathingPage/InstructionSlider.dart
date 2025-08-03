@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
+import 'package:respire/components/Global/Step.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 class InstructionBlock {
   final String text;
@@ -28,6 +30,7 @@ class InstructionSliderState extends State<InstructionSlider>
   late Animation<double> _animation;
   final double spacing = 140.0;
   final Duration duration = Duration(milliseconds: 400);
+  TranslationProvider translationProvider = TranslationProvider();
 
   List<InstructionBlock> _blocks = [];
   int i = 1;
@@ -38,7 +41,7 @@ class InstructionSliderState extends State<InstructionSlider>
    
     _blocks.add(
       InstructionBlock(
-        text: "Get ready", 
+        text: translationProvider.getTranslation("BreathingPage.InstructionSlider.get_ready_block_text"), 
         position: 0.0)
     );
     
@@ -70,7 +73,7 @@ class InstructionSliderState extends State<InstructionSlider>
 
     if(oldWidget.change != widget.change) {
       _controller.forward();
-      if(_blocks.last.text!="The end") {
+      if(_blocks.last.text!=translationProvider.getTranslation("BreathingPage.InstructionSlider.ending_tile_text")) {
         addNewStep(widget.stepsQueue.elementAt(2), 2.0);
       }
     }
@@ -83,7 +86,7 @@ class InstructionSliderState extends State<InstructionSlider>
   // }
 
   void addNewStep(training_step.Step? step, double position) {
-    String stepName = step==null ? "The end": _stepType(step);
+    String stepName = step==null ? translationProvider.getTranslation("BreathingPage.InstructionSlider.ending_tile_text") : _stepType(step);
     _blocks.add(
       InstructionBlock(
         text: stepName, 
@@ -92,7 +95,8 @@ class InstructionSliderState extends State<InstructionSlider>
   }
 
    String _firstToUpperCase(String str) {
-    return str[0].toUpperCase() + str.substring(1).toLowerCase();
+    if (str.isEmpty) return str;
+    return str[0].toUpperCase() + str.substring(1);
   }
 
    String _breathDepth(training_step.Step? step) {
@@ -102,42 +106,32 @@ class InstructionSliderState extends State<InstructionSlider>
 
   String _breathType(training_step.Step? step) {
     if (step!.breathType == null) return "";
-    return _firstToUpperCase(step.breathType!.name);
+    return _firstToUpperCase(translationProvider.getTranslation("StepType.${step.breathType!.name}"));
   }
 
   String _stepType(training_step.Step? step) {
     if (step == null) return "";
 
-  String str = _firstToUpperCase(step.stepType.name);
-    switch (str) {
+    String str = _firstToUpperCase(translationProvider.getTranslation("StepType.${step.stepType.name}"));
 
-      case "Inhale":
+    switch (step.stepType) {
+
+      case StepType.inhale:
+      case StepType.exhale:
         if (step.breathType!=null) {
           str += "\n${_breathType(step)}";
         }
         if (step.breathDepth!=null) {
           str += "\n${_breathDepth(step)}";
         }
-        str += "\n${step.duration} sec";
-        return str;
-
-      case "Exhale":
-        String str = "Exhale";
-        if (step.breathType!=null) {
-          str += "\n${_breathType(step)}";
-        }
-        if (step.breathDepth!=null) {
-          str += "\n${_breathDepth(step)}";
-        }
-        str += "\n${step.duration} sec";
-        return str;
-
-      case "Recovery" || "Retention":
-        return "$str\n${step.duration} sec";
+        break;
 
       default:
-        return "";
+        break;  
     }
+    
+    str += "\n${step.duration} s";
+    return str;
   }
 
   double _calculateScale(double position) {

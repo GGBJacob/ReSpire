@@ -6,6 +6,7 @@ import 'package:respire/components/BreathingPage/TrainingParser.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
 import 'package:respire/services/TrainingController.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 
 class BreathingPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _BreathingPageState extends State<BreathingPage> {
   late TrainingController controller;
   int second = 0;
   int steps = 0;
+  TranslationProvider translationProvider = TranslationProvider();
 
   @override
   void initState() {
@@ -42,9 +44,9 @@ class _BreathingPageState extends State<BreathingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Exit"),
+          title: Text(translationProvider.getTranslation("BreathingPage.exit_popup_title")),
           content: Text(
-              "Are you sure you want exit?\nIf you click \"Yes\" your session will end."),
+            translationProvider.getTranslation("BreathingPage.exit_popup_message")),
               //textAlign: TextAlign.center),
           actions: [
             TextButton(
@@ -52,14 +54,14 @@ class _BreathingPageState extends State<BreathingPage> {
                 Navigator.pop(context);
                 controller.resume();
               },
-              child: Text("No", style: TextStyle(color: darkerblue)),
+              child: Text(translationProvider.getTranslation("PopupButton.no"), style: TextStyle(color: darkerblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text("Yes", style: TextStyle(color: darkerblue)),
+              child: Text(translationProvider.getTranslation("PopupButton.yes"), style: TextStyle(color: darkerblue)),
             ),
           ],
         );
@@ -203,7 +205,7 @@ class _BreathingPageState extends State<BreathingPage> {
 
                           isPaused
                               ? Text(
-                                  "Resume",
+                                  translationProvider.getTranslation("BreathingPage.circle_paused_text"),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
