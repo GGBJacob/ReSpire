@@ -46,14 +46,15 @@ class _StepTileState extends State<StepTile> {
     super.initState();
     currentDuration = widget.step.duration;
     durationController =
-        TextEditingController(text: currentDuration>=2 ? currentDuration.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '') : currentDuration.toString());
+        TextEditingController(text: currentDuration.toStringAsFixed(1));
     durationFocusNode = FocusNode();
   }
 
   @override
   void didUpdateWidget(StepTile oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.step.duration != widget.step.duration && !(durationFocusNode?.hasFocus ?? false)) {
+    if (oldWidget.step.duration != widget.step.duration &&
+        !(durationFocusNode?.hasFocus ?? false)) {
       currentDuration = widget.step.duration;
       durationController.text = currentDuration.toString();
     }
@@ -66,21 +67,19 @@ class _StepTileState extends State<StepTile> {
     super.dispose();
   }
 
-  void updateDuration(String value) {
-    String normalizedValue = value.replaceAll(',', '.');
-    
-    double? newDuration = double.tryParse(normalizedValue);
-    if (newDuration != null && newDuration >= 0.1) {
-      currentDuration = (newDuration * 10).roundToDouble() / 10;
-    }
-  }
-
   void commitDurationChange() {
-    String currentText = durationController.text.replaceAll(',', '.');
-    if (currentText != durationController.text) {
-      durationController.text = currentText;
+    double newDuration = currentDuration;
+
+    if (newDuration > 0 && newDuration < 1) {
+      currentDuration = (newDuration * 10).roundToDouble() / 10;
+    } else if (newDuration >= 1) {
+      currentDuration = (newDuration * 2).roundToDouble() / 2;
     }
-    
+
+    currentDuration = currentDuration.clamp(0.1, double.infinity);
+
+    durationController.text = currentDuration.toStringAsFixed(1);
+
     respire.Step newStep = respire.Step(
       duration: currentDuration,
       increment: widget.step.increment,
@@ -118,8 +117,8 @@ class _StepTileState extends State<StepTile> {
         margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: lightblue, 
-          borderRadius: BorderRadius.circular(30), 
+          color: lightblue,
+          borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -162,12 +161,13 @@ class _StepTileState extends State<StepTile> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
                           onTap: () {
-                            double currentValue = double.tryParse(durationController.text) ?? 0.1;
-                            double newValue = ((currentValue>=2 ? currentValue - 1.0:currentValue-0.1)).clamp(0.1, double.infinity);
-                            double roundedValue = (newValue * 10).roundToDouble() / 10;
-                            durationController.text = roundedValue>=2 ? roundedValue.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '') : roundedValue.toString();
-                            updateDuration(roundedValue.toString());
-                            widget.onUpdate();
+                            double currentValue =
+                                double.tryParse(durationController.text) ?? 0.1;
+                            double step = currentValue <= 1 ? 0.1 : 0.5;
+                            double newValue = (currentValue - step)
+                                .clamp(0.1, double.infinity);
+                            currentDuration = newValue;
+                            commitDurationChange();
                           },
                           child: Container(
                             width: 24,
@@ -183,14 +183,17 @@ class _StepTileState extends State<StepTile> {
                       ),
                       Expanded(
                         child: TextField(
-                          key: ValueKey('duration_${widget.step.stepType}_${widget.step.breathType}'),
+                          key: ValueKey(
+                              'duration_${widget.step.stepType}_${widget.step.breathType}'),
                           controller: durationController,
                           focusNode: durationFocusNode,
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           textAlign: TextAlign.center,
                           inputFormatters: [
                             CommaToDecimalFormatter(),
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d*')),
                           ],
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -203,7 +206,7 @@ class _StepTileState extends State<StepTile> {
                             fontSize: 15,
                           ),
                           onChanged: (value) {
-                            updateDuration(value);
+                            currentDuration = double.tryParse(value) ?? 0.1;
                           },
                           onEditingComplete: () {
                             commitDurationChange();
@@ -222,12 +225,13 @@ class _StepTileState extends State<StepTile> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
                           onTap: () {
-                            double currentValue = double.tryParse(durationController.text) ?? 0.1;
-                            double newValue = currentValue>=2 ? currentValue + 1.0 : currentValue + 0.1;
-                            double roundedValue = (newValue * 10).roundToDouble() / 10;
-                            durationController.text = roundedValue>=2 ? roundedValue.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '') : roundedValue.toString();
-                            updateDuration(roundedValue.toString());
-                            widget.onUpdate();
+                            double currentValue =
+                                double.tryParse(durationController.text) ?? 0.1;
+                            double step = currentValue < 1 ? 0.1 : 0.5;
+                            double newValue = (currentValue + step)
+                                .clamp(0.1, double.infinity);
+                            currentDuration = newValue;
+                            commitDurationChange();
                           },
                           child: Container(
                             width: 24,
@@ -287,11 +291,11 @@ class _StepTileState extends State<StepTile> {
                       ),
                       items: respire.StepType.values
                           .map((e) => DropdownMenuItem(
+                                value: e,
                                 child: Text(
                                   e.toString().split('.').last,
                                   style: TextStyle(fontSize: 13),
                                 ),
-                                value: e,
                               ))
                           .toList(),
                       onChanged: (newType) {
