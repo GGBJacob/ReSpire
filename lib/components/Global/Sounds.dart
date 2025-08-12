@@ -40,4 +40,7 @@ class Sounds {
 
   @HiveField(11)
   String nextGlobalSound = 'None';
+
+  @HiveField(12)
+  String countingSound = 'None';
 }
