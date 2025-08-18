@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Sounds.dart';
-import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/TrainingEditorPage/AudioSelectionDropdown.dart';
@@ -29,7 +28,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   late TextEditingController descriptionController;
   final ScrollController _scrollController = ScrollController();
   TextEditingController trainingNameController = TextEditingController();
-  Timer? _debounce;
+  
 
   // Focus management
   final FocusNode _titleFocusNode = FocusNode();
@@ -66,11 +65,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     descriptionController = TextEditingController(text: widget.training.description);
   }
 
-  void saveTraining() {
-    // TODO: implement actual saving logic, e.g., write to local storage or call an API
-    print("Training saved: ${widget.training.title}");
-  }
-
   void addPhase() {
     setState(() {
       phases.add(Phase(reps: 3, steps: [], increment: 0));
@@ -84,7 +78,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       // Clear any active focus when adding new phase to prevent keyboard issues
       FocusScope.of(context).unfocus();
     });
-    saveTraining();
   }
 
   void removePhase(int index) async {
@@ -116,7 +109,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       setState(() {
         phases.removeAt(index);
       });
-      saveTraining();
     }
   }
 
@@ -126,7 +118,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       final phase = phases.removeAt(oldIndex);
       phases.insert(newIndex, phase);
     });
-    saveTraining();
   }
 
   @override
@@ -135,7 +126,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     descriptionController.dispose();
     _titleFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _debounce?.cancel();
     super.dispose();
   }
 
@@ -182,7 +172,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
               setState(() {
                 widget.training.title = trainingNameController.text;
               });
-              saveTraining();
               Navigator.of(context).pop();
             },
           ),
@@ -208,10 +197,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
             style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
             onChanged: (value) {
               widget.training.title = value;
-              if (_debounce?.isActive ?? false) _debounce!.cancel();
-              _debounce = Timer(Duration(milliseconds: 500), () {
-                saveTraining();
-              });
             },
           ),
           actions: [
@@ -242,8 +227,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                     // Clear focus first so TextFields lose focus and commit
                     FocusScope.of(context).unfocus();
                     setState(() => _selectedTab = val);
-                    // Persist training after switching tab so all focus-loss commits are saved
-                    WidgetsBinding.instance.addPostFrameCallback((_) => saveTraining());
                   },
                   decoration: BoxDecoration(
                     color: darkerblue,
@@ -279,7 +262,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                               onDelete: () => removePhase(index),
                               onUpdate: () {
                                 setState(() => widget.training.phases = phases);
-                                saveTraining();
                               },
                             ),
                         ],
@@ -571,7 +553,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                       ),
                                       onChanged: (value) {
                                         widget.training.description = value;
-                                        saveTraining();
                                       },
                                     ),
                                     SizedBox(height: 12),
