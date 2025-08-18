@@ -50,6 +50,11 @@ class _StepTileState extends State<StepTile> {
     durationController =
         TextEditingController(text: currentDuration.toStringAsFixed(1));
     durationFocusNode = FocusNode();
+    durationFocusNode!.addListener(() {
+      if (!(durationFocusNode?.hasFocus ?? true)) {
+        commitDurationChange();
+      }
+    });
   }
 
   @override

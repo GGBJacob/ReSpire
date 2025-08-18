@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Sounds.dart';
-import 'package:respire/components/Global/Step.dart';
 import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
@@ -240,9 +239,11 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                   },
                   initialValue: _selectedTab,
                   onValueChanged: (val) {
-                    setState(() => _selectedTab = val);
-                    // Clear focus when switching tabs to prevent focus issues
+                    // Clear focus first so TextFields lose focus and commit
                     FocusScope.of(context).unfocus();
+                    setState(() => _selectedTab = val);
+                    // Persist training after switching tab so all focus-loss commits are saved
+                    WidgetsBinding.instance.addPostFrameCallback((_) => saveTraining());
                   },
                   decoration: BoxDecoration(
                     color: darkerblue,

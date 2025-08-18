@@ -36,6 +36,24 @@ class _PhaseTileState extends State<PhaseTile> {
     incrementController = TextEditingController(text: widget.phase.increment.toString());
     repsFocusNode = FocusNode();
     incrementFocusNode = FocusNode();
+    repsFocusNode!.addListener(() {
+      if (!(repsFocusNode?.hasFocus ?? true)) {
+        final value = int.tryParse(repsController.text);
+        if (value != null && value > 0) {
+          setState(() => widget.phase.reps = value);
+        }
+        widget.onUpdate();
+      }
+    });
+    incrementFocusNode!.addListener(() {
+      if (!(incrementFocusNode?.hasFocus ?? true)) {
+        final value = int.tryParse(incrementController.text);
+        if (value != null && value >= 0 && value <= 100) {
+          setState(() => widget.phase.increment = value);
+        }
+        widget.onUpdate();
+      }
+    });
   }
 
   @override
