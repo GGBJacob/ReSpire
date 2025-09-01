@@ -42,5 +42,8 @@ class Sounds {
   String? nextGlobalSound;
 
   @HiveField(12)
+  String? nextVoiceover;
+
+  @HiveField(13)
   String? countingSound;
 }

@@ -44,6 +44,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   //Next step sound options
   final Map<String,String?> _showNextStepSoundOptions = {
     "None": null,
+    "Voiceover": "voice",
     "Global": "global",
     "For each phase": "phase",
   };
@@ -377,7 +378,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                           onChanged: (v) => setState(() => _sounds.nextSound = v))],
                               ),
                             ),
-                            if (_sounds.nextSound != null)...[
+                            if (_sounds.nextSound != null && _sounds.nextSound != "voice")...[
                               SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
