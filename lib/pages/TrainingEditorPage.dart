@@ -34,10 +34,10 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   final List<String> _soundOptions = SoundManager().getAvailableSounds();
   late Sounds _sounds;
 
-  //Next step sound options
+  // Next step sound options (internal values kept capitalized for backward compatibility)
   final List<String> _showNextStepSoundOptions = ["None", "Global", "For each phase"];
 
-  //Counting sounds tab state
+  // Counting sounds options (internal values capitalized)
   final List<String> _countingSoundOptions = ["None", "Voice", "Tic", "Gong"];
 
   //To remove, when tic and gong sounds will be added
@@ -311,7 +311,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Counting sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),), 
+                                      children: [Text(translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.counting_sound"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),), 
                                         DropdownButton2<String>(
                                           underline: SizedBox(), 
                                           iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),//darkerblue)),
@@ -322,13 +322,14 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               ),
                                             ),
                                           value: _sounds.countingSound, 
-                                           items: _countingSoundOptions.map((s) {
+                                          items: _countingSoundOptions.map((s) {
                                             final isDisabled = disabledOptions.contains(s);
+                                            final key = s.toLowerCase();
                                             return DropdownMenuItem(
                                               value: s,
                                               enabled: !isDisabled,
                                               child: Text(
-                                                s,
+                                                translationProvider.getTranslation("TrainingEditorPage.SoundOption.$key"),
                                                 style: TextStyle(
                                                   color: isDisabled ? Colors.grey : Colors.black,
                                                 ),
@@ -413,10 +414,22 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               ),
                                             ), 
                                           value: _sounds.nextSound, 
-                                          items: _showNextStepSoundOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => _sounds.nextSound = v!))],
+                                          items: _showNextStepSoundOptions.map((s) {
+                                            String key;
+                                            if (s == "For each phase") {
+                                              key = "for_each_phase";
+                                            } else {
+                                              key = s.toLowerCase();
+                                            }
+                                            return DropdownMenuItem(
+                                              value: s,
+                                              child: Text(translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextStepSounds.$key")),
+                                            );
+                                          }).toList(),
+                                          onChanged: (v) => setState(() => _sounds.nextSound = v!))],
                               ),
                             ),
-                            if (_sounds.nextSound !="None")...[
+                            if (_sounds.nextSound.toLowerCase() !="none")...[
                               SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -426,10 +439,10 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                                 child: Column(
                                   children: [
-                                    if(_sounds.nextSound=="Global") ...[
+                                    if(_sounds.nextSound.toLowerCase()=="global") ...[
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [Text('Next step sound', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
+                                      children: [Text(translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextStepSounds.next_step_sound_label"), style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)), 
                                         DropdownButton2<String>(
                                           underline: SizedBox(),
                                           iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color:Color.fromARGB(123, 26, 147, 168))),

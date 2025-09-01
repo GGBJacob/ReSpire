@@ -20,7 +20,8 @@
 
     "TrainingPage":{
         "start_button_label":"Start training",
-        "description_placeholder":"No description provided.",
+    "description_placeholder":"No description provided.",
+    "description_placeholder_prefix":"Add training description for:",
         "TrainingOverview":{
             "title":"Training Overview",
             "reps":"Reps",
@@ -61,7 +62,8 @@
             "TrainingSounds":{
                 "title":"Training sounds",
                 "background_sound":"Background sound",
-                "preparation_sound":"Preparation sound"
+                "preparation_sound":"Preparation sound",
+                "counting_sound":"Counting sound"
             },
 
             "StepSounds":{
@@ -75,6 +77,12 @@
                 "for_each_phase":"For each phase",
                 "next_step_sound_label":"Next step sound"
             }
+        },
+        "SoundOption":{
+            "none":"None",
+            "voice":"Voice",
+            "tic":"Tic",
+            "gong":"Gong"
         },
 
         "OtherTab":{
@@ -103,5 +111,11 @@
         "exhale":"Exhale",
         "retention":"Retention",
         "recovery":"Recovery"
+    },
+    "ProfilePage":{
+        "page_title":"My Profile",
+        "badges_title":"Badges",
+        "default_name":"John Doe",
+        "default_email":"john.doe@example.com"
     }
 }

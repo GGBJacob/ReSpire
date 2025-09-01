@@ -20,7 +20,8 @@
 
     "TrainingPage":{
         "start_button_label":"Rozpocznij trening",
-        "description_placeholder":"Brak opisu.",
+    "description_placeholder":"Brak opisu.",
+    "description_placeholder_prefix":"Dodaj opis treningu dla:",
         "TrainingOverview":{
             "title":"Przegląd treningu",
             "reps":"Powtórzenia",
@@ -61,7 +62,8 @@
             "TrainingSounds":{
                 "title":"Dźwięki treningu",
                 "background_sound":"Dźwięk w tle",
-                "preparation_sound":"Dźwięk przygotowania"
+                "preparation_sound":"Dźwięk przygotowania",
+                "counting_sound":"Dźwięk odliczania"
             },
 
             "StepSounds":{
@@ -69,12 +71,18 @@
             },
 
             "NextStepSounds":{
-                "title":"Dźwięki kolejnej fazy",
+                "title":"Dźwięki następnego kroku",
                 "none":"Brak",
                 "global":"Globalny",
                 "for_each_phase":"Dla każdej fazy",
-                "next_step_sound_label":"Dźwięk następnej fazy"
+                "next_step_sound_label":"Dźwięk następnego kroku"
             }
+        },
+        "SoundOption":{
+            "none":"Brak",
+            "voice":"Głos",
+            "tic":"Tyk",
+            "gong":"Gong"
         },
 
         "OtherTab":{
@@ -103,5 +111,11 @@
         "exhale":"Wydech",
         "retention":"Wstrzymanie",
         "recovery":"Regeneracja"
+    },
+    "ProfilePage":{
+        "page_title":"Mój Profil",
+        "badges_title":"Odznaki",
+        "default_name":"Jan Kowalski",
+        "default_email":"jan.kowalski@poczta.pl"
     }
 }

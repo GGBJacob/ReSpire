@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:respire/components/Settings/VoiceSelectors.dart';
-import 'package:respire/components/TrainingEditorPage/SoundPicker.dart';
 import 'package:respire/theme/Colors.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,6 +10,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final TranslationProvider translationProvider = TranslationProvider();
   bool photoAdded = false;
 
   Widget _firstBox(double screenWidth) {
@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(children: [
                 SizedBox(height: screenWidth * 0.4 / 2),
                 Text(
-                  "Jan Kowalski",
+                  translationProvider.getTranslation("ProfilePage.default_name"),
                   style: TextStyle(fontSize: 30, fontFamily: 'Glacial'),
                 ),
                 Row(
@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Icon(Icons.mail_outline),
                     SizedBox(width: 10),
                     Text(
-                      "JanKowalski@poczta.pl",
+                      translationProvider.getTranslation("ProfilePage.default_email"),
                       style: TextStyle(fontSize: 20, fontFamily: 'Glacial'),
                     ),
                   ],
@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             SizedBox(height: 20),
             Text(
-              "Badges",
+              translationProvider.getTranslation("ProfilePage.badges_title"),
               style: TextStyle(fontSize: 30, fontFamily: 'Glacial'),
             ),
             SizedBox(height: 20),
@@ -196,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.pop(context);
             },
           ),
-          title: Text("My Profile",
+          title: Text(translationProvider.getTranslation("ProfilePage.page_title"),
               style: TextStyle(
                   fontWeight: FontWeight.bold, fontFamily: 'Glacial')),
           centerTitle: true,

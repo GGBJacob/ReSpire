@@ -6,7 +6,6 @@ import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
-import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 
 class TrainingPage extends StatefulWidget {
   final int index;
@@ -101,9 +100,9 @@ class _TrainingPageState extends State<TrainingPage> {
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      training.description == ''
-                          ? translationProvider.getTranslation("TrainingPage.description_placeholder")
-                          : training.description,
+            training.description == ''
+              ? '${translationProvider.getTranslation("TrainingPage.description_placeholder_prefix")} ${training.title}'
+              : training.description,
                       style: TextStyle(color: greenblue),
                     ),
                   ),

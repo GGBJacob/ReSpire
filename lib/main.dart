@@ -42,8 +42,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
+    final translationProvider = TranslationProvider();
+    return AnimatedBuilder(
+      animation: translationProvider,
+      builder: (context, _) => MaterialApp(
+        theme: ThemeData(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         textSelectionTheme: TextSelectionThemeData(
@@ -72,9 +75,10 @@ class MainApp extends StatelessWidget {
             color: Colors.black,
           ),
     ),
+        ),
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: HomePage()
     );
   }
 }

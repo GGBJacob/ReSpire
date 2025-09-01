@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:respire/services/SettingsProvider.dart';
 import 'package:respire/services/TranslationProvider/AppLanguage.dart';
 
-class TranslationProvider {
+class TranslationProvider extends ChangeNotifier {
 
   TranslationProvider._privateConstructor(){
     loadLanguage(SettingsProvider().currentLanguage);
@@ -27,7 +28,8 @@ class TranslationProvider {
       String loadingFile = "${language.localeCode}.json";
       String jsonContent = await rootBundle.loadString("assets/languages/$loadingFile");
       _translations = Map<String, dynamic>.from(json.decode(jsonContent));
-      print("Loading language: $language");
+  print("Loading language: $language");
+  notifyListeners();
     } catch (e) {
       _translations = {};
     }
