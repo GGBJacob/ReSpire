@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:respire/components/BreathingPage/TrainingParser.dart';
+import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/Step.dart' as training_step;
 import 'package:respire/services/SoundManager.dart';
 import 'package:respire/services/TextToSpeechService.dart';
@@ -29,6 +30,8 @@ class TrainingController {
   bool _stepDelay = true;
   int _stopTimer = 2;
 
+  late Sounds _sounds;
+
   String? _currentSound;
 
   TranslationProvider translationProvider = TranslationProvider();
@@ -36,6 +39,7 @@ class TrainingController {
   TrainingController(this.parser) {
     SoundManager().stopAllSounds();
     _remainingTime = parser.training.settings.preparationDuration * 1000;
+    _sounds = parser.training.sounds;
     _preloadSteps();
     _start();
   }
@@ -75,12 +79,75 @@ class TrainingController {
     _start();
   }
 
-  Future<void> handleStepChange(training_step.Step step) async {
+  Future<void> _handleBackgroundSoundChange(training_step.Step step) async {
     await SoundManager()
         .pauseSoundFadeOut(_currentSound, (_stepDelayDuration / 2).toInt());
     _currentSound = step.sound;
     await SoundManager()
         .playSoundFadeIn(_currentSound, (_stepDelayDuration / 2).toInt());
+  }
+
+  void _playCountingSound(previousSecond) {
+    switch (_sounds.countingSound) {
+      case "Voice":
+        TextToSpeechService().readNumber(previousSecond + 1);
+        break;
+      case "None":
+        break;
+      default:
+        SoundManager().playSound(_sounds.countingSound!);
+        break;
+    }
+  }
+
+  void _playNextStepSound(stepType, soundType) {
+    switch (soundType) {
+      case "Voice":
+        String stepName =
+            translationProvider.getTranslation("StepType.${stepType.name}");
+        TextToSpeechService().speak(stepName);
+        break;
+      case "None":
+        break;
+      default:
+        SoundManager().playSound(soundType);
+        Future.delayed(const Duration(seconds: 1), () {
+          SoundManager().stopSound(soundType);
+        });
+        break;
+    }
+  }
+
+  void _handleNextStepSoundPhase(stepType) {
+    switch (stepType) {
+      case training_step.StepType.inhale:
+        _playNextStepSound(stepType, _sounds.nextInhaleSound);
+        break;
+      case training_step.StepType.exhale:
+        _playNextStepSound(stepType, _sounds.nextExhaleSound);
+        break;
+      case training_step.StepType.recovery:
+        _playNextStepSound(stepType, _sounds.nextRecoverySound);
+        break;
+      case training_step.StepType.retention:
+        _playNextStepSound(stepType, _sounds.nextRetentionSound);
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _handleNextStepSoundOption(stepType) {
+    switch (_sounds.nextSound) {
+      case "Global":
+        _playNextStepSound(stepType, _sounds.nextGlobalSound);
+        break;
+      case "For each phase":
+        _handleNextStepSoundPhase(stepType);
+        break;
+      default:
+        break;
+    }
   }
 
   void _start() {
@@ -91,7 +158,7 @@ class TrainingController {
       if (previousSecond > _remainingTime ~/ 1000 && _stopTimer != 0) {
         previousSecond = _remainingTime ~/ 1000;
         second.value = previousSecond + 1;
-        TextToSpeechService().readNumber(previousSecond + 1);
+        _playCountingSound(previousSecond);
       }
 
       //time update
@@ -105,10 +172,8 @@ class TrainingController {
         if (stepsQueue.value.elementAt(1) != null) {
           second.value = 0;
           training_step.Step _step = stepsQueue.value.elementAt(1)!;
-          handleStepChange(_step);
-          String stepName =
-              translationProvider.getTranslation("StepType.${_step.stepType.name}");
-          TextToSpeechService().speak(stepName);
+          _handleBackgroundSoundChange(_step);
+          _handleNextStepSoundOption(_step.stepType);
         }
         _stepDelay = false;
 
