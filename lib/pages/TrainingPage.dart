@@ -100,11 +100,31 @@ class _TrainingPageState extends State<TrainingPage> {
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: Text(
-                      training.description == ''
-                          ? translationProvider.getTranslation("TrainingPage.description_placeholder")
-                          : training.description,
-                      style: TextStyle(color: greenblue),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: greenblue), // domyślny styl dla zwykłego tekstu
+                        children: [
+                          if (training.description == '')
+                            TextSpan(
+                              text: translationProvider.getTranslation("TrainingPage.description_placeholder"),
+                            ),
+                          if (training.description == '')
+                            TextSpan(
+                              text: training.title, 
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          if (training.description == '')
+                            TextSpan(
+                              text: ".",
+                            ),
+                          if (training.description != '')
+                            TextSpan(
+                              text: training.description,
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ))));

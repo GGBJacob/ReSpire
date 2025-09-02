@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Sounds.dart';
-import 'package:respire/components/Global/Step.dart';
 import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/Settings.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 import 'package:respire/components/TrainingEditorPage/SoundSelectionRow.dart';
 import 'package:respire/services/SoundManager.dart';
@@ -26,6 +26,8 @@ class TrainingEditorPage extends StatefulWidget {
 
 class _TrainingEditorPageState extends State<TrainingEditorPage> {
   late List<Phase> phases;
+  late Settings settings;
+  late TextEditingController preparationController;
   late TextEditingController descriptionController;
   final ScrollController _scrollController = ScrollController();
   TextEditingController trainingNameController = TextEditingController();
@@ -34,6 +36,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   // Focus management
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _descriptionFocusNode = FocusNode();
+  FocusNode? _preparationFocusNode;
 
   int _selectedTab = 0;
   // Sound tab state
@@ -57,7 +60,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   bool _showNextStepToggle = false;
   bool _showChartToggle = false;
   bool _showStepColorsToggle = false;
-  bool _countingSounds = true;
 
   TranslationProvider translationProvider = TranslationProvider();
 
@@ -66,8 +68,11 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     super.initState();
     phases = widget.training.phases;
     _sounds = widget.training.sounds;
+    settings = widget.training.settings;
     trainingNameController.text = widget.training.title;
     descriptionController = TextEditingController(text: widget.training.description);
+    preparationController = TextEditingController(text: widget.training.settings.preparationDuration.toString());
+    _preparationFocusNode = FocusNode();
   }
 
   void saveTraining() {
@@ -103,13 +108,13 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.cancel")),
+              child: Text(translationProvider.getTranslation("PopupButton.cancel"), style: TextStyle(color: darkerblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.remove")),
+              child: Text(translationProvider.getTranslation("PopupButton.remove"), style: TextStyle(color: darkerblue)),
             ),
           ],
         );
@@ -137,8 +142,10 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   void dispose() {
     trainingNameController.dispose();
     descriptionController.dispose();
+    preparationController.dispose();
     _titleFocusNode.dispose();
     _descriptionFocusNode.dispose();
+    _preparationFocusNode?.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -476,12 +483,71 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                           return mediumblue;
                                         } return null;}),
                                       onChanged: null),//(v) => setState(() => _showStepColorsToggle = v)),
-                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.counting_sound_label")), value: _countingSounds, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
-                                    WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                                      if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
-                                        return mediumblue;
-                                      } return null;}),
-                                    onChanged: (v) => setState(() => _countingSounds = v)),
+                                    ListTile(
+                                      title: Text(
+                                        translationProvider.getTranslation("TrainingEditorPage.OtherTab.preparation_duration_label")
+                                      ),
+                                      trailing: Container(
+                                        width: 90,
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(18),
+                                          border: Border.all(color: darkerblue, width: 2),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(18),
+                                                onTap: () {
+                                                  int currentValue = int.tryParse(preparationController.text) ?? 1;
+                                                  int newValue = (currentValue - 1).clamp(1, 999);
+                                                  preparationController.text = newValue.toString();
+                                                  setState(() {
+                                                    widget.training.settings.preparationDuration = newValue;
+                                                  });
+                                                  saveTraining();
+                                                },
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(8),
+                                                  child: Icon(Icons.remove, size: 16),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Center(
+                                                child: Text(
+                                                  preparationController.text,
+                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                            Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(18),
+                                                onTap: () {
+                                                  int currentValue = int.tryParse(preparationController.text) ?? 1;
+                                                  int newValue = (currentValue + 1).clamp(1, 999);
+                                                  preparationController.text = newValue.toString();
+                                                  setState(() {
+                                                    widget.training.settings.preparationDuration = newValue;
+                                                  });
+                                                  saveTraining();
+                                                },
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(8),
+                                                  child: Icon(Icons.add, size: 16),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

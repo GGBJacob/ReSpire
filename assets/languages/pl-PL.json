@@ -20,7 +20,7 @@
 
     "TrainingPage":{
         "start_button_label":"Rozpocznij trening",
-        "description_placeholder":"Brak opisu.",
+        "description_placeholder":"Dodaj opis treningu ",
         "TrainingOverview":{
             "title":"Przegląd treningu",
             "reps":"Powtórzenia",
@@ -53,7 +53,9 @@
 
             "StepTile":{
                 "time":"Czas (s)",
-                "type":"Typ"
+                "type":"Typ",
+                "remove_step_dialog_title":"Usunąć krok?",
+                "remove_step_dialog_content":"Na pewno chcesz usunąć krok?"
             }
         },
 
@@ -85,7 +87,7 @@
             "next_step_label":"Kolejny krok",
             "chart_label":"Wykres",
             "step_colors_label":"Kolory kroków",
-            "counting_sound_label":"Dźwięk odliczania"
+            "preparation_duration_label":"Długość trwania fazy przygotowania (s)"
         }
     },
 

@@ -20,7 +20,7 @@
 
     "TrainingPage":{
         "start_button_label":"Start training",
-        "description_placeholder":"No description provided.",
+        "description_placeholder":"Provide description for training ",
         "TrainingOverview":{
             "title":"Training Overview",
             "reps":"Reps",
@@ -33,9 +33,9 @@
     "TrainingEditorPage":{
         
         "tab":{
-            "training":"Trening",
-            "sounds":"Dźwięki",
-            "other":"Inne"
+            "training":"Training",
+            "sounds":"Sounds",
+            "other":"Other"
         },
 
         "TrainingTab":{
@@ -53,7 +53,9 @@
 
             "StepTile":{
                 "time":"Time (s)",
-                "type":"Type"
+                "type":"Type",
+                "remove_step_dialog_title":"Remove step?",
+                "remove_step_dialog_content":"Are you sure you want to remove this step?"
             }
         },
 
@@ -86,7 +88,7 @@
             "next_step_label":"Next step",
             "chart_label":"Chart",
             "step_colors_label":"Step colors",
-            "counting_sound_label":"Counting sound"
+            "preparation_duration_label":"Duration of preparation phase (s)"
         }
     },
 

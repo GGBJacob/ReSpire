@@ -77,21 +77,21 @@ class _PhaseTileState extends State<PhaseTile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Remove phase?'),
+          title: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.StepTile.remove_step_dialog_title")),
           backgroundColor: Colors.white,
-          content: Text('Are you sure you want to remove this phase?'),
+          content: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.StepTile.remove_step_dialog_content")),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: Text(translationProvider.getTranslation("PopupButton.cancel"), style: TextStyle(color: darkerblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Remove'),
+              child: Text(translationProvider.getTranslation("PopupButton.remove"), style: TextStyle(color: darkerblue)),
             ),
           ],
         );
