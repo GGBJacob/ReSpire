@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
 
 enum SoundListType {
@@ -19,7 +20,7 @@ class SoundManager{
 
   ValueNotifier<String?> currentlyPlaying = ValueNotifier<String?>(null);
 
-  static const Map<String,String?> _longSounds = {
+  static final Map<String,String?> _longSounds = {
     "Birds":"sounds/birds.mp3",
     "Ainsa":"sounds/Ainsa.mp3",
     "Rain":"sounds/rain.mp3",
@@ -27,7 +28,7 @@ class SoundManager{
     
   };
 
-  static const Map<String,String?> _shortSounds = {
+  static final Map<String,String?> _shortSounds = {
     "Click":"sounds/click.mp3",
     "Pop":"sounds/pop.mp3",
     "Beep":"sounds/beep.mp3",
@@ -36,8 +37,6 @@ class SoundManager{
 
   ///A map of available sounds in the assets folder.\
   ///The keys are the sound names, and the values are the paths to the sound files.
-  ///
-  // MAKE SURE TO ADD YOUR SOUNDS TO THIS MAP!
   static final Map<String,String?> _availableSounds = {
     ..._longSounds,
     ..._shortSounds,
@@ -238,12 +237,20 @@ class SoundManager{
     currentlyPlaying.value = null;
   }
 
-  void addUserSound(String soundName, String soundPath, SoundListType type) {
-    if (type == SoundListType.longSounds) {
-      _longSounds[soundName] = soundPath;
-    } else {
-      _shortSounds[soundName] = soundPath;
+  void refreshSoundsList() {
+    _availableSounds.clear();
+    _availableSounds.addAll(_longSounds);
+    _availableSounds.addAll(_shortSounds);
+    _availableSounds.addAll(UserSoundsDatabase().userLongSounds);
+    _availableSounds.addAll(UserSoundsDatabase().userShortSounds);
+  }
+
+  void removeUserSound(String soundName, SoundListType type) {
+    _availableSounds.remove(soundName);
+    if (_audioPlayers.containsKey(soundName)) {
+      _audioPlayers[soundName]!.dispose();
+      _audioPlayers.remove(soundName);
     }
-    _availableSounds[soundName] = soundPath;
+    PresetDataBase().clearUserSound(soundName);
   }
 }

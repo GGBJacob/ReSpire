@@ -116,4 +116,11 @@ class PresetDataBase {
   {
     _box.put('presets', presetList);
   }
+
+  void clearUserSound(String soundName) {
+    for (var training in presetList) {
+      training.sounds.clearUserSound(soundName);
+    }
+    updateDataBase();
+  }
 }

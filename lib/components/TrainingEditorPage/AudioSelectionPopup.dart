@@ -29,19 +29,20 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
   @override
   Widget build(BuildContext context) {
     
-    final Map<String,String> userItems = 
+    final Map<String,String> userItemsMap = 
       widget.listType == SoundListType.longSounds
           ? UserSoundsDatabase().userLongSounds
           : UserSoundsDatabase().userShortSounds;
 
-    final items = {
+    final itemsMap = {
       "None": null,
-      ..._soundManager.getSounds(widget.listType),
-      ...userItems,
+      ..._soundManager.getSounds(widget.listType)
     };
 
-
+    final items = itemsMap.entries.toList();
+    final userItems = userItemsMap.entries.toList();
     final combinedLength = items.length + (userItems.isNotEmpty ? 1 : 0) + userItems.length;
+
 
     return AlertDialog(
       actions: [
@@ -50,12 +51,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: _addCustomSound,
-                  icon: const Icon(Icons.add, color: Colors.white),
-                  label: const Text("Add Custom Sound", style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
-                ),
+                child: _addCustomSoundButton(),
               ),
             ),
             TextButton(
@@ -70,33 +66,32 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
         width: 300,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxHeight: 400),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: items.length,
-            itemBuilder: (context, index) {
+          child: RawScrollbar(
+            radius: Radius.circular(10),
+            thickness: 3,
+            thumbVisibility: false,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: combinedLength,
+              itemBuilder: (context, index) {
 
-              if (index == items.length && userItems.isNotEmpty) {
-              return const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              );
-            }
+                //preloaded items
+                if (index < items.length) {
+                  final entry = items[index];
+                  return _tileForPresetEntry(entry);
+                }
 
-              final entry = items.entries.elementAt(index);
-              return ValueListenableBuilder<String?>(
-                valueListenable: _soundManager.currentlyPlaying,
-                builder: (context, currentlyPlaying, _) {
-                  return AudioListTile(
-                    entry: entry,
-                    isPlaying: currentlyPlaying == entry.key,
-                    isSelected: widget.selectedValue == entry.key || widget.selectedValue == entry.value,
-                    onPlayToggle: () => _togglePlay(entry.key),
-                    onTap: () => Navigator.of(context).pop(entry.key),
-                  );
-                },
-              );
-            },
-          ),
+                if (index == items.length && userItems.isNotEmpty) {
+                  return _divider();
+                }
+
+                // user items
+                final userIndex = index - items.length - (userItems.isNotEmpty ? 1 : 0);
+                final entry = userItems[userIndex];
+                return _tileForUserEntry(entry);
+              },
+            ),
+          ) 
         ),
       ),
     );
@@ -116,6 +111,68 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
 
       setState(() {}); 
     }
+  }
+
+  Widget _tileForPresetEntry(MapEntry<String, String?> entry) {
+    return ValueListenableBuilder<String?>(
+      valueListenable: _soundManager.currentlyPlaying,
+      builder: (context, currentlyPlaying, _) {
+        return AudioListTile(
+          key: ValueKey(entry.key),
+          entry: entry,
+          isPlaying: currentlyPlaying == entry.key,
+          isSelected: widget.selectedValue == entry.key || widget.selectedValue == entry.value,
+          onPlayToggle: () => _togglePlay(entry.key),
+          onTap: () => Navigator.of(context).pop(entry.key),
+        );
+      },
+    );
+  }
+
+  Widget _tileForUserEntry(MapEntry<String, String?> entry) {
+    return ValueListenableBuilder<String?>(
+      valueListenable: _soundManager.currentlyPlaying,
+      builder: (context, currentlyPlaying, _) {
+        return AudioListTile(
+          key: ValueKey(entry.key),
+          entry: entry,
+          isPlaying: currentlyPlaying == entry.key,
+          isSelected: widget.selectedValue == entry.key || widget.selectedValue == entry.value,
+          onPlayToggle: () => _togglePlay(entry.key),
+          onTap: () => Navigator.of(context).pop(entry.key),
+          isRemovable: true,
+          onRemove: () {
+            UserSoundsDatabase().removeSound(entry.key, SoundListType.longSounds);
+            setState(() {});
+          },
+        );
+      },
+    );
+  }
+
+  Widget _addCustomSoundButton() {
+    return TextButton.icon(
+      onPressed: _addCustomSound,
+      icon: const Icon(Icons.add, color: Colors.white),
+      label: const Text("Add Custom Sound", style: TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
+    );
+  }
+
+  Widget _divider() {
+    return Padding(
+          padding: const EdgeInsets.fromLTRB(8, 12, 8, 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'User sounds',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              const Divider(thickness: 1),
+            ],
+          ),
+        );
   }
 
   @override

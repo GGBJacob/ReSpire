@@ -4,7 +4,6 @@ import 'package:respire/components/Global/Step.dart';
 import 'dart:async';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/Global/Phase.dart';
-import 'package:respire/components/TrainingEditorPage/AudioSelectionDropdown.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 import 'package:respire/components/TrainingEditorPage/SoundSelectionRow.dart';
 import 'package:respire/services/SoundManager.dart';
@@ -44,7 +43,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   //Next step sound options
   final Map<String,String?> _showNextStepSoundOptions = {
     "None": null,
-    "Voiceover": "voice",
     "Global": "global",
     "For each phase": "phase",
   };

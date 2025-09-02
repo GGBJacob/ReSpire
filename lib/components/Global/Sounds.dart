@@ -46,4 +46,47 @@ class Sounds {
 
   @HiveField(13)
   String? countingSound;
+
+  
+void clearUserSound(String soundName) {
+    if (backgroundSound == soundName) {
+      backgroundSound = null;
+    }
+    if (inhaleSound == soundName) {
+      inhaleSound = null;
+    }
+    if (retentionSound == soundName) {
+      retentionSound = null;
+    }
+    if (exhaleSound == soundName) {
+      exhaleSound = null;
+    }
+    if (recoverySound == soundName) {
+      recoverySound = null;
+    }
+    if (preparationSound == soundName) {
+      preparationSound = null;
+    }
+    if (nextInhaleSound == soundName) {
+      nextInhaleSound = null;
+    }
+    if (nextRetentionSound == soundName) {
+      nextRetentionSound = null;
+    }
+    if (nextExhaleSound == soundName) {
+      nextExhaleSound = null;
+    }
+    if (nextRecoverySound == soundName) {
+      nextRecoverySound = null;
+    }
+    if (nextGlobalSound == soundName) {
+      nextGlobalSound = null;
+    }
+    if (nextVoiceover == soundName) {
+      nextVoiceover = null;
+    }
+    if (countingSound == soundName) {
+      countingSound = null;
+    }
+  }
 }

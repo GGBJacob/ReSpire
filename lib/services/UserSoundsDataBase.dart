@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:respire/services/SoundManager.dart';
 
 class UserSoundsDatabase {
   static final UserSoundsDatabase _instance = UserSoundsDatabase._internal();
@@ -30,33 +31,38 @@ class UserSoundsDatabase {
     }
   }
 
-  void addShortSound(MapEntry<String, String> soundPath) {
-    if (!_userShortSounds.containsKey(soundPath.key)) {
-      _userShortSounds[soundPath.key] = soundPath.value;
+  void addShortSound(MapEntry<String, String> sound) {
+    if (!_userShortSounds.containsKey(sound.key)) {
+      _userShortSounds[sound.key] = sound.value;
       updateDatabase();
     }
   }
 
-  void addLongSound(MapEntry<String, String> soundPath) {
-    if (!_userLongSounds.containsKey(soundPath.key)) {
-      _userLongSounds[soundPath.key] = soundPath.value;
+  void addLongSound(MapEntry<String, String> sound) {
+    if (!_userLongSounds.containsKey(sound.key)) {
+      _userLongSounds[sound.key] = sound.value;
       updateDatabase();
     }
   }
 
-  void removeShortSound(String soundPath) {
-    _userShortSounds.remove(soundPath);
+  void removeSound(String soundName, SoundListType type) {
+    if (type == SoundListType.longSounds) {
+      _userLongSounds.remove(soundName);
+    } else {
+      _userShortSounds.remove(soundName);
+    }
     updateDatabase();
+    postRemoveSound(soundName, type);
   }
 
-  void removeLongSound(String soundPath) {
-    _userLongSounds.remove(soundPath);
-    updateDatabase();
+  void postRemoveSound(String soundName, SoundListType type) {
+    SoundManager().removeUserSound(soundName, type);
   }
 
   void updateDatabase() {
     _shortBox.put('userShortSounds', _userShortSounds);
     _longBox.put('userLongSounds', _userLongSounds);
+    SoundManager().refreshSoundsList();
   }
 
 }
