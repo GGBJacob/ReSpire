@@ -56,37 +56,20 @@ class TrainingParser {
         break;
     }
 
-    // Compute base duration. If both a per-step increment AND a phase increment are set,
-    // we prioritize the phase increment (simpler expected linear growth) and IGNORE the step increment
-    // to avoid compounded growth (e.g. 0.5, 1.55, 2.6). This yields 0.5, 1.5, 2.5 ... when phase increment=1.
-    double durationSeconds;
-    final bool hasPhaseInc = currentPhase.increment > 0;
-    final bool hasStepInc = currentStep.increment != null && currentStep.increment!.value != 0;
-    if (hasPhaseInc && hasStepInc) {
-      durationSeconds = currentStep.duration; // ignore step-level increment when phase increment active
-    } else {
-      durationSeconds = currentStep.getStepDuration(doneReps);
-    }
-
-    // Apply phase-level progression (seconds) after deciding base
-    if (hasPhaseInc && doneReps > 0) {
-      durationSeconds += currentPhase.increment * doneReps;
-    }
+  // Simple phase-based progression: every repetition adds phase.increment seconds to ALL steps
+  // rep index = doneReps (0 for first repetition). duration(rep) = base + doneReps * phase.increment
+  double durationSeconds = currentStep.duration + (currentPhase.increment * doneReps);
 
     // We need AnimatedCircle to use the progressed duration. Since Step.duration is final,
     // we create a lightweight clone with the computed duration while keeping original definition
     // (including its increment) intact inside currentPhase.steps for future repetitions.
     final progressedStep = training_step.Step(
       duration: durationSeconds,
-      increment: currentStep.increment, // keep reference to per-step increment
       stepType: currentStep.stepType,
       breathType: currentStep.breathType,
       breathDepth: currentStep.breathDepth,
       sound: currentStep.sound,
     );
-
-    // NOTE (future): If phase increment becomes percentage-based, apply multiplicative logic above
-    // before cloning (e.g., durationSeconds *= 1 + phaseIncPct/100 * doneReps).
 
     return {
       "step": progressedStep,
