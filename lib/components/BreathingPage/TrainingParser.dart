@@ -22,6 +22,7 @@ class TrainingParser {
 
         if (doneReps == currentPhase.reps) {
           phaseID++;
+          doneReps = 0;
 
           if (phaseID == training.phases.length) {
             return null;
