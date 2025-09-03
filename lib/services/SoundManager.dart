@@ -29,9 +29,9 @@ class SoundManager{
   };
 
   static final Map<String,String?> _shortSounds = {
-    "Click":"sounds/click.mp3",
-    "Pop":"sounds/pop.mp3",
-    "Beep":"sounds/beep.mp3",
+    "Notification":"sounds/new-notification.mp3",
+    "Whistle Up":"sounds/whistle-up.mp3",
+    "Whistle Down":"sounds/whistle-down.mp3",
   };
 
 
