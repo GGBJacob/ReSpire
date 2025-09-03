@@ -394,7 +394,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 child: Column(
                                   children: [
                                     if(_sounds.nextSound=="global") ...[
-                                      SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextStepSounds.global"), selectedValue: _sounds.nextGlobalSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.nextGlobalSound = v; }))
+                                      SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextStepSounds.global"), selectedValue: _sounds.nextGlobalSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextGlobalSound = v; }))
                                     ] 
                                     else
                                     ...[SoundSelectionRow(label: translationProvider.getTranslation("StepType.inhale"), selectedValue: _sounds.nextInhaleSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextInhaleSound = v; })),

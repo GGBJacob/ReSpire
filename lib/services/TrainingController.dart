@@ -175,8 +175,8 @@ class TrainingController {
         if (stepsQueue.value.elementAt(1) != null) {
           second.value = 0;
           training_step.Step _step = stepsQueue.value.elementAt(1)!;
-          _handleBackgroundSoundChange(_step);
           _handleNextStepSoundOption(_step.stepType);
+          _handleBackgroundSoundChange(_step);
         }
         _stepDelay = false;
 
