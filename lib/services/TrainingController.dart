@@ -69,13 +69,13 @@ class TrainingController {
 
   void pause() {
     isPaused.value = true;
-    SoundManager().pauseSound(_currentSound!);
+    SoundManager().pauseSound(_currentSound);
     _timer?.cancel();
   }
 
   void resume() {
     isPaused.value = false;
-    SoundManager().playSound(_currentSound!);
+    SoundManager().playSound(_currentSound);
     _start();
   }
 
@@ -95,12 +95,12 @@ class TrainingController {
       case "None":
         break;
       default:
-        SoundManager().playSound(_sounds.countingSound!);
+        SoundManager().playSound(_sounds.countingSound);
         break;
     }
   }
 
-  void _playNextStepSound(stepType, soundType) {
+  void _playNextStepSound(training_step.StepType stepType, String? soundType) {
     switch (soundType) {
       case "Voice":
         String stepName =
@@ -118,7 +118,7 @@ class TrainingController {
     }
   }
 
-  void _handleNextStepSoundPhase(stepType) {
+  void _handleNextStepSoundPhase(training_step.StepType stepType) {
     switch (stepType) {
       case training_step.StepType.inhale:
         _playNextStepSound(stepType, _sounds.nextInhaleSound);
@@ -137,12 +137,12 @@ class TrainingController {
     }
   }
 
-  void _handleNextStepSoundOption(stepType) {
+  void _handleNextStepSoundOption(training_step.StepType stepType) {
     switch (_sounds.nextSound) {
-      case "Global":
+      case "global":
         _playNextStepSound(stepType, _sounds.nextGlobalSound);
         break;
-      case "For each phase":
+      case "phase":
         _handleNextStepSoundPhase(stepType);
         break;
       default:
@@ -152,6 +152,9 @@ class TrainingController {
 
   void _start() {
     int previousSecond = _remainingTime ~/ 1000;
+    _currentSound = _sounds.preparationSound;
+    SoundManager().playSound(_currentSound);
+
     _timer =
         Timer.periodic(Duration(milliseconds: _updateInterval), (Timer timer) {
       //voice

@@ -110,7 +110,7 @@ class SoundManager{
   }
 
   ///Plays a sound from a file in the assets folder.
-  Future<void> playSound(String soundName) async{
+  Future<void> playSound(String? soundName) async{
     if(_availableSounds[soundName] == null) {
       log("No sound to play.");
       return;
@@ -121,7 +121,7 @@ class SoundManager{
     
     if (!_audioPlayers.containsKey(soundName)) {
       log("Sound $soundName is not loaded. Loading now...");
-      if(await loadSound(soundName)){
+      if(await loadSound(soundName!)){
         playSound(soundName);
       }
       return;
@@ -160,8 +160,8 @@ class SoundManager{
 
 
   ///Pauses a sound from a file in the assets folder if playing.
-  Future<void> pauseSound(String soundName) async {
-    if(_availableSounds[soundName] == null) {
+  Future<void> pauseSound(String? soundName) async {
+    if (_availableSounds[soundName] == null) {
       log("No sound to pause.");
       return;
     }
@@ -176,7 +176,7 @@ class SoundManager{
 
   ///Stops a sound from a file in the assets folder if playing.
   ///This will stop the sound and reset it to the beginning.
-  Future<void> stopSound(String soundName) async{
+  Future<void> stopSound(String? soundName) async{
     if(_availableSounds[soundName] == null) {
       log("No sound to stop.");
       return;
