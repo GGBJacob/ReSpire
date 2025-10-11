@@ -29,13 +29,14 @@ class SoundsAdapter extends TypeAdapter<Sounds> {
       ..nextExhaleSound = fields[9] as String?
       ..nextRecoverySound = fields[10] as String?
       ..nextGlobalSound = fields[11] as String?
-      ..countingSound = fields[12] as String?;
+      ..nextVoiceover = fields[12] as String?
+      ..countingSound = fields[13] as String?;
   }
 
   @override
   void write(BinaryWriter writer, Sounds obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.backgroundSound)
       ..writeByte(1)
@@ -61,6 +62,8 @@ class SoundsAdapter extends TypeAdapter<Sounds> {
       ..writeByte(11)
       ..write(obj.nextGlobalSound)
       ..writeByte(12)
+      ..write(obj.nextVoiceover)
+      ..writeByte(13)
       ..write(obj.countingSound);
   }
 

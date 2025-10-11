@@ -7,21 +7,22 @@ part 'Phase.g.dart';
 class Phase {
   
   @HiveField(0)
-  int reps;
-  
+  String name;
+
   @HiveField(1)
-  int doneRepsCounter = 0;
+  int reps;
 
   @HiveField(2)
-  int increment = 0; // in seconds
+  int increment;
   
   @HiveField(3)
   List<Step> steps;
 
   Phase({
     required this.reps,
-    required this.increment,
-    required this.steps
+    required this.increment, // Value in seconds 
+    required this.steps,
+    this.name = "Phase", //Default name
   });
 
   void addStep(Step step)

@@ -17,10 +17,11 @@ class PhaseAdapter extends TypeAdapter<Phase> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Phase(
-      reps: fields[0] as int,
+      reps: fields[1] as int,
       increment: fields[2] as int,
       steps: (fields[3] as List).cast<Step>(),
-    )..doneRepsCounter = fields[1] as int;
+      name: fields[0] as String,
+    );
   }
 
   @override
@@ -28,9 +29,9 @@ class PhaseAdapter extends TypeAdapter<Phase> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.reps)
+      ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.doneRepsCounter)
+      ..write(obj.reps)
       ..writeByte(2)
       ..write(obj.increment)
       ..writeByte(3)
