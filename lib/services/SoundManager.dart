@@ -25,13 +25,17 @@ class SoundManager{
     "Ainsa":"sounds/Ainsa.mp3",
     "Rain":"sounds/rain.mp3",
     "Ocean":"sounds/ocean-waves.mp3",
-    
+    "Chanting 1":"sounds/buddhist-chanting.mp3",
+    "Chanting 2":"sounds/chanting.mp3",
+    "Low hz":"sounds/low-hz.mp3",
+    "Solfeggio Frequency":"sounds/solfeggio-frequency.mp3",
   };
 
   static final Map<String,String?> _shortSounds = {
     "Notification":"sounds/new-notification.mp3",
     "Whistle Up":"sounds/whistle-up.mp3",
     "Whistle Down":"sounds/whistle-down.mp3",
+    "Gong":"sounds/gong.mp3",
   };
 
 
@@ -72,17 +76,11 @@ class SoundManager{
       return false;
     }
     AudioPlayer audioPlayer = AudioPlayer();
-    audioPlayer.setReleaseMode(ReleaseMode.stop);
-    audioPlayer.onPlayerComplete.listen((event) async {
-        if (currentlyPlaying.value == soundName) {
-          currentlyPlaying.value = null;
-          await audioPlayer.seek(Duration.zero);
-        }
-      });
+
+    setupAudioPlayer(audioPlayer, soundName);
 
     bool isAsset = _availableSounds[soundName]!.startsWith("sounds/");
     try{
-
       if(isAsset){
         await audioPlayer.setSource(AssetSource(_availableSounds[soundName]!));
       }
@@ -97,6 +95,35 @@ class SoundManager{
       log("Error loading sound $soundName: $e");
       return false;
     }
+  }
+
+  void setupAudioPlayer(AudioPlayer audioPlayer, String soundName) {
+    //Loops the audio
+    audioPlayer.setReleaseMode(ReleaseMode.stop);
+    
+    // Get total duration once it’s available
+    Duration? totalDuration;
+    audioPlayer.onDurationChanged.listen((d) {
+      totalDuration = d;
+    });
+
+    //Setup fade out when the audio completes
+    bool isFadingOut = false;
+    audioPlayer.onPositionChanged.listen((currentPosition) async {
+      if(isFadingOut) return;
+      if (totalDuration != null) {
+        if (totalDuration!.inMilliseconds - currentPosition.inMilliseconds <= 2000) {
+          isFadingOut = true;
+          await fadeOut(soundName, 1800);
+
+          // Reset audio after fade completes
+          await audioPlayer.seek(Duration.zero);
+          await audioPlayer.setVolume(1.0);
+          await audioPlayer.resume();
+        }
+        isFadingOut = false;
+      }
+    });
   }
 
   ///Lists all sounds that are currently loaded in the service.
@@ -192,13 +219,10 @@ class SoundManager{
     currentlyPlaying.value = null;
   }
 
-  ///Pauses the provided sound with a fade-out effect.\
-  ///[fadeOutDuration] is the duration of the effect in milliseconds.
-  Future<void> pauseSoundFadeOut(String? soundName, int fadeOutDuration) async{
+  Future<void> fadeOut(String? soundName, int fadeOutDuration) async {
     if(_availableSounds[soundName] == null) {
       return;
     }
-    
     var player = _audioPlayers[soundName]!;
     final int stepDuration = 50;
 
@@ -213,8 +237,14 @@ class SoundManager{
       await player.setVolume(newVolume);
       await Future.delayed(Duration(milliseconds: stepDuration));
     }
-    await pauseSound(soundName!);
     await player.setVolume(1.0);
+  }
+
+  ///Pauses the provided sound with a fade-out effect.\
+  ///[fadeOutDuration] is the duration of the effect in milliseconds.
+  Future<void> pauseSoundFadeOut(String? soundName, int fadeOutDuration) async{
+    fadeOut(soundName, fadeOutDuration);
+    await pauseSound(soundName!);
   }
 
   void stopCurrentlyPlayingSound() {
