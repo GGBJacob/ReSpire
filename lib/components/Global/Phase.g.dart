@@ -20,13 +20,8 @@ class PhaseAdapter extends TypeAdapter<Phase> {
       reps: fields[1] as int,
       increment: fields[2] as int,
       steps: (fields[3] as List).cast<Step>(),
-<<<<<<< HEAD
       name: fields[0] as String ? ?? '',
     )..phaseBackgroundSound = fields[4] as String?;
-=======
-      name: fields[4] as String? ?? '',
-  )..doneRepsCounter = (fields[1] as int?) ?? 0;
->>>>>>> naming
   }
 
   @override
@@ -42,11 +37,7 @@ class PhaseAdapter extends TypeAdapter<Phase> {
       ..writeByte(3)
       ..write(obj.steps)
       ..writeByte(4)
-<<<<<<< HEAD
       ..write(obj.phaseBackgroundSound);
-=======
-      ..write(obj.name);
->>>>>>> naming
   }
 
   @override
