@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:respire/components/Global/PhaseSounds.dart';
 import 'package:respire/components/Global/StepIncrement.dart';
 
 part 'Step.g.dart';
@@ -68,7 +69,7 @@ class Step {
   BreathDepth? breathDepth;
 
   @HiveField(5)
-  String? sound;
+  PhaseSounds sounds = PhaseSounds();
 
   Step({
     required this.duration,
@@ -76,7 +77,7 @@ class Step {
     this.stepType = StepType.inhale,
     this.breathType,
     this.breathDepth,
-    this.sound = "None"
+    PhaseSounds? sounds,
     });
 
     ///Calculate the Step's duration in `rep` repetition. The returned value is in seconds.

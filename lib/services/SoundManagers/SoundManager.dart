@@ -2,23 +2,14 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
+import 'package:respire/services/SoundManagers/ISoundManager.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
 
-enum SoundListType {
-  longSounds,
-  shortSounds,
-}
-
-class SoundManager{
-  static final SoundManager _instance = SoundManager._internal();
-  SoundManager._internal();
-  factory SoundManager() {
-    return _instance;
+class SoundManager implements ISoundManager {
+  SoundManager(){
+    log("SoundManager initialized.");
   }
-
-  ValueNotifier<String?> currentlyPlaying = ValueNotifier<String?>(null);
 
   static final Map<String,String?> _longSounds = {
     "Birds":"sounds/birds.mp3",
@@ -46,22 +37,22 @@ class SoundManager{
 
   final HashMap<String,AudioPlayer> _audioPlayers = HashMap<String,AudioPlayer>();
 
+  @override
   Map<String, String?> getSounds(SoundListType type) {
     switch (type) {
       case SoundListType.longSounds:
         return _longSounds;
       case SoundListType.shortSounds:
         return _shortSounds;
-      default:
-        return {};
     }
   }
 
   ///Loads a sound from a file.\
   ///[soundName] is the name of the sound file returned by **getLoadedSounds()**.
+  @override
   Future<bool> loadSound(String soundName) async{
     if(_availableSounds[soundName] == null) {
-      log("No sound to load.");
+      log("Could not load sound: $soundName is not available.");
       return false;
     }
     if (_audioPlayers.containsKey(soundName)) {
@@ -72,13 +63,7 @@ class SoundManager{
       return false;
     }
     AudioPlayer audioPlayer = AudioPlayer();
-    audioPlayer.setReleaseMode(ReleaseMode.stop);
-    audioPlayer.onPlayerComplete.listen((event) async {
-        if (currentlyPlaying.value == soundName) {
-          currentlyPlaying.value = null;
-          await audioPlayer.seek(Duration.zero);
-        }
-      });
+    setPlayerSettings(audioPlayer);
 
     bool isAsset = _availableSounds[soundName]!.startsWith("sounds/");
     try{
@@ -99,40 +84,67 @@ class SoundManager{
     }
   }
 
+  void setPlayerSettings(AudioPlayer audioPlayer) {
+    audioPlayer.setAudioContext(createAudioContext());
+    audioPlayer.setReleaseMode(ReleaseMode.stop);
+    audioPlayer.onPlayerComplete.listen((event) async {
+        await audioPlayer.seek(Duration.zero);
+    });
+  }
+
+  AudioContext createAudioContext() {
+    return AudioContext(
+    android: AudioContextAndroid(
+      isSpeakerphoneOn: true,
+      stayAwake: true,
+      contentType: AndroidContentType.music,
+      usageType: AndroidUsageType.media,
+      // This is the most important part.
+      // It tells the player not to request focus, so it won't interrupt others.
+      audioFocus: AndroidAudioFocus.none,
+    ),
+    iOS: AudioContextIOS(
+      category: AVAudioSessionCategory.playback,
+      options: {
+        AVAudioSessionOptions.mixWithOthers,
+      },
+    ),
+  );
+  }
+
   ///Lists all sounds that are currently loaded in the service.
+  @override
   List<String> getLoadedSounds() {
     return _audioPlayers.keys.toList();
   }
 
   ///Returns all sounds that are available in the assets folder.
+  @override
   List<String> getAvailableSounds(){
     return _availableSounds.keys.toList();
   }
 
   ///Plays a sound from a file in the assets folder.
+  @override
   Future<void> playSound(String? soundName) async{
     if(_availableSounds[soundName] == null) {
-      log("No sound to play.");
+      log("Sound: $soundName is not available.");
       return;
     }
-    if (currentlyPlaying.value != null) {
-      await stopSound(currentlyPlaying.value!);
-    }
-    
     if (!_audioPlayers.containsKey(soundName)) {
-      log("Sound $soundName is not loaded. Loading now...");
+      log("Sound: $soundName is not loaded. Loading now...");
       if(await loadSound(soundName!)){
         playSound(soundName);
       }
       return;
     }
-    currentlyPlaying.value = soundName;
     log("Playing sound: $soundName");
     await _audioPlayers[soundName]!.resume();
   }
 
   ///Plays a sound from a file in the assets folder with a fade-in effect.\
   ///[fadeInDuration] is the duration of the effect in milliseconds.
+  @override
   Future<void> playSoundFadeIn(String? soundName, int fadeInDuration) async{
     if(_availableSounds[soundName] == null) {
       return;
@@ -160,42 +172,43 @@ class SoundManager{
 
 
   ///Pauses a sound from a file in the assets folder if playing.
+  @override
   Future<void> pauseSound(String? soundName) async {
-    if (_availableSounds[soundName] == null) {
-      log("No sound to pause.");
+    if (_availableSounds[soundName] == null || !_audioPlayers.containsKey(soundName)) {
+      log("Sound: $soundName is not available.");
       return;
     }
     if (!_audioPlayers.containsKey(soundName)) {
-      log("Sound $soundName is not loaded. Cannot pause.");
+      log("Sound: $soundName is not loaded. Cannot pause.");
       return;
     }
     log("Pausing sound: $soundName");
     await _audioPlayers[soundName]!.pause();
-    currentlyPlaying.value = null;
   }
 
   ///Stops a sound from a file in the assets folder if playing.
   ///This will stop the sound and reset it to the beginning.
+  @override
   Future<void> stopSound(String? soundName) async{
     if(_availableSounds[soundName] == null) {
-      log("No sound to stop.");
+      log("Sound: $soundName is not available.");
       return;
     }
 
     if (!_audioPlayers.containsKey(soundName)) {
-      log("Sound $soundName is not loaded. Cannot stop.");
+      log("Sound: $soundName is not loaded. Cannot stop.");
       return;
     }
 
     log("Stopping sound: $soundName");
     await _audioPlayers[soundName]!.stop();
-    currentlyPlaying.value = null;
   }
 
   ///Pauses the provided sound with a fade-out effect.\
   ///[fadeOutDuration] is the duration of the effect in milliseconds.
+  @override
   Future<void> pauseSoundFadeOut(String? soundName, int fadeOutDuration) async{
-    if(_availableSounds[soundName] == null) {
+    if(_availableSounds[soundName] == null || !_audioPlayers.containsKey(soundName)) {
       return;
     }
     
@@ -217,14 +230,10 @@ class SoundManager{
     await player.setVolume(1.0);
   }
 
-  void stopCurrentlyPlayingSound() {
-    if (currentlyPlaying.value != null) {
-      stopSound(currentlyPlaying.value!);
-    }
-  }
 
   ///Stops all sounds that are currently playing.
   ///This will not unload the sounds, just stop and reset them.
+  @override
   void stopAllSounds() {
     log("Stopping all sounds.");
     for (var player in _audioPlayers.values) {
@@ -234,9 +243,9 @@ class SoundManager{
         player.setSource(currentSource);
       }
     }
-    currentlyPlaying.value = null;
   }
 
+  @override
   void refreshSoundsList() {
     _availableSounds.clear();
     _availableSounds.addAll(_longSounds);
@@ -245,6 +254,7 @@ class SoundManager{
     _availableSounds.addAll(UserSoundsDatabase().userShortSounds);
   }
 
+  @override
   void removeUserSound(String soundName, SoundListType type) {
     _availableSounds.remove(soundName);
     if (_audioPlayers.containsKey(soundName)) {

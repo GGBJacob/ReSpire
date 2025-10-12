@@ -1,43 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'Phase.dart';
+part of 'TrainingSounds.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PhaseAdapter extends TypeAdapter<Phase> {
+class TrainingSoundsAdapter extends TypeAdapter<TrainingSounds> {
   @override
-  final int typeId = 2;
+  final int typeId = 12;
 
   @override
-  Phase read(BinaryReader reader) {
+  TrainingSounds read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Phase(
-      reps: fields[1] as int,
-      increment: fields[2] as int,
-      steps: (fields[3] as List).cast<Step>(),
-      name: fields[0] as String,
-    )..phaseBackgroundSound = fields[4] as String?;
+    return TrainingSounds(
+      preparation: fields[0] as String?,
+      ending: fields[1] as String?,
+      counting: fields[2] as String?,
+    );
   }
 
   @override
-  void write(BinaryWriter writer, Phase obj) {
+  void write(BinaryWriter writer, TrainingSounds obj) {
     writer
-      ..writeByte(5)
-      ..writeByte(0)
-      ..write(obj.name)
-      ..writeByte(1)
-      ..write(obj.reps)
-      ..writeByte(2)
-      ..write(obj.increment)
       ..writeByte(3)
-      ..write(obj.steps)
-      ..writeByte(4)
-      ..write(obj.phaseBackgroundSound);
+      ..writeByte(0)
+      ..write(obj.preparation)
+      ..writeByte(1)
+      ..write(obj.ending)
+      ..writeByte(2)
+      ..write(obj.counting);
   }
 
   @override
@@ -46,7 +41,7 @@ class PhaseAdapter extends TypeAdapter<Phase> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PhaseAdapter &&
+      other is TrainingSoundsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:respire/services/SoundManager.dart';
+import 'package:respire/services/SoundManagers/ISoundManager.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 
 class UserSoundsDatabase {
   static final UserSoundsDatabase _instance = UserSoundsDatabase._internal();

@@ -18,6 +18,9 @@ class Phase {
   @HiveField(3)
   List<Step> steps;
 
+  @HiveField(4)
+  String? phaseBackgroundSound;
+
   Phase({
     required this.reps,
     required this.increment, // Value in seconds 
@@ -28,5 +31,17 @@ class Phase {
   void addStep(Step step)
   {
     steps.add(step);
+  }
+
+  void propabateBackgroundSound(String? globalBackgroundSound) {
+    // Replace the phase background sound with the global one if it exists
+    if (globalBackgroundSound != null) {
+      phaseBackgroundSound = globalBackgroundSound;
+    }
+
+    // Set the background sound for each step in the phase
+    for (var step in steps) {
+      step.sounds.background = phaseBackgroundSound;
+    }
   }
 }

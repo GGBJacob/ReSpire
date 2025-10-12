@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:respire/services/SoundManager.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 
 class SoundPicker extends StatefulWidget {
 
-  SoundManager soundManager = SoundManager();
+  final SoundManager soundManager = SoundManager();
 
   @override
   _SoundPickerState createState() => _SoundPickerState();

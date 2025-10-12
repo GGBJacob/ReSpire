@@ -200,6 +200,7 @@ class _HomePageState extends State<HomePage> {
                             );
                             if (updated != null) {
                               setState(() {
+                                updated.propagateBackgroundSounds();
                                 db.presetList[index] = updated;
                                 db.updateDataBase();
                               });

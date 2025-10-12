@@ -22,7 +22,7 @@ class StepAdapter extends TypeAdapter<Step> {
       stepType: fields[2] as StepType,
       breathType: fields[3] as BreathType?,
       breathDepth: fields[4] as BreathDepth?,
-      sound: fields[5] as String?,
+      sounds: fields[5] as PhaseSounds?,
     );
   }
 
@@ -41,7 +41,7 @@ class StepAdapter extends TypeAdapter<Step> {
       ..writeByte(4)
       ..write(obj.breathDepth)
       ..writeByte(5)
-      ..write(obj.sound);
+      ..write(obj.sounds);
   }
 
   @override

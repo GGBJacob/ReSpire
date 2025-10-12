@@ -1,7 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:respire/components/TrainingEditorPage/AudioListTile.dart';
-import 'package:respire/services/SoundManager.dart';
+import 'package:respire/services/SoundManagers/ISoundManager.dart';
+import 'package:respire/services/SoundManagers/SingleSoundManager.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
 import 'package:respire/theme/Colors.dart';
@@ -17,7 +18,7 @@ class AudioSelectionPopup extends StatefulWidget {
 
 class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
   
-  final SoundManager _soundManager = SoundManager();
+  final SingleSoundManager _soundManager = SingleSoundManager();
   final TranslationProvider _translationProvider = TranslationProvider();
   
   Future<void> _togglePlay(String soundName) async {
