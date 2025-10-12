@@ -42,6 +42,7 @@
         "TrainingTab":{
             "edit_title_dialog_title":"Edit training title",
             "edit_title_dialog_hint":"Enter training title",
+            "error":"Title cannot be empty",
             "remove_phase_dialog_title":"Remove phase?",
             "remove_phase_dialog_content":"Are you sure you want to remove this phase?",
             "add_stage_button_label":"Add training stage",

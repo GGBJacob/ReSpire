@@ -144,57 +144,89 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   
   void showEditTitleDialog(BuildContext context) {
     final tempController = TextEditingController(text: widget.training.title);
+    bool isError = false; 
+    const int titleMaxLength = 20;
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Text(
-          translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_title"),
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue),
-        ),
-        content: TextField(
-          controller: tempController,
-          autofocus: true,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: darkerblue,
-                width: 2.0,
+      builder: (context) {
+        return StatefulBuilder( 
+        builder: (context, setStateDialog) => AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_title"),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isError)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft, 
+                    child: Text(
+                      translationProvider.getTranslation("TrainingEditorPage.TrainingTab.error"),
+                      style: TextStyle(color: darkred, fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              TextField(
+                controller: tempController,
+                autofocus: true,
+                maxLength: titleMaxLength,
+                decoration: InputDecoration(
+                  hintText: translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_hint"),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: darkerblue, width: 2.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: darkerblue, width: 2.0),
+                  ),
+                ),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                translationProvider.getTranslation("PopupButton.cancel"),
+                style: TextStyle(color: darkerblue),
               ),
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: darkerblue,
-                width: 2.0,
+            ElevatedButton(
+              child: Text(
+                translationProvider.getTranslation("PopupButton.save"),
+                style: TextStyle(color: Colors.white),
               ),
+              style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
+              onPressed: () {
+                String text = tempController.text.trim();
+
+                if (text.isEmpty) {
+                  setStateDialog(() {
+                    isError = true;
+                  });
+                  return;
+                }
+
+                setState(() {
+                  widget.training.title = text;
+                });
+                Navigator.of(context).pop();
+              },
             ),
-            hintText: translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_hint"),
-          ),
+          ],
         ),
-        actions: [
-          TextButton(
-            child: Text(translationProvider.getTranslation("PopupButton.cancel"), style: TextStyle(color: darkerblue)),
-            onPressed: () => Navigator.of(context).pop(), // discard changes
-          ),
-          ElevatedButton(
-            child: Text(translationProvider.getTranslation("PopupButton.save"), style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
-            onPressed: () {
-              setState(() {
-                widget.training.title = tempController.text.trim();
-              });
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
