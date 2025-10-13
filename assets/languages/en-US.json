@@ -66,22 +66,29 @@
         },
 
         "SoundsTab":{
+            "TrainingSounds":{
+                "title": "Training sounds",
+                "counting_sound": "Counting sound",
+                "NextPhaseSounds":{
+                    "title":"Next breathing phase sounds",
+                    "none": "None",
+                    "global":"Global",
+                    "for_each_phase":"For each phase"
+                }
+            },
+
             "TrainingMusic":{
                 "title":"Training music",
-                "background_music":"Background music",
                 "preparation_music":"Preparation music",
-                "counting_sound":"Counting sound"
-            },
-
-            "PhaseSounds":{
-                "title":"Phase background sounds"
-            },
-
-            "NextPhaseSounds":{
-                "title":"Next phase sounds",
-                "global":"Global",
-                "for_each_phase":"For each stage",
-                "next_step_sound_label":"Next step sound"
+                "ending_music":"Ending music",
+                "Background_music":{
+                    "title": "Background music",
+                    "global": "For whole training",
+                    "stages": "For stages",
+                    "breathing_phases": "For breathing phases",
+                    "breathing_phases_label": "Breathing phases",
+                    "none": "None"
+                }
             },
 
             "AudioSelectionPopup":{
@@ -103,9 +110,9 @@
         "OtherTab":{
             "training_description_label":"Training description",
             "training_description_hint":"Describe your training...",
-            "next_step_label":"Next step",
+            "next_step_label":"Next phase",
             "chart_label":"Chart",
-            "step_colors_label":"Step colors",
+            "step_colors_label":"Phases colors",
             "preparation_duration_label":"Duration of preparation stage (s)"
         }
     },

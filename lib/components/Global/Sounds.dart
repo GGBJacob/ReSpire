@@ -47,6 +47,15 @@ class Sounds {
   @HiveField(13)
   String? countingSound;
 
+  @HiveField(14)
+  String? endingSound;
+
+  @HiveField(15)
+  String? backgroundOptionSound;
+
+  @HiveField(16)
+  List<String>? backgroundStagesSounds;
+
   
 void clearUserSound(String soundName) {
     if (backgroundSound == soundName) {
@@ -87,6 +96,9 @@ void clearUserSound(String soundName) {
     }
     if (countingSound == soundName) {
       countingSound = null;
+    }
+    if (endingSound == soundName) {
+      endingSound = null;
     }
   }
 }

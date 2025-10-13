@@ -66,22 +66,29 @@
         },
 
         "SoundsTab":{
+            "TrainingSounds":{
+                "title":"Dźwięki treningu",
+                "counting_sound": "Dźwięk odliczania",
+                "NextPhaseSounds":{
+                    "title":"Dźwięki następnej fazy oddechowej",
+                    "none": "Brak",
+                    "global":"Globalne",
+                    "for_each_phase":"Dla każdej fazy"
+                }
+            },
+
             "TrainingMusic":{
                 "title":"Muzyka treningu",
-                "background_music":"Muzyka w tle",
-                "preparation_music":"Muzyka przygotowania",
-                "counting_sound":"Dźwięk odliczania"
-            },
-
-            "PhaseSounds":{
-                "title":"Dźwięki w tle etapów"
-            },
-
-            "NextPhaseSounds":{
-                "title":"Dźwięk rozpoczęcia fazy",
-                "global":"Globalny",
-                "for_each_phase":"Dla każdej fazy",
-                "next_step_sound_label":"Dźwięk następnej fazy"
+                "preparation_music":"Muzyka przygotowawcza",
+                "ending_music":"Muzyka zakończenia",
+                "Background_music":{
+                    "title": "Muzyka w tle",
+                    "global": "Dla całego treningu",
+                    "stages": "Dla etapów",
+                    "breathing_phases": "Dla faz oddechowych",
+                    "breathing_phases_label": "Fazy oddechowe",
+                    "none": "Brak"
+                }
             },
 
             "AudioSelectionPopup":{
@@ -103,9 +110,9 @@
         "OtherTab":{
             "training_description_label":"Opis treningu",
             "training_description_hint":"Wpisz opis treningu...",
-            "next_step_label":"Kolejny krok",
+            "next_step_label":"Kolejna faza",
             "chart_label":"Wykres",
-            "step_colors_label":"Kolory kroków",
+            "step_colors_label":"Kolory faz",
             "preparation_duration_label":"Długość trwania fazy przygotowania (s)"
         }
     },

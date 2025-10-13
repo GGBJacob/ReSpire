@@ -9,6 +9,7 @@ class SoundSelectionRow extends StatelessWidget {
   final String? selectedValue;
   final SoundListType soundListType;
   final ValueChanged<String> onChanged;
+  final TextStyle? labelStyle;
 
   const SoundSelectionRow({
     super.key,
@@ -16,6 +17,7 @@ class SoundSelectionRow extends StatelessWidget {
     required this.selectedValue,
     required this.soundListType,
     required this.onChanged,
+    this.labelStyle,
   });
 
   Future<void> _openPopup(BuildContext context) async {
@@ -37,7 +39,7 @@ class SoundSelectionRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold)),
+        Text(label, style: labelStyle ?? TextStyle()),
        ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 150), // adjust as needed
         child: Row(
