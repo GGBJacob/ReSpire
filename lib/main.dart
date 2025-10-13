@@ -10,8 +10,9 @@ import 'package:respire/pages/HomePage.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
+import 'package:respire/components/Global/PhaseSounds.dart';
+import 'package:respire/components/Global/TrainingSounds.dart';
 import 'theme/Colors.dart';
-import 'dart:ui' as ui;
 
 void main() async{
   
@@ -26,7 +27,7 @@ Future<void> initialize() async
   await Hive.initFlutter();
   // If any changes in loaded data occur, uncomment the following
   // line to delete the data and load it again
-  //await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
+  await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
   Hive.registerAdapter(StepTypeAdapter());
   Hive.registerAdapter(BreathTypeAdapter());
   Hive.registerAdapter(BreathDepthAdapter());
@@ -37,6 +38,8 @@ Future<void> initialize() async
   Hive.registerAdapter(TrainingAdapter());
   Hive.registerAdapter(SoundsAdapter());
   Hive.registerAdapter(SettingsAdapter());
+  Hive.registerAdapter(PhaseSoundsAdapter());
+  Hive.registerAdapter(TrainingSoundsAdapter());
   await Hive.openBox('respire');
   await Hive.openBox('userShortSounds');
   await Hive.openBox('userLongSounds');
