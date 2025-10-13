@@ -155,7 +155,13 @@ class TrainingController {
       // step delay for reading the name (enter delay when main time finished)
       if (_remainingTime == 0 && _stepDelay && _stopTimer != 0) {
         stepsCount.value++;
-        _updateCurrentPhaseLabel(peekNext: true);
+        if (stepsQueue.value.elementAt(1) != null) {
+          if (_phaseNameQueue.length > 1 && _phaseNameQueue.elementAt(1) != null) {
+            _updateCurrentPhaseLabel(peekNext: true);
+          }
+        } else {
+          currentPhaseName.value = '';
+        }
         if (stepsQueue.value.elementAt(1) != null) {
           second.value = 0;
           training_step.Step step = stepsQueue.value.elementAt(1)!;
@@ -194,7 +200,6 @@ class TrainingController {
           // start new step
           stepsQueue.value.removeFirst();
           _remainingTime = _nextRemainingTime;
-          _phaseNameQueue.add(null);
           if (_phaseNameQueue.isNotEmpty) {
             _phaseNameQueue.removeFirst();
           }

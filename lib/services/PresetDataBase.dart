@@ -54,7 +54,6 @@ class PresetDataBase {
               Step(duration: 1, stepType: StepType.recovery),
             ],
             increment: 0,
-            name: 'Stage 1',
           )
         ]
       ),
@@ -69,7 +68,6 @@ class PresetDataBase {
             Step(duration: 3, stepType: StepType.recovery),
           ],
           increment: 0,
-          name: 'Stage 1',
           )
         ]
          ),
@@ -85,7 +83,6 @@ class PresetDataBase {
             Step(duration: 3, stepType: StepType.recovery),
           ],
           increment: 10,
-          name: 'Stage 1',
         ),
         Phase(
           reps: 1,
@@ -96,7 +93,6 @@ class PresetDataBase {
             Step(duration: 3, stepType: StepType.recovery),
           ],
           increment: 0,
-          name: 'Stage 2',
         ),
       ],
     ),
@@ -113,23 +109,12 @@ class PresetDataBase {
     final storedList = _box.get('presets');
     if (storedList is List) {
       presetList = storedList.cast<Training>();
-      _backfillStageNames();
     }
   }
 
   void updateDataBase()
   {
     _box.put('presets', presetList);
-  }
-
-  void _backfillStageNames() {
-    for (var training in presetList) {
-      for (var i = 0; i < training.phases.length; i++) {
-        if (training.phases[i].name.trim().isEmpty) {
-          training.phases[i].name = 'Stage ${i + 1}';
-        }
-      }
-    }
   }
 
   void clearUserSound(String soundName) {

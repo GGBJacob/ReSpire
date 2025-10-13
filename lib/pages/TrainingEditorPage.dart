@@ -6,6 +6,7 @@ import 'package:respire/components/Global/Settings.dart';
 import 'package:respire/components/TrainingEditorPage/PhaseTile.dart';
 import 'package:respire/components/TrainingEditorPage/SoundSelectionRow.dart';
 import 'package:respire/services/SoundManagers/ISoundManager.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
@@ -30,18 +31,24 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   late TextEditingController descriptionController;
   final ScrollController _scrollController = ScrollController();
   final FocusNode _descriptionFocusNode = FocusNode();
+  FocusNode? _preparationFocusNode;
 
   int _selectedTab = 0;
-
+  // Sound tab state
+  final List<String> _soundOptions = SoundManager().getAvailableSounds();
   late Sounds _sounds;
 
   TranslationProvider _translationProvider = TranslationProvider();
 
   //Next step sound options
-  late Map<String,String?> _showNextStepSoundOptions = {};
+  late Map<String,String?> _showNextStepSoundOptions = {
+    _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.None"): null,
+    "Global": "global",
+    "For each phase": "phase",
+  };
 
-  //Background sound options
-  late Map<String,String?> _showBackgroundSoundOptions = {};
+  // Counting sounds options (internal values capitalized)
+  late final List<String> _countingSoundOptions = ["None", "Voice", "Tic", "Gong"];
 
   //To remove, when tic and gong sounds will be added
   final disabledOptions = {'Tic', 'Gong'};
@@ -57,47 +64,24 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   void initState() {
     super.initState();
     _initializeStepSoundOptions();
-    _initializeBackgroundSoundOptions();
     phases = widget.training.phases;
-    _ensurePhaseNames();
     _sounds = widget.training.sounds;
     descriptionController = TextEditingController(text: widget.training.description);
     preparationController = TextEditingController(text: widget.training.settings.preparationDuration.toString());
+    _preparationFocusNode = FocusNode();
   }
 
   void _initializeStepSoundOptions() {
     _showNextStepSoundOptions = {
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextPhaseSounds.none"): null,
-      _translationProvider.getTranslation("TrainingEditorPage.SoundOption.voice"): "voice",
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextPhaseSounds.global"): "global",
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextPhaseSounds.for_each_phase"): "phase",
-    };
-  }
-
-    void _initializeBackgroundSoundOptions() {
-    _showBackgroundSoundOptions = {
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.none"): null,
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.global"): "global",
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.stages"): "stages",
-      _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.breathing_phases"): "breathing_phases",
-    };
-  }
-
-  void saveTraining() {
-    // TODO: implement actual saving logic, e.g., write to local storage or call an API
-    print("Training saved: ${widget.training.title}");
+    _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.None"): null,
+    _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextPhaseSounds.global"): "global",
+    _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextPhaseSounds.for_each_phase"): "phase",
+  };
   }
 
   void addPhase() {
     setState(() {
-      final newPhaseIndex = phases.length;
-      phases.add(Phase(
-        reps: 3,
-        steps: [],
-        increment: 0,
-        name: _defaultStageName(newPhaseIndex),
-      ));
-      _ensurePhaseNames();
+      phases.add(Phase(reps: 3, steps: [], increment: 0));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
@@ -138,7 +122,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     if (confirmDelete ?? false) {
       setState(() {
         phases.removeAt(index);
-        _ensurePhaseNames();
       });
     }
   }
@@ -148,7 +131,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       if (newIndex > oldIndex) newIndex -= 1;
       final phase = phases.removeAt(oldIndex);
       phases.insert(newIndex, phase);
-      _ensurePhaseNames();
     });
   }
 
@@ -157,23 +139,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     descriptionController.dispose();
     _descriptionFocusNode.dispose();
     super.dispose();
-  }
-
-  void _ensurePhaseNames() {
-    for (var i = 0; i < phases.length; i++) {
-      if (phases[i].name.trim().isEmpty) {
-        phases[i].name = _defaultStageName(i);
-      }
-    }
-  }
-
-  String _defaultStageName(int index) {
-    final template = translationProvider
-        .getTranslation("TrainingEditorPage.TrainingTab.default_stage_name");
-    if (template.contains('{number}')) {
-      return template.replaceAll('{number}', (index + 1).toString());
-    }
-    return "Stage ${index + 1}";
   }
 
   
@@ -341,8 +306,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                               onDelete: () => removePhase(index),
                               onUpdate: () {
                                 setState(() => widget.training.phases = phases);
-                                _ensurePhaseNames();
-                                saveTraining();
                               },
                             ),
                         ],
@@ -352,6 +315,14 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                         child: _selectedTab == 1 ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Text(
+                                translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.title"),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                              ),
+                            ),
+                            SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
@@ -360,64 +331,23 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                                 child: Column(
                                   children: [
-                                    Text(
-                                      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.title"),
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                    SoundSelectionRow(labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold), label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.counting_sound"), selectedValue: _sounds.countingSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.countingSound = v; })),
-                                    Row(
-                                        children: [
-                                          Text(
-                                            translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextPhaseSounds.title"),
-                                            style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(width: 8),
-                                          DropdownButton2<String>(
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 35,
-                                              width: 160,
-                                              elevation: 2,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(12),
-                                                color: Colors.white,
-                                              ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                                            ),
-                                                  underline: SizedBox(),
-                                                  iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                                    dropdownStyleData: DropdownStyleData(       
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(12),
-                                                      ),
-                                                    ), 
-                                                  value: _sounds.nextSound, 
-                                                  items: _showNextStepSoundOptions.map((key, value) {
-                                                    return MapEntry(key, DropdownMenuItem(value: value, child: Text(key)));
-                                                  }).values.toList(),
-                                                  onChanged: (v) => setState(() => _sounds.nextSound = v))],
-                                      ),
-                                    
-                                    if (_sounds.nextSound != null && _sounds.nextSound != "voice")...[
-                                      Column(
-                                          children: [
-                                            if(_sounds.nextSound=="global") ...[
-                                              SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextPhaseSounds.global"), selectedValue: _sounds.nextGlobalSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextGlobalSound = v; }))
-                                            ] 
-                                            else
-                                            ...[SoundSelectionRow(label: translationProvider.getTranslation("StepType.inhale"), selectedValue: _sounds.nextInhaleSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextInhaleSound = v; })),
-                                            SoundSelectionRow(label: translationProvider.getTranslation("StepType.retention"), selectedValue: _sounds.nextRetentionSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextRetentionSound = v; })),
-                                            SoundSelectionRow(label: translationProvider.getTranslation("StepType.exhale"), selectedValue: _sounds.nextExhaleSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextExhaleSound = v; })),
-                                            SoundSelectionRow(label: translationProvider.getTranslation("StepType.recovery"), selectedValue: _sounds.nextRecoverySound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextRecoverySound = v ; })),
-                                          ],
-                                          ],
-                                        ),
-                                    ],
+                                    SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.background_music"), selectedValue: _sounds.backgroundSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.backgroundSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.preparation_music"), selectedValue: _sounds.preparationSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.preparationSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.counting_sound"), selectedValue: _sounds.countingSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.countingSound = v; })),
+                                  
                                   ],
                                 ),
                               ),
                             ),
                             SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Text(
+                                translationProvider.getTranslation("TrainingEditorPage.SoundsTab.PhaseSounds.title"),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                              ),
+                            ),
+                            SizedBox(height: 8),
                             Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 2,
@@ -426,85 +356,74 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                                 child: Column(
                                   children: [
-                                    Text(
-                                      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.title"),
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                    SoundSelectionRow(labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold), label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.preparation_music"), selectedValue: _sounds.preparationSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.preparationSound = v; })),
-                                    SoundSelectionRow(labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold), label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.ending_music"), selectedValue: _sounds.endingSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.endingSound = v; })),
-                                    Row(
-                                        children: [
-                                          Text(
-                                            translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.title"),
-                                            style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(width: 8),
-                                          DropdownButton2<String>(
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 35,
-                                              width: 240,
-                                              elevation: 2,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(12),
-                                                color: Colors.white,
-                                              ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                                            ),
-                                                  underline: SizedBox(),
-                                                  iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                                    dropdownStyleData: DropdownStyleData(       
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(12),
-                                                      ),
-                                                    ), 
-                                                  value: _sounds.backgroundOptionSound, 
-                                                  items: _showBackgroundSoundOptions.map((key, value) {
-                                                    return MapEntry(key, DropdownMenuItem(value: value, child: Text(key)));
-                                                  }).values.toList(),
-                                                  onChanged: (v) => setState(() => _sounds.backgroundOptionSound = v))],
-                                      ),
-                                      if (_sounds.backgroundOptionSound != null)...[
-                                        Column(
-                                              children: [
-                                                if(_sounds.backgroundOptionSound=="global") ...[
-                                                  SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.global"), selectedValue: _sounds.backgroundSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.backgroundSound = v; }))
-                                                ] 
-                                                else if(_sounds.backgroundOptionSound=="breathing_phases")
-                                                ...[SoundSelectionRow(label: translationProvider.getTranslation("StepType.inhale"), selectedValue: _sounds.inhaleSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.inhaleSound = v; })),
-                                                SoundSelectionRow(label: translationProvider.getTranslation("StepType.retention"), selectedValue: _sounds.retentionSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.retentionSound = v; })),
-                                                SoundSelectionRow(label: translationProvider.getTranslation("StepType.exhale"), selectedValue: _sounds.exhaleSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.exhaleSound = v; })),
-                                                SoundSelectionRow(label: translationProvider.getTranslation("StepType.recovery"), selectedValue: _sounds.recoverySound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.recoverySound = v ; })),
-                                                ]
-                                                else ...[
-                                                  for (int i = 0; i < phases.length; i++)
-                                                    SoundSelectionRow(
-                                                      label: phases[i].name, 
-                                                      selectedValue: (_sounds.backgroundStagesSounds != null &&
-                                                                      _sounds.backgroundStagesSounds!.length > i)
-                                                                  ? _sounds.backgroundStagesSounds![i]
-                                                                  : null,
-                                                      soundListType: SoundListType.longSounds,
-                                                      onChanged: (v) {
-                                                        setState(() {
-                                                          if (_sounds.backgroundStagesSounds == null) {
-                                                            _sounds.backgroundStagesSounds = List<String?>.filled(phases.length, null).cast<String>();
-                                                          } else if (_sounds.backgroundStagesSounds!.length < phases.length) {
-                                                            _sounds.backgroundStagesSounds!.length = phases.length;
-                                                          }
-                                                          _sounds.backgroundStagesSounds![i] = v;
-                                                        });
-                                                      },
-                                                    ),
-                                                ],
-                                          ],
-                                        ),
-                                    ],
-                                    ],
-                                  
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.inhale"), selectedValue: _sounds.inhaleSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.inhaleSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.retention"), selectedValue: _sounds.retentionSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.retentionSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.exhale"), selectedValue: _sounds.exhaleSound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.exhaleSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.recovery"), selectedValue: _sounds.recoverySound, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.recoverySound = v ; })),
+                                  ],
                                 ),
                               ),
                             ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextPhaseSounds.title"),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                                  ),
+                                  SizedBox(width: 8),
+                                  DropdownButton2<String>(
+                                    buttonStyleData: ButtonStyleData(
+                                      height: 40,
+                                      width: 160,
+                                      elevation: 2,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.white,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    ),
+                                          underline: SizedBox(),
+                                          iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
+                                            dropdownStyleData: DropdownStyleData(       
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ), 
+                                          value: _sounds.nextSound, 
+                                          items: _showNextStepSoundOptions.map((key, value) {
+                                            return MapEntry(key, DropdownMenuItem(value: value, child: Text(key)));
+                                          }).values.toList(),
+                                          onChanged: (v) => setState(() => _sounds.nextSound = v))],
+                              ),
+                            ),
+                            if (_sounds.nextSound != null && _sounds.nextSound != "voice")...[
+                              SizedBox(height: 8),
+                            Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              elevation: 2,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                child: Column(
+                                  children: [
+                                    if(_sounds.nextSound=="global") ...[
+                                      SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.NextPhaseSounds.global"), selectedValue: _sounds.nextGlobalSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextGlobalSound = v; }))
+                                    ] 
+                                    else
+                                    ...[SoundSelectionRow(label: translationProvider.getTranslation("StepType.inhale"), selectedValue: _sounds.nextInhaleSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextInhaleSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.retention"), selectedValue: _sounds.nextRetentionSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextRetentionSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.exhale"), selectedValue: _sounds.nextExhaleSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextExhaleSound = v; })),
+                                    SoundSelectionRow(label: translationProvider.getTranslation("StepType.recovery"), selectedValue: _sounds.nextRecoverySound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextRecoverySound = v ; })),
+                                  ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                            ]
                           ],
                         ) : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,10 +438,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                   children: [
                                     // Description field
                                     Align(
-                                      alignment: Alignment.center,
+                                      alignment: Alignment.centerLeft,
                                       child: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.training_description_label"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
                                     ),
-                                    SizedBox(height: 5),
                                     TextField(
                                       controller: descriptionController,
                                       focusNode: _descriptionFocusNode,
