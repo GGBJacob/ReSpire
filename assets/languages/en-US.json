@@ -24,7 +24,7 @@
         "description_placeholder_prefix":"Add training description for:",
         "TrainingOverview":{
             "title":"Training Overview",
-            "stage":"Stage",
+            "training_stage":"Training stage",
             "reps":"Reps",
             "increment":"Inc"
         },
@@ -44,24 +44,24 @@
             "edit_title_dialog_title":"Edit training title",
             "edit_title_dialog_hint":"Enter training title",
             "error":"Title cannot be empty",
-            "add_stage_button_label":"Add training stage",
-            "remove_phase_dialog_title":"Remove stage?",
-            "remove_phase_dialog_content":"Are you sure you want to remove this stage?",
-            "default_stage_name":"Stage {number}",
+            "add_training_stage_button_label":"Add training stage",
+            "remove_training_stage_dialog_title":"Remove training stage?",
+            "remove_training_stage_dialog_content":"Are you sure you want to remove this training stage?",
+            "default_training_stage_name":"Training stage {number}",
 
-            "PhaseTile":{
-                "name":"Stage name",
-                "name_placeholder":"Enter stage name",
+            "TrainingStageTile":{
+                "name":"Training stage name",
+                "name_placeholder":"Enter training stage name",
                 "reps":"Reps",
                 "increment":"Inc (s)",
-                "add_phase_button_label":"Add breathing phase"
+                "add_training_stage_button_label":"Add breathing training stage"
             },
 
-            "StepTile":{
+            "BreathingPhaseTile":{
                 "time":"Time (s)",
                 "type":"Type",
-                "remove_step_dialog_title":"Remove step?",
-                "remove_step_dialog_content":"Are you sure you want to remove this step?"
+                "remove_breathing_phase_dialog_title":"Remove breathing phase?",
+                "remove_breathing_phase_dialog_content":"Are you sure you want to remove this breathing phase?"
             }
         },
 
@@ -69,11 +69,11 @@
             "TrainingSounds":{
                 "title": "Training sounds",
                 "counting_sound": "Counting",
-                "NextPhaseSounds":{
-                    "title":"Next phase",
+                "NextTrainingStageSounds":{
+                    "title":"Next training stage",
                     "global":"Global",
                     "voice":"Lector",
-                    "for_each_phase":"For each phase"
+                    "for_each_training_stage":"For each training stage"
                 }
             },
 
@@ -84,7 +84,7 @@
                 "Background_music":{
                     "title": "Background",
                     "global": "For whole training",
-                    "stages": "For stages",
+                    "training_stages": "For training stages",
                     "breathing_phases": "For phases",
                     "breathing_phases_label": "Phases",
                     "none": "None"
@@ -104,10 +104,10 @@
         "OtherTab":{
             "training_description_label":"Training description",
             "training_description_hint":"Describe your training...",
-            "next_step_label":"Next phase",
+            "next_breathing_phase_label":"Next breathing phase",
             "chart_label":"Chart",
-            "step_colors_label":"Phases colors",
-            "preparation_duration_label":"Duration of preparation stage (s)"
+            "breathing_phase_colors_label":"Breathing phase colors",
+            "preparation_duration_label":"Duration of preparation training stage (s)"
         }
     },
 
@@ -115,16 +115,16 @@
         "exit_popup_title":"Exit",
         "exit_popup_message":"Are you sure you want exit?\nIf you click \"Yes\" your session will end.",
         "circle_paused_text":"Resume",
-        "current_stage_label":"Current stage",
-        "default_stage_name":"Stage {number}",
-        
+        "current_training_stage_label":"Current training stage",
+        "default_training_stage_name":"Training stage {number}",
+
         "InstructionSlider":{
             "get_ready_block_text":"Get ready",
             "ending_tile_text":"The end"
         }
     },
 
-    "StepType":{
+    "BreathingPhaseType":{
         "inhale":"Inhale",
         "exhale":"Exhale",
         "retention":"Retention",

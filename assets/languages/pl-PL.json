@@ -57,11 +57,11 @@
                 "add_phase_button_label":"Dodaj fazę oddechu"
             },
 
-            "StepTile":{
+            "BreathingPhaseTile":{
                 "time":"Czas (s)",
                 "type":"Typ",
-                "remove_step_dialog_title":"Usunąć krok?",
-                "remove_step_dialog_content":"Na pewno chcesz usunąć krok?"
+                "remove_breathing_phase_dialog_title":"Usunąć fazę oddechu?",
+                "remove_breathing_phase_dialog_content":"Na pewno chcesz usunąć fazę oddechu?"
             }
         },
 
@@ -105,9 +105,9 @@
         "OtherTab":{
             "training_description_label":"Opis treningu",
             "training_description_hint":"Wpisz opis treningu...",
-            "next_step_label":"Kolejna faza",
+            "next_training_stage_label":"Kolejna faza treningu",
             "chart_label":"Wykres",
-            "step_colors_label":"Kolory faz",
+            "training_stage_colors_label":"Kolory faz treningu",
             "preparation_duration_label":"Długość trwania fazy przygotowania (s)"
         }
     },
@@ -124,8 +124,8 @@
             "ending_tile_text":"Koniec"
         }
     },
-    
-    "StepType":{
+
+    "BreathingPhaseType":{
         "inhale":"Wdech",
         "exhale":"Wydech",
         "retention":"Wstrzymanie",
