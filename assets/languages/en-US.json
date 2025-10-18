@@ -21,7 +21,7 @@
     "TrainingPage":{
         "start_button_label":"Start training",
         "description_placeholder":"No description provided.",
-        "description_placeholder_prefix":"Add training description for:",
+        "description_placeholder_prefix":"Add description for training",
         "TrainingOverview":{
             "title":"Training Overview",
             "training_stage":"Training stage",
@@ -130,6 +130,7 @@
         "retention":"Retention",
         "recovery":"Recovery"
     },
+
     "ProfilePage":{
         "page_title":"My Profile",
         "badges_title":"Badges",

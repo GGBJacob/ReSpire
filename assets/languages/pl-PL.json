@@ -21,7 +21,7 @@
     "TrainingPage":{
         "start_button_label":"Rozpocznij trening",
         "description_placeholder":"Brak opisu.",
-        "description_placeholder_prefix":"Dodaj opis treningu dla:",
+        "description_placeholder_prefix":"Dodaj opis dla treningu",
         "TrainingOverview":{
             "title":"Przegląd treningu",
             "stage":"Etap",
@@ -131,6 +131,7 @@
         "retention":"Wstrzymanie",
         "recovery":"Regeneracja"
     },
+
     "ProfilePage":{
         "page_title":"Mój Profil",
         "badges_title":"Odznaki",

@@ -96,14 +96,15 @@ class _TrainingPageState extends State<TrainingPage> {
                   color: lightblue,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Center(
+                child: Align(
+                  alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
             training.description == ''
-              ? '${translationProvider.getTranslation("TrainingPage.description_placeholder_prefix")} ${training.title}'
+              ? '${translationProvider.getTranslation("TrainingPage.description_placeholder_prefix")} "${training.title}".'
               : training.description,
-                      style: TextStyle(color: greenblue),
+                      style: TextStyle(color: greenblue, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ))));
@@ -227,7 +228,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               ),
                               SizedBox(height: 6),
                               Text(
-                                '${translationProvider.getTranslation("TrainingPage.TrainingOverview.reps")}: ${trainingStage.reps} ${translationProvider.getTranslation("TrainingPage.TrainingOverview.increment")}: ${trainingStage.increment} [s]',
+                                '${translationProvider.getTranslation("TrainingPage.TrainingOverview.reps")}: ${trainingStage.reps} | ${translationProvider.getTranslation("TrainingPage.TrainingOverview.increment")}: ${trainingStage.increment} [s]',
                                 style: TextStyle(
                                     color: darkerblue,
                                     fontWeight: FontWeight.bold),
@@ -337,6 +338,8 @@ class _TrainingPageState extends State<TrainingPage> {
           Row(
             children: [shareButton(), Spacer(), editButton(), deleteButton()],
           ),
+          /*if (training.description.isNotEmpty)
+          ...[descriptionBox(screenWidth),],*/
           descriptionBox(screenWidth),
           trainingOverview(screenWidth),
           startTrainingButton()

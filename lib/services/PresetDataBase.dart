@@ -46,7 +46,7 @@ class PresetDataBase {
     presetList = [
       Training(
         title: "Deep Serenity",
-        description: "A calming routine to enhance relaxation and mindfulness.",
+        description: "A calming routine to enhance relaxation and\u00A0mindfulness.",
         trainingStages: [
           TrainingStage(
             reps: 5,
