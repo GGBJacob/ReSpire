@@ -51,7 +51,7 @@ class _TrainingPageState extends State<TrainingPage> {
             icon: Icon(Icons.edit_rounded, color: darkerblue),
             style: IconButton.styleFrom(backgroundColor: Colors.white),
             onPressed: () async {
-              final updated = await Navigator.push<Training>(
+              final updatedTraining = await Navigator.push<Training>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => TrainingEditorPage(
@@ -59,9 +59,10 @@ class _TrainingPageState extends State<TrainingPage> {
                   ),
                 ),
               );
-              if (updated != null) {
+              if (updatedTraining != null) {
                 setState(() {
-                  widget.db.presetList[widget.index] = updated;
+                  updatedTraining.updateSounds();
+                  widget.db.presetList[widget.index] = updatedTraining;
                   widget.db.updateDataBase();
                 });
               }

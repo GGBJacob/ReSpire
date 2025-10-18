@@ -1,4 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:respire/components/Global/SoundAsset.dart';
+import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Step.dart';
 
 part 'Sounds.g.dart';
@@ -6,127 +8,98 @@ part 'Sounds.g.dart';
 @HiveType(typeId: 9)
 class Sounds {
 
-  // // Sound for counting during exercises
-  // String? countingSound;
+  // === GLOBAL / TRAINING LEVEL ===
 
-  // // Global switch breathing phase sound to be used across all training
-  // String? globalSound;
-
-  // // Sounds for each breathing phase type
-  // Map<BreathingPhaseType, String?> breathingPhaseSounds = {
-  //   for (var type in BreathingPhaseType.values) type: null
-  // };
-
-  // // Preparation and ending tracks for the training session
-  // String? preparationTrack;
-  // String? endingTrack;
-
-  // // Background audio for the entire training session
-  // String? trainingBackgroundTrack;
-
-  // // Stage tracks for different training stages
-  // // key - stage uuid, value - sound name
-  // Map<String, String?> stageTracks = {};
-  
-  // // Audio files for each breathing phase type
-  // Map<BreathingPhaseType, String?> breathingPhaseTracks = {
-  //   for (var type in BreathingPhaseType.values) type: null
-  // };
-
-  @HiveField(0)
-  String? backgroundSound;
-  
+  /// Sound for counting during exercises
   @HiveField(1)
-  String? nextSound;
-  
+  SoundAsset countingSound = SoundAsset();
+
+  /// Background sound for the entire training session
   @HiveField(2)
-  String? inhaleSound;
-  
+  SoundAsset globalBackgroundSound = SoundAsset(type: SoundType.melody);
+
+
+  /// Scope of the next sound played between breathing phases.
+  /// Used to determine the user's choice in the editor page.
   @HiveField(3)
-  String? retentionSound;
-  
+  SoundScope nextSoundScope = SoundScope.global;
+  /// Next sound played between breathing phases
   @HiveField(4)
-  String? exhaleSound;
-  
+  SoundAsset nextSound = SoundAsset(type: SoundType.cue);
+
+  /// Preparation and ending tracks for the training session
   @HiveField(5)
-  String? recoverySound;
-
+  SoundAsset preparationTrack = SoundAsset(type: SoundType.melody);
   @HiveField(6)
-  String? preparationSound;
+  SoundAsset endingTrack = SoundAsset(type: SoundType.melody);
 
+  /// Scope of the background audio during the training session
   @HiveField(7)
-  String? nextInhaleSound;
-
+  SoundScope backgroundSoundScope = SoundScope.global;
+  /// Background audio for the entire training session
   @HiveField(8)
-  String? nextRetentionSound;
+  SoundAsset trainingBackgroundTrack = SoundAsset(type: SoundType.melody);
 
+  // === STAGE LEVEL ===
+
+  /// Stage tracks for different training stages
+  /// 
+  /// `key` - stage uuid, `value` - sound name
   @HiveField(9)
-  String? nextExhaleSound;
+  List<SoundAsset> stageTracks = [];
 
+  // === BREATHING PHASE LEVEL ===
+
+  /// Short sounds for each breathing phase type that indicate the transition
   @HiveField(10)
-  String? nextRecoverySound;
-
-  @HiveField(11)
-  String? nextGlobalSound;
-
-  @HiveField(12)
-  String? nextVoiceover;
-
-  @HiveField(13)
-  String? countingSound;
-
-  @HiveField(14)
-  String? endingSound;
-
-  @HiveField(15)
-  String? backgroundOptionSound;
-
-  @HiveField(16)
-  List<String>? backgroundStagesSounds;
+  Map<BreathingPhaseType, SoundAsset> breathingPhaseCues = {
+    for (var type in BreathingPhaseType.values) type: SoundAsset(type: SoundType.cue)
+  };
 
   
-void clearUserSound(String soundName) {
-    if (backgroundSound == soundName) {
-      backgroundSound = null;
+  /// Longer audio files for each breathing phase type
+  @HiveField(11)
+  Map<BreathingPhaseType, SoundAsset> breathingPhaseBackgrounds = {
+    for (var type in BreathingPhaseType.values) type: SoundAsset(type: SoundType.melody)
+  };
+
+
+  void clearUserSound(String soundName) {
+    if (countingSound.path == soundName) {
+      countingSound = SoundAsset(type: SoundType.none);
     }
-    if (inhaleSound == soundName) {
-      inhaleSound = null;
+    if (globalBackgroundSound.path == soundName) {
+      globalBackgroundSound = SoundAsset(type: SoundType.none);
     }
-    if (retentionSound == soundName) {
-      retentionSound = null;
+    if (nextSound.path == soundName) {
+      nextSound = SoundAsset(type: SoundType.none);
     }
-    if (exhaleSound == soundName) {
-      exhaleSound = null;
+    if (preparationTrack.path == soundName) {
+      preparationTrack = SoundAsset(type: SoundType.none);
     }
-    if (recoverySound == soundName) {
-      recoverySound = null;
+    if (endingTrack.path == soundName) {
+      endingTrack = SoundAsset(type: SoundType.none);
     }
-    if (preparationSound == soundName) {
-      preparationSound = null;
+    if (trainingBackgroundTrack.path == soundName) {
+      trainingBackgroundTrack = SoundAsset(type: SoundType.none);
     }
-    if (nextInhaleSound == soundName) {
-      nextInhaleSound = null;
+
+    for (int i=0; i<stageTracks.length; i++) {
+      if (stageTracks[i].path == soundName) {
+        stageTracks[i] = SoundAsset(type: SoundType.none);
+      }
     }
-    if (nextRetentionSound == soundName) {
-      nextRetentionSound = null;
-    }
-    if (nextExhaleSound == soundName) {
-      nextExhaleSound = null;
-    }
-    if (nextRecoverySound == soundName) {
-      nextRecoverySound = null;
-    }
-    if (nextGlobalSound == soundName) {
-      nextGlobalSound = null;
-    }
-    if (nextVoiceover == soundName) {
-      nextVoiceover = null;
-    }
-    if (countingSound == soundName) {
-      countingSound = null;
-    }
-    if (endingSound == soundName) {
-      endingSound = null;
-    }
+
+    breathingPhaseCues.forEach((key, value) {
+      if (value.path == soundName) {
+        breathingPhaseCues[key] = SoundAsset(type: SoundType.none);
+      }
+    });
+
+    breathingPhaseBackgrounds.forEach((key, value) {
+      if (value.path == soundName) {
+        breathingPhaseBackgrounds[key] = SoundAsset(type: SoundType.none);
+      }
+    });
   }
 }

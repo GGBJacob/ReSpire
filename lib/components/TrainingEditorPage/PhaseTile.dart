@@ -209,7 +209,7 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        translationProvider.getTranslation("TrainingEditorPage.TrainingTab.PhaseTile.name"),
+                        translationProvider.getTranslation("TrainingEditorPage.TrainingTab.TrainingStageTile.name"),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: darkerblue,
@@ -271,7 +271,7 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.PhaseTile.reps"),
+                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.TrainingStageTile.reps"),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: darkerblue,
@@ -387,7 +387,7 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.PhaseTile.increment"),
+                  translationProvider.getTranslation("TrainingEditorPage.TrainingTab.TrainingStageTile.increment"),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: darkerblue,

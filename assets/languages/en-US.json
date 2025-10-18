@@ -130,10 +130,19 @@
         "retention":"Retention",
         "recovery":"Recovery"
     },
+
     "ProfilePage":{
         "page_title":"My Profile",
         "badges_title":"Badges",
         "default_name":"John Doe",
         "default_email":"john.doe@example.com"
+    },
+
+    "SoundScope":{
+        "none":"None",
+        "voice":"Lector",
+        "global":"For whole training",
+        "perStage":"For training stages",
+        "perPhase":"For each breathing phase"
     }
 }

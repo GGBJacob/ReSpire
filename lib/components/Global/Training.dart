@@ -1,8 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/Global/Settings.dart';
+import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Sounds.dart';
-import 'package:respire/components/Global/TrainingSounds.dart';
+import 'package:respire/components/Global/Step.dart';
 
 part 'Training.g.dart';
 
@@ -24,22 +25,75 @@ class Training {
   @HiveField(4)
   Settings settings = Settings();
 
-  @HiveField(5)
-  String? globalBackgroundSound;
-
-  @HiveField(6)
-  TrainingSounds trainingSounds = TrainingSounds();
-
   Training({
     required this.title,
     required this.trainingStages,
     this.description = ''
   });
 
-  // Call this method after loading or modifying the training to ensure that all training stages and breathing phases have the correct background sounds.
-  void propagateBackgroundSounds() {
-    for (var trainingStage in trainingStages) {
-      trainingStage.propagateBackgroundSound(globalBackgroundSound);
+  void updateSounds() {
+
+    // Update next phase sounds
+    switch (sounds.nextSoundScope) {
+      case SoundScope.none:
+      case SoundScope.voice:
+      case SoundScope.perStage:
+        break;
+
+      case SoundScope.global:
+        if(sounds.nextSound.path != null &&
+          sounds.nextSound.path!.isNotEmpty) {
+          for (var stage in trainingStages) {
+            stage.propagateNextSound(sounds.nextSound.path);
+          }
+        }
+        break; 
+
+      case SoundScope.perPhase:
+        for (int i=0; i<trainingStages.length; i++) {
+          for (var phase in trainingStages[i].breathingPhases){
+            switch(phase.breathingPhaseType) {
+              case BreathingPhaseType.inhale:
+                phase.sounds.preBreathingPhase = sounds.breathingPhaseCues[BreathingPhaseType.inhale]!.path;
+                break;
+              case BreathingPhaseType.retention:
+                phase.sounds.preBreathingPhase = sounds.breathingPhaseCues[BreathingPhaseType.retention]!.path;
+                break;
+              case BreathingPhaseType.exhale:
+                phase.sounds.preBreathingPhase = sounds.breathingPhaseCues[BreathingPhaseType.exhale]!.path;
+                break;
+              case BreathingPhaseType.recovery:
+                phase.sounds.preBreathingPhase = sounds.breathingPhaseCues[BreathingPhaseType.recovery]!.path;
+                break;
+            }
+          }
+        }
+        break; 
+
+    }
+
+    // Update background sounds
+    switch (sounds.backgroundSoundScope) {
+      case SoundScope.none:
+      case SoundScope.voice:
+      case SoundScope.perPhase:
+        break;
+
+      case SoundScope.global:
+        if(sounds.globalBackgroundSound.path != null &&
+          sounds.globalBackgroundSound.path!.isNotEmpty) {
+          for (var stage in trainingStages) {
+            stage.propagateBackgroundSound(sounds.globalBackgroundSound.path);
+          }
+        }
+        break; 
+
+      case SoundScope.perStage:
+        for (int i=0; i<trainingStages.length; i++) {
+          trainingStages[i].propagateBackgroundSound(sounds.stageTracks[i].path);
+        }
+        break; 
+
     }
   }
 }

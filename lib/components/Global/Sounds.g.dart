@@ -17,54 +17,47 @@ class SoundsAdapter extends TypeAdapter<Sounds> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Sounds()
-      ..backgroundSound = fields[0] as String?
-      ..nextSound = fields[1] as String?
-      ..inhaleSound = fields[2] as String?
-      ..retentionSound = fields[3] as String?
-      ..exhaleSound = fields[4] as String?
-      ..recoverySound = fields[5] as String?
-      ..preparationSound = fields[6] as String?
-      ..nextInhaleSound = fields[7] as String?
-      ..nextRetentionSound = fields[8] as String?
-      ..nextExhaleSound = fields[9] as String?
-      ..nextRecoverySound = fields[10] as String?
-      ..nextGlobalSound = fields[11] as String?
-      ..nextVoiceover = fields[12] as String?
-      ..countingSound = fields[13] as String?;
+      ..countingSound = fields[1] as SoundAsset
+      ..globalBackgroundSound = fields[2] as SoundAsset
+      ..nextSoundScope = fields[3] as SoundScope
+      ..nextSound = fields[4] as SoundAsset
+      ..preparationTrack = fields[5] as SoundAsset
+      ..endingTrack = fields[6] as SoundAsset
+      ..backgroundSoundScope = fields[7] as SoundScope
+      ..trainingBackgroundTrack = fields[8] as SoundAsset
+      ..stageTracks = (fields[9] as List).cast<SoundAsset>()
+      ..breathingPhaseCues =
+          (fields[10] as Map).cast<BreathingPhaseType, SoundAsset>()
+      ..breathingPhaseBackgrounds =
+          (fields[11] as Map).cast<BreathingPhaseType, SoundAsset>();
   }
 
   @override
   void write(BinaryWriter writer, Sounds obj) {
     writer
-      ..writeByte(14)
-      ..writeByte(0)
-      ..write(obj.backgroundSound)
-      ..writeByte(1)
-      ..write(obj.nextSound)
-      ..writeByte(2)
-      ..write(obj.inhaleSound)
-      ..writeByte(3)
-      ..write(obj.retentionSound)
-      ..writeByte(4)
-      ..write(obj.exhaleSound)
-      ..writeByte(5)
-      ..write(obj.recoverySound)
-      ..writeByte(6)
-      ..write(obj.preparationSound)
-      ..writeByte(7)
-      ..write(obj.nextInhaleSound)
-      ..writeByte(8)
-      ..write(obj.nextRetentionSound)
-      ..writeByte(9)
-      ..write(obj.nextExhaleSound)
-      ..writeByte(10)
-      ..write(obj.nextRecoverySound)
       ..writeByte(11)
-      ..write(obj.nextGlobalSound)
-      ..writeByte(12)
-      ..write(obj.nextVoiceover)
-      ..writeByte(13)
-      ..write(obj.countingSound);
+      ..writeByte(1)
+      ..write(obj.countingSound)
+      ..writeByte(2)
+      ..write(obj.globalBackgroundSound)
+      ..writeByte(3)
+      ..write(obj.nextSoundScope)
+      ..writeByte(4)
+      ..write(obj.nextSound)
+      ..writeByte(5)
+      ..write(obj.preparationTrack)
+      ..writeByte(6)
+      ..write(obj.endingTrack)
+      ..writeByte(7)
+      ..write(obj.backgroundSoundScope)
+      ..writeByte(8)
+      ..write(obj.trainingBackgroundTrack)
+      ..writeByte(9)
+      ..write(obj.stageTracks)
+      ..writeByte(10)
+      ..write(obj.breathingPhaseCues)
+      ..writeByte(11)
+      ..write(obj.breathingPhaseBackgrounds);
   }
 
   @override

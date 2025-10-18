@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/Phase.dart';
 import 'package:respire/components/Global/Settings.dart';
+import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Sounds.dart';
+import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/Step.dart';
 import 'package:respire/components/Global/StepIncrement.dart';
 import 'package:respire/components/Global/Training.dart';
@@ -11,7 +13,6 @@ import 'package:respire/services/TextToSpeechService.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
 import 'package:respire/components/Global/PhaseSounds.dart';
-import 'package:respire/components/Global/TrainingSounds.dart';
 import 'theme/Colors.dart';
 
 void main() async{
@@ -36,10 +37,12 @@ Future<void> initialize() async
   Hive.registerAdapter(BreathingPhaseIncrementAdapter());
   Hive.registerAdapter(TrainingStageAdapter());
   Hive.registerAdapter(TrainingAdapter());
+  Hive.registerAdapter(SoundAssetAdapter());
+  Hive.registerAdapter(SoundScopeAdapter());
+  Hive.registerAdapter(SoundTypeAdapter());
   Hive.registerAdapter(SoundsAdapter());
   Hive.registerAdapter(SettingsAdapter());
   Hive.registerAdapter(BreathingPhaseSoundsAdapter());
-  Hive.registerAdapter(TrainingSoundsAdapter());
   await Hive.openBox('respire');
   await Hive.openBox('userShortSounds');
   await Hive.openBox('userLongSounds');

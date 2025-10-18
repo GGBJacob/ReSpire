@@ -47,7 +47,7 @@ class TrainingParser {
       sounds: currentBreathingPhase.sounds,
     );
 
-    log('preBreathingPhase: ${progressedBreathingPhase.sounds.preBreathingPhase}, background ${progressedBreathingPhase.sounds.background}');
+    log('preBreathingPhase: ${progressedBreathingPhase.sounds.preBreathingPhase}, background: ${progressedBreathingPhase.sounds.background}');
 
     return {
       "breathingPhase": progressedBreathingPhase,
