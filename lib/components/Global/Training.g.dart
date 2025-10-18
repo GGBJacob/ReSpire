@@ -22,15 +22,13 @@ class TrainingAdapter extends TypeAdapter<Training> {
       description: fields[1] as String,
     )
       ..sounds = fields[3] as Sounds
-      ..settings = fields[4] as Settings
-      ..globalBackgroundSound = fields[5] as String?
-      ..trainingSounds = fields[6] as TrainingSounds;
+      ..settings = fields[4] as Settings;
   }
 
   @override
   void write(BinaryWriter writer, Training obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -40,11 +38,7 @@ class TrainingAdapter extends TypeAdapter<Training> {
       ..writeByte(3)
       ..write(obj.sounds)
       ..writeByte(4)
-      ..write(obj.settings)
-      ..writeByte(5)
-      ..write(obj.globalBackgroundSound)
-      ..writeByte(6)
-      ..write(obj.trainingSounds);
+      ..write(obj.settings);
   }
 
   @override

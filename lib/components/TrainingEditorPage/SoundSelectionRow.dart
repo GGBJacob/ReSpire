@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:respire/components/TrainingEditorPage/AudioSelectionPopup.dart';
 import 'package:respire/services/SoundManagers/ISoundManager.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
-import 'package:respire/theme/Colors.dart';
 
 class SoundSelectionRow extends StatelessWidget {
   final String label;

@@ -1,35 +1,34 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'StepIncrement.dart';
+part of 'SoundAsset.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BreathingPhaseIncrementAdapter
-    extends TypeAdapter<BreathingPhaseIncrement> {
+class SoundAssetAdapter extends TypeAdapter<SoundAsset> {
   @override
-  final int typeId = 8;
+  final int typeId = 13;
 
   @override
-  BreathingPhaseIncrement read(BinaryReader reader) {
+  SoundAsset read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BreathingPhaseIncrement(
-      value: fields[0] as double,
-      type: fields[1] as BreathingPhaseIncrementType,
+    return SoundAsset(
+      path: fields[1] as String?,
+      type: fields[2] as SoundType?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, BreathingPhaseIncrement obj) {
+  void write(BinaryWriter writer, SoundAsset obj) {
     writer
       ..writeByte(2)
-      ..writeByte(0)
-      ..write(obj.value)
       ..writeByte(1)
+      ..write(obj.path)
+      ..writeByte(2)
       ..write(obj.type);
   }
 
@@ -39,36 +38,45 @@ class BreathingPhaseIncrementAdapter
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BreathingPhaseIncrementAdapter &&
+      other is SoundAssetAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class BreathingPhaseIncrementTypeAdapter
-    extends TypeAdapter<BreathingPhaseIncrementType> {
+class SoundTypeAdapter extends TypeAdapter<SoundType> {
   @override
-  final int typeId = 7;
+  final int typeId = 14;
 
   @override
-  BreathingPhaseIncrementType read(BinaryReader reader) {
+  SoundType read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return BreathingPhaseIncrementType.percentage;
+        return SoundType.voice;
       case 1:
-        return BreathingPhaseIncrementType.value;
+        return SoundType.melody;
+      case 2:
+        return SoundType.cue;
+      case 3:
+        return SoundType.none;
       default:
-        return BreathingPhaseIncrementType.percentage;
+        return SoundType.voice;
     }
   }
 
   @override
-  void write(BinaryWriter writer, BreathingPhaseIncrementType obj) {
+  void write(BinaryWriter writer, SoundType obj) {
     switch (obj) {
-      case BreathingPhaseIncrementType.percentage:
+      case SoundType.voice:
         writer.writeByte(0);
         break;
-      case BreathingPhaseIncrementType.value:
+      case SoundType.melody:
         writer.writeByte(1);
+        break;
+      case SoundType.cue:
+        writer.writeByte(2);
+        break;
+      case SoundType.none:
+        writer.writeByte(3);
         break;
     }
   }
@@ -79,7 +87,7 @@ class BreathingPhaseIncrementTypeAdapter
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BreathingPhaseIncrementTypeAdapter &&
+      other is SoundTypeAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

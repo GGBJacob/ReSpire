@@ -78,7 +78,9 @@ class BreathingPhase {
     this.breathType,
     this.breathDepth,
     BreathingPhaseSounds? sounds,
-    });
+    }){
+      this.sounds = sounds ?? BreathingPhaseSounds();
+    }
 
     ///Calculate the BreathingPhase's duration in `rep` repetition. The returned value is in seconds.
     double getBreathingPhaseDuration(int rep)

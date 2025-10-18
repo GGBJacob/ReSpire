@@ -193,16 +193,16 @@ class _HomePageState extends State<HomePage> {
                             setState(() {});
                           },
                           editTile: (context) async {
-                            final updated = await Navigator.push<Training>(
+                            final updatedTraining = await Navigator.push<Training>(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => TrainingEditorPage(
                                       training: db.presetList[index])),
                             );
-                            if (updated != null) {
+                            if (updatedTraining != null) {
                               setState(() {
-                                updated.propagateBackgroundSounds();
-                                db.presetList[index] = updated;
+                                updatedTraining.updateSounds();
+                                db.presetList[index] = updatedTraining;
                                 db.updateDataBase();
                               });
                             }

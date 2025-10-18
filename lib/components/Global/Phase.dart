@@ -1,29 +1,22 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/Step.dart';
-import 'package:uuid/uuid.dart';
 
 part 'Phase.g.dart';
 
 @HiveType(typeId: 2)
 class TrainingStage {
-
-  @HiveField(0)
-  String id = Uuid().v4();
   
-  @HiveField(1)
+  @HiveField(0)
   String name;
 
-  @HiveField(2)
+  @HiveField(1)
   int reps;
 
-  @HiveField(3)
+  @HiveField(2)
   int increment;
   
-  @HiveField(4)
+  @HiveField(3)
   List<BreathingPhase> breathingPhases;
-
-  @HiveField(5)
-  String? trainingStageBackgroundSound; // Is this correct?
 
   TrainingStage({
     required this.reps,
@@ -37,15 +30,17 @@ class TrainingStage {
     breathingPhases.add(breathingPhase);
   }
 
-  void propagateBackgroundSound(String? globalBackgroundSound) {
-    // Replace the breathing phase background sound with the global one if it exists
-    if (globalBackgroundSound != null) {
-      trainingStageBackgroundSound = globalBackgroundSound;
+  void propagateNextSound(String? nextSound) {
+    // Set the next sound for each breathing phase
+    for (var breathingPhase in breathingPhases) {
+      breathingPhase.sounds.preBreathingPhase = nextSound;
     }
-  
+  }
+
+  void propagateBackgroundSound(String? globalBackgroundSound) {  
     // Set the background sound for each breathing phase
     for (var breathingPhase in breathingPhases) {
-      breathingPhase.sounds.background = trainingStageBackgroundSound;
+      breathingPhase.sounds.background = globalBackgroundSound;
     }
   }
 }

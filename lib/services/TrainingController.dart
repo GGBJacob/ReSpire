@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:respire/components/BreathingPage/TrainingParser.dart';
+import 'package:respire/components/Global/SoundAsset.dart';
+import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/Step.dart' as breathing_phase;
-import 'package:respire/components/Global/TrainingSounds.dart';
 import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
@@ -32,7 +33,7 @@ class TrainingController {
   bool _breathingPhaseDelay = true;
   int _stopTimer = 2;
 
-  late TrainingSounds _sounds;
+  late Sounds _sounds;
 
   String? _currentSound;
   late SoundManager soundManager;
@@ -43,7 +44,7 @@ class TrainingController {
     soundManager = SoundManager();
     soundManager.stopAllSounds();
     _remainingTime = parser.training.settings.preparationDuration * 1000;
-    _sounds = parser.training.trainingSounds;
+    _sounds = parser.training.sounds;
     _preloadBreathingPhases();
     _start();
   }
@@ -89,14 +90,14 @@ class TrainingController {
 
 
   void _playCountingSound(previousSecond) {
-    switch (_sounds.counting) {
-      case "Voice":
+    switch (_sounds.countingSound.type) {
+      case SoundType.voice:
         TextToSpeechService().readNumber(previousSecond + 1);
         break;
-      case "None":
+      case SoundType.none:
         break;
       default:
-        soundManager.playSound(_sounds.counting);
+        soundManager.playSound(_sounds.countingSound.path);
         break;
     }
   }
@@ -130,7 +131,7 @@ class TrainingController {
   void _start() {
     int previousSecond = _remainingTime ~/ 1000;
     DateTime lastTick = DateTime.now();
-    String? currentBackgroundSound = _sounds.preparation;
+    String? currentBackgroundSound = _sounds.preparationTrack.path;
     soundManager.playSound(currentBackgroundSound);
     _timer =
         Timer.periodic(Duration(milliseconds: _updateInterval), (Timer timer) {

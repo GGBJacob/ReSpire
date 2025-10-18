@@ -50,7 +50,7 @@ class BreathingPhaseAdapter extends TypeAdapter<BreathingPhase> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BreathDepthAdapter &&
+      other is BreathingPhaseAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

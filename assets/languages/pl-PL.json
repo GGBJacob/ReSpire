@@ -137,5 +137,13 @@
         "badges_title":"Odznaki",
         "default_name":"Jan Kowalski",
         "default_email":"jan.kowalski@poczta.pl"
+    },
+
+    "SoundScope":{
+        "none":"Brak",
+        "voice":"Lektor",
+        "global":"Na cały trening",
+        "perStage":"Dla etapów treningu",
+        "perPhase":"Dla każdej fazy oddechowej"
     }
 }
