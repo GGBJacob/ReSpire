@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Step.dart' as breathing_phase;
-import 'package:respire/components/Global/Step.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 class InstructionBlock {

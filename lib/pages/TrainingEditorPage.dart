@@ -36,12 +36,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
 
   int _selectedTab = 0;
   late Sounds _sounds;
-
-  //Next breathing phase sound options
-  late Map<String,String?> _showNextBreathingPhaseSoundOptions = {};
-
-   //Background sound options
-  late Map<String,String?> _showBackgroundSoundOptions = {};
   
   // Other tab state
   bool _showNextBreathingPhaseToggle = false;
@@ -53,29 +47,10 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   @override
   void initState() {
     super.initState();
-    _initializeBreathingPhaseSoundOptions();
-    _initializeBackgroundSoundOptions();
     trainingStages = widget.training.trainingStages;
     _sounds = widget.training.sounds;
     descriptionController = TextEditingController(text: widget.training.description);
     preparationController = TextEditingController(text: widget.training.settings.preparationDuration.toString());
-  }
-
-  void _initializeBreathingPhaseSoundOptions() {
-    _showNextBreathingPhaseSoundOptions = {
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.none"): null,
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.voice"): "voice",
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.global"): "global",
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.for_each_breathing_phase"): "phase",
-    };
-  }
-  void _initializeBackgroundSoundOptions() {
-    _showBackgroundSoundOptions = {
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.none"): null,
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.global"): "global",
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.stages"): "stages",
-      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.breathing_phases"): "breathing_phases", // ????
-    };
   }
 
   void saveTraining() {
