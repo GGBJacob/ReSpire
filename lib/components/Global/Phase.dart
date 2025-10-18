@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/Step.dart';
+import 'package:uuid/uuid.dart';
 
 part 'Phase.g.dart';
 
@@ -7,15 +8,18 @@ part 'Phase.g.dart';
 class TrainingStage {
   
   @HiveField(0)
-  String name;
+  String id = Uuid().v4();
 
   @HiveField(1)
-  int reps;
+  String name;
 
   @HiveField(2)
+  int reps;
+
+  @HiveField(3)
   int increment;
   
-  @HiveField(3)
+  @HiveField(4)
   List<BreathingPhase> breathingPhases;
 
   TrainingStage({

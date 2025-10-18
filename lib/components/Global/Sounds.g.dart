@@ -25,7 +25,7 @@ class SoundsAdapter extends TypeAdapter<Sounds> {
       ..endingTrack = fields[6] as SoundAsset
       ..backgroundSoundScope = fields[7] as SoundScope
       ..trainingBackgroundTrack = fields[8] as SoundAsset
-      ..stageTracks = (fields[9] as List).cast<SoundAsset>()
+      ..stageTracks = (fields[9] as Map).cast<String, SoundAsset>()
       ..breathingPhaseCues =
           (fields[10] as Map).cast<BreathingPhaseType, SoundAsset>()
       ..breathingPhaseBackgrounds =

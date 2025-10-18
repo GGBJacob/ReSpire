@@ -149,7 +149,7 @@ class _BreathingPageState extends State<BreathingPage> {
                       maintainState: true,
                       child: Text(
                         translationProvider
-                            .getTranslation("BreathingPage.current_stage_label"),
+                            .getTranslation("BreathingPage.current_training_stage_label"),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black54,

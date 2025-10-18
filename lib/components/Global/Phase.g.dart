@@ -17,24 +17,26 @@ class TrainingStageAdapter extends TypeAdapter<TrainingStage> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TrainingStage(
-      reps: fields[1] as int,
-      increment: fields[2] as int,
-      breathingPhases: (fields[3] as List).cast<BreathingPhase>(),
-      name: fields[0] as String,
-    );
+      reps: fields[2] as int,
+      increment: fields[3] as int,
+      breathingPhases: (fields[4] as List).cast<BreathingPhase>(),
+      name: fields[1] as String,
+    )..id = fields[0] as String;
   }
 
   @override
   void write(BinaryWriter writer, TrainingStage obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.reps)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.increment)
+      ..write(obj.reps)
       ..writeByte(3)
+      ..write(obj.increment)
+      ..writeByte(4)
       ..write(obj.breathingPhases);
   }
 

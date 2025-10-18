@@ -287,7 +287,7 @@ class _TrainingPageState extends State<TrainingPage> {
       return trimmed;
     }
     final template = translationProvider
-        .getTranslation("TrainingPage.TrainingOverview.stage");
+        .getTranslation("TrainingPage.TrainingOverview.training_stage");
     return '$template ${index + 1}';
   }
 

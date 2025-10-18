@@ -25,7 +25,7 @@ class Sounds {
   SoundScope nextSoundScope = SoundScope.global;
   /// Next sound played between breathing phases
   @HiveField(4)
-  SoundAsset nextSound = SoundAsset(type: SoundType.cue);
+  SoundAsset nextSound = SoundAsset();
 
   /// Preparation and ending tracks for the training session
   @HiveField(5)
@@ -46,7 +46,7 @@ class Sounds {
   /// 
   /// `key` - stage uuid, `value` - sound name
   @HiveField(9)
-  List<SoundAsset> stageTracks = [];
+  Map<String, SoundAsset> stageTracks = {};
 
   // === BREATHING PHASE LEVEL ===
 
@@ -66,39 +66,39 @@ class Sounds {
 
   void clearUserSound(String soundName) {
     if (countingSound.path == soundName) {
-      countingSound = SoundAsset(type: SoundType.none);
+      countingSound.path = null;
     }
     if (globalBackgroundSound.path == soundName) {
-      globalBackgroundSound = SoundAsset(type: SoundType.none);
+      globalBackgroundSound.path = null;
     }
     if (nextSound.path == soundName) {
-      nextSound = SoundAsset(type: SoundType.none);
+      nextSound.path = null;
     }
     if (preparationTrack.path == soundName) {
-      preparationTrack = SoundAsset(type: SoundType.none);
+      preparationTrack.path = null;
     }
     if (endingTrack.path == soundName) {
-      endingTrack = SoundAsset(type: SoundType.none);
+      endingTrack.path = null;
     }
     if (trainingBackgroundTrack.path == soundName) {
-      trainingBackgroundTrack = SoundAsset(type: SoundType.none);
+      trainingBackgroundTrack.path = null;
     }
 
-    for (int i=0; i<stageTracks.length; i++) {
-      if (stageTracks[i].path == soundName) {
-        stageTracks[i] = SoundAsset(type: SoundType.none);
+    for (var stage in stageTracks.keys) {
+      if (stageTracks[stage]!.path == soundName) {
+        stageTracks[stage]!.path = null;
       }
     }
 
     breathingPhaseCues.forEach((key, value) {
       if (value.path == soundName) {
-        breathingPhaseCues[key] = SoundAsset(type: SoundType.none);
+        breathingPhaseCues[key]!.path = null;
       }
     });
 
     breathingPhaseBackgrounds.forEach((key, value) {
       if (value.path == soundName) {
-        breathingPhaseBackgrounds[key] = SoundAsset(type: SoundType.none);
+        breathingPhaseBackgrounds[key]!.path = null;
       }
     });
   }

@@ -9,15 +9,12 @@ enum SoundScope {
   none,
 
   @HiveField(1)
-  voice,
-
-  @HiveField(2)
   global,
 
-  @HiveField(3)
+  @HiveField(2)
   perStage,
 
-  @HiveField(4)
+  @HiveField(3)
   perPhase,
 }
 
@@ -26,8 +23,6 @@ extension SoundScopeX on SoundScope {
     switch (this) {
       case SoundScope.none:
         return TranslationProvider().getTranslation("SoundScope.none");
-      case SoundScope.voice:
-        return TranslationProvider().getTranslation("SoundScope.voice");
       case SoundScope.global:
         return TranslationProvider().getTranslation("SoundScope.global");
       case SoundScope.perStage:
@@ -39,9 +34,5 @@ extension SoundScopeX on SoundScope {
 
   static List<SoundScope> get nextPhaseScopeValues {
     return SoundScope.values.where((scope) => scope != SoundScope.perStage).toList();
-  }
-
-  static List<SoundScope> get backgroundScopeValues {
-    return SoundScope.values.where((scope) => scope != SoundScope.perPhase).toList();
   }
 }

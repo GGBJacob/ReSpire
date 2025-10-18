@@ -53,14 +53,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     preparationController = TextEditingController(text: widget.training.settings.preparationDuration.toString());
   }
 
-  void saveTraining() {
-    // TODO: implement actual saving logic, e.g., write to local storage or call an API
-    print("Training saved: ${widget.training.title}");
-  }
-
   void addTrainingStage() {
     setState(() {
-      trainingStages.add(TrainingStage(reps: 3, breathingPhases: [], increment: 0, name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.stage")} ${trainingStages.length + 1}"));
+      trainingStages.add(TrainingStage(reps: 3, breathingPhases: [], increment: 0, name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} ${trainingStages.length + 1}"));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
@@ -339,20 +334,18 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   onChanged: (v) => setState(() => _sounds.nextSoundScope = v!))],
                                       ),
                                     
-                                    if (_sounds.nextSoundScope != SoundScope.none && _sounds.nextSoundScope != SoundScope.voice)...[
+                                    if (_sounds.nextSoundScope != SoundScope.none)...[
                                       Column(
                                           children: [
                                             if(_sounds.nextSoundScope == SoundScope.global)
-                                              SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.global"), selectedValue: _sounds.nextSound.path, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextSound.path = v; })) 
+                                              ((){
+                                                _sounds.nextSound.type = SoundType.cue;
+                                                return SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.global"), selectedValue: _sounds.nextSound.path, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextSound.path = v; }));})()
                                             else if (_sounds.nextSoundScope == SoundScope.perPhase)
-                                            ...[SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.inhale"), selectedValue: _sounds.breathingPhaseCues[BreathingPhaseType.inhale]?.path, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseCues[BreathingPhaseType.inhale]?.path = v; })),
-                                            SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.retention"), selectedValue: _sounds.breathingPhaseCues[BreathingPhaseType.retention]?.path, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseCues[BreathingPhaseType.retention]?.path = v; })),
-                                            SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.exhale"), selectedValue: _sounds.breathingPhaseCues[BreathingPhaseType.exhale]?.path, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseCues[BreathingPhaseType.exhale]?.path = v; })),
-                                            SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.recovery"), selectedValue: _sounds.breathingPhaseCues[BreathingPhaseType.recovery]?.path, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseCues[BreathingPhaseType.recovery]?.path = v; })),
-                                          ],
+                                              ...buildPhaseSoundRows(SoundListType.shortSounds)
                                           ],
                                         ),
-                                    ],
+                                    ]
                                   ],
                                 ),
                               ),
@@ -399,7 +392,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                       ),
                                                     ), 
                                                   value: _sounds.backgroundSoundScope, 
-                                                  items: SoundScopeX.backgroundScopeValues.map((e) => DropdownMenuItem(value: e, child: Text(e.name))).toList(),
+                                                  items: SoundScope.values.map((e) => DropdownMenuItem(value: e, child: Text(e.name))).toList(),
                                                   onChanged: (v) => setState(() => _sounds.backgroundSoundScope = v!))],
                                       ),
                                       if (_sounds.backgroundSoundScope != SoundScope.none)...[
@@ -409,13 +402,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.global"), selectedValue: _sounds.trainingBackgroundTrack.path, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.trainingBackgroundTrack.path = v; }))
                                                 ] 
                                                 else if(_sounds.backgroundSoundScope == SoundScope.perPhase)
-                                                ...[SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.inhale"), selectedValue: _sounds.breathingPhaseBackgrounds[BreathingPhaseType.inhale]?.path, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseBackgrounds[BreathingPhaseType.inhale]?.path = v; })),
-                                                SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.retention"), selectedValue: _sounds.breathingPhaseBackgrounds[BreathingPhaseType.retention]?.path, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseBackgrounds[BreathingPhaseType.retention]?.path = v; })),
-                                                SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.exhale"), selectedValue: _sounds.breathingPhaseBackgrounds[BreathingPhaseType.exhale]?.path, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseBackgrounds[BreathingPhaseType.exhale]?.path = v; })),
-                                                SoundSelectionRow(label: translationProvider.getTranslation("BreathingPhaseType.recovery"), selectedValue: _sounds.breathingPhaseBackgrounds[BreathingPhaseType.recovery]?.path, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.breathingPhaseBackgrounds[BreathingPhaseType.recovery]?.path = v ; })),
-                                                ]
+                                                  ...buildPhaseSoundRows(SoundListType.longSounds)
                                                 else if(_sounds.backgroundSoundScope == SoundScope.perStage)
-                                                  ...buildStageTracksRows()
+                                                  ...buildStageSoundsRows()
                                                 ,
                                           ],
                                         ),
@@ -565,26 +554,48 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
              ? FloatingActionButton.extended(
                  onPressed: addTrainingStage,
                  backgroundColor: darkerblue,
-                 label: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.add_stage_button_label"), style: TextStyle(color: Colors.white)),
+                 label: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.add_training_stage_button_label"), style: TextStyle(color: Colors.white)),
                  icon: Icon(Icons.add, color: Colors.white),
                )
              : null,
       ),
     );
   }
-  
-  List<Widget> buildStageTracksRows() {
-  _sounds.stageTracks = List<SoundAsset>.filled(trainingStages.length, SoundAsset(type: SoundType.melody));
 
-    return List.generate(trainingStages.length, (i) => SoundSelectionRow(
-      label: translationProvider.getTranslation(trainingStages[i].name),
-      selectedValue: _sounds.stageTracks[i].path,
-      soundListType: SoundListType.longSounds,
-      onChanged: (v) {
-        setState(() {
-          _sounds.stageTracks[i].path = v;
-        });
-      },
-    ));
+  List<Widget> buildPhaseSoundRows(SoundListType type) {
+    return [
+      for (final phase in BreathingPhaseType.values)
+        SoundSelectionRow(
+          label: translationProvider.getTranslation("BreathingPhaseType.${phase.name}"),
+          selectedValue: type == SoundListType.longSounds? 
+            _sounds.breathingPhaseBackgrounds[phase]?.path :
+            _sounds.breathingPhaseCues[phase]?.path,
+          soundListType: type,
+          onChanged: (v) {
+            setState(() {
+              type == SoundListType.longSounds ?
+                _sounds.breathingPhaseBackgrounds[phase] =  SoundAsset(type: SoundType.melody, path: v) :
+                _sounds.breathingPhaseCues[phase] = SoundAsset(type: SoundType.cue, path: v);
+            });
+          },
+        ),
+    ];
+  }
+  
+  List<Widget> buildStageSoundsRows() {
+    return [
+      for (final stage in trainingStages)
+        SoundSelectionRow(
+          label: translationProvider.getTranslation(stage.name),
+          selectedValue: _sounds.stageTracks[stage.id]?.path,
+          soundListType: SoundListType.longSounds,
+          onChanged: (v) {
+            setState(() {
+              _sounds.stageTracks[stage.id] = 
+                SoundAsset(type: SoundType.melody, path: v);
+            });
+          },
+        ),
+    ];
   }
 }

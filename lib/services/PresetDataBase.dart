@@ -57,7 +57,7 @@ class PresetDataBase {
               BreathingPhase(duration: 1, breathingPhaseType: BreathingPhaseType.recovery),
             ],
             increment: 0,
-            name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.stage")} 1"
+            name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} 1"
           )
         ]
       ),
@@ -72,7 +72,7 @@ class PresetDataBase {
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.recovery),
           ],
           increment: 0,
-          name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.stage")} 1"
+          name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} 1"
           )
         ]
          ),
@@ -88,7 +88,7 @@ class PresetDataBase {
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.recovery),
           ],
           increment: 10,
-          name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.stage")} 1"
+          name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} 1"
         ),
         TrainingStage(
           reps: 1,
@@ -99,7 +99,7 @@ class PresetDataBase {
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.recovery),
           ],
           increment: 0,
-          name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.stage")} 2"
+          name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} 2"
         ),
       ],
     ),

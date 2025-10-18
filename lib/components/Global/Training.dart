@@ -36,7 +36,6 @@ class Training {
     // Update next phase sounds
     switch (sounds.nextSoundScope) {
       case SoundScope.none:
-      case SoundScope.voice:
       case SoundScope.perStage:
         break;
 
@@ -75,8 +74,6 @@ class Training {
     // Update background sounds
     switch (sounds.backgroundSoundScope) {
       case SoundScope.none:
-      case SoundScope.voice:
-      case SoundScope.perPhase:
         break;
 
       case SoundScope.global:
@@ -90,10 +87,31 @@ class Training {
 
       case SoundScope.perStage:
         for (int i=0; i<trainingStages.length; i++) {
-          trainingStages[i].propagateBackgroundSound(sounds.stageTracks[i].path);
+          trainingStages[i].propagateBackgroundSound(sounds.stageTracks[trainingStages[i].id]!.path);
         }
         break; 
 
+      
+      case SoundScope.perPhase:
+        for (int i=0; i<trainingStages.length; i++) {
+          for (var phase in trainingStages[i].breathingPhases){
+            switch(phase.breathingPhaseType) {
+              case BreathingPhaseType.inhale:
+                phase.sounds.background = sounds.breathingPhaseBackgrounds[BreathingPhaseType.inhale]!.path;
+                break;
+              case BreathingPhaseType.retention:
+                phase.sounds.background = sounds.breathingPhaseBackgrounds[BreathingPhaseType.retention]!.path;
+                break;
+              case BreathingPhaseType.exhale:
+                phase.sounds.background = sounds.breathingPhaseBackgrounds[BreathingPhaseType.exhale]!.path;
+                break;
+              case BreathingPhaseType.recovery:
+                phase.sounds.background = sounds.breathingPhaseBackgrounds[BreathingPhaseType.recovery]!.path;
+                break;
+            }
+          }
+        }
+        break;
     }
   }
 }
