@@ -66,7 +66,7 @@ class PresetDataBase {
         trainingStages: [
           TrainingStage(reps: 3,
           breathingPhases: [
-            BreathingPhase(duration: 2.5, breathingPhaseType: BreathingPhaseType.inhale, increment: BreathingPhaseIncrement(value: 10, type: BreathingPhaseIncrementType.percentage), breathDepth: BreathDepth.shallow, breathType: BreathType.costal),
+            BreathingPhase(duration: 2.5, breathingPhaseType: BreathingPhaseType.inhale, increment: BreathingPhaseIncrement(value: 10, type: BreathingPhaseIncrementType.percentage)),
             BreathingPhase(duration: 3.14, breathingPhaseType: BreathingPhaseType.retention),
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.exhale, increment: BreathingPhaseIncrement(value: 50, type: BreathingPhaseIncrementType.percentage)),
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.recovery),
@@ -82,7 +82,7 @@ class PresetDataBase {
         TrainingStage(
           reps: 2,
           breathingPhases: [
-            BreathingPhase(duration: 2.5, breathingPhaseType: BreathingPhaseType.inhale, increment: BreathingPhaseIncrement(value: 10, type: BreathingPhaseIncrementType.percentage), breathDepth: BreathDepth.deep, breathType: BreathType.diaphragmatic),
+            BreathingPhase(duration: 2.5, breathingPhaseType: BreathingPhaseType.inhale, increment: BreathingPhaseIncrement(value: 10, type: BreathingPhaseIncrementType.percentage)),
             BreathingPhase(duration: 3.5, breathingPhaseType: BreathingPhaseType.retention),
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.exhale, increment: BreathingPhaseIncrement(value: 1, type: BreathingPhaseIncrementType.value)),
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.recovery),
@@ -93,7 +93,7 @@ class PresetDataBase {
         TrainingStage(
           reps: 1,
           breathingPhases: [
-            BreathingPhase(duration: 5.0, breathingPhaseType: BreathingPhaseType.inhale, increment: BreathingPhaseIncrement(value: 15, type: BreathingPhaseIncrementType.percentage), breathDepth: BreathDepth.deep, breathType: BreathType.diaphragmatic),
+            BreathingPhase(duration: 5.0, breathingPhaseType: BreathingPhaseType.inhale, increment: BreathingPhaseIncrement(value: 15, type: BreathingPhaseIncrementType.percentage)),
             BreathingPhase(duration: 4, breathingPhaseType: BreathingPhaseType.retention),
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.exhale, increment: BreathingPhaseIncrement(value: 50, type: BreathingPhaseIncrementType.percentage)),
             BreathingPhase(duration: 3, breathingPhaseType: BreathingPhaseType.recovery),

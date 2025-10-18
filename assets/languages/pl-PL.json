@@ -116,7 +116,7 @@
         "exit_popup_title":"Wyjdź",
         "exit_popup_message":"Zakończyć trening?\nJeśli naciśniesz \"Tak\" twój trening zostanie przerwany.",
         "circle_paused_text":"Wznów",
-        "current_stage_label":"Aktualny etap",
+        "current_training_stage_label":"Aktualny etap",
         "default_stage_name":"Etap {number}",
         
         "InstructionSlider":{

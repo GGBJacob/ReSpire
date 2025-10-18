@@ -162,7 +162,7 @@ class InstructionSliderState extends State<InstructionSlider>
           ),
           child: Text(
             text,
-            style: TextStyle(fontSize: 18, color: Colors.white,),
+            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
         ),
