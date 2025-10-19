@@ -71,9 +71,10 @@
                 "counting_sound": "Counting",
                 "NextBreathingPhaseSounds":{
                     "title":"Next breathing phase",
+                    "none": "No sound",
                     "global":"Global",
                     "voice":"Lector",
-                    "for_each_breathing_phase":"For each breathing phase"
+                    "for_each_breathing_phase":"Each breathing phase"
                 }
             },
 
@@ -82,11 +83,11 @@
                 "preparation_music":"Preparation",
                 "ending_music":"Ending",
                 "Background_music":{
-                    "title": "Background",
+                    "title": "Background music",
                     "global": "For whole training",
                     "training_stages": "For training stages",
                     "breathing_phases": "For breathing phases",
-                    "breathing_phases_label": "Breathing Phases",
+                    "breathing_phases_label": "Breathing phases",
                     "none": "None"
                 }
             },

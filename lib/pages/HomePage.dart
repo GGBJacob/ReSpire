@@ -51,7 +51,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addPreset() {
-    //TODO: Implement preset adding (dedicated page + controllers)
     db.presetList
         .add(Training(title: titleController.text, trainingStages: List.empty()));
     setState(() {});
@@ -60,7 +59,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void editPreset(int index) {
-    //TODO: Implement preset editing (dedicated page + controllers)
     db.presetList[index] =
         Training(title: titleController.text, trainingStages: List.empty());
     setState(() {});

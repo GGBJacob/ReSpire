@@ -71,10 +71,10 @@
                 "counting_sound": "Odliczanie",
                 "NextBreathingPhaseSounds":{
                     "title":"Następna faza oddechu",
-                    "none": "Brak",
+                    "none": "Brak dźwięku",
                     "voice":"Lektor",
                     "global":"Globalnie",
-                    "for_each_breathing_phase":"Dla każdej fazy oddechu"
+                    "for_each_breathing_phase":"Każda faza oddechu"
                 }
             },
 
@@ -85,8 +85,8 @@
                 "Background_music":{
                     "title": "Muzyka w tle",
                     "global": "Dla całego treningu",
-                    "stages": "Dla etapów",
-                    "breathing_phases": "Dla fazy oddechu",
+                    "training_stages": "Dla etapów",
+                    "breathing_phases": "Dla faz oddechu",
                     "breathing_phases_label": "Fazy oddechu",
                     "none": "Brak"
                 }

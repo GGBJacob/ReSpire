@@ -6,6 +6,7 @@ import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
+import 'package:respire/utils/TextUtils.dart';
 
 class TrainingPage extends StatefulWidget {
   final int index;
@@ -104,7 +105,7 @@ class _TrainingPageState extends State<TrainingPage> {
                     child: Text(
             training.description == ''
               ? '${translationProvider.getTranslation("TrainingPage.description_placeholder_prefix")} "${training.title}".'
-              : training.description,
+              : TextUtils.addNoBreakingSpaces(training.description),
                       style: TextStyle(color: greenblue, fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -161,11 +162,6 @@ class _TrainingPageState extends State<TrainingPage> {
                     ),
                   ],
                 ))));
-  }
-
-  String capitalize(String s) {
-    if (s.isEmpty) return s;
-    return s[0].toUpperCase() + s.substring(1);
   }
 
   Widget trainingOverviewHeader() {
