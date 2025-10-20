@@ -108,7 +108,12 @@
             "next_breathing_phase_label":"Next breathing phase",
             "chart_label":"Chart",
             "breathing_phase_colors_label":"Breathing phase colors",
-            "preparation_duration_label":"Duration of preparation training stage (s)"
+            "preparation_duration_label":"Duration of preparation training stage (s)",
+            "binaural_beats_label":"Binaural Beats",
+            "binaural_beats_enabled":"Enable binaural beats",
+            "left_frequency_label":"Left ear frequency",
+            "right_frequency_label":"Right ear frequency",
+            "beat_frequency_label":"Beat frequency"
         }
     },
 

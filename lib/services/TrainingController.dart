@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:respire/components/BreathingPage/TrainingParser.dart';
+import 'package:respire/components/Global/Settings.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/Step.dart' as breathing_phase;
+import 'package:respire/services/BinauralBeatGenerator.dart';
 import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
@@ -35,17 +38,32 @@ class TrainingController {
   int _stopTimer = 2;
 
   late Sounds _sounds;
+  late Settings _settings;
 
   String? _currentSound;
   late SoundManager soundManager;
+  late BinauralBeatGenerator binauralGenerator;
 
   TranslationProvider translationProvider = TranslationProvider();
 
   TrainingController(this.parser) {
     soundManager = SoundManager();
     soundManager.stopAllSounds();
+    binauralGenerator = BinauralBeatGenerator();
     _remainingTime = parser.training.settings.preparationDuration * 1000;
     _sounds = parser.training.sounds;
+    _settings = parser.training.settings;
+    
+    // Start binaural beats once if enabled
+    dev.log('TrainingController: binauralBeatsEnabled=${_settings.binauralBeatsEnabled}');
+    if (_settings.binauralBeatsEnabled) {
+      dev.log('Starting binaural beats: Left=${_settings.binauralLeftFrequency}Hz, Right=${_settings.binauralRightFrequency}Hz');
+      binauralGenerator.start(
+        _settings.binauralLeftFrequency,
+        _settings.binauralRightFrequency,
+      );
+    }
+    
     _preloadBreathingPhases();
     _start();
   }
@@ -78,6 +96,9 @@ class TrainingController {
     if (_currentSound != null) {
       soundManager.pauseSound(_currentSound!);
     }
+    if (_settings.binauralBeatsEnabled) {
+      binauralGenerator.pause();
+    }
     _timer?.cancel();
   }
 
@@ -85,6 +106,9 @@ class TrainingController {
     isPaused.value = false;
     if (_currentSound != null) {
       soundManager.playSound(_currentSound!);
+    }
+    if (_settings.binauralBeatsEnabled) {
+      binauralGenerator.resume();
     }
     _start();
   }
@@ -135,6 +159,7 @@ class TrainingController {
     String? currentBackgroundSound = _sounds.preparationTrack.path;
     _currentSound = currentBackgroundSound;
     soundManager.playSound(currentBackgroundSound);
+    
     _timer =
         Timer.periodic(Duration(milliseconds: _updateInterval), (Timer timer) {
       final now = DateTime.now();
@@ -234,6 +259,7 @@ class TrainingController {
   void dispose() {
     TextToSpeechService().stopSpeaking();
     soundManager.stopAllSounds();
+    binauralGenerator.stop();
     _timer?.cancel();
     currentTrainingStageName.dispose();
   }

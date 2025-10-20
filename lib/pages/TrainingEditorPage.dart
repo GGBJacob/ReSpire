@@ -543,6 +543,98 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                 ),
                               ),
                             ),
+                            SizedBox(height: 16),
+                            Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              elevation: 2,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        translationProvider.getTranslation("TrainingEditorPage.OtherTab.binaural_beats_label"),
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue),
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    SwitchListTile(
+                                      title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.binaural_beats_enabled")),
+                                      value: widget.training.settings.binauralBeatsEnabled,
+                                      activeColor: darkerblue,
+                                      inactiveTrackColor: Colors.white,
+                                      inactiveThumbColor: Colors.grey,
+                                      trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+                                        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
+                                          return mediumblue;
+                                        }
+                                        return null;
+                                      }),
+                                      onChanged: (v) => setState(() => widget.training.settings.binauralBeatsEnabled = v),
+                                    ),
+                                    if (widget.training.settings.binauralBeatsEnabled) ...[
+                                      SizedBox(height: 12),
+                                      ListTile(
+                                        title: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              translationProvider.getTranslation("TrainingEditorPage.OtherTab.left_frequency_label"),
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                            ),
+                                            Text(
+                                              '${widget.training.settings.binauralLeftFrequency.toStringAsFixed(1)} Hz',
+                                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Slider(
+                                          value: widget.training.settings.binauralLeftFrequency,
+                                          min: 100,
+                                          max: 500,
+                                          divisions: 80,
+                                          activeColor: darkerblue,
+                                          onChanged: (v) => setState(() => widget.training.settings.binauralLeftFrequency = v),
+                                        ),
+                                      ),
+                                      ListTile(
+                                        title: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              translationProvider.getTranslation("TrainingEditorPage.OtherTab.right_frequency_label"),
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                            ),
+                                            Text(
+                                              '${widget.training.settings.binauralRightFrequency.toStringAsFixed(1)} Hz',
+                                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Slider(
+                                          value: widget.training.settings.binauralRightFrequency,
+                                          min: 100,
+                                          max: 500,
+                                          divisions: 80,
+                                          activeColor: darkerblue,
+                                          onChanged: (v) => setState(() => widget.training.settings.binauralRightFrequency = v),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        child: Text(
+                                          '${translationProvider.getTranslation("TrainingEditorPage.OtherTab.beat_frequency_label")}: ${(widget.training.settings.binauralRightFrequency - widget.training.settings.binauralLeftFrequency).abs().toStringAsFixed(1)} Hz',
+                                          style: TextStyle(fontSize: 13, color: darkerblue, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

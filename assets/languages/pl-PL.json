@@ -108,7 +108,12 @@
             "next_breathing_phase_label":"Kolejna faza oddechu",
             "chart_label":"Wykres",
             "breathing_phase_colors_label":"Kolory faz oddechu",
-            "preparation_duration_label":"Długość trwania fazy przygotowania (s)"
+            "preparation_duration_label":"Długość trwania fazy przygotowania (s)",
+            "binaural_beats_label":"Dźwięki Binauralne",
+            "binaural_beats_enabled":"Włącz dźwięki binauralne",
+            "left_frequency_label":"Częstotliwość lewego ucha",
+            "right_frequency_label":"Częstotliwość prawego ucha",
+            "beat_frequency_label":"Częstotliwość uderzenia"
         }
     },
 

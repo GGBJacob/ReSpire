@@ -11,5 +11,13 @@ class Settings {
   @HiveField(1)
   bool differentColors = false;
 
+  @HiveField(2)
+  bool binauralBeatsEnabled = false;
+  
+  @HiveField(3)
+  double binauralLeftFrequency = 200.0; // Hz
+  
+  @HiveField(4)
+  double binauralRightFrequency = 210.0; // Hz (10 Hz beat frequency)
   
 }
