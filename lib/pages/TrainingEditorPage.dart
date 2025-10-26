@@ -36,7 +36,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
 
   int _selectedTab = 0;
   late Sounds _sounds;
-  
+
   // Other tab state
   bool _showNextBreathingPhaseToggle = false;
   bool _showChartToggle = false;
@@ -49,13 +49,20 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     super.initState();
     trainingStages = widget.training.trainingStages;
     _sounds = widget.training.sounds;
-    descriptionController = TextEditingController(text: widget.training.description);
-    preparationController = TextEditingController(text: widget.training.settings.preparationDuration.toString());
+    descriptionController =
+        TextEditingController(text: widget.training.description);
+    preparationController = TextEditingController(
+        text: widget.training.settings.preparationDuration.toString());
   }
 
   void addTrainingStage() {
     setState(() {
-      trainingStages.add(TrainingStage(reps: 3, breathingPhases: [], increment: 0, name: "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} ${trainingStages.length + 1}"));
+      trainingStages.add(TrainingStage(
+          reps: 3,
+          breathingPhases: [],
+          increment: 0,
+          name:
+              "${translationProvider.getTranslation("TrainingPage.TrainingOverview.training_stage")} ${trainingStages.length + 1}"));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
@@ -73,20 +80,26 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.remove_training_stage_dialog_title")),
-          content: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.remove_training_stage_dialog_content")),
+          title: Text(translationProvider.getTranslation(
+              "TrainingEditorPage.TrainingTab.remove_training_stage_dialog_title")),
+          content: Text(translationProvider.getTranslation(
+              "TrainingEditorPage.TrainingTab.remove_training_stage_dialog_content")),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.cancel"), style: TextStyle(color: darkerblue)),
+              child: Text(
+                  translationProvider.getTranslation("PopupButton.cancel"),
+                  style: TextStyle(color: darkerblue)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.remove"), style: TextStyle(color: darkerblue)),
+              child: Text(
+                  translationProvider.getTranslation("PopupButton.remove"),
+                  style: TextStyle(color: darkerblue)),
             ),
           ],
         );
@@ -115,92 +128,98 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     super.dispose();
   }
 
-  
   void showEditTitleDialog(BuildContext context) {
     final tempController = TextEditingController(text: widget.training.title);
-    bool isError = false; 
+    bool isError = false;
     const int titleMaxLength = 20;
     showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder( 
-        builder: (context, setStateDialog) => AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_title"),
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isError)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft, 
-                    child: Text(
-                      translationProvider.getTranslation("TrainingEditorPage.TrainingTab.error"),
-                      style: TextStyle(color: darkred, fontSize: 12, fontWeight: FontWeight.bold),
+        return StatefulBuilder(
+          builder: (context, setStateDialog) => AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              translationProvider.getTranslation(
+                  "TrainingEditorPage.TrainingTab.edit_title_dialog_title"),
+              style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold, color: darkerblue),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isError)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        translationProvider.getTranslation(
+                            "TrainingEditorPage.TrainingTab.error"),
+                        style: TextStyle(
+                            color: darkred,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-              TextField(
-                controller: tempController,
-                autofocus: true,
-                maxLength: titleMaxLength,
-                decoration: InputDecoration(
-                  hintText: translationProvider.getTranslation("TrainingEditorPage.TrainingTab.edit_title_dialog_hint"),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: darkerblue, width: 2.0),
+                TextField(
+                  controller: tempController,
+                  autofocus: true,
+                  maxLength: titleMaxLength,
+                  decoration: InputDecoration(
+                    hintText: translationProvider.getTranslation(
+                        "TrainingEditorPage.TrainingTab.edit_title_dialog_hint"),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: darkerblue, width: 2.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: darkerblue, width: 2.0),
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: darkerblue, width: 2.0),
-                  ),
+                )
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text(
+                  translationProvider.getTranslation("PopupButton.cancel"),
+                  style: TextStyle(color: darkerblue),
                 ),
-              )
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              ElevatedButton(
+                child: Text(
+                  translationProvider.getTranslation("PopupButton.save"),
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
+                onPressed: () {
+                  String text = tempController.text.trim();
+
+                  if (text.isEmpty) {
+                    setStateDialog(() {
+                      isError = true;
+                    });
+                    return;
+                  }
+
+                  setState(() {
+                    widget.training.title = text;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
-          actions: [
-            TextButton(
-              child: Text(
-                translationProvider.getTranslation("PopupButton.cancel"),
-                style: TextStyle(color: darkerblue),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: Text(
-                translationProvider.getTranslation("PopupButton.save"),
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
-              onPressed: () {
-                String text = tempController.text.trim();
-
-                if (text.isEmpty) {
-                  setStateDialog(() {
-                    isError = true;
-                  });
-                  return;
-                }
-
-                setState(() {
-                  widget.training.title = text;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +233,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
         appBar: AppBar(
           title: Text(
             widget.training.title,
-            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
@@ -236,9 +256,33 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomSlidingSegmentedControl<int>(
                   children: {
-                    0: Text(translationProvider.getTranslation("TrainingEditorPage.tab.training"), style: TextStyle(color: _selectedTab==0?darkerblue:Colors.white, fontWeight:  _selectedTab==0?FontWeight.bold:FontWeight.normal)),
-                    1: Text(translationProvider.getTranslation("TrainingEditorPage.tab.sounds"), style: TextStyle(color: _selectedTab==1?darkerblue:Colors.white, fontWeight:  _selectedTab==1?FontWeight.bold:FontWeight.normal)),
-                    2: Text(translationProvider.getTranslation("TrainingEditorPage.tab.other"), style: TextStyle(color: _selectedTab==2?darkerblue:Colors.white, fontWeight:  _selectedTab==2?FontWeight.bold:FontWeight.normal)),
+                    0: Text(
+                        translationProvider
+                            .getTranslation("TrainingEditorPage.tab.training"),
+                        style: TextStyle(
+                            color:
+                                _selectedTab == 0 ? darkerblue : Colors.white,
+                            fontWeight: _selectedTab == 0
+                                ? FontWeight.bold
+                                : FontWeight.normal)),
+                    1: Text(
+                        translationProvider
+                            .getTranslation("TrainingEditorPage.tab.sounds"),
+                        style: TextStyle(
+                            color:
+                                _selectedTab == 1 ? darkerblue : Colors.white,
+                            fontWeight: _selectedTab == 1
+                                ? FontWeight.bold
+                                : FontWeight.normal)),
+                    2: Text(
+                        translationProvider
+                            .getTranslation("TrainingEditorPage.tab.other"),
+                        style: TextStyle(
+                            color:
+                                _selectedTab == 2 ? darkerblue : Colors.white,
+                            fontWeight: _selectedTab == 2
+                                ? FontWeight.bold
+                                : FontWeight.normal)),
                   },
                   initialValue: _selectedTab,
                   onValueChanged: (val) {
@@ -261,7 +305,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                       )
                     ],
                   ),
-                  innerPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                  innerPadding:
+                      EdgeInsets.symmetric(vertical: 4, horizontal: 4),
                 ),
               ),
               SizedBox(height: 2),
@@ -270,385 +315,698 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                     ? ReorderableListView(
                         scrollController: _scrollController,
                         onReorder: reorderTrainingStage,
-                        proxyDecorator: (child, idx, anim) => Material(color: Colors.transparent, child: child), //removes shadow when dragging tile
+                        proxyDecorator: (child, idx, anim) => Material(
+                            color: Colors.transparent,
+                            child: child), //removes shadow when dragging tile
                         padding: EdgeInsets.only(bottom: 80),
                         children: [
-                          for (int index = 0; index < trainingStages.length; index++)
+                          for (int index = 0;
+                              index < trainingStages.length;
+                              index++)
                             TrainingStageTile(
                               key: ValueKey('stage_$index'),
                               trainingStage: trainingStages[index],
                               trainingStageIndex: index,
                               onDelete: () => removeTrainingStage(index),
                               onUpdate: () {
-                                setState(() => widget.training.trainingStages = trainingStages);
+                                setState(() => widget.training.trainingStages =
+                                    trainingStages);
                               },
                             ),
                         ],
                       )
                     : SingleChildScrollView(
                         padding: EdgeInsets.all(16),
-                        child: _selectedTab == 1 ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 2,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.title"),
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                    SoundSelectionRow(labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold), label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.counting_sound"), selectedValue: _sounds.countingSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.countingSound = v; }), includeVoiceOption: true),
-                                    Row(
+                        child: _selectedTab == 1
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    elevation: 2,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                      child: Column(
                                         children: [
                                           Text(
-                                            translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.title"),
-                                            style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                                            translationProvider.getTranslation(
+                                                "TrainingEditorPage.SoundsTab.TrainingSounds.title"),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
                                           ),
-                                          SizedBox(width: 8),
-                                          DropdownButton2<SoundScope>(
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 35,
-                                              width: 160,
-                                              elevation: 2,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(12),
-                                                color: Colors.white,
+                                          SoundSelectionRow(
+                                              labelStyle: TextStyle(
+                                                  color: darkerblue,
+                                                  fontWeight: FontWeight.bold),
+                                              label: translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.SoundsTab.TrainingSounds.counting_sound"),
+                                              selectedValue:
+                                                  _sounds.countingSound,
+                                              soundListType:
+                                                  SoundListType.shortSounds,
+                                              onChanged: (v) => setState(() {
+                                                    _sounds.countingSound = v;
+                                                  }),
+                                              includeVoiceOption: true),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                translationProvider.getTranslation(
+                                                    "TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.title"),
+                                                style: TextStyle(
+                                                    color: darkerblue,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                                            ),
+                                              SizedBox(width: 8),
+                                              DropdownButton2<SoundScope>(
+                                                  buttonStyleData:
+                                                      ButtonStyleData(
+                                                    height: 35,
+                                                    width: 160,
+                                                    elevation: 2,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      color: Colors.white,
+                                                    ),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 12),
+                                                  ),
                                                   underline: SizedBox(),
-                                                  iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                                    dropdownStyleData: DropdownStyleData(       
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(12),
-                                                      ),
-                                                    ), 
+                                                  iconStyleData: IconStyleData(
+                                                      icon: Icon(
+                                                          Icons.arrow_drop_down,
+                                                          color: darkerblue)),
+                                                  dropdownStyleData:
+                                                      DropdownStyleData(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                  ),
                                                   value: _sounds.nextSoundScope,
-                                                  items: SoundScopeX.nextPhaseScopeValues.map((e) => DropdownMenuItem(child: Text(e.name), value: e)).toList(),
-                                                  onChanged: (v) => setState(() => _sounds.nextSoundScope = v!))],
+                                                  items: SoundScopeX
+                                                      .nextPhaseScopeValues
+                                                      .map((e) =>
+                                                          DropdownMenuItem(
+                                                              child:
+                                                                  Text(e.name),
+                                                              value: e))
+                                                      .toList(),
+                                                  onChanged: (v) => setState(
+                                                      () => _sounds
+                                                          .nextSoundScope = v!))
+                                            ],
+                                          ),
+                                          if (_sounds.nextSoundScope !=
+                                              SoundScope.none) ...[
+                                            Column(
+                                              children: [
+                                                if (_sounds.nextSoundScope ==
+                                                    SoundScope.global)
+                                                  (() {
+                                                    return SoundSelectionRow(
+                                                        label: translationProvider
+                                                            .getTranslation(
+                                                                "TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.global"),
+                                                        selectedValue:
+                                                            _sounds.nextSound,
+                                                        soundListType:
+                                                            SoundListType
+                                                                .shortSounds,
+                                                        onChanged: (v) =>
+                                                            setState(() {
+                                                              _sounds.nextSound =
+                                                                  v;
+                                                            }),
+                                                        includeVoiceOption:
+                                                            true);
+                                                  })()
+                                                else if (_sounds
+                                                        .nextSoundScope ==
+                                                    SoundScope.perPhase)
+                                                  ...buildPhaseSoundRows(
+                                                      SoundListType.shortSounds)
+                                              ],
+                                            ),
+                                          ]
+                                        ],
                                       ),
-                                    
-                                    if (_sounds.nextSoundScope != SoundScope.none)...[
-                                      Column(
-                                          children: [
-                                            if(_sounds.nextSoundScope == SoundScope.global)
-                                              ((){
-                                                return SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingSounds.NextBreathingPhaseSounds.global"), selectedValue: _sounds.nextSound, soundListType: SoundListType.shortSounds, onChanged:(v) => setState(() { _sounds.nextSound = v; }), includeVoiceOption: true);})()
-                                            else if (_sounds.nextSoundScope == SoundScope.perPhase)
-                                              ...buildPhaseSoundRows(SoundListType.shortSounds)
-                                          ],
-                                        ),
-                                    ]
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 16),
-                            Card(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 2,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.title"),
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                                     ),
-                                    SoundSelectionRow(labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold), label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.preparation_music"), selectedValue: _sounds.preparationTrack, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.preparationTrack = v; }), includeVoiceOption: true),
-                                    SoundSelectionRow(labelStyle: TextStyle(color: darkerblue, fontWeight: FontWeight.bold), label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.ending_music"), selectedValue: _sounds.endingTrack, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.endingTrack = v; }), includeVoiceOption: true),
-                                    Row(
+                                  ),
+                                  SizedBox(height: 16),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    elevation: 2,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                      child: Column(
                                         children: [
                                           Text(
-                                            translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.title"),
-                                            style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                                            translationProvider.getTranslation(
+                                                "TrainingEditorPage.SoundsTab.TrainingMusic.title"),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
                                           ),
-                                          SizedBox(width: 8),
-                                          DropdownButton2<SoundScope>(
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 35,
-                                              width: 200,
-                                              elevation: 2,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(12),
-                                                color: Colors.white,
+                                          SoundSelectionRow(
+                                              labelStyle: TextStyle(
+                                                  color: darkerblue,
+                                                  fontWeight: FontWeight.bold),
+                                              label: translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.SoundsTab.TrainingMusic.preparation_music"),
+                                              selectedValue:
+                                                  _sounds.preparationTrack,
+                                              soundListType:
+                                                  SoundListType.longSounds,
+                                              onChanged: (v) => setState(() {
+                                                    _sounds.preparationTrack =
+                                                        v;
+                                                  }),
+                                              includeVoiceOption: false),
+                                          SoundSelectionRow(
+                                              labelStyle: TextStyle(
+                                                  color: darkerblue,
+                                                  fontWeight: FontWeight.bold),
+                                              label: translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.SoundsTab.TrainingMusic.ending_music"),
+                                              selectedValue:
+                                                  _sounds.endingTrack,
+                                              soundListType:
+                                                  SoundListType.longSounds,
+                                              onChanged: (v) => setState(() {
+                                                    _sounds.endingTrack = v;
+                                                  }),
+                                              includeVoiceOption: false),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                translationProvider.getTranslation(
+                                                    "TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.title"),
+                                                style: TextStyle(
+                                                    color: darkerblue,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                                            ),
+                                              SizedBox(width: 8),
+                                              DropdownButton2<SoundScope>(
+                                                  buttonStyleData:
+                                                      ButtonStyleData(
+                                                    height: 35,
+                                                    width: 200,
+                                                    elevation: 2,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      color: Colors.white,
+                                                    ),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 12),
+                                                  ),
                                                   underline: SizedBox(),
-                                                  iconStyleData: IconStyleData(icon: Icon(Icons.arrow_drop_down, color: darkerblue)),
-                                                    dropdownStyleData: DropdownStyleData(       
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(12),
-                                                      ),
-                                                    ), 
-                                                  value: _sounds.backgroundSoundScope, 
-                                                  items: SoundScope.values.map((e) => DropdownMenuItem(value: e, child: Text(e.name))).toList(),
-                                                  onChanged: (v) => setState(() => _sounds.backgroundSoundScope = v!))],
-                                      ),
-                                      if (_sounds.backgroundSoundScope != SoundScope.none)...[
-                                        Column(
+                                                  iconStyleData: IconStyleData(
+                                                      icon: Icon(
+                                                          Icons.arrow_drop_down,
+                                                          color: darkerblue)),
+                                                  dropdownStyleData:
+                                                      DropdownStyleData(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                  ),
+                                                  value: _sounds
+                                                      .backgroundSoundScope,
+                                                  items: SoundScope.values
+                                                      .map((e) =>
+                                                          DropdownMenuItem(
+                                                              value: e,
+                                                              child:
+                                                                  Text(e.name)))
+                                                      .toList(),
+                                                  onChanged: (v) => setState(
+                                                      () => _sounds
+                                                              .backgroundSoundScope =
+                                                          v!))
+                                            ],
+                                          ),
+                                          if (_sounds.backgroundSoundScope !=
+                                              SoundScope.none) ...[
+                                            Column(
                                               children: [
-                                                if(_sounds.backgroundSoundScope == SoundScope.global) ...[
-                                                  SoundSelectionRow(label: translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.global"), selectedValue: _sounds.trainingBackgroundTrack, soundListType: SoundListType.longSounds, onChanged:(v) => setState(() { _sounds.trainingBackgroundTrack = v; }), includeVoiceOption: true)
-                                                ] 
-                                                else if(_sounds.backgroundSoundScope == SoundScope.perPhase)
-                                                  ...buildPhaseSoundRows(SoundListType.longSounds)
-                                                else if(_sounds.backgroundSoundScope == SoundScope.perStage)
-                                                  ...buildStageSoundsRows()
-                                                ,
+                                                if (_sounds
+                                                        .backgroundSoundScope ==
+                                                    SoundScope.global) ...[
+                                                  SoundSelectionRow(
+                                                      label: translationProvider
+                                                          .getTranslation(
+                                                              "TrainingEditorPage.SoundsTab.TrainingMusic.Background_music.global"),
+                                                      selectedValue: _sounds
+                                                          .trainingBackgroundTrack,
+                                                      soundListType:
+                                                          SoundListType
+                                                              .longSounds,
+                                                      onChanged: (v) =>
+                                                          setState(() {
+                                                            _sounds.trainingBackgroundTrack =
+                                                                v;
+                                                          }),
+                                                      includeVoiceOption: false)
+                                                ] else if (_sounds
+                                                        .backgroundSoundScope ==
+                                                    SoundScope.perPhase)
+                                                  ...buildPhaseSoundRows(
+                                                      SoundListType.longSounds)
+                                                else if (_sounds
+                                                        .backgroundSoundScope ==
+                                                    SoundScope.perStage)
+                                                  ...buildStageSoundsRows(),
+                                              ],
+                                            ),
                                           ],
-                                        ),
-                                    ],
-                                    ],
-                                  
-                                ),
-                              ),
-                            ),
-                          ],
-                        ) : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 2,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  children: [
-                                    // Description field
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.training_description_label"), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue)),
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(height: 5),
-                                    TextField(
-                                      controller: descriptionController,
-                                      focusNode: _descriptionFocusNode,
-                                      maxLines: 3,
-                                      decoration: InputDecoration(
-                                        hintText: translationProvider.getTranslation("TrainingEditorPage.OtherTab.training_description_hint"),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8), 
-                                          borderSide: BorderSide(
-                                            color: darkgrey,
-                                            width: 1.0, 
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    elevation: 2,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        children: [
+                                          // Description field
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                translationProvider.getTranslation(
+                                                    "TrainingEditorPage.OtherTab.training_description_label"),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: darkblue)),
                                           ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8), 
-                                          borderSide: BorderSide(
-                                            color: darkerblue,
-                                            width: 1.0, 
+                                          SizedBox(height: 5),
+                                          TextField(
+                                            controller: descriptionController,
+                                            focusNode: _descriptionFocusNode,
+                                            maxLines: 3,
+                                            decoration: InputDecoration(
+                                              hintText: translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.OtherTab.training_description_hint"),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                borderSide: BorderSide(
+                                                  color: darkgrey,
+                                                  width: 1.0,
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                borderSide: BorderSide(
+                                                  color: darkerblue,
+                                                  width: 1.0,
+                                                ),
+                                              ),
+                                            ),
+                                            onChanged: (value) {
+                                              widget.training.description =
+                                                  value;
+                                            },
                                           ),
-                                        ),
+                                          SizedBox(height: 12),
+                                          SwitchListTile(
+                                              title: Text(translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.OtherTab.next_breathing_phase_label")),
+                                              value:
+                                                  _showNextBreathingPhaseToggle,
+                                              activeColor: darkerblue,
+                                              inactiveTrackColor: Colors.white,
+                                              inactiveThumbColor: Colors.grey,
+                                              trackOutlineColor:
+                                                  WidgetStateProperty
+                                                      .resolveWith<Color?>(
+                                                          (Set<WidgetState>
+                                                              states) {
+                                                if (!states.contains(
+                                                        WidgetState.selected) &&
+                                                    !states.contains(
+                                                        WidgetState.disabled)) {
+                                                  return mediumblue;
+                                                }
+                                                return null;
+                                              }),
+                                              onChanged:
+                                                  null), //(v) => setState(() => _showNextBreathingPhaseToggle = v)),
+                                          SwitchListTile(
+                                              title: Text(translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.OtherTab.chart_label")),
+                                              value: _showChartToggle,
+                                              activeColor: darkerblue,
+                                              inactiveTrackColor: Colors.white,
+                                              inactiveThumbColor: Colors.grey,
+                                              trackOutlineColor:
+                                                  WidgetStateProperty
+                                                      .resolveWith<Color?>(
+                                                          (Set<WidgetState>
+                                                              states) {
+                                                if (!states.contains(
+                                                        WidgetState.selected) &&
+                                                    !states.contains(
+                                                        WidgetState.disabled)) {
+                                                  return mediumblue;
+                                                }
+                                                return null;
+                                              }),
+                                              onChanged:
+                                                  null), //(v) => setState(() => _showChartToggle = v)),
+                                          SwitchListTile(
+                                              title: Text(translationProvider
+                                                  .getTranslation(
+                                                      "TrainingEditorPage.OtherTab.breathing_phase_colors_label")),
+                                              value:
+                                                  _showBreathingPhaseColorsToggle,
+                                              activeColor: darkerblue,
+                                              inactiveTrackColor: Colors.white,
+                                              inactiveThumbColor: Colors.grey,
+                                              trackOutlineColor:
+                                                  WidgetStateProperty
+                                                      .resolveWith<Color?>(
+                                                          (Set<WidgetState>
+                                                              states) {
+                                                if (!states.contains(
+                                                        WidgetState.selected) &&
+                                                    !states.contains(
+                                                        WidgetState.disabled)) {
+                                                  return mediumblue;
+                                                }
+                                                return null;
+                                              }),
+                                              onChanged:
+                                                  null), //(v) => setState(() => _showBreathingPhaseColorsToggle = v)),
+                                          ListTile(
+                                            title: Text(translationProvider
+                                                .getTranslation(
+                                                    "TrainingEditorPage.OtherTab.preparation_duration_label")),
+                                            trailing: Container(
+                                              width: 90,
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(18),
+                                                border: Border.all(
+                                                    color: darkerblue,
+                                                    width: 2),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18),
+                                                      onTap: () {
+                                                        int currentValue =
+                                                            int.tryParse(
+                                                                    preparationController
+                                                                        .text) ??
+                                                                1;
+                                                        int newValue =
+                                                            (currentValue - 1)
+                                                                .clamp(1, 999);
+                                                        preparationController
+                                                                .text =
+                                                            newValue.toString();
+                                                        setState(() {
+                                                          widget
+                                                                  .training
+                                                                  .settings
+                                                                  .preparationDuration =
+                                                              newValue;
+                                                        });
+                                                      },
+                                                      child: const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Icon(
+                                                            Icons.remove,
+                                                            size: 16),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Center(
+                                                      child: Text(
+                                                        preparationController
+                                                            .text,
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18),
+                                                      onTap: () {
+                                                        int currentValue =
+                                                            int.tryParse(
+                                                                    preparationController
+                                                                        .text) ??
+                                                                1;
+                                                        int newValue =
+                                                            (currentValue + 1)
+                                                                .clamp(1, 999);
+                                                        preparationController
+                                                                .text =
+                                                            newValue.toString();
+                                                        setState(() {
+                                                          widget
+                                                                  .training
+                                                                  .settings
+                                                                  .preparationDuration =
+                                                              newValue;
+                                                        });
+                                                      },
+                                                      child: const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Icon(Icons.add,
+                                                            size: 16),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      onChanged: (value) {
-                                        widget.training.description = value;
-                                      },
                                     ),
-                                    SizedBox(height: 12),
-                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.next_breathing_phase_label")), value: _showNextBreathingPhaseToggle, activeColor: darkerblue, inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
-                                      WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                                        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
-                                          return mediumblue;
-                                        } return null;}), 
-                                      onChanged: null),//(v) => setState(() => _showNextBreathingPhaseToggle = v)),
-                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.chart_label")), value: _showChartToggle, activeColor: darkerblue, inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
-                                      WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                                        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
-                                          return mediumblue;
-                                        } return null;}),
-                                      onChanged: null), //(v) => setState(() => _showChartToggle = v)),
-                                    SwitchListTile(title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.breathing_phase_colors_label")), value: _showBreathingPhaseColorsToggle, activeColor: darkerblue,inactiveTrackColor: Colors.white, inactiveThumbColor: Colors.grey, trackOutlineColor: 
-                                      WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                                        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
-                                          return mediumblue;
-                                        } return null;}),
-                                      onChanged: null),//(v) => setState(() => _showBreathingPhaseColorsToggle = v)),
-                                    ListTile(
-                                      title: Text(
-                                        translationProvider.getTranslation("TrainingEditorPage.OtherTab.preparation_duration_label")
-                                      ),
-                                      trailing: Container(
-                                        width: 90,
-                                        height: 35,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(18),
-                                          border: Border.all(color: darkerblue, width: 2),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Material(
-                                              color: Colors.transparent,
-                                              child: InkWell(
-                                                borderRadius: BorderRadius.circular(18),
-                                                onTap: () {
-                                                  int currentValue = int.tryParse(preparationController.text) ?? 1;
-                                                  int newValue = (currentValue - 1).clamp(1, 999);
-                                                  preparationController.text = newValue.toString();
-                                                  setState(() {
-                                                    widget.training.settings.preparationDuration = newValue;
-                                                  });
-                                                },
-                                                child: const Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Icon(Icons.remove, size: 16),
-                                                ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    elevation: 2,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              translationProvider.getTranslation(
+                                                  "TrainingEditorPage.OtherTab.binaural_beats_label"),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: darkblue),
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          SwitchListTile(
+                                            title: Text(translationProvider
+                                                .getTranslation(
+                                                    "TrainingEditorPage.OtherTab.binaural_beats_enabled")),
+                                            value: widget.training.settings
+                                                .binauralBeatsEnabled,
+                                            activeColor: darkerblue,
+                                            inactiveTrackColor: Colors.white,
+                                            inactiveThumbColor: Colors.grey,
+                                            trackOutlineColor:
+                                                WidgetStateProperty.resolveWith<
+                                                        Color?>(
+                                                    (Set<WidgetState> states) {
+                                              if (!states.contains(
+                                                      WidgetState.selected) &&
+                                                  !states.contains(
+                                                      WidgetState.disabled)) {
+                                                return mediumblue;
+                                              }
+                                              return null;
+                                            }),
+                                            onChanged: (v) => setState(() =>
+                                                widget.training.settings
+                                                    .binauralBeatsEnabled = v),
+                                          ),
+                                          if (widget.training.settings
+                                              .binauralBeatsEnabled) ...[
+                                            SizedBox(height: 12),
+                                            ListTile(
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    translationProvider
+                                                        .getTranslation(
+                                                            "TrainingEditorPage.OtherTab.left_frequency_label"),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  Text(
+                                                    '${widget.training.settings.binauralLeftFrequency.toStringAsFixed(1)} Hz',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                ],
+                                              ),
+                                              subtitle: Slider(
+                                                value: widget.training.settings
+                                                    .binauralLeftFrequency,
+                                                min: 100,
+                                                max: 500,
+                                                divisions: 80,
+                                                activeColor: darkerblue,
+                                                onChanged: (v) => setState(() =>
+                                                    widget.training.settings
+                                                        .binauralLeftFrequency = v),
                                               ),
                                             ),
-                                            Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  preparationController.text,
-                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                                  textAlign: TextAlign.center,
-                                                ),
+                                            ListTile(
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    translationProvider
+                                                        .getTranslation(
+                                                            "TrainingEditorPage.OtherTab.right_frequency_label"),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  Text(
+                                                    '${widget.training.settings.binauralRightFrequency.toStringAsFixed(1)} Hz',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                ],
+                                              ),
+                                              subtitle: Slider(
+                                                value: widget.training.settings
+                                                    .binauralRightFrequency,
+                                                min: 100,
+                                                max: 500,
+                                                divisions: 80,
+                                                activeColor: darkerblue,
+                                                onChanged: (v) => setState(() =>
+                                                    widget.training.settings
+                                                        .binauralRightFrequency = v),
                                               ),
                                             ),
-                                            Material(
-                                              color: Colors.transparent,
-                                              child: InkWell(
-                                                borderRadius: BorderRadius.circular(18),
-                                                onTap: () {
-                                                  int currentValue = int.tryParse(preparationController.text) ?? 1;
-                                                  int newValue = (currentValue + 1).clamp(1, 999);
-                                                  preparationController.text = newValue.toString();
-                                                  setState(() {
-                                                    widget.training.settings.preparationDuration = newValue;
-                                                  });
-                                                },
-                                                child: const Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Icon(Icons.add, size: 16),
-                                                ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16),
+                                              child: Text(
+                                                '${translationProvider.getTranslation("TrainingEditorPage.OtherTab.beat_frequency_label")}: ${(widget.training.settings.binauralRightFrequency - widget.training.settings.binauralLeftFrequency).abs().toStringAsFixed(1)} Hz',
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: darkerblue,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
+                                            SizedBox(height: 8),
                                           ],
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(height: 16),
-                            Card(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 2,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        translationProvider.getTranslation("TrainingEditorPage.OtherTab.binaural_beats_label"),
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: darkblue),
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    SwitchListTile(
-                                      title: Text(translationProvider.getTranslation("TrainingEditorPage.OtherTab.binaural_beats_enabled")),
-                                      value: widget.training.settings.binauralBeatsEnabled,
-                                      activeColor: darkerblue,
-                                      inactiveTrackColor: Colors.white,
-                                      inactiveThumbColor: Colors.grey,
-                                      trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-                                        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
-                                          return mediumblue;
-                                        }
-                                        return null;
-                                      }),
-                                      onChanged: (v) => setState(() => widget.training.settings.binauralBeatsEnabled = v),
-                                    ),
-                                    if (widget.training.settings.binauralBeatsEnabled) ...[
-                                      SizedBox(height: 12),
-                                      ListTile(
-                                        title: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              translationProvider.getTranslation("TrainingEditorPage.OtherTab.left_frequency_label"),
-                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              '${widget.training.settings.binauralLeftFrequency.toStringAsFixed(1)} Hz',
-                                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                                            ),
-                                          ],
-                                        ),
-                                        subtitle: Slider(
-                                          value: widget.training.settings.binauralLeftFrequency,
-                                          min: 100,
-                                          max: 500,
-                                          divisions: 80,
-                                          activeColor: darkerblue,
-                                          onChanged: (v) => setState(() => widget.training.settings.binauralLeftFrequency = v),
-                                        ),
-                                      ),
-                                      ListTile(
-                                        title: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              translationProvider.getTranslation("TrainingEditorPage.OtherTab.right_frequency_label"),
-                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              '${widget.training.settings.binauralRightFrequency.toStringAsFixed(1)} Hz',
-                                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                                            ),
-                                          ],
-                                        ),
-                                        subtitle: Slider(
-                                          value: widget.training.settings.binauralRightFrequency,
-                                          min: 100,
-                                          max: 500,
-                                          divisions: 80,
-                                          activeColor: darkerblue,
-                                          onChanged: (v) => setState(() => widget.training.settings.binauralRightFrequency = v),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                                        child: Text(
-                                          '${translationProvider.getTranslation("TrainingEditorPage.OtherTab.beat_frequency_label")}: ${(widget.training.settings.binauralRightFrequency - widget.training.settings.binauralLeftFrequency).abs().toStringAsFixed(1)} Hz',
-                                          style: TextStyle(fontSize: 13, color: darkerblue, fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
               ),
             ],
           ),
         ),
         floatingActionButton: _selectedTab == 0
-             ? FloatingActionButton.extended(
-                 onPressed: addTrainingStage,
-                 backgroundColor: darkerblue,
-                 label: Text(translationProvider.getTranslation("TrainingEditorPage.TrainingTab.add_training_stage_button_label"), style: TextStyle(color: Colors.white)),
-                 icon: Icon(Icons.add, color: Colors.white),
-               )
-             : null,
+            ? FloatingActionButton.extended(
+                onPressed: addTrainingStage,
+                backgroundColor: darkerblue,
+                label: Text(
+                    translationProvider.getTranslation(
+                        "TrainingEditorPage.TrainingTab.add_training_stage_button_label"),
+                    style: TextStyle(color: Colors.white)),
+                icon: Icon(Icons.add, color: Colors.white),
+              )
+            : null,
       ),
     );
   }
@@ -658,22 +1016,23 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       for (final phase in BreathingPhaseType.values)
         SoundSelectionRow(
           includeVoiceOption: false,
-          label: translationProvider.getTranslation("BreathingPhaseType.${phase.name}"),
-          selectedValue: type == SoundListType.longSounds? 
-            _sounds.breathingPhaseBackgrounds[phase]! :
-            _sounds.breathingPhaseCues[phase]!,
+          label: translationProvider
+              .getTranslation("BreathingPhaseType.${phase.name}"),
+          selectedValue: type == SoundListType.longSounds
+              ? _sounds.breathingPhaseBackgrounds[phase]!
+              : _sounds.breathingPhaseCues[phase]!,
           soundListType: type,
           onChanged: (v) {
             setState(() {
-              type == SoundListType.longSounds ?
-                _sounds.breathingPhaseBackgrounds[phase] =  v :
-                _sounds.breathingPhaseCues[phase] = v;
+              type == SoundListType.longSounds
+                  ? _sounds.breathingPhaseBackgrounds[phase] = v
+                  : _sounds.breathingPhaseCues[phase] = v;
             });
           },
         ),
     ];
   }
-  
+
   List<Widget> buildStageSoundsRows() {
     return [
       for (final stage in trainingStages)
