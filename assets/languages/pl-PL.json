@@ -112,6 +112,15 @@
             "left_frequency_label":"Częstotliwość lewego ucha",
             "right_frequency_label":"Częstotliwość prawego ucha",
             "beat_frequency_label":"Częstotliwość uderzenia"
+        },
+
+        "Alert":{
+            "header" : "Twój trening jest niekompletny!",
+            "empty_training_message" : "Twój trening jest pusty, bo nie dodałeś żadnych faz oddechowych. Jeśli teraz wyjdziesz, trening nie zostanie zapisany.",
+            "empty_stages_message_first_part" : "Część etapów w Twoim treningu nie ma faz oddechowych i jest pusta (liczba etapów: ",
+            "empty_stages_message_second_part" : "). Jeśli teraz wyjdziesz, te etapy zostaną usunięte.",
+            "back_to_edition_button" : "Wróć do edycji",
+            "finish_edition_button" : "Wyjdź mimo to"
         }
     },
 

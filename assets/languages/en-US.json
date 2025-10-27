@@ -112,6 +112,16 @@
             "left_frequency_label":"Left ear frequency",
             "right_frequency_label":"Right ear frequency",
             "beat_frequency_label":"Beat frequency"
+        },
+
+                    
+        "Alert":{
+            "header" : "Your training is incomplete!",
+            "empty_training_message" : "Your training is empty because no breathing phases have been added. If you leave now, your training will not be saved.",
+            "empty_stages_message_first_part" : "Some stages in your workout don’t contain any breathing phases and are empty (number of stages: ",
+            "empty_stages_message_second_part" : "). If you leave now, these stages will be removed.",
+            "back_to_edition_button" : "Go back to editing",
+            "finish_edition_button" : "Leave anyway"
         }
     },
 

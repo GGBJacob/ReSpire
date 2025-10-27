@@ -221,12 +221,52 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     );
   }
 
+  void _showAlert(int emptyStages) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(translationProvider.getTranslation("TrainingEditorPage.Alert.header")),
+          content: widget.training.isEmpty() 
+            ? Text(translationProvider.getTranslation("TrainingEditorPage.Alert.empty_training_message")) 
+            : Text('${translationProvider.getTranslation("TrainingEditorPage.Alert.empty_stages_message_first_part")}$emptyStages${translationProvider.getTranslation("TrainingEditorPage.Alert.empty_stages_message_second_part")}'),
+              //textAlign: TextAlign.center),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actions: [
+            TextButton(
+              onPressed: () {
+                //delete empty stages
+                if(emptyStages > 0) {
+                  widget.training.deleteEmptyStages();
+                }
+                Navigator.pop(context);
+                Navigator.pop(context, widget.training);
+              },
+              child: Text(translationProvider.getTranslation("TrainingEditorPage.Alert.finish_edition_button")),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(translationProvider.getTranslation("TrainingEditorPage.Alert.back_to_edition_button")),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         // Automatically return updated training when popping
-        Navigator.pop(context, widget.training);
+        int emptyStages = widget.training.countEmptyStages();
+        if(emptyStages > 0 || widget.training.trainingStages.isEmpty) {
+          _showAlert(emptyStages);
+        } else {
+          Navigator.pop(context, widget.training);
+        }
         return false;
       },
       child: Scaffold(

@@ -31,6 +31,30 @@ class Training {
     this.description = ''
   });
 
+  int countEmptyStages() {
+    int emptyStages = 0;
+    for (TrainingStage stage in trainingStages) {
+      if(stage.breathingPhases.isEmpty) {
+        emptyStages += 1;
+      }
+    }
+    return emptyStages;
+  }
+
+  void deleteEmptyStages() {
+    trainingStages.removeWhere((stage) => stage.breathingPhases.isEmpty);
+  }
+
+  bool isEmpty() {
+    if(trainingStages.isEmpty) {
+      return true;
+    }
+    if(countEmptyStages() == trainingStages.length) {
+      return true;
+    }
+    return false;
+  }
+
   void updateSounds() {
 
     // Update next phase sounds
