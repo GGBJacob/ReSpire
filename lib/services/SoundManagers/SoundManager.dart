@@ -27,6 +27,7 @@ class SoundManager implements ISoundManager {
     "Whistle Up":SoundAsset(name:"Whistle Up", path:"sounds/whistle-up.mp3", type:SoundType.cue),
     "Whistle Down":SoundAsset(name:"Whistle Down", path:"sounds/whistle-down.mp3", type:SoundType.cue),
     "Gong":SoundAsset(name:"Gong", path:"sounds/gong.mp3", type:SoundType.cue),
+    "Metronome":SoundAsset(name: "Metronome", path: "sounds/metronome.mp3", type: SoundType.cue)
   };
 
 
