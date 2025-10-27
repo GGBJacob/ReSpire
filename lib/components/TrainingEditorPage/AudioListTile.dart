@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
+import 'package:respire/theme/Colors.dart';
 
 ///A tile within `AudioSelectionPopup`
 class AudioListTile extends StatelessWidget {
@@ -49,7 +50,7 @@ class AudioListTile extends StatelessWidget {
 
   Icon getTileIcon(SoundAsset asset) {
     if (asset.type == SoundType.voice) {
-      return Icon(Icons.record_voice_over, color: Colors.blue);
+      return Icon(Icons.record_voice_over, color: darkerblue);
     } else if (asset.type == SoundType.none) {
       return Icon(Icons.volume_off, color: Colors.grey);
     } else {
