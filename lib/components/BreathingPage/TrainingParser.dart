@@ -65,4 +65,49 @@ class TrainingParser {
     return result;
   }
 
+  double calculateTotalDuration({double breathingPhaseDelaySeconds = 0.6}) {
+    double totalSeconds = training.settings.preparationDuration.toDouble();
+    
+    int totalBreathingPhases = 0;
+    
+    for (int stageIdx = 0; stageIdx < training.trainingStages.length; stageIdx++) {
+      final stage = training.trainingStages[stageIdx];
+      
+      for (int rep = 0; rep < stage.reps; rep++) {
+        for (int phaseIdx = 0; phaseIdx < stage.breathingPhases.length; phaseIdx++) {
+          final phase = stage.breathingPhases[phaseIdx];
+          totalSeconds += phase.duration + (stage.increment * rep);
+          totalBreathingPhases++;
+        }
+      }
+    }
+    
+    totalSeconds += totalBreathingPhases * breathingPhaseDelaySeconds;
+    
+    return totalSeconds;
+  }
+
+  double calculateTrainingDurationWithoutPreparation({double breathingPhaseDelaySeconds = 0.6}) {
+    // Calculate only the breathing phases duration (without preparation)
+    double totalSeconds = 0.0;
+    
+    int totalBreathingPhases = 0;
+    
+    for (int stageIdx = 0; stageIdx < training.trainingStages.length; stageIdx++) {
+      final stage = training.trainingStages[stageIdx];
+      
+      for (int rep = 0; rep < stage.reps; rep++) {
+        for (int phaseIdx = 0; phaseIdx < stage.breathingPhases.length; phaseIdx++) {
+          final phase = stage.breathingPhases[phaseIdx];
+          totalSeconds += phase.duration + (stage.increment * rep);
+          totalBreathingPhases++;
+        }
+      }
+    }
+    
+    totalSeconds += totalBreathingPhases * breathingPhaseDelaySeconds;
+    
+    return totalSeconds;
+  }
+
 }

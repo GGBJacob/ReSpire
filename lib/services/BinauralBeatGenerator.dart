@@ -20,10 +20,9 @@ class BinauralBeatGenerator {
 
   static const int sampleRate = 44100;
   static const int bufferSize = 4096;
-  static const double amplitude = 0.5; // 50% volume for better audibility
+  static const double amplitude = 0.5;
 
-  Future<void> start(double leftFrequency, double rightFrequency) async {
-    // If already playing with the same frequencies, don't restart
+  Future<void> start(double leftFrequency, double rightFrequency, {double? durationSeconds}) async {
     if (_isPlaying && _leftPlayer != null && _rightPlayer != null) {
       dev.log('Binaural beats already playing, resuming if needed');
       await _leftPlayer!.resume();
@@ -31,17 +30,15 @@ class BinauralBeatGenerator {
       return;
     }
 
-    // Stop any existing playback before starting new one
     if (_isPlaying) {
       await stop();
     }
 
-    dev.log('Starting binaural beats: Left=$leftFrequency Hz, Right=$rightFrequency Hz');
+    dev.log('Starting binaural beats: Left=$leftFrequency Hz, Right=$rightFrequency Hz, Duration=${durationSeconds ?? "infinite"}s');
 
     _leftPlayer = AudioPlayer();
     _rightPlayer = AudioPlayer();
 
-    // Configure audio players for mixing with other sounds
     await _leftPlayer!.setAudioContext(AudioContext(
       android: AudioContextAndroid(
         isSpeakerphoneOn: true,
@@ -74,33 +71,31 @@ class BinauralBeatGenerator {
       ),
     ));
 
-    // Set release mode to loop
-    await _leftPlayer!.setReleaseMode(ReleaseMode.loop);
-    await _rightPlayer!.setReleaseMode(ReleaseMode.loop);
+    if (durationSeconds == null) {
+      await _leftPlayer!.setReleaseMode(ReleaseMode.loop);
+      await _rightPlayer!.setReleaseMode(ReleaseMode.loop);
+    } else {
+      await _leftPlayer!.setReleaseMode(ReleaseMode.stop);
+      await _rightPlayer!.setReleaseMode(ReleaseMode.stop);
+    }
 
-    // Set volume to maximum
     await _leftPlayer!.setVolume(1.0);
     await _rightPlayer!.setVolume(1.0);
 
-    // Set balance: left player to left channel, right player to right channel
-    await _leftPlayer!.setBalance(-1.0); // Full left
-    await _rightPlayer!.setBalance(1.0);  // Full right
+    await _leftPlayer!.setBalance(-1.0);
+    await _rightPlayer!.setBalance(1.0);
 
-    // Generate tone data
-    final leftTone = _generateTone(leftFrequency);
-    final rightTone = _generateTone(rightFrequency);
+    final leftTone = _generateTone(leftFrequency, durationSeconds);
+    final rightTone = _generateTone(rightFrequency, durationSeconds);
 
     dev.log('Generated tone data: Left=${leftTone.length} bytes, Right=${rightTone.length} bytes');
 
-    // For simplicity, we'll use BytesSource with generated WAV data
-    // This is a workaround since audioplayers doesn't support real-time streaming easily
     final leftWav = _createWavFile(leftTone);
     final rightWav = _createWavFile(rightTone);
 
     dev.log('Created WAV files: Left=${leftWav.length} bytes, Right=${rightWav.length} bytes');
 
     try {
-      // Save to temporary files
       final tempDir = await getTemporaryDirectory();
       final leftFile = File('${tempDir.path}/binaural_left.wav');
       final rightFile = File('${tempDir.path}/binaural_right.wav');
@@ -127,16 +122,20 @@ class BinauralBeatGenerator {
     }
   }
 
-  Uint8List _generateTone(double frequency) {
-    final numSamples = sampleRate * 2; // 2 seconds of audio for looping
+  Uint8List _generateTone(double frequency, double? durationSeconds) {
+    final duration = durationSeconds ?? 60.0;
+
+    final numCycles = (duration * frequency).round();
+    final samplesPerCycle = sampleRate / frequency;
+    final numSamples = (samplesPerCycle * numCycles).round();
+    
     final samples = Float32List(numSamples);
     
     for (int i = 0; i < numSamples; i++) {
-      final t = i / sampleRate;
-      samples[i] = amplitude * sin(2 * pi * frequency * t);
+      final phase = 2 * pi * frequency * i / sampleRate;
+      samples[i] = amplitude * sin(phase);
     }
 
-    // Convert float samples to 16-bit PCM
     final pcmData = Int16List(numSamples);
     for (int i = 0; i < numSamples; i++) {
       pcmData[i] = (samples[i] * 32767).toInt().clamp(-32768, 32767);

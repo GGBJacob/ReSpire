@@ -54,15 +54,8 @@ class TrainingController {
     _sounds = parser.training.sounds;
     _settings = parser.training.settings;
     
-    // Start binaural beats once if enabled
+    // Binaural beats will be started after preparation phase
     dev.log('TrainingController: binauralBeatsEnabled=${_settings.binauralBeatsEnabled}');
-    if (_settings.binauralBeatsEnabled) {
-      dev.log('Starting binaural beats: Left=${_settings.binauralLeftFrequency}Hz, Right=${_settings.binauralRightFrequency}Hz');
-      binauralGenerator.start(
-        _settings.binauralLeftFrequency,
-        _settings.binauralRightFrequency,
-      );
-    }
     
     _preloadBreathingPhases();
     _start();
@@ -183,6 +176,18 @@ class TrainingController {
       // breathing phase delay for reading the name (enter delay when main time finished)
       if (_remainingTime == 0 && _breathingPhaseDelay && _stopTimer != 0) {
         breathingPhasesCount.value++;
+        
+        // Start binaural beats when first breathing phase begins (after preparation)
+        if (breathingPhasesCount.value == 1 && _settings.binauralBeatsEnabled) {
+          final trainingDuration = parser.calculateTrainingDurationWithoutPreparation();
+          dev.log('Starting binaural beats: Left=${_settings.binauralLeftFrequency}Hz, Right=${_settings.binauralRightFrequency}Hz, Duration=${trainingDuration}s');
+          binauralGenerator.start(
+            _settings.binauralLeftFrequency,
+            _settings.binauralRightFrequency,
+            durationSeconds: trainingDuration,
+          );
+        }
+        
         if (breathingPhasesQueue.value.elementAt(1) != null) {
           if (_trainingStageNameQueue.length > 1 && _trainingStageNameQueue.elementAt(1) != null) {
             _updateCurrentTrainingStageLabel(peekNext: true);
