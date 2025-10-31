@@ -89,9 +89,9 @@ class TrainingController {
 
   void pause() {
     isPaused.value = true;
-    if (_currentSound != null) {
-      soundManager.pauseSound(_currentSound!);
-    }
+    // to account for some longer counting sounds 
+    //(that are not stored in the _currentSound)
+    soundManager.stopAllSounds();
     if (_settings.binauralBeatsEnabled) {
       binauralGenerator.pause();
     }

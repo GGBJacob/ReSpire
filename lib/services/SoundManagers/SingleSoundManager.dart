@@ -25,6 +25,7 @@ class SingleSoundManager extends SoundManager {
     return super.playSoundFadeIn(soundName, fadeInDuration);
   }
 
+
   @override
   Future<void> pauseSound(String? soundName) {
     currentlyPlaying.value = null;
@@ -43,14 +44,23 @@ class SingleSoundManager extends SoundManager {
     currentlyPlaying.value = null;
   }
 
+  // we override the looping to only play the audio once and remove the currentlyPlaying.value
+  // so that the AudioSelectionPopup will have proper icons displayed for all sounds.
   @override
-  void setupLoopingAudioPlayer(AudioPlayer audioPlayer, SoundAsset soundAsset) {
+  void setupLoopingAudioPlayer(AudioPlayer audioPlayer, SoundAsset asset) {
     audioPlayer.setReleaseMode(ReleaseMode.stop);
     audioPlayer.onPlayerComplete.listen((event) {
-      if (currentlyPlaying.value == soundAsset.name) {
+      if (currentlyPlaying.value == asset.name) {
         currentlyPlaying.value = null;
       }
     });
+  }
+
+  // we do not want to set up audio players in lowLatency mode, since we cannot react to
+  // the audio file completing in this mode. Hence we tread all audio files equally.
+  @override
+  void setupLowLatencyAudioPlayer(AudioPlayer audioPlayer, SoundAsset asset) {
+    setupLoopingAudioPlayer(audioPlayer, asset);
   }
 
   @override

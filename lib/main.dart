@@ -28,7 +28,7 @@ Future<void> initialize() async
   await Hive.initFlutter();
   // If any changes in loaded data occur, uncomment the following
   // line to delete the data and load it again
-  //await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
+  await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
   Hive.registerAdapter(BreathingPhaseAdapter());
   Hive.registerAdapter(BreathingPhaseTypeAdapter());
   Hive.registerAdapter(BreathTypeAdapter());

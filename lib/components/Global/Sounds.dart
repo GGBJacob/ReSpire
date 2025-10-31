@@ -2,6 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Step.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 
 part 'Sounds.g.dart';
 
@@ -12,7 +13,7 @@ class Sounds {
 
   /// Sound for counting during exercises
   @HiveField(1)
-  SoundAsset countingSound = SoundAsset();
+  SoundAsset countingSound = SoundManager.shortSounds["Metronome"]!;
 
   /// Scope of the next sound played between breathing phases.
   /// Used to determine the user's choice in the editor page.
@@ -20,20 +21,20 @@ class Sounds {
   SoundScope nextSoundScope = SoundScope.global;
   /// Next sound played between breathing phases
   @HiveField(3)
-  SoundAsset nextSound = SoundAsset();
+  SoundAsset nextSound = SoundManager.shortSounds["Notification"]!;
 
   /// Preparation and ending tracks for the training session
   @HiveField(4)
-  SoundAsset preparationTrack = SoundAsset();
+  SoundAsset preparationTrack = SoundManager.longSounds["Rain"]!;
   @HiveField(5)
-  SoundAsset endingTrack = SoundAsset();
+  SoundAsset endingTrack = SoundManager.longSounds["Ocean"]!;
 
   /// Scope of the background audio during the training session
   @HiveField(6)
   SoundScope backgroundSoundScope = SoundScope.global;
   /// Background audio for the entire training session
   @HiveField(7)
-  SoundAsset trainingBackgroundTrack = SoundAsset();
+  SoundAsset trainingBackgroundTrack = SoundManager.longSounds["Birds"]!;
 
   // === STAGE LEVEL ===
 

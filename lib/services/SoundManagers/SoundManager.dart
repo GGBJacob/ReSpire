@@ -11,7 +11,7 @@ class SoundManager implements ISoundManager {
   SoundManager(){}
 
 
-  static final Map<String,SoundAsset> _longSounds = {
+  static final Map<String,SoundAsset> longSounds = {
     "Birds":SoundAsset(name:"Birds", path:"sounds/birds.mp3", type:SoundType.melody),
     "Ainsa":SoundAsset(name:"Ainsa", path:"sounds/Ainsa.mp3", type:SoundType.melody),
     "Rain":SoundAsset(name:"Rain", path:"sounds/rain.mp3", type:SoundType.melody),
@@ -22,7 +22,7 @@ class SoundManager implements ISoundManager {
     "Solfeggio Frequency":SoundAsset(name:"Solfeggio Frequency", path:"sounds/solfeggio-frequency.mp3", type:SoundType.melody),
   };
 
-  static final Map<String,SoundAsset> _shortSounds = {
+  static final Map<String,SoundAsset> shortSounds = {
     "Notification":SoundAsset(name:"Notification", path:"sounds/new-notification.mp3", type:SoundType.cue),
     "Whistle Up":SoundAsset(name:"Whistle Up", path:"sounds/whistle-up.mp3", type:SoundType.cue),
     "Whistle Down":SoundAsset(name:"Whistle Down", path:"sounds/whistle-down.mp3", type:SoundType.cue),
@@ -34,8 +34,8 @@ class SoundManager implements ISoundManager {
   ///A map of available sounds in the assets folder.\
   ///The keys are the sound names, and the values are the paths to the sound files.
   static final Map<String,SoundAsset> _availableSounds = {
-    ..._longSounds,
-    ..._shortSounds,
+    ...longSounds,
+    ...shortSounds,
     ...UserSoundsDatabase().userLongSounds,
     ...UserSoundsDatabase().userShortSounds,
   };
@@ -46,9 +46,9 @@ class SoundManager implements ISoundManager {
   Map<String, SoundAsset> getSounds(SoundListType type) {
     switch (type) {
       case SoundListType.longSounds:
-        return _longSounds;
+        return longSounds;
       case SoundListType.shortSounds:
-        return _shortSounds;
+        return shortSounds;
     }
   }
 
@@ -162,30 +162,33 @@ class SoundManager implements ISoundManager {
     return _availableSounds.keys.toList();
   }
 
+  Future<void> ensureSoundLoaded(String? soundName) async{
+    final asset = _availableSounds[soundName];
+    
+    //If cue, always remove old entry
+    if (asset!.type == SoundType.cue && _audioPlayers.containsKey(soundName)) {
+      _audioPlayers[soundName]!.dispose();
+      _audioPlayers.remove(soundName);
+    }
+
+    //Load if needed
+    if (!_audioPlayers.containsKey(soundName)) {
+      await loadSound(soundName!);
+    }
+  }
+
   ///Plays a sound from a file in the assets folder.
   @override
   Future<void> playSound(String? soundName) async{
-    if(_availableSounds[soundName] == null) {
-      log("Sound: $soundName is not available.");
+    if (_availableSounds[soundName] == null){
       return;
     }
-    if (!_audioPlayers.containsKey(soundName)) {
-      log("Sound: $soundName is not loaded. Loading now...");
-      if(await loadSound(soundName!)){
-        playSound(soundName);
-      }
-      return;
-    }
+    await ensureSoundLoaded(soundName);
     log("Playing sound: $soundName");
 
     var player = _audioPlayers[soundName]!;
     if (_availableSounds[soundName]!.type == SoundType.cue) {
       await player.play(player.source!);
-      _audioPlayers.remove(soundName);
-      // let's hope garbage collector takes care of the audio player
-      // there is no way to get the audio duration from a low latency audio player
-      // nor can we set up a listener for onComplete (see documentation)
-      // we would have to store the durations which is too much of a hustle.
     } else {
       await player.resume();
     }
@@ -299,8 +302,8 @@ class SoundManager implements ISoundManager {
   @override
   void refreshSoundsList() {
     _availableSounds.clear();
-    _availableSounds.addAll(_longSounds);
-    _availableSounds.addAll(_shortSounds);
+    _availableSounds.addAll(longSounds);
+    _availableSounds.addAll(shortSounds);
     _availableSounds.addAll(UserSoundsDatabase().userLongSounds);
     _availableSounds.addAll(UserSoundsDatabase().userShortSounds);
   }
