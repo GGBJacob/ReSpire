@@ -9,6 +9,7 @@ import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/pages/TrainingPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
+import 'package:respire/services/TrainingImportExportService.dart';
 import 'package:respire/theme/Colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -125,6 +126,62 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  Future<void> importTraining() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      final training = await TrainingImportExportService.importTraining();
+      
+      Navigator.pop(context);
+      
+      if (training != null) {
+        setState(() {
+          training.updateSounds();
+          db.presetList.add(training);
+          db.updateDataBase();
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(translationProvider.getTranslation('HomePage.import_success')),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(translationProvider.getTranslation('HomePage.import_cancelled')),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(translationProvider.getTranslation('HomePage.import_error')),
+            content: Text('${translationProvider.getTranslation('HomePage.import_error_details')}:\n\n$e'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(translationProvider.getTranslation('PopupButton.cancel')),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
@@ -146,6 +203,11 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         actions: [
+          IconButton(
+            icon: Icon(Icons.file_upload_outlined, color: darkerblue),
+            onPressed: importTraining,
+            tooltip: translationProvider.getTranslation('HomePage.import_training_tooltip'),
+          ),
           IconButton(
             icon: Icon(Icons.settings, color: darkerblue),
             onPressed: () {

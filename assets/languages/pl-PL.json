@@ -9,7 +9,12 @@
     },
 
     "HomePage":{
-        "default_training_title":"Mój Trening"
+        "default_training_title":"Mój Trening",
+        "import_training_tooltip":"Importuj trening",
+        "import_success":"Trening został pomyślnie zaimportowany",
+        "import_cancelled":"Import treningu został anulowany",
+        "import_error":"Błąd podczas importu",
+        "import_error_details":"Wystąpił błąd podczas importowania treningu"
     },
 
     "SettingsPage":{
@@ -29,7 +34,10 @@
             "increment":"Przyrost"
         },
         "delete_training_dialog_title":"Usuwanie Treningu",
-        "delete_training_dialog_content":"Na pewno chcesz usunąć ten trening?"
+        "delete_training_dialog_content":"Na pewno chcesz usunąć ten trening?",
+        "export_success":"Trening został pomyślnie wyeksportowany",
+        "export_error":"Błąd eksportu",
+        "export_error_details":"Wystąpił błąd podczas eksportowania treningu"
     },
 
     "TrainingEditorPage":{

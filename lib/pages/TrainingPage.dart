@@ -5,6 +5,7 @@ import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
+import 'package:respire/services/TrainingImportExportService.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:respire/utils/TextUtils.dart';
 
@@ -38,10 +39,10 @@ class _TrainingPageState extends State<TrainingPage> {
     return Padding(
       padding: EdgeInsets.all(10),
       child: IconButton(
-          icon: Icon(Icons.share_rounded, color: darkgrey),
+          icon: Icon(Icons.share_rounded, color: darkerblue),
           style: IconButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 207, 206, 206)),
-          onPressed: () => {}),
+              backgroundColor: Colors.white),
+          onPressed: exportTraining),
     );
   }
 
@@ -368,5 +369,41 @@ class _TrainingPageState extends State<TrainingPage> {
             ],
           );
         });
+  }
+
+  Future<void> exportTraining() async {
+    try {
+      final success = await TrainingImportExportService.exportTraining(training);
+      
+      if (!mounted) return;
+      
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(translationProvider.getTranslation('TrainingPage.export_success')),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(translationProvider.getTranslation('TrainingPage.export_error')),
+              content: Text('${translationProvider.getTranslation('TrainingPage.export_error_details')}:\n\n$e'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(translationProvider.getTranslation('PopupButton.cancel')),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 }

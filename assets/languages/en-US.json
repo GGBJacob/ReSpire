@@ -9,7 +9,12 @@
     },
 
     "HomePage":{
-        "default_training_title":"My Training"
+        "default_training_title":"My Training",
+        "import_training_tooltip":"Import training",
+        "import_success":"Training imported successfully",
+        "import_cancelled":"Training import cancelled",
+        "import_error":"Error during import",
+        "import_error_details":"An error occurred while importing the training"
     },
 
     "SettingsPage":{
@@ -29,7 +34,10 @@
             "increment":"Inc"
         },
         "delete_training_dialog_title":"Delete Training",
-        "delete_training_dialog_content":"Are you sure you want to delete this training?"
+        "delete_training_dialog_content":"Are you sure you want to delete this training?",
+        "export_success":"Training exported successfully",
+        "export_error":"Export error",
+        "export_error_details":"An error occurred while exporting the training"
     },
 
     "TrainingEditorPage":{
