@@ -6,6 +6,7 @@ import 'package:respire/components/Global/Step.dart';
 import 'package:respire/components/Global/StepIncrement.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 
 class PresetDataBase {
 
@@ -56,19 +57,19 @@ class PresetDataBase {
         int index = presetList.indexOf(training);
         switch (index % 3) {
           case 0:
-            training.sounds.trainingBackgroundTrack.name = "Birds";
-            training.sounds.preparationTrack.name = "Ocean";
-            training.sounds.endingTrack.name = "Rain";
+            training.sounds.trainingBackgroundTrack = SoundManager.longSounds["Birds"]!;
+            training.sounds.preparationTrack = SoundManager.longSounds["Ocean"]!;
+            training.sounds.endingTrack = SoundManager.longSounds["Rain"]!;
             break;
           case 1:
-            training.sounds.trainingBackgroundTrack.name = "Rain";
-            training.sounds.preparationTrack.name = "Ainsa";
-            training.sounds.endingTrack.name = "Ocean";
+            training.sounds.trainingBackgroundTrack = SoundManager.longSounds["Rain"]!;
+            training.sounds.preparationTrack = SoundManager.longSounds["Ainsa"]!;
+            training.sounds.endingTrack = SoundManager.longSounds["Ocean"]!;
             break;
           case 2:
-            training.sounds.trainingBackgroundTrack.name = "Ainsa";
-            training.sounds.preparationTrack.name = "Birds";
-            training.sounds.endingTrack.name = "Ocean";
+            training.sounds.trainingBackgroundTrack = SoundManager.longSounds["Ainsa"]!;
+            training.sounds.preparationTrack = SoundManager.longSounds["Birds"]!;
+            training.sounds.endingTrack = SoundManager.longSounds["Ocean"]!;
             break;
         }
         training.sounds.backgroundSoundScope = SoundScope.global;
@@ -96,9 +97,9 @@ class PresetDataBase {
             name: "${translationProvider.getTranslation("TrainingEditorPage.TrainingTab.default_training_stage_name")} 1"
           )
         ]
-      )..sounds.trainingBackgroundTrack.name = "Birds"
-       ..sounds.preparationTrack.name = "Ocean"
-       ..sounds.endingTrack.name = "Rain"
+      )..sounds.trainingBackgroundTrack = SoundManager.longSounds["Birds"]!
+       ..sounds.preparationTrack = SoundManager.longSounds["Ocean"]!
+       ..sounds.endingTrack = SoundManager.longSounds["Rain"]!
        ..sounds.backgroundSoundScope = SoundScope.global
        ..updateSounds(),
       Training(
@@ -115,9 +116,9 @@ class PresetDataBase {
               name: "${translationProvider.getTranslation("TrainingEditorPage.TrainingTab.default_training_stage_name")} 1"
               )
         ]
-      )..sounds.trainingBackgroundTrack.name = "Rain"
-       ..sounds.preparationTrack.name = "Ainsa"
-       ..sounds.endingTrack.name = "Ocean"
+      )..sounds.trainingBackgroundTrack = SoundManager.longSounds["Rain"]!
+       ..sounds.preparationTrack = SoundManager.longSounds["Ainsa"]!
+       ..sounds.endingTrack = SoundManager.longSounds["Ocean"]!
        ..sounds.backgroundSoundScope = SoundScope.global
        ..updateSounds(),
       Training(
@@ -146,9 +147,9 @@ class PresetDataBase {
           name: "${translationProvider.getTranslation("TrainingEditorPage.TrainingTab.default_training_stage_name")} 2"
         ),
       ],
-    )..sounds.trainingBackgroundTrack.name = "Ainsa"
-     ..sounds.preparationTrack.name = "Birds"
-     ..sounds.endingTrack.name = "Ocean"
+    )..sounds.trainingBackgroundTrack = SoundManager.longSounds["Ainsa"]!
+     ..sounds.preparationTrack = SoundManager.longSounds["Birds"]!
+     ..sounds.endingTrack = SoundManager.longSounds["Ocean"]!
      ..sounds.backgroundSoundScope = SoundScope.global
      ..updateSounds(),
     ];
