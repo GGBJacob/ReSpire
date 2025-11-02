@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/TrainingEditorPage/AudioSelectionPopup.dart';
 import 'package:respire/services/SoundManagers/ISoundManager.dart';
+import 'package:respire/theme/Colors.dart';
 
 ///A row containing a name of a sound and the `AudioSelectionPopup`
 class SoundSelectionRow extends StatelessWidget {
@@ -11,6 +12,7 @@ class SoundSelectionRow extends StatelessWidget {
   final bool includeVoiceOption;
   final ValueChanged<SoundAsset> onChanged;
   final TextStyle? labelStyle;
+  final bool blueBorder;
 
   const SoundSelectionRow({
     super.key,
@@ -20,6 +22,7 @@ class SoundSelectionRow extends StatelessWidget {
     required this.includeVoiceOption,
     required this.onChanged,
     this.labelStyle,
+    this.blueBorder = false,
   });
 
   Future<void> _openPopup(BuildContext context) async {
@@ -46,7 +49,7 @@ class SoundSelectionRow extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey.shade300,
+          color: blueBorder ? mediumblue : Colors.grey.shade300,
           width: 1,
         ),
         boxShadow: [

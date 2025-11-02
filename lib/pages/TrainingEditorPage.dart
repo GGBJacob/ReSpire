@@ -413,7 +413,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                             onChanged: (v) => setState(() {
                                                   _sounds.countingSound = v;
                                                 }),
-                                            includeVoiceOption: true),
+                                            includeVoiceOption: true,
+                                            blueBorder: true),
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 4),
                                             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -421,7 +422,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(16),
                                               border: Border.all(
-                                                color: Colors.grey.shade300,
+                                                color: mediumblue,
                                                 width: 1,
                                               ),
                                               boxShadow: [
@@ -449,7 +450,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                           decoration: BoxDecoration(
                                                             color: Colors.white,
                                                             borderRadius: BorderRadius.circular(12),
-                                                            border: Border.all(color: darkerblue),
+                                                            border: Border.all(color: mediumblue),
                                                           ),
                                                         ), 
                                                         isExpanded: true,
@@ -537,8 +538,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                             onChanged: (v) => setState(() {
                                                   _sounds.preparationTrack =
                                                       v;
-                                                }),
-                                            includeVoiceOption: false),
+                                                },),
+                                            includeVoiceOption: false,
+                                            blueBorder: true),
                                           SoundSelectionRow(
                                             labelStyle: TextStyle(
                                                 color: darkerblue,
@@ -555,7 +557,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                             onChanged: (v) => setState(() {
                                                   _sounds.endingTrack = v;
                                                 }),
-                                            includeVoiceOption: false),
+                                            includeVoiceOption: false,
+                                            blueBorder: true,),
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 4),
                                             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -563,7 +566,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(16),
                                               border: Border.all(
-                                                color: Colors.grey.shade300,
+                                                color: mediumblue,
                                                 width: 1,
                                               ),
                                               boxShadow: [
@@ -591,7 +594,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                           decoration: BoxDecoration(
                                                             color: Colors.white,
                                                             borderRadius: BorderRadius.circular(16),
-                                                            border: Border.all(color: darkerblue),
+                                                            border: Border.all(color: mediumblue),
                                                           ),
                                                         ), 
                                                         isExpanded: true,
@@ -1077,6 +1080,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
       for (final stage in trainingStages)
         SoundSelectionRow(
           includeVoiceOption: false,
+          labelStyle: TextStyle(overflow: TextOverflow.ellipsis),
           label: translationProvider.getTranslation(stage.name),
           selectedValue: _sounds.stageTracks[stage.id] ?? SoundAsset(),
           soundListType: SoundListType.longSounds,
