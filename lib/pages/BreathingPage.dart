@@ -118,7 +118,7 @@ class _BreathingPageState extends State<BreathingPage> {
             valueListenable: controller.isPaused,
             builder: (context, isPaused, _) {
               return IconButton(
-                icon: isPaused ? Icon(Icons.play_arrow, color: Colors.white,) : Icon(Icons.pause, color: Colors.white,),
+                icon: isPaused ? Icon(Icons.play_arrow, color: Colors.black,) : Icon(Icons.pause, color: Colors.black,),
                 onPressed: () {
                   isPaused ? controller.resume() : controller.pause();
                 },
