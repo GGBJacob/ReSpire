@@ -6,12 +6,15 @@ import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/services/SoundManagers/ISoundManager.dart';
 import 'package:respire/services/PresetDataBase.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
+import 'package:respire/components/Global/Sounds_lists.g.dart';
 
 class SoundManager implements ISoundManager {
   SoundManager(){}
 
+  static final longSounds = ReSpireSounds().longSounds;
+  static final shortSounds = ReSpireSounds().shortSounds;
 
-  static final Map<String,SoundAsset> longSounds = {
+  /*static final Map<String,SoundAsset> longSounds = {
     "Birds":SoundAsset(name:"Birds", path:"sounds/birds.mp3", type:SoundType.melody),
     "Ainsa":SoundAsset(name:"Ainsa", path:"sounds/Ainsa.mp3", type:SoundType.melody),
     "Rain":SoundAsset(name:"Rain", path:"sounds/rain.mp3", type:SoundType.melody),
@@ -28,7 +31,7 @@ class SoundManager implements ISoundManager {
     "Whistle Down":SoundAsset(name:"Whistle Down", path:"sounds/whistle-down.mp3", type:SoundType.cue),
     "Gong":SoundAsset(name:"Gong", path:"sounds/gong.mp3", type:SoundType.cue),
     "Metronome":SoundAsset(name: "Metronome", path: "sounds/metronome.mp3", type: SoundType.cue)
-  };
+  };*/
 
 
   ///A map of available sounds in the assets folder.\

@@ -37,7 +37,8 @@ flutter:
     - assets/logo_biale_tlo.png
     - assets/logo_poziom.png
     - assets/logo_bez_tla.png
-    - assets/sounds/
+    - assets/sounds/short/
+    - assets/sounds/long/
     - assets/languages/
 
   fonts:
