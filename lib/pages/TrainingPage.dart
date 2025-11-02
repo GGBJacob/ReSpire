@@ -39,7 +39,7 @@ class _TrainingPageState extends State<TrainingPage> {
     return Padding(
       padding: EdgeInsets.all(10),
       child: IconButton(
-          icon: Icon(Icons.share_rounded, color: darkerblue),
+          icon: Icon(Icons.file_upload_outlined, color: darkerblue),
           style: IconButton.styleFrom(
               backgroundColor: Colors.white),
           onPressed: exportTraining),

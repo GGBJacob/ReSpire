@@ -255,6 +255,16 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                           },
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, left: 4),
+                        child: Text(
+                          '${nameController.text.length}/${widget.trainingStageNameMaxLength} ${translationProvider.getTranslation("TrainingEditorPage.TrainingTab.TrainingStageTile.characters")}',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 9,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

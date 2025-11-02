@@ -62,7 +62,8 @@
                 "name_placeholder":"Wpisz nazwę etapu",
                 "reps":" Powtórzenia",
                 "increment":" Przyrost (s)",
-                "add_breathing_phase_button_label":"Dodaj fazę oddechu"
+                "add_breathing_phase_button_label":"Dodaj fazę oddechu",
+                "characters":"znaków"
             },
 
             "BreathingPhaseTile":{

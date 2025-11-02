@@ -62,7 +62,8 @@
                 "name_placeholder":"Enter training stage name",
                 "reps":" Reps",
                 "increment":" Inc (s)",
-                "add_breathing_phase_button_label":"Add breathing phase"
+                "add_breathing_phase_button_label":"Add breathing phase",
+                "characters":"characters"
             },
 
             "BreathingPhaseTile":{

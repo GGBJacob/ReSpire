@@ -149,15 +149,33 @@ class _HomePageState extends State<HomePage> {
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(translationProvider.getTranslation('HomePage.import_success')),
+            content:  Center( 
+              child: Text(
+                translationProvider.getTranslation('HomePage.import_success'),
+                textAlign: TextAlign.center, 
+                style: const TextStyle(
+                  fontSize: 16, 
+                  color: Colors.white,
+                ),
+              ),
+            ),
             backgroundColor: Colors.green,
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(translationProvider.getTranslation('HomePage.import_cancelled')),
-            backgroundColor: Colors.orange,
+            content:  Center( 
+              child: Text(
+                translationProvider.getTranslation('HomePage.import_cancelled'),
+                textAlign: TextAlign.center, 
+                style: const TextStyle(
+                  fontSize: 16, 
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            backgroundColor: lightblue,
           ),
         );
       }
@@ -204,7 +222,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.file_upload_outlined, color: darkerblue),
+            icon: Icon(Icons.file_download_outlined, color: darkerblue),
             onPressed: importTraining,
             tooltip: translationProvider.getTranslation('HomePage.import_training_tooltip'),
           ),
