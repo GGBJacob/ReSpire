@@ -35,6 +35,14 @@ class SoundManager implements ISoundManager {
     }
   }
 
+  AudioPlayer? getPlayer(String soundName) {
+    return _audioPlayers[soundName];
+  }
+
+  SoundAsset? getAsset(String soundName){
+    return _availableSounds[soundName];
+  }
+
   ///Loads a sound from a file.\
   ///[soundName] is the name of the sound file returned by **getLoadedSounds()**.
   @override
@@ -55,9 +63,9 @@ class SoundManager implements ISoundManager {
     SoundAsset asset = _availableSounds[soundName]!;
     
     if (asset.type == SoundType.cue) {
-      setupLowLatencyAudioPlayer(audioPlayer, asset);
+      setupLowLatencyAudioPlayer(audioPlayer);
     } else {
-      setupLoopingAudioPlayer(audioPlayer, asset);
+      _commonAudioPlayerSetup(audioPlayer);
     }
 
     bool isAsset = asset.path.startsWith("sounds/");
@@ -99,38 +107,9 @@ class SoundManager implements ISoundManager {
   audioPlayer.setReleaseMode(ReleaseMode.stop);
 }
 
-  void setupLowLatencyAudioPlayer(AudioPlayer audioPlayer, SoundAsset asset) {
+  void setupLowLatencyAudioPlayer(AudioPlayer audioPlayer) {
     _commonAudioPlayerSetup(audioPlayer);
     audioPlayer.setPlayerMode(PlayerMode.lowLatency);
-  }
-
-  void setupLoopingAudioPlayer(AudioPlayer audioPlayer, SoundAsset asset) {
-    _commonAudioPlayerSetup(audioPlayer);
-    audioPlayer.setPlayerMode(PlayerMode.mediaPlayer);
-
-    // Get total duration once it’s available
-    Duration? totalDuration;
-    audioPlayer.onDurationChanged.listen((d) {
-      totalDuration = d;
-    });
-
-    //Setup fade out when the audio completes
-    bool isFadingOut = false;
-    audioPlayer.onPositionChanged.listen((currentPosition) async {
-      if(isFadingOut) return;
-      if (totalDuration != null) {
-        if (totalDuration!.inMilliseconds - currentPosition.inMilliseconds <= 2000) {
-          isFadingOut = true;
-          await fadeOut(asset.name, 1800);
-
-          // Reset audio after fade completes
-          await audioPlayer.seek(Duration.zero);
-          await audioPlayer.setVolume(1.0);
-          await audioPlayer.resume();
-        }
-        isFadingOut = false;
-      }
-    });
   }
 
   ///Lists all sounds that are currently loaded in the service.
@@ -282,7 +261,6 @@ class SoundManager implements ISoundManager {
     }
   }
 
-  @override
   void refreshSoundsList() {
     _availableSounds.clear();
     _availableSounds.addAll(longSounds);
@@ -291,7 +269,6 @@ class SoundManager implements ISoundManager {
     _availableSounds.addAll(UserSoundsDatabase().userShortSounds);
   }
 
-  @override
   void removeUserSound(String soundName, SoundListType type) {
     _availableSounds.remove(soundName);
     if (_audioPlayers.containsKey(soundName)) {

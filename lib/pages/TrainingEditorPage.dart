@@ -641,6 +641,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                       ] else if (_sounds.backgroundSoundScope == SoundScope.perPhase)
                                                         ...buildPhaseSoundRows(SoundListType.longSounds)
                                                       else if (_sounds.backgroundSoundScope == SoundScope.perStage)
+                                                      //TODO: Playlist UI implementation
                                                         ...buildStageSoundsRows(),
                                                     ],
                                                   ),

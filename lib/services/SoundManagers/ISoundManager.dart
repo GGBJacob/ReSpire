@@ -37,10 +37,4 @@ abstract class ISoundManager {
 
   /// Stops all currently playing sounds.
   void stopAllSounds();
-  
-  /// Refreshes the list of available sounds from the database.
-  void refreshSoundsList();
-
-  /// Removes a user-added sound from the manager and database.
-  void removeUserSound(String soundName, SoundListType type);
 }

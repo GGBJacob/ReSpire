@@ -8,6 +8,7 @@ import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/Step.dart' as breathing_phase;
 import 'package:respire/services/BinauralBeatGenerator.dart';
+import 'package:respire/services/SoundManagers/PlaylistManager.dart';
 import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
@@ -87,11 +88,14 @@ class TrainingController {
     _newBreathingPhaseRemainingTime = instructionData["remainingTime"];
   }
 
+  final PlaylistManager _playlistManager = PlaylistManager();
+
   void pause() {
     isPaused.value = true;
     // to account for some longer counting sounds 
     //(that are not stored in the _currentSound)
     soundManager.stopAllSounds();
+    _playlistManager.pausePlaylist();
     if (_settings.binauralBeatsEnabled) {
       binauralGenerator.pause();
     }
@@ -101,7 +105,8 @@ class TrainingController {
   void resume() {
     isPaused.value = false;
     if (_currentSound != null) {
-      soundManager.playSound(_currentSound!);
+      //soundManager.playSound(_currentSound!); //TODO: Delete once the playlist is working properly
+      _playlistManager.resumePlaylist();
     }
     if (_settings.binauralBeatsEnabled) {
       binauralGenerator.resume();
@@ -140,8 +145,13 @@ class TrainingController {
     }
   }
 
+  bool triggered = false;
   Future<void> _handleBackgroundSoundChange(
       String? nextBackgroundSound, int changeTime) async {
+
+    //TODO: Load and play a playlist with backgrounSoundManager.playPlaylist(list of sound names)
+    //Do it only when we change phase. Checkable in parser.trainingStageID
+    
     if (_currentSound != nextBackgroundSound) {
       await soundManager.pauseSoundFadeOut(_currentSound, changeTime);
       _currentSound = nextBackgroundSound;
@@ -152,7 +162,9 @@ class TrainingController {
   void _start() {
     int previousSecond = _remainingTime ~/ 1000;
     DateTime lastTick = DateTime.now();
-    soundManager.playSound(_currentSound);
+    //soundManager.playSound(_currentSound); //TODO: Delete once the playlist is working properly
+
+    //TODO: Handle distinguishing when are we playing a playlist and when a single sound. Maybe by checking the return type?
 
     _timer =
         Timer.periodic(Duration(milliseconds: _updateInterval), (Timer timer) {
