@@ -212,21 +212,22 @@ class _HomePageState extends State<HomePage> {
           height: 36,
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        // Deleted profile page
+        // leading: IconButton(
+        //   icon: Icon(Icons.person, color: darkerblue),
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => ProfilePage()),
+        //     );
+        //   },
+        // ),
         leading: IconButton(
-          icon: Icon(Icons.person, color: darkerblue),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
             icon: Icon(Icons.file_download_outlined, color: darkerblue),
             onPressed: importTraining,
             tooltip: translationProvider.getTranslation('HomePage.import_training_tooltip'),
           ),
+        actions: [
           IconButton(
             icon: Icon(Icons.settings, color: darkerblue),
             onPressed: () {

@@ -34,8 +34,12 @@ class ReSpireSounds {
     "Notification": SoundAsset(name: "Notification", path: "sounds/short/Notification.mp3", type: SoundType.cue),
     "Pop": SoundAsset(name: "Pop", path: "sounds/short/Pop.mp3", type: SoundType.cue),
     "Snap": SoundAsset(name: "Snap", path: "sounds/short/Snap.mp3", type: SoundType.cue),
+    "Wdech": SoundAsset(name: "Wdech", path: "sounds/short/Wdech.mp3", type: SoundType.cue),
     "Whistle Down": SoundAsset(name: "Whistle Down", path: "sounds/short/Whistle-Down.mp3", type: SoundType.cue),
     "Whistle Up": SoundAsset(name: "Whistle Up", path: "sounds/short/Whistle-Up.mp3", type: SoundType.cue),
+    "Wstrzymanie": SoundAsset(name: "Wstrzymanie", path: "sounds/short/Wstrzymanie.mp3", type: SoundType.cue),
+    "Wydech": SoundAsset(name: "Wydech", path: "sounds/short/Wydech.mp3", type: SoundType.cue),
+    "Zatrzymanie": SoundAsset(name: "Zatrzymanie", path: "sounds/short/Zatrzymanie.mp3", type: SoundType.cue),
     "Zen gong": SoundAsset(name: "Zen gong", path: "sounds/short/Zen-gong.mp3", type: SoundType.cue),
   };
 }
