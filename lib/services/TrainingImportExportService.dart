@@ -10,8 +10,8 @@ class TrainingImportExportService {
   
   static Future<bool> exportTraining(Training training, {String? fileName}) async {
     try {
-      final String defaultFileName = fileName ?? 
-          '${training.title.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_')}_training.json';
+      final String defaultFileName = fileName ??
+          '${_sanitizeFileName(training.title)}_training.json';
       
       final String jsonString = TrainingJsonConverter.toJson(training);
       
@@ -36,7 +36,42 @@ class TrainingImportExportService {
     }
   }
 
+  static Future<bool> exportMultipleTrainings(List<Training> trainings) async {
+    if (trainings.isEmpty) {
+      return false;
+    }
+
+    try {
+      final String timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final String defaultFileName = 'respire_trainings_$timestamp.json';
+
+      final String jsonString = TrainingJsonConverter.toJsonMultiple(trainings);
+      final Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
+
+      final String? outputPath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Zapisz treningi',
+        fileName: defaultFileName,
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+        bytes: bytes,
+      );
+
+      return outputPath != null;
+    } catch (e) {
+      debugPrint('Error during multiple trainings export: $e');
+      return false;
+    }
+  }
+
   static Future<Training?> importTraining() async {
+    final trainings = await importTrainings();
+    if (trainings == null || trainings.isEmpty) {
+      return null;
+    }
+    return trainings.first;
+  }
+
+  static Future<List<Training>?> importTrainings() async {
     try {
       // Otwórz okno wyboru pliku
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -49,17 +84,20 @@ class TrainingImportExportService {
         return null;
       }
       
-      final String? filePath = result.files.single.path;
-      if (filePath == null) {
+      final PlatformFile file = result.files.single;
+
+      String? jsonString;
+      if (file.bytes != null) {
+        jsonString = utf8.decode(file.bytes!);
+      } else if (file.path != null) {
+        jsonString = await File(file.path!).readAsString();
+      }
+
+      if (jsonString == null) {
         return null;
       }
-      
-      final File file = File(filePath);
-      final String jsonString = await file.readAsString();
-      
-      final Training training = TrainingJsonConverter.fromJson(jsonString);
-      
-      return training;
+
+      return TrainingJsonConverter.fromJsonMultiple(jsonString);
     } catch (e) {
       debugPrint('Error during trainingimport: $e');
       return null;
@@ -70,13 +108,16 @@ class TrainingImportExportService {
     try {
       final File file = File(filePath);
       final String jsonString = await file.readAsString();
-      
-      final Training training = TrainingJsonConverter.fromJson(jsonString);
-      
-      return training;
+      final trainings = TrainingJsonConverter.fromJsonMultiple(jsonString);
+      return trainings.isNotEmpty ? trainings.first : null;
     } catch (e) {
       debugPrint('Error during training import from file $filePath: $e');
       return null;
     }
+  }
+
+  static String _sanitizeFileName(String value) {
+    final sanitized = value.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
+    return sanitized.isEmpty ? 'training' : sanitized.replaceAll(RegExp(r'\s+'), '_');
   }
 }

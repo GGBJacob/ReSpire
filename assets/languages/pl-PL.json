@@ -14,7 +14,16 @@
         "import_success":"Trening został pomyślnie zaimportowany",
         "import_cancelled":"Import treningu został anulowany",
         "import_error":"Błąd podczas importu",
-        "import_error_details":"Wystąpił błąd podczas importowania treningu"
+        "import_error_details":"Wystąpił błąd podczas importowania treningu",
+        "select_mode":"Tryb zaznaczania",
+        "cancel_selection":"Anuluj zaznaczanie",
+        "select_all":"Zaznacz wszystkie",
+        "deselect_all":"Odznacz wszystkie",
+        "export_selected":"Eksportuj",
+        "export_selected_count":"Eksportuj ({count})",
+        "export_multiple_success":"Treningi zostały wyeksportowane",
+        "no_trainings_selected":"Nie wybrano treningów",
+        "import_multiple_success":"{count} treningów zostało pomyślnie zaimportowanych"
     },
 
     "SettingsPage":{

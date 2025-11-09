@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/components/HomePage/AddPresetTile.dart';
-import 'package:respire/components/HomePage/DialogBox.dart';
 import 'package:respire/components/HomePage/PresetTile.dart';
 import 'package:respire/pages/ProfilePage.dart';
 import 'package:respire/pages/SettingsPage.dart';
@@ -28,95 +27,110 @@ class _HomePageState extends State<HomePage> {
   int retentionTime = 3;
 
   TranslationProvider translationProvider = TranslationProvider();
+  
+  bool _isSelectionMode = false;
+  Set<int> _selectedIndices = {};
 
   @override
   void initState() {
     db.initialize();
     super.initState();
   }
-
-  void loadValues(int index) {
-    Training entry = db.presetList[index];
-
-    titleController.text = entry.title;
-
-    //TODO: Load other values
+  
+  void _toggleSelectionMode() {
+    setState(() {
+      _isSelectionMode = !_isSelectionMode;
+      if (!_isSelectionMode) {
+        _selectedIndices.clear();
+      }
+    });
   }
-
-  void clearValues() {
-    titleController.text = "";
-    breathCount = 10;
-    inhaleTime = 3;
-    exhaleTime = 3;
-    retentionTime = 3;
+  
+  void _toggleSelection(int index) {
+    setState(() {
+      if (_selectedIndices.contains(index)) {
+        _selectedIndices.remove(index);
+      } else {
+        _selectedIndices.add(index);
+      }
+    });
   }
-
-  void addPreset() {
-    db.presetList
-        .add(Training(title: titleController.text, trainingStages: List.empty()));
-    setState(() {});
-    clearValues();
-    db.updateDataBase();
+  
+  void _selectAll() {
+    setState(() {
+      _selectedIndices = Set.from(List.generate(db.presetList.length, (index) => index));
+    });
   }
-
-  void editPreset(int index) {
-    db.presetList[index] =
-        Training(title: titleController.text, trainingStages: List.empty());
-    setState(() {});
-    clearValues();
-    db.updateDataBase();
+  
+  void _deselectAll() {
+    setState(() {
+      _selectedIndices.clear();
+    });
   }
-
-  void showNewPresetDialog({required BuildContext context}) async {
-    final result = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogBox(
-            titleController: titleController,
-            breathCount: breathCount,
-            inhaleTime: inhaleTime,
-            exhaleTime: exhaleTime,
-            retentionTime: retentionTime,
-            onCancel: clearValues,
-          );
-        });
-
-    if (result != null) {
-      setState(() {
-        titleController.text = result['title'];
-        breathCount = result['breathCount'];
-        inhaleTime = result['inhaleTime'];
-        exhaleTime = result['exhaleTime'];
-        retentionTime = result['retentionTime'];
-      });
+  
+  Future<void> _exportSelected() async {
+    if (_selectedIndices.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              translationProvider.getTranslation('HomePage.no_trainings_selected'),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
     }
-  }
-
-  void showEditPresetDialog(
-      {required BuildContext context, required int index}) async {
-    loadValues(index); // Loads values to variables before showing the dialog
-
-    final result = await showDialog(
+    
+    try {
+      final selectedTrainings = _selectedIndices
+          .map((index) => db.presetList[index])
+          .toList();
+      final success = await TrainingImportExportService.exportMultipleTrainings(selectedTrainings);
+      
+      if (!mounted) return;
+      
+      if (success) {
+        setState(() {
+          _isSelectionMode = false;
+          _selectedIndices.clear();
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                translationProvider.getTranslation('HomePage.export_multiple_success'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      showDialog(
         context: context,
         builder: (BuildContext context) {
-          return DialogBox(
-            titleController: titleController,
-            breathCount: breathCount,
-            inhaleTime: inhaleTime,
-            exhaleTime: exhaleTime,
-            retentionTime: retentionTime,
-            onCancel: clearValues,
+          return AlertDialog(
+            title: Text(translationProvider.getTranslation('TrainingPage.export_error')),
+            content: Text('${translationProvider.getTranslation('TrainingPage.export_error_details')}:\n\n$e'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(translationProvider.getTranslation('PopupButton.cancel')),
+              ),
+            ],
           );
-        });
-
-    if (result != null) {
-      setState(() {
-        titleController.text = result['title'];
-        breathCount = result['breathCount'];
-        inhaleTime = result['inhaleTime'];
-        exhaleTime = result['exhaleTime'];
-        retentionTime = result['retentionTime'];
-      });
+        },
+      );
     }
   }
 
@@ -136,22 +150,31 @@ class _HomePageState extends State<HomePage> {
     );
 
     try {
-      final training = await TrainingImportExportService.importTraining();
+      final trainings = await TrainingImportExportService.importTrainings();
       
+      if (!mounted) return;
       Navigator.pop(context);
       
-      if (training != null) {
+      if (trainings != null && trainings.isNotEmpty) {
         setState(() {
-          training.updateSounds();
-          db.presetList.add(training);
+          for (var training in trainings) {
+            training.updateSounds();
+            db.presetList.add(training);
+          }
           db.updateDataBase();
         });
         
+        final message = trainings.length == 1
+            ? translationProvider.getTranslation('HomePage.import_success')
+            : translationProvider.getTranslation('HomePage.import_multiple_success')
+                .replaceAll('{count}', trainings.length.toString());
+        
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:  Center( 
               child: Text(
-                translationProvider.getTranslation('HomePage.import_success'),
+                message,
                 textAlign: TextAlign.center, 
                 style: const TextStyle(
                   fontSize: 16, 
@@ -163,6 +186,7 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:  Center( 
@@ -180,6 +204,7 @@ class _HomePageState extends State<HomePage> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
       Navigator.pop(context);
       
       showDialog(
@@ -207,36 +232,84 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
-        title: Image.asset(
-          'assets/logo_poziom.png',
-          height: 36,
-        ),
+        title: _isSelectionMode 
+            ? Text(
+                _selectedIndices.isEmpty
+                    ? translationProvider.getTranslation('HomePage.select_mode')
+                    : translationProvider.getTranslation('HomePage.export_selected_count')
+                        .replaceAll('{count}', _selectedIndices.length.toString()),
+                style: TextStyle(color: darkerblue, fontSize: 18, fontWeight: FontWeight.bold),
+              )
+            : Image.asset(
+                'assets/logo_poziom.png',
+                height: 36,
+              ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        leading: IconButton(
-          icon: Icon(Icons.person, color: darkerblue),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.file_download_outlined, color: darkerblue),
-            onPressed: importTraining,
-            tooltip: translationProvider.getTranslation('HomePage.import_training_tooltip'),
-          ),
-          IconButton(
-            icon: Icon(Icons.settings, color: darkerblue),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-        ],
+        leading: _isSelectionMode
+            ? IconButton(
+                icon: Icon(Icons.close, color: darkerblue),
+                onPressed: _toggleSelectionMode,
+                tooltip: translationProvider.getTranslation('HomePage.cancel_selection'),
+              )
+            : IconButton(
+                icon: Icon(Icons.person, color: darkerblue),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
+                },
+              ),
+        actions: _isSelectionMode
+            ? [
+                // Select All / Deselect All button
+                if (_selectedIndices.length < db.presetList.length)
+                  TextButton(
+                    onPressed: _selectAll,
+                    child: Text(
+                      translationProvider.getTranslation('HomePage.select_all'),
+                      style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                else
+                  TextButton(
+                    onPressed: _deselectAll,
+                    child: Text(
+                      translationProvider.getTranslation('HomePage.deselect_all'),
+                      style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                // Export button
+                IconButton(
+                  icon: Icon(Icons.file_upload_outlined, color: darkerblue),
+                  onPressed: _exportSelected,
+                  tooltip: translationProvider.getTranslation('HomePage.export_selected'),
+                ),
+              ]
+            : [
+                // Selection mode button
+                IconButton(
+                  icon: Icon(Icons.checklist, color: darkerblue),
+                  onPressed: db.presetList.isEmpty ? null : _toggleSelectionMode,
+                  tooltip: translationProvider.getTranslation('HomePage.select_mode'),
+                ),
+                // Import button
+                IconButton(
+                  icon: Icon(Icons.file_download_outlined, color: darkerblue),
+                  onPressed: importTraining,
+                  tooltip: translationProvider.getTranslation('HomePage.import_training_tooltip'),
+                ),
+                // Settings button
+                IconButton(
+                  icon: Icon(Icons.settings, color: darkerblue),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                    );
+                  },
+                ),
+              ],
       ),
       backgroundColor: mediumblue,
       body: RefreshIndicator(
@@ -248,68 +321,121 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(top: size * 0.022),
               itemCount: db.presetList.length + 1,
               itemBuilder: (context, index) {
+                final isSelected = _isSelectionMode && _selectedIndices.contains(index);
+                final double tileWidth = size * 0.7;
+                
                 return Padding(
-                  padding: EdgeInsets.all(
-                      size * 0.022), // padding between elements / screen
+                  padding: EdgeInsets.all(size * 0.022), // padding between elements / screen
                   child: index < db.presetList.length
-                      ? PresetTile(
-                          values: db.presetList[index],
-                          onClick: () async {
-                            final bool? updated = await Navigator.push<bool>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TrainingPage(index: index),
-                              ),
-                            );
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: tileWidth,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                if (isSelected)
+                                  Positioned(
+                                    top: -6,
+                                    bottom: -6,
+                                    left: -6,
+                                    right: -6,
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: darkerblue,
+                                          width: 4,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(76),
+                                          bottomRight: Radius.circular(41),
+                                          topLeft: Radius.circular(41),
+                                          topRight: Radius.circular(76),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                GestureDetector(
+                                  onTap: _isSelectionMode
+                                      ? () => _toggleSelection(index)
+                                      : null,
+                                  child: PresetTile(
+                                    values: db.presetList[index],
+                                    onClick: _isSelectionMode
+                                        ? () => _toggleSelection(index)
+                                        : () async {
+                                            final bool? updated = await Navigator.push<bool>(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => TrainingPage(index: index),
+                                              ),
+                                            );
 
-                            // If the user updated (removed) the training, refresh the state
-                            if (updated == true) {
-                              setState(() {});
-                            }
-                          },
-                          deleteTile: (context) {
-                            db.deletePreset(index);
-                            setState(() {});
-                          },
-                          editTile: (context) async {
-                            final updatedTraining = await Navigator.push<Training>(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TrainingEditorPage(
-                                      training: db.presetList[index])),
-                            );
-                            if (updatedTraining != null) {
-                              setState(() {
-                                updatedTraining.updateSounds();
-                                db.presetList[index] = updatedTraining;
-                                db.updateDataBase();
-                              });
-                            }
-                          },
+                                            if (updated == true) {
+                                              setState(() {});
+                                            }
+                                          },
+                                    deleteTile: _isSelectionMode
+                                        ? null
+                                        : (context) {
+                                            db.deletePreset(index);
+                                            setState(() {});
+                                          },
+                                    editTile: _isSelectionMode
+                                        ? null
+                                        : (context) async {
+                                            final updatedTraining = await Navigator.push<Training>(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => TrainingEditorPage(
+                                                      training: db.presetList[index])),
+                                            );
+                                            if (updatedTraining != null) {
+                                              setState(() {
+                                                updatedTraining.updateSounds();
+                                                db.presetList[index] = updatedTraining;
+                                                db.updateDataBase();
+                                              });
+                                            }
+                                          },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         )
-                      : AddPresetTile(
-                          onClick: () async {
-                            final newTraining = await Navigator.push<Training>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TrainingEditorPage(
-                                  training:
-                                      Training(title: translationProvider.getTranslation("HomePage.default_training_title"), trainingStages: []),
+                      : _isSelectionMode
+                          ? const SizedBox.shrink()
+                          : Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: tileWidth,
+                                child: AddPresetTile(
+                                  onClick: () async {
+                                    final newTraining = await Navigator.push<Training>(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TrainingEditorPage(
+                                          training: Training(
+                                            title: translationProvider.getTranslation("HomePage.default_training_title"),
+                                            trainingStages: [],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+
+                                    if (newTraining != null &&
+                                        newTraining.trainingStages
+                                            .any((trainingStage) => trainingStage.breathingPhases.isNotEmpty)) {
+                                      setState(() {
+                                        db.presetList.add(newTraining);
+                                        db.updateDataBase();
+                                      });
+                                    }
+                                  },
                                 ),
                               ),
-                            );
-
-                            // Only persist if user added at least one breathing phase in any training stage
-                            if (newTraining != null &&
-                                newTraining.trainingStages
-                                    .any((trainingStage) => trainingStage.breathingPhases.isNotEmpty)) {
-                              setState(() {
-                                db.presetList.add(newTraining);
-                                db.updateDataBase();
-                              });
-                            }
-                          },
-                        ),
+                            ),
                 );
               })),
     );
