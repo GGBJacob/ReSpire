@@ -308,6 +308,19 @@ class SoundManager implements ISoundManager {
     PresetDataBase().clearUserSound(soundName);
   }
 
+  Future<Duration?> getSoundDuration(String soundName) async {
+    if (!_audioPlayers.containsKey(soundName)) {
+      bool loaded = await loadSound(soundName);
+      if (!loaded) return null;
+    }
+    
+    final player = _audioPlayers[soundName];
+    if (player == null) return null;
+    
+    // Get duration from player
+    return await player.getDuration();
+  }
+
   void dispose() {
     for (var player in _audioPlayers.values) {
       player.dispose();

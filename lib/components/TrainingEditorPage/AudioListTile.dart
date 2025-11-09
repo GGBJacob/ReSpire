@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/theme/Colors.dart';
+import 'package:respire/utils/DurationFormatter.dart';
 
 ///A tile within `AudioSelectionPopup`
-class AudioListTile extends StatelessWidget {
+class AudioListTile extends StatefulWidget {
   final SoundAsset entry;
   final bool isPlaying;
   final VoidCallback onTap;
@@ -11,6 +13,7 @@ class AudioListTile extends StatelessWidget {
   final bool isSelected;
   final bool isRemovable;
   final VoidCallback onRemove;
+  final bool showDuration;
 
   const AudioListTile({
     super.key,
@@ -21,9 +24,41 @@ class AudioListTile extends StatelessWidget {
     required this.isSelected,
     this.isRemovable = false,
     this.onRemove = _defaultOnRemove,
+    this.showDuration = false,
   });
 
   static void _defaultOnRemove() {}
+
+  @override
+  State<AudioListTile> createState() => _AudioListTileState();
+}
+
+class _AudioListTileState extends State<AudioListTile> {
+  Duration? _duration;
+  bool _loadingDuration = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.showDuration && widget.entry.type != SoundType.none && widget.entry.type != SoundType.voice) {
+      _loadDuration();
+    }
+  }
+
+  Future<void> _loadDuration() async {
+    if (_loadingDuration) return;
+    _loadingDuration = true;
+    
+    final soundManager = SoundManager();
+    final duration = await soundManager.getSoundDuration(widget.entry.name);
+    
+    if (mounted) {
+      setState(() {
+        _duration = duration;
+        _loadingDuration = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +69,33 @@ class AudioListTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: ListTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          selected: isSelected,
+          selected: widget.isSelected,
           selectedColor: Colors.black,
           textColor: Colors.black,
-          titleTextStyle: isSelected ? TextStyle(fontWeight: FontWeight.bold):TextStyle(fontWeight: FontWeight.normal),
+          titleTextStyle: widget.isSelected ? TextStyle(fontWeight: FontWeight.bold):TextStyle(fontWeight: FontWeight.normal),
           selectedTileColor: Color.fromARGB(99, 156, 156, 156),
-          leading: IconButton(onPressed: onPlayToggle, iconSize:35, icon: getTileIcon(entry)),
-          title: Text(entry.name, overflow: TextOverflow.clip, maxLines: 1,),
-          trailing: isRemovable ? IconButton(onPressed: () => _removeUserEntry(context, onRemove), icon: Icon(Icons.delete, color: Colors.red)) : null,
-          onTap: onTap,
+          leading: IconButton(onPressed: widget.onPlayToggle, iconSize:35, icon: getTileIcon(widget.entry)),
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(widget.entry.name, overflow: TextOverflow.clip, maxLines: 1),
+              ),
+              if (widget.showDuration && _duration != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    formatDuration(_duration),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          trailing: widget.isRemovable ? IconButton(onPressed: () => _removeUserEntry(context, widget.onRemove), icon: Icon(Icons.delete, color: Colors.red)) : null,
+          onTap: widget.onTap,
         ),
       )
     );
@@ -54,7 +107,7 @@ class AudioListTile extends StatelessWidget {
     } else if (asset.type == SoundType.none) {
       return Icon(Icons.volume_off, color: Colors.grey);
     } else {
-      return isPlaying ? Icon(Icons.pause, color: Colors.red) : Icon(Icons.play_arrow, color: Colors.green);
+      return widget.isPlaying ? Icon(Icons.pause, color: Colors.red) : Icon(Icons.play_arrow, color: Colors.green);
     }
   }
 
@@ -64,7 +117,7 @@ class AudioListTile extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: const Text("Remove Sound"),
-          content: Text("Are you sure you want to remove '${entry.name}'?"),
+          content: Text("Are you sure you want to remove '${widget.entry.name}'?"),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(), // cancel

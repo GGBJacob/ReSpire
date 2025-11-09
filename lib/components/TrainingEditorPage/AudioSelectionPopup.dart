@@ -133,6 +133,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
           isSelected: widget.selectedValue == asset.name,
           onPlayToggle: () => _togglePlay(asset.name),
           onTap: () => Navigator.of(context).pop(asset),
+          showDuration: widget.listType == SoundListType.longSounds,
         );
       },
     );
@@ -154,6 +155,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
             UserSoundsDatabase().removeSound(asset.name, SoundListType.longSounds);
             setState(() {});
           },
+          showDuration: widget.listType == SoundListType.longSounds,
         );
       },
     );

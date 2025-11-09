@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/TrainingEditorPage/AudioSelectionPopup.dart';
 import 'package:respire/services/SoundManagers/ISoundManager.dart';
+import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
+import 'package:respire/utils/DurationFormatter.dart';
 
 class PlaylistEditor extends StatefulWidget {
   final List<SoundAsset> playlist;
@@ -23,6 +25,36 @@ class PlaylistEditor extends StatefulWidget {
 
 class _PlaylistEditorState extends State<PlaylistEditor> {
   final TranslationProvider _translationProvider = TranslationProvider();
+  final SoundManager _soundManager = SoundManager();
+  final Map<String, Duration?> _durationCache = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDurations();
+  }
+
+  Future<void> _loadDurations() async {
+    for (var sound in widget.playlist) {
+      if (!_durationCache.containsKey(sound.name)) {
+        final duration = await _soundManager.getSoundDuration(sound.name);
+        if (mounted) {
+          setState(() {
+            _durationCache[sound.name] = duration;
+          });
+        }
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(PlaylistEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Load durations for any new sounds
+    if (widget.playlist.length != oldWidget.playlist.length) {
+      _loadDurations();
+    }
+  }
 
   Future<void> _addSound() async {
     final result = await showDialog<SoundAsset>(
@@ -118,6 +150,8 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
   }
 
   Widget _buildSoundTile(SoundAsset sound, int index) {
+    final duration = _durationCache[sound.name];
+    
     return Container(
       key: ValueKey('${sound.name}_$index'),
       margin: const EdgeInsets.symmetric(vertical: 4),
@@ -144,13 +178,31 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
             color: Colors.grey.shade600,
           ),
         ),
-        title: Text(
-          sound.name,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          overflow: TextOverflow.ellipsis,
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                sound.name,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (duration != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  formatDuration(duration),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+          ],
         ),
         subtitle: sound.type == SoundType.melody
             ? Text(
