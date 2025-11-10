@@ -42,13 +42,13 @@ class StagePlaylistsEditor extends StatelessWidget {
     TranslationProvider translationProvider,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: mediumblue,
-          width: 2,
+          color: darkblue.withOpacity(0.25),
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
@@ -61,7 +61,7 @@ class StagePlaylistsEditor extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          tilePadding: const EdgeInsets.symmetric(horizontal: 12),
           childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           title: Row(
             children: [
@@ -77,9 +77,9 @@ class StagePlaylistsEditor extends StatelessWidget {
                       ? translationProvider.getTranslation("TrainingEditorPage.TrainingTab.default_training_stage_name")
                       : stage.name,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: darkblue,
+                    color: Colors.black
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),

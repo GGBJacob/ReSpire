@@ -58,16 +58,16 @@
             "default_training_stage_name":"Training stage",
 
             "TrainingStageTile":{
-                "name":" Training stage name",
+                "name":"Training stage name",
                 "name_placeholder":"Enter training stage name",
-                "reps":" Reps",
-                "increment":" Inc (s)",
+                "reps":"Reps",
+                "increment":"Inc (s)",
                 "add_breathing_phase_button_label":"Add breathing phase",
                 "characters":"characters"
             },
 
             "BreathingPhaseTile":{
-                "time":" Time (s)",
+                "time":"Time (s)",
                 "type":"Type",
                 "remove_breathing_phase_dialog_title":"Remove breathing phase?",
                 "remove_breathing_phase_dialog_content":"Are you sure you want to remove this breathing phase?"

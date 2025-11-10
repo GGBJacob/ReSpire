@@ -58,17 +58,17 @@
             "default_training_stage_name":"Etap treningu",
 
             "TrainingStageTile":{
-                "name":" Nazwa etapu",
+                "name":"Nazwa etapu",
                 "name_placeholder":"Wpisz nazwę etapu",
-                "reps":" Powtórzenia",
-                "increment":" Przyrost (s)",
+                "reps":"Powtórzenia",
+                "increment":"Przyrost (s)",
                 "add_breathing_phase_button_label":"Dodaj fazę oddechu",
                 "characters":"znaków"
             },
 
             "BreathingPhaseTile":{
-                "time":" Czas (s)",
-                "type":" Typ",
+                "time":"Czas (s)",
+                "type":"Typ",
                 "remove_breathing_phase_dialog_title":"Usunąć fazę oddechu?",
                 "remove_breathing_phase_dialog_content":"Na pewno chcesz usunąć fazę oddechu?"
             }

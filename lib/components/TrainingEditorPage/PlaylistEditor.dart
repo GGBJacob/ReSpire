@@ -146,6 +146,12 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
         final sound = widget.playlist[index];
         return _buildSoundTile(sound, index);
       },
+      proxyDecorator: (Widget child, int index, Animation<double> animation) {
+                return Material(
+                  color: Colors.transparent,  
+                  child: child,
+                );
+              },
     );
   }
 
@@ -215,8 +221,9 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
             : null,
         trailing: IconButton(
           icon: Icon(
-            Icons.delete_outline,
-            color: Colors.red.shade400,
+            Icons.delete,
+            color: darkerblue,
+            size: 21,
           ),
           onPressed: () => _removeSound(index),
         ),
