@@ -47,9 +47,10 @@ class SoundManager implements ISoundManager {
   }
 
   ///Loads a sound from a file.\
-  ///[soundName] is the name of the sound file returned by **getLoadedSounds()**.
+  /// [forceCommonSetup] if true, will setup the audio player with common settings regardless of type.\
+  /// [soundName] is the name of the sound file returned by **getLoadedSounds()**.
   @override
-  Future<bool> loadSound(String soundName) async{
+  Future<bool> loadSound(String soundName, {bool forceCommonSetup = false}) async{
     if(_availableSounds[soundName] == null) {
       log("Could not load sound: $soundName is not available.");
       return false;
@@ -65,7 +66,7 @@ class SoundManager implements ISoundManager {
     
     SoundAsset asset = _availableSounds[soundName]!;
     
-    if (asset.type == SoundType.cue) {
+    if (asset.type == SoundType.cue && !forceCommonSetup) {
       setupLowLatencyAudioPlayer(audioPlayer);
     } else {
       _commonAudioPlayerSetup(audioPlayer);
