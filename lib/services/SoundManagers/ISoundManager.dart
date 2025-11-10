@@ -3,7 +3,8 @@ import 'package:respire/components/Global/SoundAsset.dart';
 
 enum SoundListType {
   longSounds,
-  shortSounds,
+  shortSounds, 
+  countingSounds,
 }
 
 abstract class ISoundManager {

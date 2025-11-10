@@ -51,5 +51,8 @@ enum SoundType {
   cue,
 
   @HiveField(3)
+  counting,
+
+  @HiveField(4)
   none,
 }

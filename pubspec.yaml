@@ -39,6 +39,7 @@ flutter:
     - assets/logo_bez_tla.png
     - assets/sounds/short/
     - assets/sounds/long/
+    - assets/sounds/counting/
     - assets/languages/
 
   fonts:

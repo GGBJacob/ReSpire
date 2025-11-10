@@ -34,10 +34,11 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
   @override
   Widget build(BuildContext context) {
     
-    final Map<String,SoundAsset> userItemsMap = 
-      widget.listType == SoundListType.longSounds
-          ? UserSoundsDatabase().userLongSounds
-          : UserSoundsDatabase().userShortSounds;
+    final userItemsMap = switch (widget.listType) {
+      SoundListType.longSounds => UserSoundsDatabase().userLongSounds,
+      SoundListType.shortSounds => UserSoundsDatabase().userShortSounds,
+      SoundListType.countingSounds => UserSoundsDatabase().userCountingSounds,
+    };
 
     final itemsMap = {
       _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.None"):SoundAsset(type: SoundType.none),
@@ -110,13 +111,31 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
       );
 
     if (result != null && result.files.single.path != null) {
-      SoundAsset newSound = SoundAsset(name: result.files.single.name, path: result.files.single.path!, type: 
-        widget.listType == SoundListType.longSounds ? SoundType.melody : SoundType.cue
-      );
+      SoundType type;
+      switch (widget.listType) {
+        case SoundListType.longSounds:
+          type = SoundType.melody;
+          break;
+        case SoundListType.shortSounds:
+          type = SoundType.cue;
+          break;
+        case SoundListType.countingSounds:
+          type = SoundType.counting;
+          break;
+      }
+      SoundAsset newSound = SoundAsset(name: result.files.single.name, path: result.files.single.path!, type: type);
 
-      widget.listType == SoundListType.longSounds
-          ? UserSoundsDatabase().addLongSound(newSound)
-          : UserSoundsDatabase().addShortSound(newSound);
+      switch (widget.listType) {
+        case SoundListType.longSounds:
+          UserSoundsDatabase().addLongSound(newSound);
+          break;
+        case SoundListType.shortSounds:
+          UserSoundsDatabase().addShortSound(newSound);
+          break;
+        case SoundListType.countingSounds:
+          UserSoundsDatabase().addCountingSound(newSound);
+          break;
+      }
 
       setState(() {}); 
     }
@@ -151,7 +170,19 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
           onTap: () => Navigator.of(context).pop(asset),
           isRemovable: true,
           onRemove: () {
-            UserSoundsDatabase().removeSound(asset.name, SoundListType.longSounds);
+            switch(asset.type) {
+              case SoundType.melody:
+                UserSoundsDatabase().removeSound(asset.name, SoundListType.longSounds);
+                break;
+              case SoundType.cue:
+                UserSoundsDatabase().removeSound(asset.name, SoundListType.shortSounds);
+                break;
+              case SoundType.counting:
+                UserSoundsDatabase().removeSound(asset.name, SoundListType.countingSounds);
+                break;
+              default:
+                break;
+            }
             setState(() {});
           },
         );

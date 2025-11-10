@@ -59,6 +59,8 @@ class SoundTypeAdapter extends TypeAdapter<SoundType> {
       case 2:
         return SoundType.cue;
       case 3:
+        return SoundType.counting;
+      case 4:
         return SoundType.none;
       default:
         return SoundType.voice;
@@ -77,8 +79,11 @@ class SoundTypeAdapter extends TypeAdapter<SoundType> {
       case SoundType.cue:
         writer.writeByte(2);
         break;
-      case SoundType.none:
+      case SoundType.counting:
         writer.writeByte(3);
+        break;
+      case SoundType.none:
+        writer.writeByte(4);
         break;
     }
   }

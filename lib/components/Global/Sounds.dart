@@ -13,7 +13,7 @@ class Sounds {
 
   /// Sound for counting during exercises
   @HiveField(1)
-  SoundAsset countingSound = SoundManager.shortSounds["Metronome"]!;
+  SoundAsset countingSound = SoundManager.countingSounds["Metronome"]!;
 
   /// Scope of the next sound played between breathing phases.
   /// Used to determine the user's choice in the editor page.
@@ -58,7 +58,6 @@ class Sounds {
   Map<BreathingPhaseType, SoundAsset> breathingPhaseBackgrounds = {
     for (var type in BreathingPhaseType.values) type: SoundAsset()
   };
-
 
   void clearUserSound(String soundName) {
     if (countingSound.name == soundName) {

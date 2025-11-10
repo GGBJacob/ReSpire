@@ -25,17 +25,20 @@ class ReSpireSounds {
   final Map<String, SoundAsset> shortSounds = {
     "Beep": SoundAsset(name: "Beep", path: "sounds/short/Beep.mp3", type: SoundType.cue),
     "Bell": SoundAsset(name: "Bell", path: "sounds/short/Bell.mp3", type: SoundType.cue),
-    "Clock": SoundAsset(name: "Clock", path: "sounds/short/Clock.mp3", type: SoundType.cue),
     "Cricket": SoundAsset(name: "Cricket", path: "sounds/short/Cricket.mp3", type: SoundType.cue),
     "Gong": SoundAsset(name: "Gong", path: "sounds/short/Gong.mp3", type: SoundType.cue),
     "Harp": SoundAsset(name: "Harp", path: "sounds/short/Harp.mp3", type: SoundType.cue),
     "Level up": SoundAsset(name: "Level up", path: "sounds/short/Level-up.mp3", type: SoundType.cue),
-    "Metronome": SoundAsset(name: "Metronome", path: "sounds/short/Metronome.mp3", type: SoundType.cue),
     "Notification": SoundAsset(name: "Notification", path: "sounds/short/Notification.mp3", type: SoundType.cue),
     "Pop": SoundAsset(name: "Pop", path: "sounds/short/Pop.mp3", type: SoundType.cue),
     "Snap": SoundAsset(name: "Snap", path: "sounds/short/Snap.mp3", type: SoundType.cue),
     "Whistle Down": SoundAsset(name: "Whistle Down", path: "sounds/short/Whistle-Down.mp3", type: SoundType.cue),
     "Whistle Up": SoundAsset(name: "Whistle Up", path: "sounds/short/Whistle-Up.mp3", type: SoundType.cue),
     "Zen gong": SoundAsset(name: "Zen gong", path: "sounds/short/Zen-gong.mp3", type: SoundType.cue),
+  };
+
+  final Map<String, SoundAsset> countingSounds = {
+    "Clock": SoundAsset(name: "Clock", path: "sounds/counting/Clock.mp3", type: SoundType.counting),
+    "Metronome": SoundAsset(name: "Metronome", path: "sounds/counting/Metronome.mp3", type: SoundType.counting),
   };
 }

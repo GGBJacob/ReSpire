@@ -409,7 +409,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                             selectedValue:
                                                 _sounds.countingSound,
                                             soundListType:
-                                                SoundListType.shortSounds,
+                                                SoundListType.countingSounds,
                                             onChanged: (v) => setState(() {
                                                   _sounds.countingSound = v;
                                                 }),
@@ -522,43 +522,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                             translationProvider.getTranslation("TrainingEditorPage.SoundsTab.TrainingMusic.title"),
                                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black, overflow: TextOverflow.ellipsis),
                                           ),
-                                          SoundSelectionRow(
-                                            labelStyle: TextStyle(
-                                                color: darkerblue,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                                overflow: TextOverflow.ellipsis),
-                                            label: translationProvider
-                                                .getTranslation(
-                                                    "TrainingEditorPage.SoundsTab.TrainingMusic.preparation_music"),
-                                            selectedValue:
-                                                _sounds.preparationTrack,
-                                            soundListType:
-                                                SoundListType.longSounds,
-                                            onChanged: (v) => setState(() {
-                                                  _sounds.preparationTrack =
-                                                      v;
-                                                },),
-                                            includeVoiceOption: false,
-                                            blueBorder: true),
-                                          SoundSelectionRow(
-                                            labelStyle: TextStyle(
-                                                color: darkerblue,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                                overflow: TextOverflow.ellipsis),
-                                            label: translationProvider
-                                                .getTranslation(
-                                                    "TrainingEditorPage.SoundsTab.TrainingMusic.ending_music"),
-                                            selectedValue:
-                                                _sounds.endingTrack,
-                                            soundListType:
-                                                SoundListType.longSounds,
-                                            onChanged: (v) => setState(() {
-                                                  _sounds.endingTrack = v;
-                                                }),
-                                            includeVoiceOption: false,
-                                            blueBorder: true,),
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 4),
                                             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -648,6 +611,43 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               ],
                                             ),
                                           ),
+                                          SoundSelectionRow(
+                                            labelStyle: TextStyle(
+                                                color: darkerblue,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                overflow: TextOverflow.ellipsis),
+                                            label: translationProvider
+                                                .getTranslation(
+                                                    "TrainingEditorPage.SoundsTab.TrainingMusic.preparation_music"),
+                                            selectedValue:
+                                                _sounds.preparationTrack,
+                                            soundListType:
+                                                SoundListType.longSounds,
+                                            onChanged: (v) => setState(() {
+                                                  _sounds.preparationTrack =
+                                                      v;
+                                                },),
+                                            includeVoiceOption: false,
+                                            blueBorder: true),
+                                          SoundSelectionRow(
+                                            labelStyle: TextStyle(
+                                                color: darkerblue,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                overflow: TextOverflow.ellipsis),
+                                            label: translationProvider
+                                                .getTranslation(
+                                                    "TrainingEditorPage.SoundsTab.TrainingMusic.ending_music"),
+                                            selectedValue:
+                                                _sounds.endingTrack,
+                                            soundListType:
+                                                SoundListType.longSounds,
+                                            onChanged: (v) => setState(() {
+                                                  _sounds.endingTrack = v;
+                                                }),
+                                            includeVoiceOption: false,
+                                            blueBorder: true,),
                                         ],
                                       ),
                                     ),

@@ -3,6 +3,7 @@ import 'package:respire/utils/TextUtils.dart';
 
 void main() async {
   final longDir = Directory('./assets/sounds/long');
+  final countingDir = Directory('./assets/sounds/counting');
   final shortDir = Directory('./assets/sounds/short');
 
   final longFiles = longDir
@@ -13,6 +14,13 @@ void main() async {
       .toList();
 
   final shortFiles = shortDir
+      .listSync()
+      .whereType<File>()
+      .where((f) => f.path.endsWith('.mp3'))
+      .map((f) => f.uri.pathSegments.last.replaceAll('.mp3', ''))
+      .toList();
+
+  final countingFiles = countingDir
       .listSync()
       .whereType<File>()
       .where((f) => f.path.endsWith('.mp3'))
@@ -40,6 +48,15 @@ void main() async {
     final displayName = TextUtils.capitalizeAndRemoveTextSeparators(name);
     buffer.writeln(
         '    "$displayName": SoundAsset(name: "$displayName", path: "sounds/short/$name.mp3", type: SoundType.cue),');
+  }
+  
+  buffer.writeln('  };\n');
+  buffer.writeln('  final Map<String, SoundAsset> countingSounds = {');
+
+  for (var name in countingFiles) {
+    final displayName = TextUtils.capitalizeAndRemoveTextSeparators(name);
+    buffer.writeln(
+        '    "$displayName": SoundAsset(name: "$displayName", path: "sounds/counting/$name.mp3", type: SoundType.counting),');
   }
 
   buffer.writeln('  };');

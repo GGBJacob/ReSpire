@@ -46,6 +46,7 @@ Future<void> initialize() async
   await Hive.openBox('respire');
   await Hive.openBox('userShortSounds');
   await Hive.openBox('userLongSounds');
+  await Hive.openBox('userCountingSounds');
   await TextToSpeechService().init();
   UserSoundsDatabase().loadData();
   TranslationProvider();

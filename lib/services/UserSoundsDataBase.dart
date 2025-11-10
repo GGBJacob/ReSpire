@@ -13,12 +13,15 @@ class UserSoundsDatabase {
 
   final _shortBox = Hive.box('userShortSounds');
   final _longBox = Hive.box('userLongSounds');
+  final _countingBox = Hive.box('userCountingSounds');
 
   final Map<String, SoundAsset> _userShortSounds = {};
   final Map<String, SoundAsset> _userLongSounds = {};
+  final Map<String, SoundAsset> _userCountingSounds = {};
 
   Map<String,SoundAsset> get userShortSounds => Map.unmodifiable(_userShortSounds);
   Map<String,SoundAsset> get userLongSounds => Map.unmodifiable(_userLongSounds);
+  Map<String,SoundAsset> get userCountingSounds => Map.unmodifiable(_userCountingSounds);
 
   void loadData()
   {
@@ -30,6 +33,11 @@ class UserSoundsDatabase {
     final storedMapLong = _longBox.get('userLongSounds');
     if (storedMapLong is Map) {
       _userLongSounds.addAll(storedMapLong.cast<String, SoundAsset>());
+    }
+
+    final storedMapCounting = _countingBox.get('userCountingSounds');
+    if (storedMapCounting is Map) {
+      _userCountingSounds.addAll(storedMapCounting.cast<String, SoundAsset>());
     }
   }
 
@@ -47,11 +55,19 @@ class UserSoundsDatabase {
     }
   }
 
+  void addCountingSound(SoundAsset sound) {
+    if (!_userCountingSounds.containsKey(sound.name)) {
+      _userCountingSounds[sound.name] = sound;
+      updateDatabase();
+    }
+  }
   void removeSound(String soundName, SoundListType type) {
     if (type == SoundListType.longSounds) {
       _userLongSounds.remove(soundName);
-    } else {
+    } else if (type == SoundListType.shortSounds) {
       _userShortSounds.remove(soundName);
+    } else {
+      _userCountingSounds.remove(soundName);
     }
     updateDatabase();
     postRemoveSound(soundName, type);
@@ -64,6 +80,7 @@ class UserSoundsDatabase {
   void updateDatabase() {
     _shortBox.put('userShortSounds', _userShortSounds);
     _longBox.put('userLongSounds', _userLongSounds);
+    _countingBox.put('userCountingSounds', _userCountingSounds);
     SoundManager().refreshSoundsList();
   }
 
