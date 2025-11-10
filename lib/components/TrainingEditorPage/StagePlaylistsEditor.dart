@@ -61,6 +61,8 @@ class StagePlaylistsEditor extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
+          iconColor: Colors.black,
+          collapsedIconColor: Colors.black,
           tilePadding: const EdgeInsets.symmetric(horizontal: 12),
           childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           title: Row(
