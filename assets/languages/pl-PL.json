@@ -123,6 +123,11 @@
                 "beat_frequency_label":"Częstotliwość uderzenia"
             },
 
+            "RemovingUserSoundPopup":{
+                "title":"Usuwanie dźwięku",
+                "content":"Czy na pewno chcesz usunąć dźwięk"
+            },
+
             "None":"Brak",
             "Voice":"Lektor"
 

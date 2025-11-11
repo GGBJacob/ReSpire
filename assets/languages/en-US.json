@@ -122,6 +122,11 @@
                 "beat_frequency_label":"Beat frequency"
             },
 
+            "RemovingUserSoundPopup":{
+                "title":"Removing sound",
+                "content":"Are you sure you want to remove sound"
+            },
+
             "None":"None",
             "Voice":"Lector"
             

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/services/SoundManagers/SoundManager.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:respire/utils/DurationFormatter.dart';
 
@@ -36,6 +37,7 @@ class AudioListTile extends StatefulWidget {
 class _AudioListTileState extends State<AudioListTile> {
   Duration? _duration;
   bool _loadingDuration = false;
+  TranslationProvider translationProvider = TranslationProvider();
 
   @override
   void initState() {
@@ -116,12 +118,31 @@ class _AudioListTileState extends State<AudioListTile> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Remove Sound"),
-          content: Text("Are you sure you want to remove '${widget.entry.name}'?"),
+          title: Text(translationProvider.getTranslation("TrainingEditorPage.SoundsTab.RemovingUserSoundPopup.title")),
+          content: RichText(
+          text: TextSpan(
+            style: const TextStyle(
+              color: Colors.black, 
+              fontSize: 16,
+            ),
+            children: [ TextSpan(
+                  text: "${translationProvider.getTranslation("TrainingEditorPage.SoundsTab.RemovingUserSoundPopup.content")} ",
+                ),
+                TextSpan(
+                  text: widget.entry.name,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: mediumblue,
+                  ),
+                ),
+                const TextSpan(text: " ?"),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(), // cancel
-              child: const Text("Cancel"),
+              child: Text(translationProvider.getTranslation("PopupButton.cancel")),
             ),
             TextButton(
               onPressed: () {
@@ -129,7 +150,7 @@ class _AudioListTileState extends State<AudioListTile> {
                 onConfirmed(); // run your actual removal logic
               },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text("Remove"),
+              child: Text(translationProvider.getTranslation("PopupButton.remove")),
             ),
           ],
         );
