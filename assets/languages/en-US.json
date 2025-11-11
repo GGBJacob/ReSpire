@@ -114,6 +114,14 @@
                 "user_sound":"User sound"
             },
 
+            "BinauralBeats":{
+                "binaural_beats_label":"Binaural Beats",
+                "binaural_beats_enabled":"Enable binaural beats",
+                "left_frequency_label":"Left ear frequency",
+                "right_frequency_label":"Right ear frequency",
+                "beat_frequency_label":"Beat frequency"
+            },
+
             "None":"None",
             "Voice":"Lector"
             
@@ -122,15 +130,8 @@
         "OtherTab":{
             "training_description_label":"Training description",
             "training_description_hint":"Describe your training...",
-            "next_breathing_phase_label":"Next breathing phase",
-            "chart_label":"Chart",
-            "breathing_phase_colors_label":"Breathing phase colors",
-            "preparation_duration_label":"Preparation time (s)",
-            "binaural_beats_label":"Binaural Beats",
-            "binaural_beats_enabled":"Enable binaural beats",
-            "left_frequency_label":"Left ear frequency",
-            "right_frequency_label":"Right ear frequency",
-            "beat_frequency_label":"Beat frequency"
+            "training_preparation_label":"Training preparation",
+            "preparation_duration_label":"Preparation time (s)"
         },
 
                     

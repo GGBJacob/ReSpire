@@ -40,11 +40,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
 
   final int titleMaxLength = 15;
 
-  // Other tab state
-  bool _showNextBreathingPhaseToggle = false;
-  bool _showChartToggle = false;
-  bool _showBreathingPhaseColorsToggle = false;
-
   TranslationProvider translationProvider = TranslationProvider();
 
   @override
@@ -510,7 +505,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 16),
+                                  SizedBox(height: 12),
                                   Card(
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                     elevation: 2,
@@ -658,6 +653,146 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                       ),
                                     ),
                                   ),
+                                  SizedBox(height: 12),
+                                    Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    elevation: 2,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              translationProvider.getTranslation(
+                                                  "TrainingEditorPage.SoundsTab.BinauralBeats.binaural_beats_label"),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: darkblue),
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          SwitchListTile(
+                                            title: Text(translationProvider
+                                                .getTranslation(
+                                                    "TrainingEditorPage.SoundsTab.BinauralBeats.binaural_beats_enabled")),
+                                            value: widget.training.settings
+                                                .binauralBeatsEnabled,
+                                            activeColor: darkerblue,
+                                            inactiveTrackColor: Colors.white,
+                                            inactiveThumbColor: Colors.grey,
+                                            trackOutlineColor:
+                                                WidgetStateProperty.resolveWith<
+                                                        Color?>(
+                                                    (Set<WidgetState> states) {
+                                              if (!states.contains(
+                                                      WidgetState.selected) &&
+                                                  !states.contains(
+                                                      WidgetState.disabled)) {
+                                                return mediumblue;
+                                              }
+                                              return null;
+                                            }),
+                                            onChanged: (v) => setState(() =>
+                                                widget.training.settings
+                                                    .binauralBeatsEnabled = v),
+                                          ),
+                                          if (widget.training.settings
+                                              .binauralBeatsEnabled) ...[
+                                            SizedBox(height: 12),
+                                            ListTile(
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    translationProvider
+                                                        .getTranslation(
+                                                            "TrainingEditorPage.SoundsTab.BinauralBeats.left_frequency_label"),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  Text(
+                                                    '${widget.training.settings.binauralLeftFrequency.toStringAsFixed(1)} Hz',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                ],
+                                              ),
+                                              subtitle: Slider(
+                                                value: widget.training.settings
+                                                    .binauralLeftFrequency,
+                                                min: 100,
+                                                max: 500,
+                                                divisions: 80,
+                                                activeColor: darkerblue,
+                                                onChanged: (v) => setState(() =>
+                                                    widget.training.settings
+                                                        .binauralLeftFrequency = v),
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    translationProvider
+                                                        .getTranslation(
+                                                            "TrainingEditorPage.SoundsTab.BinauralBeats.right_frequency_label"),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  Text(
+                                                    '${widget.training.settings.binauralRightFrequency.toStringAsFixed(1)} Hz',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                ],
+                                              ),
+                                              subtitle: Slider(
+                                                value: widget.training.settings
+                                                    .binauralRightFrequency,
+                                                min: 100,
+                                                max: 500,
+                                                divisions: 80,
+                                                activeColor: darkerblue,
+                                                onChanged: (v) => setState(() =>
+                                                    widget.training.settings
+                                                        .binauralRightFrequency = v),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16),
+                                              child: Text(
+                                                '${translationProvider.getTranslation("TrainingEditorPage.SoundsTab.BinauralBeats.beat_frequency_label")}: ${(widget.training.settings.binauralRightFrequency - widget.training.settings.binauralLeftFrequency).abs().toStringAsFixed(1)} Hz',
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: darkerblue,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               )
                             : Column(
@@ -670,7 +805,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                     elevation: 2,
                                     color: Colors.white,
                                     child: Padding(
-                                      padding: EdgeInsets.all(16),
+                                      padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                                       child: Column(
                                         children: [
                                           // Description field
@@ -682,7 +817,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
-                                                    color: darkblue)),
+                                                    color: Colors.black)),
                                           ),
                                           SizedBox(height: 5),
                                           TextField(
@@ -715,78 +850,32 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   value;
                                             },
                                           ),
-                                          SizedBox(height: 12),
-                                          SwitchListTile(
-                                              title: Text(translationProvider
-                                                  .getTranslation(
-                                                      "TrainingEditorPage.OtherTab.next_breathing_phase_label")),
-                                              value:
-                                                  _showNextBreathingPhaseToggle,
-                                              activeColor: darkerblue,
-                                              inactiveTrackColor: Colors.white,
-                                              inactiveThumbColor: Colors.grey,
-                                              trackOutlineColor:
-                                                  WidgetStateProperty
-                                                      .resolveWith<Color?>((
-                                                          Set<WidgetState>
-                                                              states) {
-                                                if (!states.contains(
-                                                        WidgetState.selected) &&
-                                                    !states.contains(
-                                                        WidgetState.disabled)) {
-                                                  return mediumblue;
-                                                }
-                                                return null;
-                                              }),
-                                              onChanged:
-                                                  null), //(v) => setState(() => _showNextBreathingPhaseToggle = v)),
-                                          SwitchListTile(
-                                              title: Text(translationProvider
-                                                  .getTranslation(
-                                                      "TrainingEditorPage.OtherTab.chart_label")),
-                                              value: _showChartToggle,
-                                              activeColor: darkerblue,
-                                              inactiveTrackColor: Colors.white,
-                                              inactiveThumbColor: Colors.grey,
-                                              trackOutlineColor:
-                                                  WidgetStateProperty
-                                                      .resolveWith<Color?>((
-                                                          Set<WidgetState>
-                                                              states) {
-                                                if (!states.contains(
-                                                        WidgetState.selected) &&
-                                                    !states.contains(
-                                                        WidgetState.disabled)) {
-                                                  return mediumblue;
-                                                }
-                                                return null;
-                                              }),
-                                              onChanged:
-                                                  null), //(v) => setState(() => _showChartToggle = v)),
-                                          SwitchListTile(
-                                              title: Text(translationProvider
-                                                  .getTranslation(
-                                                      "TrainingEditorPage.OtherTab.breathing_phase_colors_label")),
-                                              value:
-                                                  _showBreathingPhaseColorsToggle,
-                                              activeColor: darkerblue,
-                                              inactiveTrackColor: Colors.white,
-                                              inactiveThumbColor: Colors.grey,
-                                              trackOutlineColor:
-                                                  WidgetStateProperty
-                                                      .resolveWith<Color?>((
-                                                          Set<WidgetState>
-                                                              states) {
-                                                if (!states.contains(
-                                                        WidgetState.selected) &&
-                                                    !states.contains(
-                                                        WidgetState.disabled)) {
-                                                  return mediumblue;
-                                                }
-                                                return null;
-                                              }),
-                                              onChanged:
-                                                  null), //(v) => setState(() => _showBreathingPhaseColorsToggle = v)),
+                                          SizedBox(height: 6),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 12),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    elevation: 2,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                translationProvider.getTranslation(
+                                                    "TrainingEditorPage.OtherTab.training_preparation_label"),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black)),
+                                          ),
                                           ListTile(
                                             title: Text(translationProvider
                                                 .getTranslation(
@@ -892,146 +981,6 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 16),
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    elevation: 2,
-                                    color: Colors.white,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(16),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              translationProvider.getTranslation(
-                                                  "TrainingEditorPage.OtherTab.binaural_beats_label"),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: darkblue),
-                                            ),
-                                          ),
-                                          SizedBox(height: 8),
-                                          SwitchListTile(
-                                            title: Text(translationProvider
-                                                .getTranslation(
-                                                    "TrainingEditorPage.OtherTab.binaural_beats_enabled")),
-                                            value: widget.training.settings
-                                                .binauralBeatsEnabled,
-                                            activeColor: darkerblue,
-                                            inactiveTrackColor: Colors.white,
-                                            inactiveThumbColor: Colors.grey,
-                                            trackOutlineColor:
-                                                WidgetStateProperty.resolveWith<
-                                                        Color?>(
-                                                    (Set<WidgetState> states) {
-                                              if (!states.contains(
-                                                      WidgetState.selected) &&
-                                                  !states.contains(
-                                                      WidgetState.disabled)) {
-                                                return mediumblue;
-                                              }
-                                              return null;
-                                            }),
-                                            onChanged: (v) => setState(() =>
-                                                widget.training.settings
-                                                    .binauralBeatsEnabled = v),
-                                          ),
-                                          if (widget.training.settings
-                                              .binauralBeatsEnabled) ...[
-                                            SizedBox(height: 12),
-                                            ListTile(
-                                              title: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    translationProvider
-                                                        .getTranslation(
-                                                            "TrainingEditorPage.OtherTab.left_frequency_label"),
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  Text(
-                                                    '${widget.training.settings.binauralLeftFrequency.toStringAsFixed(1)} Hz',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                                ],
-                                              ),
-                                              subtitle: Slider(
-                                                value: widget.training.settings
-                                                    .binauralLeftFrequency,
-                                                min: 100,
-                                                max: 500,
-                                                divisions: 80,
-                                                activeColor: darkerblue,
-                                                onChanged: (v) => setState(() =>
-                                                    widget.training.settings
-                                                        .binauralLeftFrequency = v),
-                                              ),
-                                            ),
-                                            ListTile(
-                                              title: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    translationProvider
-                                                        .getTranslation(
-                                                            "TrainingEditorPage.OtherTab.right_frequency_label"),
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  Text(
-                                                    '${widget.training.settings.binauralRightFrequency.toStringAsFixed(1)} Hz',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                                ],
-                                              ),
-                                              subtitle: Slider(
-                                                value: widget.training.settings
-                                                    .binauralRightFrequency,
-                                                min: 100,
-                                                max: 500,
-                                                divisions: 80,
-                                                activeColor: darkerblue,
-                                                onChanged: (v) => setState(() =>
-                                                    widget.training.settings
-                                                        .binauralRightFrequency = v),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16),
-                                              child: Text(
-                                                '${translationProvider.getTranslation("TrainingEditorPage.OtherTab.beat_frequency_label")}: ${(widget.training.settings.binauralRightFrequency - widget.training.settings.binauralLeftFrequency).abs().toStringAsFixed(1)} Hz',
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: darkerblue,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                          ],
                                         ],
                                       ),
                                     ),

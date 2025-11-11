@@ -35,10 +35,10 @@
         },
         "delete_training_dialog_title":"Usuwanie Treningu",
         "delete_training_dialog_content":"Na pewno chcesz usunąć ten trening?",
-        "export_success":"Trening został pomyślnie wyeksportowany",
-        "export_error":"Błąd eksportu",
-        "export_failed":"Trening nie został wyeksportowany",
-        "export_error_details":"Wystąpił błąd podczas eksportowania treningu"
+        "export_success":"Trening został pomyślnie wyeksportowany.",
+        "export_error":"Błąd eksportu.",
+        "export_failed":"Trening nie został wyeksportowany.",
+        "export_error_details":"Wystąpił błąd podczas eksportowania treningu."
     },
 
     "TrainingEditorPage":{
@@ -114,7 +114,15 @@
                 "add_sound":"Dodaj dźwięk",
                 "user_sound":"Dźwięk użytkownika"
             },
-            
+
+            "BinauralBeats":{
+                "binaural_beats_label":"Dźwięki Binauralne",
+                "binaural_beats_enabled":"Włącz dźwięki binauralne",
+                "left_frequency_label":"Częstotliwość lewego ucha",
+                "right_frequency_label":"Częstotliwość prawego ucha",
+                "beat_frequency_label":"Częstotliwość uderzenia"
+            },
+
             "None":"Brak",
             "Voice":"Lektor"
 
@@ -123,15 +131,8 @@
         "OtherTab":{
             "training_description_label":"Opis treningu",
             "training_description_hint":"Wpisz opis treningu...",
-            "next_breathing_phase_label":"Kolejna faza oddechu",
-            "chart_label":"Wykres",
-            "breathing_phase_colors_label":"Kolory faz oddechu",
-            "preparation_duration_label":"Czas przygotowania (s)",
-            "binaural_beats_label":"Dźwięki Binauralne",
-            "binaural_beats_enabled":"Włącz dźwięki binauralne",
-            "left_frequency_label":"Częstotliwość lewego ucha",
-            "right_frequency_label":"Częstotliwość prawego ucha",
-            "beat_frequency_label":"Częstotliwość uderzenia"
+            "training_preparation_label":"Przygotowanie do treningu",
+            "preparation_duration_label":"Czas przygotowania (s)"
         },
 
         "Alert":{
