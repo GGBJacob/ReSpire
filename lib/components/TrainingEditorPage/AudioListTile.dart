@@ -68,7 +68,7 @@ class _AudioListTileState extends State<AudioListTile> {
       color: Colors.transparent,
       clipBehavior: Clip.hardEdge,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.symmetric(vertical: 3.0),
         child: ListTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           selected: widget.isSelected,
@@ -105,9 +105,9 @@ class _AudioListTileState extends State<AudioListTile> {
 
   Icon getTileIcon(SoundAsset asset) {
     if (asset.type == SoundType.voice) {
-      return Icon(Icons.record_voice_over, color: darkerblue);
+      return Icon(Icons.record_voice_over, color: darkerblue, size:26);
     } else if (asset.type == SoundType.none) {
-      return Icon(Icons.volume_off, color: Colors.grey);
+      return Icon(Icons.volume_off, color: Colors.grey, size: 26);
     } else {
       return widget.isPlaying ? Icon(Icons.pause, color: Colors.red) : Icon(Icons.play_arrow, color: Colors.green);
     }
