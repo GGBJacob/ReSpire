@@ -13,10 +13,11 @@ class InstructionBlock {
 
 class InstructionSlider extends StatefulWidget {
 
+  double preparationTime;
   Queue<breathing_phase.BreathingPhase?> breathingPhasesQueue = Queue<breathing_phase.BreathingPhase?>();
   int change; 
 
-  InstructionSlider({super.key, required this.breathingPhasesQueue, required this.change});
+  InstructionSlider({super.key,required this.preparationTime,  required this.breathingPhasesQueue, required this.change});
 
   @override
   State<InstructionSlider> createState() => InstructionSliderState();
@@ -39,7 +40,7 @@ class InstructionSliderState extends State<InstructionSlider>
    
     _blocks.add(
       InstructionBlock(
-        text: translationProvider.getTranslation("BreathingPage.InstructionSlider.get_ready_block_text"), 
+        text: translationProvider.getTranslation("BreathingPage.InstructionSlider.get_ready_block_text") + "\n${widget.preparationTime} s", 
         position: 0.0)
     );
     
