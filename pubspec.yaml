@@ -42,9 +42,8 @@ flutter:
     - assets/sounds/long/
     - assets/sounds/counting/
     - assets/languages/
-    - assets/robot.json
-    - assets/wave.json
-    - assets/boat.json
+    - assets/animations/wave.json
+    - assets/animations/boat.json
 
   fonts:
     - family: Glacial

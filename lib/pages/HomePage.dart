@@ -41,11 +41,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     db.initialize();
 
     _waveController1 =
-        AnimationController(vsync: this, duration: Duration(seconds: 6))..repeat();
+        AnimationController(vsync: this, duration: Duration(seconds: 18))..repeat();
     _waveController2 =
-        AnimationController(vsync: this, duration: Duration(seconds: 8))..repeat();
+        AnimationController(vsync: this, duration: Duration(seconds: 21))..repeat();
     _waveController3 =
-        AnimationController(vsync: this, duration: Duration(seconds: 5))..repeat();
+        AnimationController(vsync: this, duration: Duration(seconds: 19))..repeat();
   }
 
   @override
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Opacity(
                 opacity: 0.1,
                 child: Lottie.asset(
-                  'assets/wave.json',
+                  'assets/animations/wave.json',
                   controller: _waveController1,
                   fit: BoxFit.cover,
                   height: 450,
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Opacity(
                 opacity: 0.12,
                 child: Lottie.asset(
-                  'assets/wave.json',
+                  'assets/animations/wave.json',
                   controller: _waveController2,
                   fit: BoxFit.cover,
                   height: 350,
@@ -217,7 +217,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Opacity(
                 opacity: 0.12,
                 child: Lottie.asset(
-                  'assets/wave.json',
+                  'assets/animations/wave.json',
                   controller: _waveController3,
                   fit: BoxFit.cover,
                   height: 100,
