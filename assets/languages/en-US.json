@@ -8,13 +8,23 @@
         "delete":"Delete"
     },
 
-    "HomePage":{
+        "HomePage":{
         "default_training_title":"My Training",
         "import_training_tooltip":"Import training",
         "import_success":"Training imported successfully",
         "import_cancelled":"Training import cancelled",
         "import_error":"Error during import",
-        "import_error_details":"An error occurred while importing the training"
+        "import_error_details":"An error occurred while importing the training",
+        "select_mode":"Selection mode",
+        "cancel_selection":"Cancel selection",
+        "select_all":"Select all",
+        "deselect_all":"Deselect all",
+        "export_selected":"Export",
+        "export_selected_count":"Export ({count})",
+        "export_multiple_success":"Trainings exported successfully",
+        "no_trainings_selected":"No trainings selected",
+        "import_multiple_success":"{count} trainings imported successfully",
+        "settings_tooltip" : "Settings"
     },
 
     "SettingsPage":{

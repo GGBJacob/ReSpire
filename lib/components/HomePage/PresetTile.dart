@@ -8,17 +8,13 @@ class PresetTile extends StatelessWidget
 {
 
   final GestureTapCallback onClick;
-  final Function(BuildContext)? deleteTile;
-  final Function(BuildContext)? editTile;
   final Color color;
-  final Training values;
+  final Training value;
 
   const PresetTile({
     super.key,
     required this.onClick,
-    required this.deleteTile,
-    required this.editTile,
-    required this.values,
+    required this.value,
     this.color = const Color.fromARGB(255, 189, 36, 82)
     });
 
@@ -44,7 +40,7 @@ class PresetTile extends StatelessWidget
                   ),
                   const SizedBox(width: 6), //span between icons and text
                   Text(
-                    values.title,
+                    value.title,
                     //values.title.toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

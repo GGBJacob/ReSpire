@@ -6,31 +6,79 @@ import 'package:respire/components/Global/StepIncrement.dart';
 import 'package:respire/components/Global/Settings.dart';
 
 class TrainingJsonConverter {
-  
+
   static String toJson(Training training) {
-    final Map<String, dynamic> json = {
+    return JsonEncoder.withIndent('  ').convert(_trainingToMap(training));
+  }
+
+  static String toJsonMultiple(List<Training> trainings) {
+    final payload = {
+      'trainings': trainings.map(_trainingToMap).toList(),
+    };
+
+    return JsonEncoder.withIndent('  ').convert(payload);
+  }
+
+  static Training fromJson(String jsonString) {
+    final trainings = fromJsonMultiple(jsonString);
+    if (trainings.isEmpty) {
+      throw FormatException('No training data found in JSON payload.');
+    }
+    return trainings.first;
+  }
+
+  static List<Training> fromJsonMultiple(String jsonString) {
+    final dynamic decoded = jsonDecode(jsonString);
+
+    if (decoded is List) {
+      return decoded.map((item) => _trainingFromMap(_ensureMap(item))).toList();
+    }
+
+    if (decoded is Map) {
+      final map = _ensureMap(decoded);
+
+      if (map.containsKey('trainings') && map['trainings'] is List) {
+        final List<dynamic> trainingsList = map['trainings'] as List<dynamic>;
+        return trainingsList.map((item) => _trainingFromMap(_ensureMap(item))).toList();
+      }
+
+      return [_trainingFromMap(map)];
+    }
+
+    throw FormatException('Unsupported JSON format for trainings.');
+  }
+
+  static Map<String, dynamic> _trainingToMap(Training training) {
+    return {
       'title': training.title,
       'description': training.description,
-      'trainingStages': training.trainingStages.map((stage) => _stageToJson(stage)).toList(),
+      'trainingStages': training.trainingStages.map(_stageToJson).toList(),
       'settings': _settingsToJson(training.settings),
     };
-    
-    return JsonEncoder.withIndent('  ').convert(json);
   }
-  
-  static Training fromJson(String jsonString) {
-    final Map<String, dynamic> json = jsonDecode(jsonString);
-    
+
+  static Training _trainingFromMap(Map<String, dynamic> json) {
+    final stages = (json['trainingStages'] as List?) ?? [];
+
     return Training(
       title: json['title'] ?? '',
       description: json['description'] ?? '',
-      trainingStages: (json['trainingStages'] as List)
-          .map((stage) => _stageFromJson(stage))
+      trainingStages: stages
+          .map((stage) => _stageFromJson(_ensureMap(stage)))
           .toList(),
     )..settings = _settingsFromJson(json['settings'] ?? {});
   }
-  
-  
+
+  static Map<String, dynamic> _ensureMap(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return value;
+    }
+    if (value is Map) {
+      return Map<String, dynamic>.from(value);
+    }
+    throw FormatException('Expected JSON object but found ${value.runtimeType}.');
+  }
+
   static Map<String, dynamic> _stageToJson(TrainingStage stage) {
     return {
       'name': stage.name,
@@ -43,12 +91,13 @@ class TrainingJsonConverter {
   }
   
   static TrainingStage _stageFromJson(Map<String, dynamic> json) {
+    final phases = (json['breathingPhases'] as List?) ?? [];
     return TrainingStage(
       reps: json['reps'] ?? 1,
       increment: json['increment'] ?? 0,
       name: json['name'] ?? '',
-      breathingPhases: (json['breathingPhases'] as List)
-          .map((phase) => _phaseFromJson(phase))
+      breathingPhases: phases
+          .map((phase) => _phaseFromJson(_ensureMap(phase)))
           .toList(),
     );
     // id zostanie automatycznie wygenerowane przez konstruktor TrainingStage
