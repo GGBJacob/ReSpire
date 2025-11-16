@@ -689,7 +689,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                     color: Colors.grey[600],
                                                     fontSize: 12,
                                                   ),
-                                                  textAlign: TextAlign.justify,
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
                                           ],
@@ -717,7 +717,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               }
                                               return null;
                                             }),
-                                            onChanged: (v) => toggleBineuralBeats(v),
+                                            onChanged: (v) => toggleBinauralBeats(v),
                                           ),
                                           if (widget.training.settings
                                               .binauralBeatsEnabled) ...[
@@ -1028,7 +1028,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   }
 
   SoundScope _previousBackgroundScope = SoundScope.global;
-  void toggleBineuralBeats(bool? value) {
+  void toggleBinauralBeats(bool? value) {
     setState(() {
       if (value == true) {
         _previousBackgroundScope = _sounds.backgroundSoundScope;

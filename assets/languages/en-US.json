@@ -115,7 +115,7 @@
             },
 
             "BinauralBeats":{
-                "warning":"Note! Enabling this option means that background music option will be disabled.",
+                "warning":"Warning! Enabling this feature will disable background music.",
                 "binaural_beats_label":"Binaural Beats",
                 "binaural_beats_enabled":"Enable binaural beats",
                 "left_frequency_label":"Left ear frequency",
@@ -181,10 +181,9 @@
     },
 
     "SoundScope":{
-        "none":"none",
-        "voice":"lector",
-        "global":"for whole training",
-        "perStage":"for training stages",
-        "perPhase":"for each breathing phase"
+        "none":"None",
+        "global":"For whole training",
+        "perStage":"For training stages",
+        "perPhase":"For each breathing phase"
     }
 }

@@ -97,8 +97,7 @@
                     "global": "Dla całego treningu",
                     "training_stages": "dla etapów",
                     "breathing_phases": "dla faz oddechu",
-                    "breathing_phases_label": "Fazy oddechu",
-                    "none": "brak"
+                    "breathing_phases_label": "Fazy oddechu"
                 }
             },
 
@@ -116,7 +115,7 @@
             },
 
             "BinauralBeats":{
-                "warning":"Uwaga! Włączenie tej opcji spowoduje wyłączenie opcji muzyki w tle.",
+                "warning":"Uwaga! Włączenie tej opcji spowoduje wyłączenie muzyki w tle.",
                 "binaural_beats_label":"Dźwięki Binauralne",
                 "binaural_beats_enabled":"Włącz dźwięki binauralne",
                 "left_frequency_label":"Częstotliwość lewego ucha",
@@ -181,10 +180,9 @@
     },
 
     "SoundScope":{
-        "none":"brak",
-        "voice":"lektor",
-        "global":"na cały trening",
-        "perStage":"dla etapów treningu",
-        "perPhase":"dla każdej fazy oddechowej"
+        "none":"Brak",
+        "global":"Na cały trening",
+        "perStage":"Dla etapów treningu",
+        "perPhase":"Dla każdej fazy oddechowej"
     }
 }
