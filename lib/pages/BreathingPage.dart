@@ -312,11 +312,21 @@ class _BreathingPageState extends State<BreathingPage> {
           ValueListenableBuilder<int>(
             valueListenable: controller!.breathingPhasesCount,
             builder: (context, breathingPhasesDone, _) {
-              return Text(
-                '${breathingPhasesDone <= breathingPhases ? breathingPhasesDone : breathingPhases} / $breathingPhases',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              );
+              return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(44, 173, 196, 1).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${breathingPhasesDone <= breathingPhases ? breathingPhasesDone : breathingPhases} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $breathingPhases',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(44, 173, 196, 1),
+                    ),
+                  ),
+                );
             },
           ),
 
@@ -338,6 +348,20 @@ class _BreathingPageState extends State<BreathingPage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Color.fromRGBO(183, 244, 255, 1),
+                              boxShadow: [ //shadow from https://flutter-boxshadow.vercel.app/
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.1),
+                                  blurRadius: 3,
+                                  spreadRadius: 0,
+                                  offset: Offset(0, 1),
+                                ),
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.06),
+                                  blurRadius: 2,
+                                  spreadRadius: 0,
+                                  offset: Offset(0, 1),
+                                )
+                              ]
                             ),
                           ),
 

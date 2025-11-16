@@ -158,6 +158,26 @@ class InstructionSliderState extends State<InstructionSlider>
             ? Color.fromRGBO(44, 173, 196, 1)
             : Color.fromRGBO(50, 183, 207, 1),
             borderRadius: BorderRadius.circular(16),
+            boxShadow: [ //shadow from https://flutter-boxshadow.vercel.app/ (modified)
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.07),
+                  blurRadius: 1,
+                  spreadRadius: 0,
+                  offset: Offset(0, 1),
+                ),
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.07),
+                  blurRadius: 2,
+                  spreadRadius: 0,
+                  offset: Offset(0, 2),
+                ),
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.07),
+                  blurRadius: 4,
+                  spreadRadius: 0,
+                  offset: Offset(0, 4),
+                )
+              ]
           ),
           child: Text(
             text,
