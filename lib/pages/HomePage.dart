@@ -42,12 +42,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
     db.initialize();
 
-    _waveController1 =
-        AnimationController(vsync: this, duration: Duration(seconds: 17))..repeat();
-    _waveController2 =
-        AnimationController(vsync: this, duration: Duration(seconds: 22))..repeat();
-    _waveController3 =
-        AnimationController(vsync: this, duration: Duration(seconds: 19))..repeat();
+  _waveController1 = AnimationController(vsync: this, duration: Duration(seconds: 55))..forward(from: 0.0)..repeat();
+  _waveController2 = AnimationController(vsync: this, duration: Duration(seconds: 62))..forward(from: 0.73)..repeat();
+  _waveController3 = AnimationController(vsync: this, duration: Duration(seconds: 50))..forward(from: 0.56)..repeat();
+
   }
 
   @override
@@ -260,7 +258,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ? translationProvider.getTranslation('HomePage.select_mode')
                     : translationProvider.getTranslation('HomePage.export_selected_count')
                         .replaceAll('{count}', _selectedIndices.length.toString()),
-                style: TextStyle(color: darkerblue, fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(color: darkerblue, fontSize: 16, fontWeight: FontWeight.bold),
               )
             : Image.asset(
                 'assets/logo_poziom.png',
@@ -282,19 +280,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ? [
                 // Select All / Deselect All button
                 if (_selectedIndices.length < db.presetList.length)
-                  TextButton(
+                  FilledButton(
                     onPressed: _selectAll,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: darkerblue.withOpacity(0.1),
+                      foregroundColor: darkerblue,
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    ),
                     child: Text(
                       translationProvider.getTranslation('HomePage.select_all'),
-                      style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   )
                 else
-                  TextButton(
+                  FilledButton(
                     onPressed: _deselectAll,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: darkerblue.withOpacity(0.1),
+                      foregroundColor: darkerblue,
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    ),
                     child: Text(
                       translationProvider.getTranslation('HomePage.deselect_all'),
-                      style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 // Export button
@@ -327,7 +335,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       backgroundColor: mediumblue,
       body: Stack(
         children: [
-          // 🔹 Tło z falami
           Positioned(
             bottom: 0,
             left: 0,
@@ -340,7 +347,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   'assets/animations/wave.json',
                   controller: _waveController1,
                   fit: BoxFit.cover,
-                  height: 450,
+                  height: 670,
                   repeat: true,
                 ),
               ),
@@ -358,25 +365,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   'assets/animations/wave.json',
                   controller: _waveController2,
                   fit: BoxFit.cover,
-                  height: 350,
+                  height: 550,
                   repeat: true,
                 ),
               ),
             ),
           ),
           Positioned(
-            bottom: 0,
+            bottom: -20,
             left: 0,
             right: 0,
             child: Transform.rotate(
               angle: pi,
               child: Opacity(
-                opacity: 0.12,
+                opacity: 0.15,
                 child: Lottie.asset(
                   'assets/animations/wave.json',
                   controller: _waveController3,
                   fit: BoxFit.cover,
-                  height: 100,
+                  height: 450,
                   repeat: true,
                 ),
               ),
