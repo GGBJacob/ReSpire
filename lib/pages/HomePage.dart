@@ -280,19 +280,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ? [
                 // Select All / Deselect All button
                 if (_selectedIndices.length < db.presetList.length)
-                  TextButton(
+                  FilledButton(
                     onPressed: _selectAll,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: darkerblue.withOpacity(0.1),
+                      foregroundColor: darkerblue,
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    ),
                     child: Text(
                       translationProvider.getTranslation('HomePage.select_all'),
-                      style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   )
                 else
-                  TextButton(
+                  FilledButton(
                     onPressed: _deselectAll,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: darkerblue.withOpacity(0.1),
+                      foregroundColor: darkerblue,
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    ),
                     child: Text(
                       translationProvider.getTranslation('HomePage.deselect_all'),
-                      style: TextStyle(color: darkerblue, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 // Export button
