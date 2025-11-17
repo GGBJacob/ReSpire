@@ -83,7 +83,7 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
       currentDuration = (newDuration * 2).roundToDouble() / 2;
     }
 
-    currentDuration = currentDuration.clamp(0.1, double.infinity);
+    currentDuration = currentDuration.clamp(0.3, double.infinity);
 
     durationController.text = currentDuration.toStringAsFixed(1);
 

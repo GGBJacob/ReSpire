@@ -272,7 +272,7 @@ class TrainingController {
     int previousSecond = _remainingTime ~/ 1000;
     DateTime lastTick = DateTime.now();
     soundManager.playSound(_currentSound);
-
+    bool skipFirstCounting = false;
     //TODO: Handle distinguishing when are we playing a playlist and when a single sound. Maybe by checking the return type?
 
     _timer =
@@ -280,11 +280,15 @@ class TrainingController {
       final now = DateTime.now();
       final int elapsed = now.difference(lastTick).inMilliseconds;
       lastTick = now;
-
+      dev.log(previousSecond.toString() + " " + (_remainingTime ~/ 1000).toString());
       if (previousSecond > _remainingTime ~/ 1000 && !end) {
         previousSecond = _remainingTime ~/ 1000;
-        second.value = previousSecond + 1;
-        _playCountingSound(previousSecond);
+        second.value = previousSecond;
+        if(!skipFirstCounting){ //skip the sound for the first counting after phase change to avoid overlapping sounds or playing them too frequently (eg. when phase duration is 1.5s it would play for 2s and 1s)
+          _playCountingSound(previousSecond);
+        }else{
+          skipFirstCounting = false;
+        }
       }
 
       if (_remainingTime > elapsed) {
@@ -315,7 +319,7 @@ class TrainingController {
         }
       } else if (_remainingTime > 0) {
         _remainingTime = 0;
-        second.value = 0;
+        //second.value = 0;
       }
 
       if (_remainingTime == 0 && _stopTimer != 0) {
@@ -382,7 +386,8 @@ class TrainingController {
               _playEndingSound(_sounds.endingTrack.name, 500);
             } else {
               _remainingTime = _nextRemainingTime;
-              previousSecond = (_remainingTime + 1) ~/ 1000;
+              previousSecond = (_remainingTime ~/ 1000)+1;
+              skipFirstCounting = true;
             }
           } else {
             String? newStageId;
@@ -404,7 +409,8 @@ class TrainingController {
             }
 
             _nextRemainingTime = _newBreathingPhaseRemainingTime;
-            previousSecond = (_remainingTime + 1) ~/ 1000;
+            previousSecond = (_remainingTime ~/ 1000)+1;
+            skipFirstCounting = true;
             _fetchNextBreathingPhase();
             _nextPhaseSoundPlayed = false;
             breathingPhasesQueue.value =
