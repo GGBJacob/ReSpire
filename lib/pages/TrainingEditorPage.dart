@@ -14,6 +14,7 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:respire/utils/TextUtils.dart';
 
 class TrainingEditorPage extends StatefulWidget {
   final Training training;
@@ -682,9 +683,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               Padding(
                                                 padding: const EdgeInsets.only(left: 16, right: 16),
                                                 child: Text(
-                                                  translationProvider.getTranslation(
+                                                  TextUtils.addNoBreakingSpaces(translationProvider.getTranslation(
                                                     "TrainingEditorPage.SoundsTab.BinauralBeats.warning",
-                                                  ),
+                                                  )),
                                                   style: TextStyle(
                                                     color: Colors.grey[600],
                                                     fontSize: 12,
