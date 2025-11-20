@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/Step.dart';
@@ -14,6 +15,7 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:respire/utils/TextUtils.dart';
 
 class TrainingEditorPage extends StatefulWidget {
   final Training training;
@@ -34,6 +36,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   late TextEditingController descriptionController;
   final ScrollController _scrollController = ScrollController();
   final FocusNode _descriptionFocusNode = FocusNode();
+  FocusNode? preparationFocusNode = FocusNode();
 
   int _selectedTab = 0;
   late Sounds _sounds;
@@ -51,6 +54,15 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
         TextEditingController(text: widget.training.description);
     preparationController = TextEditingController(
         text: widget.training.settings.preparationDuration.toString());
+    preparationFocusNode = FocusNode();
+    preparationFocusNode!.addListener(() {
+      if (!(preparationFocusNode?.hasFocus ?? true)) {
+        final value = int.tryParse(preparationController.text);
+        if (value != null && value > 0) {
+          setState(() => widget.training.settings.preparationDuration = value);
+        }
+      }
+    });
   }
 
   void addTrainingStage() {
@@ -123,6 +135,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
   void dispose() {
     descriptionController.dispose();
     _descriptionFocusNode.dispose();
+    preparationFocusNode?.dispose();
     super.dispose();
   }
 
@@ -682,9 +695,9 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                               Padding(
                                                 padding: const EdgeInsets.only(left: 16, right: 16),
                                                 child: Text(
-                                                  translationProvider.getTranslation(
+                                                  TextUtils.addNoBreakingSpaces(translationProvider.getTranslation(
                                                     "TrainingEditorPage.SoundsTab.BinauralBeats.warning",
-                                                  ),
+                                                  )),
                                                   style: TextStyle(
                                                     color: Colors.grey[600],
                                                     fontSize: 12,
@@ -950,16 +963,25 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   ),
                                                   Expanded(
                                                     child: Center(
-                                                      child: Text(
-                                                        preparationController
-                                                            .text,
+                                                      child: TextField(
+                                                        key: ValueKey('reps_${widget.training.hashCode}'),
+                                                        controller: preparationController,
+                                                        focusNode: preparationFocusNode,
+                                                        keyboardType: TextInputType.number,
+                                                        textAlign: TextAlign.center,
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter.digitsOnly,
+                                                        ],
+                                                        decoration: InputDecoration(
+                                                          border: InputBorder.none,
+                                                          contentPadding: EdgeInsets.zero,
+                                                          isDense: true,
+                                                        ),
                                                         style: const TextStyle(
                                                             fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
-                                                        textAlign:
-                                                            TextAlign.center,
                                                       ),
                                                     ),
                                                   ),

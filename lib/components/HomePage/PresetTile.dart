@@ -39,17 +39,19 @@ class PresetTile extends StatelessWidget
                     ),
                   ),
                   const SizedBox(width: 6), //span between icons and text
-                  Text(
-                    value.title,
-                    //values.title.toUpperCase(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: 'Glacial',
-                      fontSize: 23,
-                      fontWeight: FontWeight.w500,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                    ),
+                  Flexible(
+                    child:Text(
+                      value.title,
+                      textAlign: TextAlign.center,
+                      //values.title.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'Glacial',
+                        fontSize: 23,
+                        fontWeight: FontWeight.w500,
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                      )),
                   ),
                   const SizedBox(width: 6), 
                   Icon(

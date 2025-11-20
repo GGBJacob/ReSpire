@@ -18,7 +18,7 @@ class TrainingStage {
   int reps;
 
   @HiveField(3)
-  int increment;
+  double increment;
   
   @HiveField(4)
   List<BreathingPhase> breathingPhases;

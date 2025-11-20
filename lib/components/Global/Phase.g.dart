@@ -18,7 +18,7 @@ class TrainingStageAdapter extends TypeAdapter<TrainingStage> {
     };
     return TrainingStage(
       reps: fields[2] as int,
-      increment: fields[3] as int,
+      increment: fields[3] as double,
       breathingPhases: (fields[4] as List).cast<BreathingPhase>(),
       name: fields[1] as String,
     )..id = fields[0] as String;

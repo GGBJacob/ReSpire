@@ -21,7 +21,7 @@ class Sounds {
   SoundScope nextSoundScope = SoundScope.global;
   /// Next sound played between breathing phases
   @HiveField(3)
-  SoundAsset nextSound = SoundManager.shortSounds["Notification"]!;
+  SoundAsset nextSound = SoundManager.shortSounds["Snap"]!;
 
   /// Preparation and ending tracks for the training session
   @HiveField(4)

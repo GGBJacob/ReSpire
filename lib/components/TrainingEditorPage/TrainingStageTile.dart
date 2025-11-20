@@ -30,6 +30,7 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
   late TextEditingController repsController;
   late TextEditingController incrementController;
   late TextEditingController nameController;
+  late double incrementDuration;
   FocusNode? repsFocusNode;
   FocusNode? incrementFocusNode;
   FocusNode? nameFocusNode;
@@ -56,8 +57,8 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
     });
     incrementFocusNode!.addListener(() {
       if (!(incrementFocusNode?.hasFocus ?? true)) {
-        final value = int.tryParse(incrementController.text);
-        if (value != null && value >= 0 && value <= 100) {
+        final value = double.tryParse(incrementController.text) ?? 0;
+        if (value >= 0 && value <= 100) {
           setState(() => widget.trainingStage.increment = value);
         }
         widget.onUpdate();
@@ -69,6 +70,7 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
         widget.onUpdate();
       }
     });
+    incrementDuration = widget.trainingStage.increment;
   }
 
   @override
@@ -98,6 +100,19 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
     incrementFocusNode?.dispose();
     nameFocusNode?.dispose();
     super.dispose();
+  }
+
+  void commitIncrementDurationChange() {
+    double newDuration = incrementDuration;
+
+    incrementDuration = (newDuration * 10).roundToDouble() / 10;
+
+    widget.trainingStage.increment = incrementDuration;
+    incrementDuration = incrementDuration.clamp(0.1, double.infinity);
+
+    incrementController.text = incrementDuration.toStringAsFixed(1);
+    
+    widget.onUpdate();
   }
 
   void addBreathingPhase() {
@@ -425,8 +440,10 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(18),
                           onTap: () {
-                            int currentValue = int.tryParse(incrementController.text) ?? 0;
-                            int newValue = (currentValue - 1).clamp(0, 100);
+                            double currentValue = double.tryParse(incrementController.text) ?? 0;
+                            double newValue = currentValue <= 1 ?
+                            (currentValue - 0.1).clamp(0, 100) : (currentValue - 1).clamp(0, 100);
+                            newValue = (newValue * 10).roundToDouble() / 10;
                             incrementController.text = newValue.toString();
                             setState(() {
                               widget.trainingStage.increment = newValue;
@@ -452,7 +469,9 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
+                            CommaToDecimalFormatter(),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d*'))
                           ],
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -465,17 +484,20 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                             fontSize: 13,
                           ),
                           onChanged: (value) {
-                            int? newIncrement = int.tryParse(value);
-                            if (newIncrement != null && newIncrement >= 0 && newIncrement <= 100) {
+                            double newIncrement = double.tryParse(value) ?? 0;
+                            if (newIncrement >= 0 && newIncrement <= 100) {
                               setState(() {
-                                widget.trainingStage.increment = newIncrement;
+                                newIncrement = (newIncrement * 10).roundToDouble() / 10;
+                                incrementDuration = newIncrement;
                               });
                             }
                           },
                           onEditingComplete: () {
+                            commitIncrementDurationChange();
                             widget.onUpdate();
                           },
                           onTapOutside: (event) {
+                            commitIncrementDurationChange();
                             FocusScope.of(context).unfocus();
                             widget.onUpdate();
                           },
@@ -486,8 +508,10 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(18),
                           onTap: () {
-                            int currentValue = int.tryParse(incrementController.text) ?? 0;
-                            int newValue = (currentValue + 1).clamp(0, 100);
+                            double currentValue = double.tryParse(incrementController.text) ?? 0;
+                            double newValue = currentValue >= 1 ?
+                            (currentValue + 1).clamp(0, 100) : (currentValue + 0.1).clamp(0, 100);
+                            newValue = (newValue * 10).roundToDouble() / 10;
                             incrementController.text = newValue.toString();
                             setState(() {
                               widget.trainingStage.increment = newValue;
