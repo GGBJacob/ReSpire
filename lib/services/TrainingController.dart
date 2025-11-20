@@ -25,6 +25,8 @@ class TrainingController {
   final ValueNotifier<bool> isPaused = ValueNotifier(false);
   final ValueNotifier<int> breathingPhasesCount = ValueNotifier(0);
   final ValueNotifier<String> currentTrainingStageName = ValueNotifier('');
+  final ValueNotifier<int> currentStageIndex = ValueNotifier(0);
+  final ValueNotifier<int> totalStages = ValueNotifier(0);
 
   final int _updateInterval = 25; //in milliseconds
 
@@ -64,6 +66,8 @@ class TrainingController {
     // Initialize current stage ID to the first stage
     if (parser.training.trainingStages.isNotEmpty) {
       _currentTrainingStageId = parser.training.trainingStages[0].id;
+      totalStages.value = parser.training.trainingStages.length;
+      currentStageIndex.value = 1;
     }
 
     // Binaural beats will be started after preparation phase
@@ -426,17 +430,25 @@ class TrainingController {
             _logQueue('REBUILD');
             _updateCurrentTrainingStageLabel();
 
-            if (_sounds.backgroundSoundScope == SoundScope.perStage &&
-                newStageId != null) {
-              if (_currentTrainingStageId != newStageId) {
-                dev.log(
-                    'TrainingController: Stage changed from $_currentTrainingStageId to $newStageId - SWITCHING PLAYLIST');
-                _currentTrainingStageId = newStageId;
-                _switchToStagePlaylist(_currentTrainingStageId!);
-              } else {
-                dev.log(
-                    'TrainingController: Same stage ($newStageId) - keeping playlist');
+            if (newStageId != null && _currentTrainingStageId != newStageId) {
+              dev.log(
+                  'TrainingController: Stage changed from $_currentTrainingStageId to $newStageId');
+              _currentTrainingStageId = newStageId;
+              
+              for (int i = 0; i < parser.training.trainingStages.length; i++) {
+                if (parser.training.trainingStages[i].id == newStageId) {
+                  currentStageIndex.value = i + 1; // 1-indexed for display
+                  dev.log('TrainingController: Stage index updated to ${i + 1}');
+                  break;
+                }
               }
+              
+              if (_sounds.backgroundSoundScope == SoundScope.perStage) {
+                dev.log('TrainingController: SWITCHING PLAYLIST for stage $newStageId');
+                _switchToStagePlaylist(_currentTrainingStageId!);
+              }
+            } else if (newStageId != null) {
+              dev.log('TrainingController: Same stage ($newStageId) - keeping playlist');
             }
           }
         }
@@ -451,6 +463,8 @@ class TrainingController {
     binauralGenerator.stop();
     _timer?.cancel();
     currentTrainingStageName.dispose();
+    currentStageIndex.dispose();
+    totalStages.dispose();
   }
 
   String _resolveTrainingStageName(String? rawName, int trainingStageIndex) {

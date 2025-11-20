@@ -299,6 +299,66 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                         ),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    ValueListenableBuilder<int>(
+                      valueListenable: controller!.breathingPhasesCount,
+                      builder: (context, phaseCount, _) {
+                        if (phaseCount == 0) return const SizedBox.shrink();
+                        
+                        return ValueListenableBuilder<int>(
+                          valueListenable: controller!.currentStageIndex,
+                          builder: (context, currentIndex, _) {
+                            return ValueListenableBuilder<int>(
+                              valueListenable: controller!.totalStages,
+                              builder: (context, total, _) {
+                                if (total <= 1) return const SizedBox.shrink();
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(44, 173, 196, 0.8),
+                                        Color.fromRGBO(50, 183, 207, 0.8),
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromRGBO(44, 173, 196, 0.3),
+                                        blurRadius: 8,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.layers_outlined,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        '$currentIndex z $total',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                     const SizedBox(height: 12),
                   ],
                 ),
