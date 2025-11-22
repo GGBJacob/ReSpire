@@ -337,7 +337,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        '$currentIndex z $total',
+                                        '$currentIndex ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $total',
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
