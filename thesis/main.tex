@@ -1,0 +1,81 @@
+\documentclass[nostrict]{szablonPG}
+
+%-------------------- Dodatkowe pakiety ---------------------
+\usepackage{listing}
+\usepackage[backend=biber,
+            style=ieee,
+            language=polish,
+            giveninits=true,
+            sorting=none,
+            url=true,
+            doi=false,
+            isbn=false]{biblatex} % pakiet pozwalający na konfigurację bibliografii
+\addbibresource{refs.bib}
+%------------------------------------------------------------
+
+%------------------------------------------------------------
+%			      Początek pracy dyplomowej  
+%------------------------------------------------------------
+
+\begin{document}
+
+%------------------------------------------------------------
+%  Dodanie strony tytułowej wygenerowanej z MojaPG oraz oświadczenia
+
+\includepdf[pages=-]{meta/StronaTytulowa_193078.pdf}
+%\includepdf{meta/oswiadczenie.pdf}
+
+%------------------------------------------------------------
+%  Dodanie streszczenia i abstract
+%  						
+
+%\input{meta/streszczenie.tex}
+%\input{meta/abstract.tex}
+
+%------------------------------------------------------------
+%	Utworzenie spisu treści pracy dyplomowej
+\tableofcontents
+
+%------------------------------------------------------------
+%	Dodanie wykazu wazniejszych skrótów i oznaczeñ 
+\input{meta/oznaczenia.tex}
+
+%------------------------------------------------------------
+%	Dodanie rozdziałów pracy dyplomowej 
+
+\input{rozdzialy/wstep_cel_pracy.tex}
+\input{rozdzialy/istniejace_rozwiazania.tex}
+\input{rozdzialy/implementacja.tex}
+\input{rozdzialy/testowanie.tex}
+\input{rozdzialy/zakonczenie.tex}
+%\input{rozdzialy/przyklad.tex}
+
+% ---------------------- Bibliografia -----------------------
+\nocite{*} % dodajemy całą zawartość refs.bib
+\printbibliography[heading=bibintoc,title={Bibliografia}]
+% -----------------------------------------------------------
+
+%------------------------------------------------------------
+%	Dodanie wykazu rysunków oraz tabeli
+
+\renewcommand{\baselinestretch}{1.0}\normalsize	% interlinia w sekcji wykazów
+\addcontentsline{toc}{chapter}{\listfigurename}	% dodanie wykazu rysunków do spisu treści
+\listoffigures									% generacja wykazu rysunków
+
+\addcontentsline{toc}{chapter}{\listtablename}	% dodanie wykazu tabel do spisu treści
+\listoftables									% generacja wykazu tabel
+\renewcommand{\baselinestretch}{1.3}\normalsize	% powrót do interlinii 1.5
+
+
+% ---------------------- DODATKI -----------------------
+\chapter*{Dodatek A}
+\addcontentsline{toc}{chapter}{Dodatek A}
+% Zależnie od dodatku, zaleca się dodawnie dodatków jako
+% dokumenty PDF
+% \includepdf{dodatki/dodatek1.pdf}
+
+% -----------------------------------------------------------
+\end{document}
+%------------------------------------------------------------
+			 	%	Koniec pracy dyplomowej  %
+%------------------------------------------------------------
