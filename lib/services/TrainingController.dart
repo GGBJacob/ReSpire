@@ -397,15 +397,9 @@ class TrainingController {
               previousSecond = (_remainingTime ~/ 1000)+1;
               skipFirstCounting = true;
             }
+            tryUpdateStageCounter(); // try removing the last stage if needed
           } else {
-            String? newStageId;
-            if (_trainingStageIdQueue.length > 1) {
-              newStageId = _trainingStageIdQueue.elementAt(1);
-            }
-
-            dev.log(
-                'TrainingController: Starting new phase with stageId: $newStageId (current: $_currentTrainingStageId, queue size: ${_trainingStageIdQueue.length})');
-
+            tryUpdateStageCounter(); // we have to try before removing the phase from the queue
             final removedPhase = breathingPhasesQueue.value.removeFirst();
             _logQueue('REMOVE', phase: removedPhase);
             _remainingTime = _nextRemainingTime;
@@ -426,32 +420,44 @@ class TrainingController {
                     breathingPhasesQueue.value);
             _logQueue('REBUILD');
             _updateCurrentTrainingStageLabel();
-
-            if (newStageId != null && _currentTrainingStageId != newStageId) {
-              dev.log(
-                  'TrainingController: Stage changed from $_currentTrainingStageId to $newStageId');
-              _currentTrainingStageId = newStageId;
-              _playShortSound(parser.training.sounds.stageChangeSound.name);
-              
-              for (int i = 0; i < parser.training.trainingStages.length; i++) {
-                if (parser.training.trainingStages[i].id == newStageId) {
-                  currentStageIndex.value = i + 1; // 1-indexed for display
-                  dev.log('TrainingController: Stage index updated to ${i + 1}');
-                  break;
-                }
-              }
-              
-              if (_sounds.backgroundSoundScope == SoundScope.perStage) {
-                dev.log('TrainingController: SWITCHING PLAYLIST for stage $newStageId');
-                _switchToStagePlaylist(_currentTrainingStageId!);
-              }
-            } else if (newStageId != null) {
-              dev.log('TrainingController: Same stage ($newStageId) - keeping playlist');
-            }
           }
         }
       }
     });
+  }
+
+
+  void tryUpdateStageCounter(){
+    String? newStageId;
+    if (_trainingStageIdQueue.length > 1) {
+      newStageId = _trainingStageIdQueue.elementAt(1);
+    }
+
+    dev.log(
+        'TrainingController: Starting new phase with stageId: $newStageId (current: $_currentTrainingStageId, queue size: ${_trainingStageIdQueue.length})');
+
+    if (newStageId != null && _currentTrainingStageId != newStageId) 
+    {
+      dev.log(
+          'TrainingController: Stage changed from $_currentTrainingStageId to $newStageId');
+      _currentTrainingStageId = newStageId;
+      _playShortSound(parser.training.sounds.stageChangeSound.name);
+      
+      for (int i = 0; i < parser.training.trainingStages.length; i++) {
+        if (parser.training.trainingStages[i].id == newStageId) {
+          currentStageIndex.value = i + 1; // 1-indexed for display
+          dev.log('TrainingController: Stage index updated to ${i + 1}');
+          break;
+        }
+      }
+      
+      if (_sounds.backgroundSoundScope == SoundScope.perStage) {
+        dev.log('TrainingController: SWITCHING PLAYLIST for stage $newStageId');
+        _switchToStagePlaylist(_currentTrainingStageId!);
+      }
+    } else if (newStageId != null) {
+      dev.log('TrainingController: Same stage ($newStageId) - keeping playlist');
+    }
   }
 
   void dispose() {

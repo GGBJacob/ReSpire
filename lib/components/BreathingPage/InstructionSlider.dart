@@ -185,7 +185,7 @@ class InstructionSliderState extends State<InstructionSlider>
 
     return Positioned(
       left: sliderWidth / 2 + positionX - blockSize / 2, // offset to center + half block width
-      top: 50,
+      top: 20,
       child: Transform.scale(
         scale: scale,
         child: Container(
@@ -234,7 +234,7 @@ class InstructionSliderState extends State<InstructionSlider>
       children: [
         SizedBox(
           width: sliderWidth,
-          height: 220,
+          height: 190,
           child: AnimatedBuilder(
             animation: _animation,
             builder: (_, __) {
