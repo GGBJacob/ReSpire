@@ -112,17 +112,23 @@
                 }
             },
 
-            "AudioSelectionPopup":{
-                "title":"Select audio",
+            "AudioSelectionPopupSound":{
+                "title":"Select sound",
                 "user_sounds":"User sounds",
                 "add_custom_sound_button_label":"Add custom sound"
             },
 
+            "AudioSelectionPopupMusic":{
+                "title":"Select music",
+                "user_music":"User music",
+                "add_custom_music_button_label":"Add custom music"
+            },
+
             "PlaylistEditor":{
-                "empty_playlist":"Playlist is empty. Add sounds using the button below.",
-                "empty_stage_playlist":"No sounds in this stage playlist yet. Add sounds to play during this training stage.",
-                "add_sound":"Add sound",
-                "user_sound":"User sound"
+                "empty_playlist":"Playlist is empty. Add music using the button below.",
+                "empty_stage_playlist":"No music in this stage playlist yet. Add music to play during this training stage.",
+                "add_music":"Add music",
+                "user_music":"User music"
             },
 
             "BinauralBeats":{

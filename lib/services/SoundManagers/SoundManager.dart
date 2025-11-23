@@ -54,6 +54,12 @@ class SoundManager implements ISoundManager {
     return _availableSounds[soundName];
   }
 
+  bool isUserMusic(String soundName) {
+    return UserSoundsDatabase().userShortSounds.containsKey(soundName) ||
+        UserSoundsDatabase().userLongSounds.containsKey(soundName) ||
+        UserSoundsDatabase().userCountingSounds.containsKey(soundName);
+  }
+
   ///Loads a sound from a file.\
   /// [forceCommonSetup] if true, will setup the audio player with common settings regardless of type.\
   /// [soundName] is the name of the sound file returned by **getLoadedSounds()**.

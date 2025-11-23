@@ -423,7 +423,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   _sounds.countingSound = v;
                                                 }),
                                             includeVoiceOption: true,
-                                            blueBorder: true),
+                                            blueBorder: true,
+                                            isSoundSelection: true,),
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 4),
                                             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -504,7 +505,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                                       v;
                                                                 }),
                                                             includeVoiceOption:
-                                                                true);
+                                                                true,
+                                                                isSoundSelection: true);
                                                         })()
                                                       else if (_sounds.nextSoundScope == SoundScope.perPhase)
                                                         ...buildPhaseSoundRows(SoundListType.shortSounds)
@@ -531,7 +533,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   _sounds.stageChangeSound = v;
                                                 }),
                                             includeVoiceOption: true,
-                                            blueBorder: true),],
+                                            blueBorder: true,
+                                            isSoundSelection: true)],
                                       ),
                                     ),
                                   ),
@@ -662,7 +665,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                       v;
                                                 },),
                                             includeVoiceOption: false,
-                                            blueBorder: true),
+                                            blueBorder: true,
+                                            isSoundSelection: false),
                                           SoundSelectionRow(
                                             labelStyle: TextStyle(
                                                 color: darkerblue,
@@ -680,7 +684,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   _sounds.endingTrack = v;
                                                 }),
                                             includeVoiceOption: false,
-                                            blueBorder: true,),
+                                            blueBorder: true,
+                                            isSoundSelection: false),
                                         ],
                                       ),
                                     ),
@@ -1098,6 +1103,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                   : _sounds.breathingPhaseCues[phase] = v;
             });
           },
+          isSoundSelection: false,
         ),
     ];
   }

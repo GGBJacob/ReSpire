@@ -112,17 +112,23 @@
                 }
             },
 
-            "AudioSelectionPopup":{
+            "AudioSelectionPopupSound":{
                 "title":"Wybierz dźwięk",
                 "user_sounds":"Dźwięki użytkownika",
                 "add_custom_sound_button_label":"Dodaj własny dźwięk"
             },
 
+             "AudioSelectionPopupMusic":{
+                "title":"Wybierz muzykę",
+                "user_music":"Muzyka użytkownika",
+                "add_custom_music_button_label":"Dodaj własną muzykę"
+            },
+
             "PlaylistEditor":{
-                "empty_playlist":"Playlista jest pusta. Dodaj dźwięki za pomocą przycisku poniżej.",
-                "empty_stage_playlist":"Brak dźwięków w playliście dla tego etapu. Dodaj dźwięki, które będą odtwarzane podczas tego etapu treningu.",
-                "add_sound":"Dodaj dźwięk",
-                "user_sound":"Dźwięk użytkownika"
+                "empty_playlist":"Playlista jest pusta. Dodaj muzykę za pomocą przycisku poniżej.",
+                "empty_stage_playlist":"Brak muzyki w playliście dla tego etapu. Dodaj muzykę, która będzie odtwarzana podczas tego etapu treningu.",
+                "add_music":"Dodaj muzykę",
+                "user_music":"Muzyka użytkownika"
             },
 
             "BinauralBeats":{
