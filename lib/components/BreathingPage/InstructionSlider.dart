@@ -6,9 +6,6 @@ import 'package:respire/components/Global/Step.dart' as breathing_phase;
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'dart:developer' as dev;
 
-final blockSize = 130.0;
-final sliderWidth = 400.0;
-
 class InstructionBlock {
   final String text;
   double position;
@@ -179,7 +176,9 @@ class InstructionSliderState extends State<InstructionSlider>
   Widget _buildBlock(
       {required double positionX,
       required double scale,
-      required String text}) {
+      required String text,
+      required double blockSize,
+      required double sliderWidth}) {
 
       final isCenter = (positionX / spacing).round() == 0;
 
@@ -230,6 +229,8 @@ class InstructionSliderState extends State<InstructionSlider>
 
   @override
   Widget build(BuildContext context) {
+    final sliderWidth = MediaQuery.of(context).size.width;
+    final blockSize = sliderWidth * 0.32;
     return Column(
       children: [
         SizedBox(
@@ -245,6 +246,8 @@ class InstructionSliderState extends State<InstructionSlider>
                     positionX: animatedPos * spacing,
                     scale: _calculateScale(animatedPos),
                     text: block.text,
+                    blockSize: blockSize,
+                    sliderWidth: sliderWidth,
                   );
                 }).toList(),
               );
