@@ -30,7 +30,10 @@
     "SettingsPage":{
         "page_title":"Ustawienia",
         "app_section_title":"Aplikacja",
-        "language_label":"Język"
+        "language_label":"Język",
+        "app_second_section_title":"O ReSpire",
+        "app_description":"ReSpire to aplikacja zaprojektowana, aby pomóc wszystkim początkującym, którzy chcą zacząć zacząć wykonywać treningi oddechowe - z ReSpire jest to proste i przyjemne. Aplikacja jest dedykowana także osobom bardziej zaawansowanym, które potrzebują dużej elastyczności w tworzeniu własnych treningów. \n\nUsiądź wygodnie, zrelaksuj się i doskonal swój oddech!",
+        "copyright":"Wszelkie prawa zastrzeżone"
     },
 
     "TrainingPage":{
