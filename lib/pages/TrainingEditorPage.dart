@@ -878,7 +878,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                           TextField(
                                             controller: descriptionController,
                                             focusNode: _descriptionFocusNode,
-                                            maxLines: 3,
+                                            minLines: 3,
+                                            maxLines: null,
                                             decoration: InputDecoration(
                                               hintText: translationProvider
                                                   .getTranslation(
