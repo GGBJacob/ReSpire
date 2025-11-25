@@ -509,7 +509,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                                 isSoundSelection: true);
                                                         })()
                                                       else if (_sounds.nextSoundScope == SoundScope.perPhase)
-                                                        ...buildPhaseSoundRows(SoundListType.shortSounds)
+                                                        ...buildPhaseSoundRows(SoundListType.shortSounds, true)
                                                     ],
                                                   ),
                                                 ]
@@ -627,7 +627,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                           ),
                                                         ),
                                                       ] else if (_sounds.backgroundSoundScope == SoundScope.perPhase)
-                                                        ...buildPhaseSoundRows(SoundListType.longSounds)
+                                                        ...buildPhaseSoundRows(SoundListType.longSounds, false)
                                                       else if (_sounds.backgroundSoundScope == SoundScope.perStage)
                                                         Padding(
                                                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1085,7 +1085,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     });
   }
 
-  List<Widget> buildPhaseSoundRows(SoundListType type) {
+  List<Widget> buildPhaseSoundRows(SoundListType type, bool isSoundSelection) {
     return [
       for (final phase in BreathingPhaseType.values)
         SoundSelectionRow(
@@ -1104,7 +1104,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                   : _sounds.breathingPhaseCues[phase] = v;
             });
           },
-          isSoundSelection: false,
+          isSoundSelection: isSoundSelection ? true : false,
         ),
     ];
   }
