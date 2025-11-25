@@ -1,0 +1,14 @@
+# Generated files
+*.aux
+*.bbl
+*.bcf
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex*
+*.toc
+*.tdo
