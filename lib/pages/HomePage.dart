@@ -392,6 +392,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          Positioned(
+            bottom: size * 0.05,    // mały margines od dołu
+            width: size * 0.5,      // 50% szerokości ekranu
+            left: size * 0.25,      // zaczyna się na środku = 25% + 50%
+            height: size * 0.5,     // możesz zmienić (proporcje)
+            child: Opacity(
+              opacity: 1,
+              child: Image(
+                image: AssetImage('assets/group_logo.png'),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+
           RefreshIndicator(
             onRefresh: _refreshPresets,
             color: Colors.white,
