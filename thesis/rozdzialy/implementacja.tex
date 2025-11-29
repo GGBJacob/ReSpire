@@ -10,8 +10,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum arcu 
 
 \section{Schemat plików/klas/modułów \Hania\ \Ola\ \Jakub\ \Karol}
 
-\section{Ciekawe fragmenty kodu \Hania\ \Ola\ \Jakub\ \Karol}
-
 \section{Podział prac w zespole \Jakub}
 \section{Edycja treningu \Ola}
 \subsection{Menu - trening}
@@ -19,7 +17,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum arcu 
 \subsection{Menu - inne}
 
 \section{Przebieg treningu \Hania}
-\subsection{Parser}
+\subsection{TrainingParser}
+Klasa TrainingParser powstała w celu przekształcenia hierarchicznych danych treningowych pobranych z lokalnej bazy danych Hive w ciąg występujących po sobie faz, oparty na skonfigurowanym uprzednio przez użytkownika wzorcu oddychania. Jej zadaniem jest zwracanie kolejnych faz do obiektu TrainingController. Dzięki temu logika przełączania faz i powtórzeń jest odseparowana od interfejsu. 
+Przedstawiono poniżej w kodzie \ref{code/parser}
+
+\begin{lstlisting}[caption={main.dart - aplikacja Flutter}, label={code/parser}]
+import 'package:flutter/material.dart';
+\end{lstlisting}
+
 \subsection{Training Controller}
 \subsection{Kółko}
 \subsection{Instrukcja}

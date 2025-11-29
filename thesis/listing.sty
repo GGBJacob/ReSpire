@@ -21,7 +21,23 @@
 \definecolor{RedPG}{RGB}{227,27,35}
 \definecolor{GreenPG}{RGB}{0,153,0}
 
+\definecolor{codebg}{RGB}{250,250,250}
+\definecolor{keyword}{RGB}{33,77,177}      % ładniejszy niebieski
+\definecolor{string}{RGB}{186,33,33}
+\definecolor{comment}{RGB}{0,128,0}
+\definecolor{flutter}{RGB}{111,66,193}     % fiolet Fluttera
 
+% === OFICJALNA DEFINICJA JĘZYKA DART (z listings 2024/2025) ===
+\lstdefinelanguage{Dart}{
+  morekeywords={abstract,as,assert,async,await,break,case,catch,class,const,continue,
+    covariant,default,deferred,do,dynamic,else,enum,export,extends,extension,external,
+    factory,false,final,finally,for,Function,get,hide,if,implements,import,in,is,
+    library,mixin,new,null,on,operator,part,patch,rethrow,return,set,show,static,
+    super,switch,sync,this,throw,true,try,typedef,var,void,while,with,yield},
+  morecomment=[l]{//}, morecomment=[s]{/*}{*/},
+  morestring=[b]", morestring=[b]',
+  sensitive=true
+}
 \lstdefinestyle{matlab}{
   backgroundcolor=\color{WhitePG},         % kolor tła dla listingu
   basicstyle=\linespread{1}\footnotesize,  % rozmiar czcionki dla kodu w listingu
@@ -168,5 +184,32 @@ backgroundcolor=\color{WhitePG},            % kolor tła dla listingu
   tabsize=2,	                     % ustawienie rozmiaru tabulatora
   title=\lstname                   % tytuł listingu na podstawie nazwy pliku kodu
 }
+
+\lstdefinestyle{dart}{
+    language=Dart,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{keyword}\bfseries,
+    keywordstyle=[2]\color{flutter}\bfseries,
+    stringstyle=\color{string},
+    commentstyle=\color{comment}\itshape,
+    identifierstyle=\color{black},
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{gray!50},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    tabsize=2,
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    showtabs=false,
+    captionpos=b,
+    abovecaptionskip=10pt,
+    belowcaptionskip=10pt,
+    xleftmargin=10pt,
+    escapeinside={(*@}{@*)}
+}
+\lstset{style=dart}
 
 \endinput
