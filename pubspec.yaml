@@ -37,6 +37,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/group_logo.png
     - assets/logo_biale_tlo.png
     - assets/logo_poziom.png
     - assets/logo_bez_tla.png
