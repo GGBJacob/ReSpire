@@ -532,7 +532,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                             onChanged: (v) => setState(() {
                                                   _sounds.stageChangeSound = v;
                                                 }),
-                                            includeVoiceOption: true,
+                                            includeVoiceOption: false,
                                             blueBorder: true,
                                             isSoundSelection: true)],
                                       ),
