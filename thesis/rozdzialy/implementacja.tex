@@ -109,7 +109,7 @@ Obiekt przyjmuje dwa parametry - obiekt typu \texttt{BreathingPhase?}, który re
 \end{lstlisting}
 \end{figure}
 
-Po utworzeniu obiektu na początku zostaje obliczona wartość początkowa czasu trwania animacji, która zapisywana jest w zmiennej \textit{duration} na podstawie czasu trwania danej fazy. Następnie inicjowany jest kontroler animacji \textit{controller} oraz animacja zmiany promienia koła \textit{circleAnimation}. Kontrolwe ustawiany jest na stan początkowy (\textit{controller.value=0.0}). Jeżeli trening nie jest wstrzymany i dostępna jest faza oddechowa, uruchamiana jest odpowiednia animacja — rosnąca dla wdechu lub malejąca dla wydechu. Fragment funkcji init przedstawiono w kodzie \ref{code/circle/init}.
+Po utworzeniu obiektu na początku zostaje obliczona wartość początkowa czasu trwania animacji, która zapisywana jest w zmiennej \textit{duration} na podstawie czasu trwania danej fazy. Następnie inicjowany jest kontroler animacji \textit{controller} oraz animacja zmiany promienia koła \textit{circleAnimation}. Kontrolwe ustawiany jest na stan początkowy (\textit{controller.value=0.0}). Jeżeli trening nie jest wstrzymany i dostępna jest faza oddechowa, uruchamiana jest odpowiednia animacja - rosnąca dla wdechu lub malejąca dla wydechu. Fragment funkcji init przedstawiono w kodzie \ref{code/circle/init}.
 
 \begin{figure}[h]
 \centering
@@ -167,7 +167,7 @@ Zachowanie koła zależne jest od jego poprzedniego stanu i zmiany parametrów w
 \end{lstlisting}
 \end{figure}
 
-Koło \texttt{AnimatedCircle} reaguje również na zmianę parametru \textit{isPaused}, która określa czy trening został zatrzymany. Jeśli tak, animacja zostaje wstrzymana, w innym wypadku jeśli trening był zatrzymany i zostawł wznowiony, animacja zostaje kontynuowana w kierunku wynikającym z bieżącej fazy. Fragment ten przedstawiono w kodzie \ref{code/circle/pause}.
+Koło \texttt{AnimatedCircle} reaguje również na zmianę parametru \textit{isPaused}, która określa czy trening został zatrzymany. Jeśli tak, animacja zostaje wstrzymana, w innym wypadku jeśli trening był zatrzymany i zostawł wznowiony, animacja zostaje kontynuowana w kierunku wynikającym z~bieżącej fazy. Fragment ten przedstawiono w kodzie \ref{code/circle/pause}.
 
 \begin{figure}[h]
 \centering
