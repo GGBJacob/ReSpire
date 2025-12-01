@@ -389,7 +389,9 @@ class _TrainingPageState extends State<TrainingPage> {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(translationProvider.getTranslation('TrainingPage.export_success')),
+            content: Text(translationProvider.getTranslation('TrainingPage.export_success'), 
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.white),),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
