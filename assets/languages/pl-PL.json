@@ -46,7 +46,7 @@
             "reps":"Powtórzenia",
             "increment":"Przyrost"
         },
-        "delete_training_dialog_title":"Usuwanie Treningu",
+        "delete_training_dialog_title":"Usuwanie treningu",
         "delete_training_dialog_content":"Na pewno chcesz usunąć ten trening?",
         "export_success":"Trening został pomyślnie wyeksportowany.",
         "export_error":"Błąd eksportu.",

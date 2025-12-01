@@ -46,7 +46,7 @@
             "reps":"Reps",
             "increment":"Inc"
         },
-        "delete_training_dialog_title":"Delete Training",
+        "delete_training_dialog_title":"Delete training",
         "delete_training_dialog_content":"Are you sure you want to delete this training?",
         "export_success":"Training exported successfully.",
         "export_error":"Export error.",
