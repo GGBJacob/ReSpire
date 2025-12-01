@@ -160,7 +160,6 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
           title: Text(translationProvider.getTranslation("BreathingPage.exit_popup_title")),
           content: Text(
             translationProvider.getTranslation("BreathingPage.exit_popup_message")),
-              //textAlign: TextAlign.center),
           actions: [
             TextButton(
               onPressed: () {

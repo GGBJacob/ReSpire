@@ -167,17 +167,19 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.white,
       ),
       backgroundColor: mediumblue,
-      body: Padding(
-      padding: const EdgeInsets.only(top: 20.0), 
-      child: 
-        Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center, 
-          children: [
-            _firstBox(screenWidth),
-            SizedBox(height: 20),
-            _secondBox(screenWidth),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0), 
+        child: 
+          Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center, 
+            children: [
+              _firstBox(screenWidth),
+              SizedBox(height: 20),
+              _secondBox(screenWidth),
+            ],
+          ),
         ),
       ),
     ),
