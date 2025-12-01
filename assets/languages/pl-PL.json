@@ -66,8 +66,8 @@
             "edit_title_dialog_title":"Edytuj nazwę treningu",
             "edit_title_dialog_hint":"Wpisz nazwę treningu",
             "error":"Tytuł nie może być pusty",
-            "remove_training_stage_dialog_title":"Usunąć fazę treningu?",
-            "remove_training_stage_dialog_content":"Na pewno chcesz usunąć fazę treningu?",
+            "remove_training_stage_dialog_title":"Usunąć etap treningu?",
+            "remove_training_stage_dialog_content":"Czy na pewno chcesz usunąć etap treningu?",
             "add_training_stage_button_label":"Dodaj etap treningu",
             "default_training_stage_name":"Etap treningu",
 
