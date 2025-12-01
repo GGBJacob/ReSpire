@@ -173,7 +173,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.yes")),
+              child: Text(translationProvider.getTranslation("PopupButton.yes"), style: TextStyle(color: Colors.red)),
             ),
           ],
         );
