@@ -109,7 +109,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
               },
               child: Text(
                   translationProvider.getTranslation("PopupButton.remove"),
-                  style: TextStyle(color: darkerblue)),
+                  style: TextStyle(color: Colors.red)),
             ),
           ],
         );

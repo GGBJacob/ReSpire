@@ -156,7 +156,7 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.remove"), style: TextStyle(color: darkerblue)),
+              child: Text(translationProvider.getTranslation("PopupButton.remove"), style: TextStyle(color: Colors.red)),
             ),
           ],
         );

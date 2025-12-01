@@ -372,6 +372,7 @@ class _TrainingPageState extends State<TrainingPage> {
                 setState(() {});
                 Navigator.pop(context, true);
               },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: Text(translationProvider.getTranslation("PopupButton.delete")),
             ),
           ],
