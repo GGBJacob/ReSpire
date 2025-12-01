@@ -84,65 +84,65 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _secondBox(double screenWidth) {
-  return Container(
-    width: screenWidth * 0.9,
-    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 6,
-          offset: Offset(0, 3),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        Text(
-          translationProvider.getTranslation("SettingsPage.app_second_section_title"),
-          style: TextStyle(
-            fontSize: 26,
-            fontFamily: 'Glacial',
-            fontWeight: FontWeight.w300,
-            color: Colors.black,
+    return Container(
+      width: screenWidth * 0.9,
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: Offset(0, 3),
           ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child:
-            Text(
-            TextUtils.addNoBreakingSpaces(translationProvider.getTranslation("SettingsPage.app_description")),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            translationProvider.getTranslation("SettingsPage.app_second_section_title"),
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 26,
+              fontFamily: 'Glacial',
+              fontWeight: FontWeight.w300,
               color: Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
+          SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child:
+              Text(
+              TextUtils.addNoBreakingSpaces(translationProvider.getTranslation("SettingsPage.app_description")),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            ),
+          SizedBox(height: 20),
+          Image(image:   
+              AssetImage('assets/group_logo.png'),
+                fit: BoxFit.contain,
+                height: 75,
           ),
-        SizedBox(height: 20),
-        Icon(
-          Icons.air,
-          size: 70,
-          color: darkerblue,
-        ),
-        SizedBox(height: 20),
-        Text(
-          "© ${DateTime.now().year} ${translationProvider.getTranslation("SettingsPage.copyright")}",
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 12,
+          SizedBox(height: 20),
+          Text(
+            "© ${DateTime.now().year} ${translationProvider.getTranslation("SettingsPage.copyright")}",
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 12,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
