@@ -83,7 +83,7 @@ class PresetDataBase {
 
     Training(
       title: "Box Breathing",
-      description: "Technique used by Navy SEALs to enhance focus and reduce stress",
+      description: "Technique used by Navy SEALs to enhance focus and reduce stress.",
       trainingStages: [
         TrainingStage(
           reps: 5,
