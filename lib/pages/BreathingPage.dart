@@ -411,6 +411,33 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
             },
           ),
 
+          ValueListenableBuilder<bool>(
+            valueListenable: controller!.showLabels,
+            builder: (context, phaseCount, _) {
+              return controller!.showLabels.value ? 
+                ValueListenableBuilder<int>(
+                  valueListenable: controller!.breathingPhasesCount,
+                  builder: (context, breathingPhasesDone, _) {
+                    return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(44, 173, 196, 1).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${breathingPhasesDone <= breathingPhases ? breathingPhasesDone : breathingPhases} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $breathingPhases ${translationProvider.getTranslation("BreathingPage.phases")}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(44, 173, 196, 1),
+                          ),
+                        ),
+                      );
+                  },
+                ) 
+                : SizedBox(height: 0);
+            }),
+
           //instructions
           ValueListenableBuilder<Queue<breathing_phase.BreathingPhase?>>(
             valueListenable: controller!.breathingPhasesQueue,
@@ -431,7 +458,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
           ValueListenableBuilder<bool>(
             valueListenable: controller!.showLabels,
             builder: (context, phaseCount, _) {
-              return controller!.showLabels.value ? Column(children: [
+              return controller!.showLabels.value ? 
                 //cycles counter
                 ValueListenableBuilder<int>(
                   valueListenable: controller!.currentCycleIndex,
@@ -440,33 +467,15 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                     ValueListenableBuilder<int>(
                       valueListenable: controller!.totalCycles,
                       builder: (context, phaseCount, _) {
-                        return Text(
-                          "${controller!.currentCycleIndex.value} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} ${controller!.totalCycles.value} ${translationProvider.getTranslation("BreathingPage.cycles")}",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        );
-                      }
-                    );
-                  }
-                ),
-                SizedBox(height: 10),
-
-                //breathing phase counter
-                ValueListenableBuilder<int>(
-                  valueListenable: controller!.breathingPhasesCount,
-                  builder: (context, breathingPhasesDone, _) {
-                    return Container(
+                        return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Color.fromRGBO(44, 173, 196, 1).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          '${breathingPhasesDone <= breathingPhases ? breathingPhasesDone : breathingPhases} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $breathingPhases ${translationProvider.getTranslation("BreathingPage.phases")}',
+                          "${controller!.currentCycleIndex.value} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} ${controller!.totalCycles.value} ${translationProvider.getTranslation("BreathingPage.cycles")}",
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -474,9 +483,10 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                           ),
                         ),
                       );
-                  },
+                      }
+                    );
+                  }
                 )
-                ],) 
                 : SizedBox(height: 0);
             }),
 

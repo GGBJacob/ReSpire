@@ -526,7 +526,7 @@ class TrainingController {
     } 
     else if (newStageId != null) {
       dev.log('TrainingController: Same stage ($newStageId) - keeping playlist');
-      if (playCycleSound.value) {
+      if (playCycleSound.value && !_endingInitiated) {
         _playShortSound(parser.training.sounds.cycleChangeSound.name);
         currentCycleIndex.value++;
         playCycleSound.value = false;
