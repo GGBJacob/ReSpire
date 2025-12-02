@@ -29,6 +29,8 @@ class TrainingController {
   final ValueNotifier<String> currentTrainingStageName = ValueNotifier('');
   final ValueNotifier<int> currentStageIndex = ValueNotifier(0);
   final ValueNotifier<int> totalStages = ValueNotifier(0);
+  final ValueNotifier<int> currentCycleIndex = ValueNotifier(0);
+  final ValueNotifier<bool> playCycleSound = ValueNotifier(false);
 
   final int _updateInterval = 25; //in milliseconds
 
@@ -70,6 +72,7 @@ class TrainingController {
       _currentTrainingStageId = parser.training.trainingStages[0].id;
       totalStages.value = parser.training.trainingStages.length;
       currentStageIndex.value = 1;
+      currentCycleIndex.value = 1;
     }
 
     // Binaural beats will be started after preparation phase
@@ -455,8 +458,18 @@ class TrainingController {
         dev.log('TrainingController: SWITCHING PLAYLIST for stage $newStageId');
         _switchToStagePlaylist(_currentTrainingStageId!);
       }
+
+      currentCycleIndex.value = 1;
     } else if (newStageId != null) {
       dev.log('TrainingController: Same stage ($newStageId) - keeping playlist');
+      if (playCycleSound.value) {
+        _playShortSound(parser.training.sounds.cycleChangeSound.name);
+        currentCycleIndex.value++;
+        playCycleSound.value = false;
+      }
+      if (parser.doneReps == currentCycleIndex.value) {
+        playCycleSound.value = true;
+      }
     }
   }
 
