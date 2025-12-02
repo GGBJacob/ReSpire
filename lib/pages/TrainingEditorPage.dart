@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
@@ -1028,7 +1026,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   Expanded(
                                                     child: Center(
                                                       child: TextField(
-                                                        key: ValueKey('reps_${widget.training.hashCode}'),
+                                                        key: ValueKey('preparation_${widget.training.hashCode}'),
                                                         controller: preparationController,
                                                         focusNode: preparationFocusNode,
                                                         keyboardType: TextInputType.number,
@@ -1036,6 +1034,30 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter.digitsOnly,
                                                         ],
+                                                        onChanged: (value) {
+                                                          int newValue = int.tryParse(value) ?? 0;
+                                                          setState(() {
+                                                            widget.training.settings.preparationDuration = newValue;
+                                                          });
+                                                        },
+                                                        onTapOutside: (event) {
+                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                          if (preparationController.text.isEmpty) {
+                                                            setState(() {
+                                                              widget.training.settings.preparationDuration = 0;
+                                                              preparationController.text = "0";
+                                                            });
+                                                          }
+                                                        },
+                                                        onEditingComplete: () => {
+                                                          FocusManager.instance.primaryFocus?.unfocus(),
+                                                          if (preparationController.text.isEmpty) {
+                                                            setState(() {
+                                                              widget.training.settings.preparationDuration = 0;
+                                                              preparationController.text = "0";
+                                                            })
+                                                          }
+                                                        },
                                                         decoration: InputDecoration(
                                                           border: InputBorder.none,
                                                           contentPadding: EdgeInsets.zero,
@@ -1190,7 +1212,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   Expanded(
                                                     child: Center(
                                                       child: TextField(
-                                                        key: ValueKey('reps_${widget.training.hashCode}'),
+                                                        key: ValueKey('ending_${widget.training.hashCode}'),
                                                         controller: endingController,
                                                         focusNode: endingFocusNode,
                                                         keyboardType: TextInputType.number,
@@ -1198,6 +1220,30 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter.digitsOnly,
                                                         ],
+                                                        onChanged: (value) {
+                                                          int newValue = int.tryParse(value) ?? 0;
+                                                          setState(() {
+                                                            widget.training.settings.endingDuration = newValue;
+                                                          });
+                                                        },
+                                                        onTapOutside: (event) {
+                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                          if (endingController.text.isEmpty) {
+                                                            setState(() {
+                                                              widget.training.settings.endingDuration = 0;
+                                                              endingController.text = "0";
+                                                            });
+                                                          }
+                                                        },
+                                                        onEditingComplete: () => {
+                                                          FocusManager.instance.primaryFocus?.unfocus(),
+                                                          if (endingController.text.isEmpty) {
+                                                            setState(() {
+                                                              widget.training.settings.endingDuration = 0;
+                                                              endingController.text = "0";
+                                                            })
+                                                          }
+                                                        },
                                                         decoration: InputDecoration(
                                                           border: InputBorder.none,
                                                           contentPadding: EdgeInsets.zero,

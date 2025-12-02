@@ -183,7 +183,8 @@
         
         "PreloadingScreen":{
             "title":"Ładowanie audio",
-            "subtitle":"Proszę czekać, przygotowujemy sesję treningową..."
+            "subtitle":"Proszę czekać, przygotowujemy sesję treningową...",
+            "finalizing":"Finalizacja..."
         },
         
         "InstructionSlider":{

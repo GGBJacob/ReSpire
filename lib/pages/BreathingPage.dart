@@ -34,6 +34,10 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
   int _loadedCount = 0;
   int _totalCount = 0;
   String? _currentlyLoading;
+  bool _loadingFinalizing = false;
+
+  late double preparationDuration;
+  late double endingDuration;
 
   @override
   void initState() {
@@ -134,6 +138,19 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
       // Small delay to show progress (optional, for UX)
       await Future.delayed(const Duration(milliseconds: 50));
     }
+
+    // Finalizing loading
+    if (mounted) {
+      setState(() {
+        _currentlyLoading = null;
+        _loadingFinalizing = true;
+      });
+    }
+    
+    loadPreparationLength();
+    loadEndingLength();
+
+    await Future.delayed(const Duration(milliseconds: 50));
     
     // All sounds loaded, create controller and show training
     if (mounted) {
@@ -141,6 +158,34 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
       setState(() {
         _isPreloading = false;
       });
+    }
+  }
+
+  void loadPreparationLength() async {
+    SoundManager soundManager = SoundManager();
+    if(widget.training.settings.preparationDuration == 0)
+    {
+      if(widget.training.sounds.preparationTrack.type != SoundType.none) {
+        preparationDuration = (await soundManager.getSoundDuration(widget.training.sounds.preparationTrack.name))?.inSeconds.toDouble() ?? 0.0;
+      } else {
+        preparationDuration = 0.0;
+      }
+    } else {
+      preparationDuration = widget.training.settings.preparationDuration.toDouble();
+    }
+  }
+
+  void loadEndingLength() async {
+    SoundManager soundManager = SoundManager();
+    if(widget.training.settings.endingDuration == 0)
+    {
+      if(widget.training.sounds.endingTrack.type != SoundType.none) {
+        endingDuration = (await soundManager.getSoundDuration(widget.training.sounds.endingTrack.name))?.inSeconds.toDouble() ?? 0.0;
+      } else {
+        endingDuration = 0.0;
+      }
+    } else {
+      endingDuration = widget.training.settings.endingDuration.toDouble();
     }
   }
 
@@ -213,8 +258,10 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
         loadedCount: _loadedCount,
         totalCount: _totalCount,
         currentlyLoading: _currentlyLoading,
+        finalizing: _loadingFinalizing
       );
     }
+    controller!.setContext(context);
     bool _displayStageInfo = false;
     return Scaffold(
       appBar: AppBar(
@@ -373,7 +420,8 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                 valueListenable: controller!.breathingPhasesCount,
                 builder: (context, change, _) {
                   return InstructionSlider(
-                      preparationTime: widget.training.settings.preparationDuration.toDouble(), 
+                      preparationTime: preparationDuration,
+                      endingTime: endingDuration, 
                       breathingPhasesQueue: breathingPhasesQueue, 
                       change: change);
                 },
