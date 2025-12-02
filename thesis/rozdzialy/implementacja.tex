@@ -186,10 +186,88 @@ if (widget.isPaused && !oldWidget.isPaused) {
 \end{lstlisting}
 \end{figure}
 
-
 Dodatkowo utworzony został obiekt łączący \texttt{AnimatedCircle} oraz dwa koła statyczne typu \texttt{Container} wizualizujące maksymalną i minimalną wartość promiania koła \texttt{AnimatedCircle}, by umożliwić użytkownikowi lepiej ocenić przebieg wdechu i wydechu.
 
-\subsection{Instrukcja}
+\subsection{InstructionSlider}
+\texttt{InstructionSlider} to animowany komponent odpowiadający za wizualizację ciągu instrukcji dla użytkownika w postaci trzech kafelków reprezentujących:
+\begin{itemize}
+    \item poprzednią fazę oddechową,
+    \item obecną fazę oddechową,
+    \item nadchodzącą fazę oddechową.
+\end{itemize}
+Gdy zachodzi zmiana fazy, cała lista przesuwa się w lewo, a na końcu pojawia się nowy kafelek z~kolejną instrukcją.
+
+Obiekt przyjmuje trzy parametry - \textit{preparationTime}, czyli czas trwania fazy przygotowania przed treningiem, kolejkę \textit{breathingPhasesQueue}, która jest ciągiem faz w treningu oraz \textit{change}, która jest wyznacznikiem zmiany obecnie trwającej fazy. Framgment tworzenia klasy przedstawiony został w kodzie \ref{code/slider/constructor}.
+
+\begin{figure}[h] 
+\centering
+\begin{lstlisting}[caption={InstructionSlider - konstruktor}, label={code/slider/constructor}]
+double preparationTime;
+Queue<breathing_phase.BreathingPhase?> breathingPhasesQueue = Queue<breathing_phase.BreathingPhase?>();
+int change; 
+
+InstructionSlider({super.key,required this.preparationTime,  required this.breathingPhasesQueue, required this.change});
+\end{lstlisting}
+\end{figure}
+
+Podczas inicjalizacji obiekt tworzy pierwszy kafelek reprezentujący fazę przygotowania. Następnie dodawane są w formie kafelków dwie fazy z kolejki faz treningu. Każdy kafelek przechowuje tekst w postaci instrukcji dla użytkowanika i informację, na której pozycji ma się znaleźć. Fragment dodawania obiektów przedstawiono w kodzie \ref{code/slider/init}.
+
+\begin{figure}[h] 
+\centering
+\begin{lstlisting}[caption={InstructionSlider - fragment funkcji init}, label={code/slider/init}]
+_blocks.add(
+  InstructionBlock(
+    text: translationProvider.getTranslation(
+      "BreathingPage.InstructionSlider.get_ready_block_text") + "\n${widget.preparationTime} s", 
+    position: 0.0)
+);
+
+addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(1));
+addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(2));
+\end{lstlisting}
+\end{figure}
+
+\texttt{InstructionSlider} korzysta z \texttt{AnimationController}, który przy każdej zmianie fazy przesuwa wszystkie kafelki o jedną pozycję w lewo. Każdy kafelek ma przypisaną pozycję z przedziału od -2 do 2, gdzie wartości skrajne (-2 oraz 2) znajdują się poza obszarem widocznym dla użytkownika. W centrum ekranu znajdują się trzy środkowe pozycje: -1 odpowiada fazie poprzedniej, 0 fazie bieżącej, a 1 fazie nadchodzącej. Gdy kafelek na pozycji -2 ma zostać przesunięty zostaje usunięty w celach optymalizacyjnych. Dokładną implementację animacji przedstawiono w~kodzie \ref{code/slider/animation}. Dodatkowo wykorzystywany jest mechanizm skalowania środkowego kafelka w celu wizualnego podkreślenia aktualnie trwającej fazy.
+
+\begin{figure}[h] 
+\centering
+\begin{lstlisting}[caption={InstructionSlider - animacja}, label={code/slider/animation}]
+_controller = AnimationController(vsync: this, duration: duration);
+_animation = Tween<double>(begin: 0.0, end: -1.0).animate(
+  CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+);
+_controller.addStatusListener((status) {
+  if (status == AnimationStatus.completed) {
+    _controller.reset();
+    setState(() {
+      final removed = _blocks.where((b) => b.position <= -2).toList();
+      _blocks.removeWhere((b) => b.position <= -2);
+      _blocks.forEach((b) => b.position += _animation.value); 
+      _blocks.forEach((b) => b.position -= 1);
+    });
+  }
+});
+\end{lstlisting}
+\end{figure}
+
+Każda zmiana fazy powoduje uruchomienie aktualizacji stanu komponentu. Mechanizm opiera się na porównaniu poprzedniej i bieżącej wartości parametru \textit{change}. Dzięki temu komponent wykrywa moment rozpoczęcia nowej fazy. Obliczany jest wtedy czas trwania nowej fazy, wywoływana jest animacja oraz dodawany nowy kafelek z instrukcją. Funkcję aktualizacji przedstawiono w kodzie \ref{code/slider/update}.
+
+\begin{figure}[h] 
+\centering
+\begin{lstlisting}[caption={InstructionSlider - aktualizacja stanu}, label={code/slider/update}]
+if(oldWidget.change != widget.change) {
+  final int phaseDuration = (widget.breathingPhasesQueue.elementAt(0)?.duration.toInt() != null)
+    ? (widget.breathingPhasesQueue.elementAt(0)!.duration * 1000).toInt() - 50 
+    : 400;
+  _controller.duration = Duration(milliseconds: min(phaseDuration,400));
+  _controller.forward();
+  if(_blocks.last.text!=translationProvider.getTranslation(
+    "BreathingPage.InstructionSlider.ending_tile_text")) {
+    addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(2));
+  }
+}
+\end{lstlisting}
+\end{figure}
 
 \section{Dźwięki \Jakub}
 \subsection{SoundManager}
