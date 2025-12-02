@@ -6,7 +6,7 @@ import 'package:respire/services/SoundManagers/SoundManager.dart';
 
 part 'Sounds.g.dart';
 
-@HiveType(typeId: 9)
+@HiveType(typeId: 7)
 class Sounds {
 
   // === GLOBAL / TRAINING LEVEL ===

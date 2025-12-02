@@ -91,8 +91,6 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
       duration: currentDuration,
       increment: widget.breathingPhase.increment,
       breathingPhaseType: widget.breathingPhase.breathingPhaseType,
-      breathType: widget.breathingPhase.breathType,
-      breathDepth: widget.breathingPhase.breathDepth,
     );
     widget.onBreathingPhaseChanged(newBreathingPhase);
     widget.onUpdate();
@@ -104,8 +102,6 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
         duration: widget.breathingPhase.duration,
         increment: widget.breathingPhase.increment,
         breathingPhaseType: newType,
-        breathType: widget.breathingPhase.breathType,
-        breathDepth: widget.breathingPhase.breathDepth,
       );
       widget.onBreathingPhaseChanged(newBreathingPhase);
     }
@@ -192,7 +188,7 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
                       Expanded(
                         child: TextField(
                           key: ValueKey(
-                              'duration_${widget.breathingPhase.breathingPhaseType}_${widget.breathingPhase.breathType}'),
+                              'duration_${widget.breathingPhase.breathingPhaseType}'),
                           controller: durationController,
                           focusNode: durationFocusNode,
                           keyboardType:

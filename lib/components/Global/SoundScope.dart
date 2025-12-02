@@ -3,7 +3,7 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 part 'SoundScope.g.dart';
 
-@HiveType(typeId: 15)
+@HiveType(typeId: 12)
 enum SoundScope {
   @HiveField(0)
   none,

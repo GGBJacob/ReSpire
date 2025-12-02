@@ -20,37 +20,6 @@ enum BreathingPhaseType {
 }
 
 @HiveType(typeId: 4)
-enum BreathType { 
-  @HiveField(0)
-  diaphragmatic, 
-  
-  @HiveField(1)
-  thoracic, 
-  
-  @HiveField(2)
-  clavicular, 
-  
-  @HiveField(3)
-  costal, 
-  
-  @HiveField(4)
-  paradoxical 
-}
-
-@HiveType(typeId: 5)
-enum BreathDepth { 
-  @HiveField(0)
-  deep,
-
-  @HiveField(1)
-  normal,
-
-  @HiveField(2)
-  shallow 
-}
-
-
-@HiveType(typeId: 6)
 class BreathingPhase {
   
   @HiveField(0)
@@ -61,22 +30,14 @@ class BreathingPhase {
   
   @HiveField(2)
   BreathingPhaseType breathingPhaseType;
-  
-  @HiveField(3)
-  BreathType? breathType;
-  
-  @HiveField(4)
-  BreathDepth? breathDepth;
 
-  @HiveField(5)
+  @HiveField(3)
   BreathingPhaseSounds sounds = BreathingPhaseSounds();
 
   BreathingPhase({
     required this.duration,
     this.increment,
     this.breathingPhaseType = BreathingPhaseType.inhale,
-    this.breathType,
-    this.breathDepth,
     BreathingPhaseSounds? sounds,
     }){
       this.sounds = sounds ?? BreathingPhaseSounds();

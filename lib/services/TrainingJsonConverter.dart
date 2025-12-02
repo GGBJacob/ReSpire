@@ -107,8 +107,6 @@ class TrainingJsonConverter {
     return {
       'duration': phase.duration,
       'breathingPhaseType': phase.breathingPhaseType.name,
-      'breathType': phase.breathType?.name,
-      'breathDepth': phase.breathDepth?.name,
       'increment': phase.increment != null
           ? {
               'value': phase.increment!.value,
@@ -122,12 +120,6 @@ class TrainingJsonConverter {
     return BreathingPhase(
       duration: (json['duration'] ?? 0).toDouble(),
       breathingPhaseType: _parseBreathingPhaseType(json['breathingPhaseType']),
-      breathType: json['breathType'] != null 
-          ? _parseBreathType(json['breathType']) 
-          : null,
-      breathDepth: json['breathDepth'] != null 
-          ? _parseBreathDepth(json['breathDepth']) 
-          : null,
       increment: json['increment'] != null
           ? BreathingPhaseIncrement(
               value: (json['increment']['value'] ?? 0).toDouble(),
@@ -168,36 +160,6 @@ class TrainingJsonConverter {
         return BreathingPhaseType.recovery;
       default:
         return BreathingPhaseType.inhale;
-    }
-  }
-  
-  static BreathType _parseBreathType(String? value) {
-    switch (value?.toLowerCase()) {
-      case 'diaphragmatic':
-        return BreathType.diaphragmatic;
-      case 'thoracic':
-        return BreathType.thoracic;
-      case 'clavicular':
-        return BreathType.clavicular;
-      case 'costal':
-        return BreathType.costal;
-      case 'paradoxical':
-        return BreathType.paradoxical;
-      default:
-        return BreathType.diaphragmatic;
-    }
-  }
-  
-  static BreathDepth _parseBreathDepth(String? value) {
-    switch (value?.toLowerCase()) {
-      case 'deep':
-        return BreathDepth.deep;
-      case 'normal':
-        return BreathDepth.normal;
-      case 'shallow':
-        return BreathDepth.shallow;
-      default:
-        return BreathDepth.normal;
     }
   }
   

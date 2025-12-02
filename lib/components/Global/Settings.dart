@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 part 'Settings.g.dart';
 
-@HiveType(typeId: 10)
+@HiveType(typeId: 8)
 class Settings {
   
   @HiveField(0)

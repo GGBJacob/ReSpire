@@ -42,8 +42,6 @@ class TrainingParser {
     final progressedBreathingPhase = breathing_phase.BreathingPhase(
       duration: durationSeconds,
       breathingPhaseType: currentBreathingPhase.breathingPhaseType,
-      breathType: currentBreathingPhase.breathType,
-      breathDepth: currentBreathingPhase.breathDepth,
       sounds: currentBreathingPhase.sounds,
     );
 

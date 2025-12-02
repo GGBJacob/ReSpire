@@ -3,7 +3,7 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 part 'SoundAsset.g.dart';
 
-@HiveType(typeId: 13)
+@HiveType(typeId: 10)
 class SoundAsset {
   @HiveField(0)
   String _name;
@@ -39,7 +39,7 @@ class SoundAsset {
   }
 }
 
-@HiveType(typeId: 14)
+@HiveType(typeId: 11)
 enum SoundType {
   @HiveField(0)
   voice,

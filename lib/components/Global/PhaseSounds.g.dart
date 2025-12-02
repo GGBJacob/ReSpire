@@ -8,7 +8,7 @@ part of 'PhaseSounds.dart';
 
 class BreathingPhaseSoundsAdapter extends TypeAdapter<BreathingPhaseSounds> {
   @override
-  final int typeId = 11;
+  final int typeId = 9;
 
   @override
   BreathingPhaseSounds read(BinaryReader reader) {

@@ -31,8 +31,6 @@ Future<void> initialize() async
   // await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
   Hive.registerAdapter(BreathingPhaseAdapter());
   Hive.registerAdapter(BreathingPhaseTypeAdapter());
-  Hive.registerAdapter(BreathTypeAdapter());
-  Hive.registerAdapter(BreathDepthAdapter());
   Hive.registerAdapter(BreathingPhaseIncrementTypeAdapter());
   Hive.registerAdapter(BreathingPhaseIncrementAdapter());
   Hive.registerAdapter(TrainingStageAdapter());

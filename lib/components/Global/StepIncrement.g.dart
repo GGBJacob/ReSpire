@@ -9,7 +9,7 @@ part of 'StepIncrement.dart';
 class BreathingPhaseIncrementAdapter
     extends TypeAdapter<BreathingPhaseIncrement> {
   @override
-  final int typeId = 8;
+  final int typeId = 6;
 
   @override
   BreathingPhaseIncrement read(BinaryReader reader) {
@@ -47,7 +47,7 @@ class BreathingPhaseIncrementAdapter
 class BreathingPhaseIncrementTypeAdapter
     extends TypeAdapter<BreathingPhaseIncrementType> {
   @override
-  final int typeId = 7;
+  final int typeId = 5;
 
   @override
   BreathingPhaseIncrementType read(BinaryReader reader) {

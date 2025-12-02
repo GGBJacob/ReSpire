@@ -8,7 +8,7 @@ part of 'SoundAsset.dart';
 
 class SoundAssetAdapter extends TypeAdapter<SoundAsset> {
   @override
-  final int typeId = 13;
+  final int typeId = 10;
 
   @override
   SoundAsset read(BinaryReader reader) {
@@ -47,7 +47,7 @@ class SoundAssetAdapter extends TypeAdapter<SoundAsset> {
 
 class SoundTypeAdapter extends TypeAdapter<SoundType> {
   @override
-  final int typeId = 14;
+  final int typeId = 11;
 
   @override
   SoundType read(BinaryReader reader) {

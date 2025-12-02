@@ -8,7 +8,7 @@ part of 'Settings.dart';
 
 class SettingsAdapter extends TypeAdapter<Settings> {
   @override
-  final int typeId = 10;
+  final int typeId = 8;
 
   @override
   Settings read(BinaryReader reader) {

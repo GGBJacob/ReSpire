@@ -134,16 +134,6 @@ class InstructionSliderState extends State<InstructionSlider>
     return str[0].toUpperCase() + str.substring(1);
   }
 
-   String _breathDepth(breathing_phase.BreathingPhase? breathingPhase) {
-    if (breathingPhase!.breathDepth == null) return "";
-    return _firstToUpperCase(breathingPhase.breathDepth!.name);
-  }
-
-  String _breathType(breathing_phase.BreathingPhase? breathingPhase) {
-    if (breathingPhase!.breathType == null) return "";
-    return _firstToUpperCase(translationProvider.getTranslation("BreathingPhaseType.${breathingPhase.breathType!.name}"));
-  }
-
   String _breathingPhaseType(breathing_phase.BreathingPhase? breathingPhase) {
     if (breathingPhase == null) return "";
 
@@ -153,14 +143,6 @@ class InstructionSliderState extends State<InstructionSlider>
 
       case breathing_phase.BreathingPhaseType.inhale:
       case breathing_phase.BreathingPhaseType.exhale:
-        if (breathingPhase.breathType!=null) {
-          str += "\n${_breathType(breathingPhase)}";
-        }
-        if (breathingPhase.breathDepth!=null) {
-          str += "\n${_breathDepth(breathingPhase)}";
-        }
-        break;
-
       default:
         break;  
     }

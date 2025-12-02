@@ -8,7 +8,7 @@ part of 'SoundScope.dart';
 
 class SoundScopeAdapter extends TypeAdapter<SoundScope> {
   @override
-  final int typeId = 15;
+  final int typeId = 12;
 
   @override
   SoundScope read(BinaryReader reader) {
