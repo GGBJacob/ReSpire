@@ -198,7 +198,7 @@
             "connector": "out of"
         },
 
-        "phases":"breathing phases in total",
+        "phases":"phases in total",
         "cycles":"cycles"
     },
 
@@ -214,5 +214,10 @@
         "global":"For whole training",
         "perStage":"For training stages",
         "perPhase":"For each breathing phase"
+    },
+
+    "FilePicker":{
+        "save_training": "Save training",
+        "save_trainings": "Save trainings"
     }
 }

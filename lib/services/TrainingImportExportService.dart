@@ -5,20 +5,22 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/services/TrainingJsonConverter.dart';
+import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
+import 'package:respire/utils/TextUtils.dart';
 
 class TrainingImportExportService {
   
   static Future<bool> exportTraining(Training training, {String? fileName}) async {
     try {
       final String defaultFileName = fileName ??
-          '${_sanitizeFileName(training.title)}_training.json';
+          '${TextUtils.sanitizeFileName(training.title)}_training.json';
       
       final String jsonString = TrainingJsonConverter.toJson(training);
       
       final Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
       
       String? outputPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Zapisz trening',
+        dialogTitle: TranslationProvider().getTranslation("FilePicker.save_training"),
         fileName: defaultFileName,
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -49,7 +51,7 @@ class TrainingImportExportService {
       final Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
 
       final String? outputPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Zapisz treningi',
+        dialogTitle: TranslationProvider().getTranslation("FilePicker.save_trainings"),
         fileName: defaultFileName,
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -73,7 +75,7 @@ class TrainingImportExportService {
 
   static Future<List<Training>?> importTrainings() async {
     try {
-      // Otwórz okno wyboru pliku
+      // Open file choosing window
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -114,10 +116,5 @@ class TrainingImportExportService {
       debugPrint('Error during training import from file $filePath: $e');
       return null;
     }
-  }
-
-  static String _sanitizeFileName(String value) {
-    final sanitized = value.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
-    return sanitized.isEmpty ? 'training' : sanitized.replaceAll(RegExp(r'\s+'), '_');
   }
 }

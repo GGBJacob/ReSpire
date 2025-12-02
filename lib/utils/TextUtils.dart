@@ -23,4 +23,9 @@ class TextUtils{
     }
     return text;
   }
+
+  static String sanitizeFileName(String value) {
+    final sanitized = value.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
+    return sanitized.isEmpty ? 'training' : sanitized.replaceAll(RegExp(r'\s+'), '_');
+  }
 }

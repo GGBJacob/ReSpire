@@ -213,5 +213,10 @@
         "global":"Na cały trening",
         "perStage":"Dla etapów treningu",
         "perPhase":"Dla każdej fazy oddechowej"
+    },
+
+    "FilePicker":{
+        "save_training": "Zapisz trening",
+        "save_trainings": "Zapisz treningi"
     }
 }
