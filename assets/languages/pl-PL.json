@@ -190,7 +190,10 @@
 
         "Counter":{
             "connector": "z"
-        }
+        },
+
+        "phases":"faz oddechowych łącznie",
+        "cycles":"cykli"
     },
 
     "BreathingPhaseType":{

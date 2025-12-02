@@ -191,7 +191,10 @@
 
         "Counter":{
             "connector": "out of"
-        }
+        },
+
+        "phases":"breathing phases in total",
+        "cycles":"cycles"
     },
 
     "BreathingPhaseType":{

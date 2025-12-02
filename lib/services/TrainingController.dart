@@ -31,6 +31,8 @@ class TrainingController {
   final ValueNotifier<int> totalStages = ValueNotifier(0);
   final ValueNotifier<int> currentCycleIndex = ValueNotifier(0);
   final ValueNotifier<bool> playCycleSound = ValueNotifier(false);
+  final ValueNotifier<int> totalCycles = ValueNotifier(0);
+  final ValueNotifier<bool> showLabels = ValueNotifier(true);
 
   final int _updateInterval = 25; //in milliseconds
 
@@ -66,6 +68,7 @@ class TrainingController {
     _remainingTime = parser.training.settings.preparationDuration * 1000;
     _sounds = parser.training.sounds;
     _settings = parser.training.settings;
+    showLabels.value = false;
 
     // Initialize current stage ID to the first stage
     if (parser.training.trainingStages.isNotEmpty) {
@@ -73,6 +76,7 @@ class TrainingController {
       totalStages.value = parser.training.trainingStages.length;
       currentStageIndex.value = 1;
       currentCycleIndex.value = 1;
+      totalCycles.value = parser.training.trainingStages[0].reps;
     }
 
     // Binaural beats will be started after preparation phase
@@ -352,6 +356,7 @@ class TrainingController {
           soundManager.stopSound(_currentSound);
           _currentSound = null;
           _preparationPhaseCompleted = true;
+          showLabels.value = true;
           if (_sounds.backgroundSoundScope == SoundScope.global &&
               _sounds.trainingBackgroundPlaylist.isNotEmpty) {
             _isUsingPlaylist = true;
@@ -394,6 +399,7 @@ class TrainingController {
                 _isUsingPlaylist = false;
               }
 
+              showLabels.value = false;
               _playEndingSound(_sounds.endingTrack.name, 500);
             } else {
               _remainingTime = _nextRemainingTime;
@@ -460,7 +466,9 @@ class TrainingController {
       }
 
       currentCycleIndex.value = 1;
-    } else if (newStageId != null) {
+      totalCycles.value = parser.training.trainingStages[currentStageIndex.value-1].reps;
+    } 
+    else if (newStageId != null) {
       dev.log('TrainingController: Same stage ($newStageId) - keeping playlist');
       if (playCycleSound.value) {
         _playShortSound(parser.training.sounds.cycleChangeSound.name);
