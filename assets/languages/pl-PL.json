@@ -158,7 +158,10 @@
             "training_description_hint":"Wpisz opis treningu...",
             "training_preparation_label":"Przygotowanie do treningu",
             "preparation_duration_label":"Czas przygotowania (s)",
-            "preparation_sound_warning": "Czas przygotowania jest ustawiony na 0, a dźwięk przygotowania nie jest pusty. Muzyka zostanie odtworzona w całości."
+            "preparation_sound_warning": "Czas przygotowania jest ustawiony na 0, a muzyka przygotowania jest wybrana. Muzyka zostanie odtworzona w całości.",
+            "training_ending_label":"Zakończenie treningu",
+            "ending_duration_label":"Czas zakończenia (s)",
+            "ending_sound_warning": "Czas zakończenia jest ustawiony na 0, a muzyka zakończenia jest wybrana. Muzyka zostanie odtworzona w całości."
         },
 
         "Alert":{

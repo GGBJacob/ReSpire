@@ -140,7 +140,7 @@ class TrainingJsonConverter {
   static Map<String, dynamic> _settingsToJson(Settings settings) {
     return {
       'preparationDuration': settings.preparationDuration,
-      'differentColors': settings.differentColors,
+      'endingDuration': settings.endingDuration,
       'binauralBeatsEnabled': settings.binauralBeatsEnabled,
       'binauralLeftFrequency': settings.binauralLeftFrequency,
       'binauralRightFrequency': settings.binauralRightFrequency,
@@ -150,7 +150,7 @@ class TrainingJsonConverter {
   static Settings _settingsFromJson(Map<String, dynamic> json) {
     return Settings()
       ..preparationDuration = json['preparationDuration'] ?? 3
-      ..differentColors = json['differentColors'] ?? false
+      ..endingDuration = json['endingDuration'] ?? false
       ..binauralBeatsEnabled = json['binauralBeatsEnabled'] ?? false
       ..binauralLeftFrequency = (json['binauralLeftFrequency'] ?? 200.0).toDouble()
       ..binauralRightFrequency = (json['binauralRightFrequency'] ?? 210.0).toDouble();

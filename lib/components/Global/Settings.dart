@@ -9,7 +9,7 @@ class Settings {
   int preparationDuration = 3; //in seconds
   
   @HiveField(1)
-  bool differentColors = false;
+  int endingDuration = 5; //in seconds
 
   @HiveField(2)
   bool binauralBeatsEnabled = false;

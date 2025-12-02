@@ -158,7 +158,10 @@
             "training_description_hint":"Describe your training...",
             "training_preparation_label":"Training preparation",
             "preparation_duration_label":"Preparation time (s)",
-            "preparation_sound_warning": "Preparation duration is set to 0 while music is not null. The music will play in its full length."
+            "preparation_sound_warning": "Preparation duration is set to 0 while preparation music is chosen. The music will play in its full length.",
+            "training_ending_label":"Training ending",
+            "ending_duration_label":"Ending time (s)",
+            "ending_sound_warning": "Ending duration is set to 0 while ending music is chosen. The music will play in its full length."
         },
 
                     

@@ -18,7 +18,7 @@ class SettingsAdapter extends TypeAdapter<Settings> {
     };
     return Settings()
       ..preparationDuration = fields[0] as int
-      ..differentColors = fields[1] as bool
+      ..endingDuration = fields[1] as int
       ..binauralBeatsEnabled = fields[2] as bool
       ..binauralLeftFrequency = fields[3] as double
       ..binauralRightFrequency = fields[4] as double;
@@ -31,7 +31,7 @@ class SettingsAdapter extends TypeAdapter<Settings> {
       ..writeByte(0)
       ..write(obj.preparationDuration)
       ..writeByte(1)
-      ..write(obj.differentColors)
+      ..write(obj.endingDuration)
       ..writeByte(2)
       ..write(obj.binauralBeatsEnabled)
       ..writeByte(3)
