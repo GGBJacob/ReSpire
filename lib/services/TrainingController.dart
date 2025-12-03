@@ -316,15 +316,19 @@ class TrainingController {
         playlistManager.completePlaylist();
         _isUsingPlaylist = false;
       }
+    }
 
+    if (_sounds.backgroundSoundScope == SoundScope.perPhase) {
       if (_currentSound != null) {
-        await soundManager.pauseSoundFadeOut(_currentSound, changeTime);
+        await soundManager.pauseSoundFadeOut(_currentSound, changeTime); // we have to use both for some unknown reason, do not remove any
+        await soundManager.stopSound(_currentSound);
       }
       _currentSound = nextBackgroundSound;
       if (nextBackgroundSound != null) {
         soundManager.playSoundFadeIn(nextBackgroundSound, changeTime);
       }
     }
+    
   }
 
   void _start() {
