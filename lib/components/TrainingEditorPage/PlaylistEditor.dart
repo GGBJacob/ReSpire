@@ -61,6 +61,7 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
       context: context,
       builder: (_) => AudioSelectionPopup(
         includeVoiceOption: false,
+        includeNoneOption: false,
         listType: SoundListType.longSounds,
         selectedValue: null,
         isSoundSelection: false,

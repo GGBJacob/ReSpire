@@ -11,9 +11,10 @@ import 'package:respire/theme/Colors.dart';
 class AudioSelectionPopup extends StatefulWidget {
   final SoundListType listType;
   final bool includeVoiceOption;
+  final bool includeNoneOption;
   final String? selectedValue;
   final bool isSoundSelection;
-  const AudioSelectionPopup({super.key, required this.listType, required this.selectedValue, required this.includeVoiceOption, required this.isSoundSelection});
+  const AudioSelectionPopup({super.key, required this.listType, required this.selectedValue, required this.includeVoiceOption, this.includeNoneOption = true, required this.isSoundSelection, });
 
   @override
   State<AudioSelectionPopup> createState() => _AudioSelectionPopupState();
@@ -42,6 +43,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
     };
 
     final itemsMap = {
+      if (widget.includeNoneOption)
       _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.None"):SoundAsset(type: SoundType.none),
       if (widget.includeVoiceOption)
         _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.Voice"):SoundAsset(type: SoundType.voice),
