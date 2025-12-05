@@ -41,7 +41,7 @@ class PresetDataBase {
         }
       }
     } catch (e) {
-      print('Error loading presets: $e – resetting to default presets.');
+      print('Error loading presets: $e - resetting to default presets.');
       _box.delete('presets');
       createInitialData();
       updateDataBase();
