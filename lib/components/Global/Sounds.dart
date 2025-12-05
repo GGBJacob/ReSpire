@@ -59,6 +59,10 @@ class Sounds {
     for (var type in BreathingPhaseType.values) type: SoundAsset()
   };
 
+  /// Sound played between stages
+  @HiveField(11)
+  SoundAsset stageChangeSound = SoundManager.shortSounds["Bell"]!;
+
   void clearUserSound(String soundName) {
     if (countingSound.name == soundName) {
       countingSound = SoundAsset();

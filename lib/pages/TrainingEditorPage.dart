@@ -423,7 +423,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   _sounds.countingSound = v;
                                                 }),
                                             includeVoiceOption: true,
-                                            blueBorder: true),
+                                            blueBorder: true,
+                                            isSoundSelection: true,),
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 4),
                                             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -504,17 +505,36 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                                       v;
                                                                 }),
                                                             includeVoiceOption:
-                                                                true);
+                                                                true,
+                                                                isSoundSelection: true);
                                                         })()
                                                       else if (_sounds.nextSoundScope == SoundScope.perPhase)
-                                                        ...buildPhaseSoundRows(SoundListType.shortSounds)
+                                                        ...buildPhaseSoundRows(SoundListType.shortSounds, true)
                                                     ],
                                                   ),
                                                 ]
                                               ],
                                             ),
                                           ),
-                                        ],
+                                        SoundSelectionRow(
+                                            labelStyle: TextStyle(
+                                                color: darkerblue,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14, 
+                                                overflow: TextOverflow.ellipsis),
+                                            label: translationProvider
+                                                .getTranslation(
+                                                    "TrainingEditorPage.SoundsTab.TrainingSounds.stage_change_sound"),
+                                            selectedValue:
+                                                _sounds.stageChangeSound,
+                                            soundListType:
+                                                SoundListType.shortSounds,
+                                            onChanged: (v) => setState(() {
+                                                  _sounds.stageChangeSound = v;
+                                                }),
+                                            includeVoiceOption: true,
+                                            blueBorder: true,
+                                            isSoundSelection: true)],
                                       ),
                                     ),
                                   ),
@@ -607,7 +627,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                           ),
                                                         ),
                                                       ] else if (_sounds.backgroundSoundScope == SoundScope.perPhase)
-                                                        ...buildPhaseSoundRows(SoundListType.longSounds)
+                                                        ...buildPhaseSoundRows(SoundListType.longSounds, false)
                                                       else if (_sounds.backgroundSoundScope == SoundScope.perStage)
                                                         Padding(
                                                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -645,7 +665,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                       v;
                                                 },),
                                             includeVoiceOption: false,
-                                            blueBorder: true),
+                                            blueBorder: true,
+                                            isSoundSelection: false),
                                           SoundSelectionRow(
                                             labelStyle: TextStyle(
                                                 color: darkerblue,
@@ -663,7 +684,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                   _sounds.endingTrack = v;
                                                 }),
                                             includeVoiceOption: false,
-                                            blueBorder: true,),
+                                            blueBorder: true,
+                                            isSoundSelection: false),
                                         ],
                                       ),
                                     ),
@@ -856,7 +878,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                           TextField(
                                             controller: descriptionController,
                                             focusNode: _descriptionFocusNode,
-                                            maxLines: 3,
+                                            minLines: 3,
+                                            maxLines: null,
                                             decoration: InputDecoration(
                                               hintText: translationProvider
                                                   .getTranslation(
@@ -1062,7 +1085,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
     });
   }
 
-  List<Widget> buildPhaseSoundRows(SoundListType type) {
+  List<Widget> buildPhaseSoundRows(SoundListType type, bool isSoundSelection) {
     return [
       for (final phase in BreathingPhaseType.values)
         SoundSelectionRow(
@@ -1081,6 +1104,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                   : _sounds.breathingPhaseCues[phase] = v;
             });
           },
+          isSoundSelection: isSoundSelection ? true : false,
         ),
     ];
   }

@@ -20,7 +20,7 @@
         "select_all":"Select all",
         "deselect_all":"Deselect all",
         "export_selected":"Export",
-        "export_selected_count":"Export ({count})",
+        "export_selected_count":"Selected({count})",
         "export_multiple_success":"Trainings exported successfully",
         "no_trainings_selected":"No trainings selected",
         "import_multiple_success":"{count} trainings imported successfully",
@@ -30,7 +30,10 @@
     "SettingsPage":{
         "page_title":"Settings",
         "app_section_title":"App",
-        "language_label":"Language"
+        "language_label":"Language",
+        "app_second_section_title":"About ReSpire",
+        "app_description":"ReSpire offers full control over breath training. It is an app designed to help all users, regardless of their skill level. You can start your journey with ready-made exercises or quickly and conveniently create your own trainings tailored to your needs. \nSit back, relax and ReSpire.",
+        "copyright":"All rights reserved"
     },
 
     "TrainingPage":{
@@ -95,7 +98,8 @@
                     "global":"Global phase change sound",
                     "voice":"lector",
                     "for_each_breathing_phase":"change sound for each phase"
-                }
+                },
+                "stage_change_sound": "Stage change"
             },
 
             "TrainingMusic":{
@@ -111,17 +115,23 @@
                 }
             },
 
-            "AudioSelectionPopup":{
-                "title":"Select audio",
+            "AudioSelectionPopupSound":{
+                "title":"Select sound",
                 "user_sounds":"User sounds",
                 "add_custom_sound_button_label":"Add custom sound"
             },
 
+            "AudioSelectionPopupMusic":{
+                "title":"Select music",
+                "user_music":"User music",
+                "add_custom_music_button_label":"Add custom music"
+            },
+
             "PlaylistEditor":{
-                "empty_playlist":"Playlist is empty. Add sounds using the button below.",
-                "empty_stage_playlist":"No sounds in this stage playlist yet. Add sounds to play during this training stage.",
-                "add_sound":"Add sound",
-                "user_sound":"User sound"
+                "empty_playlist":"Playlist is empty. Add music using the button below.",
+                "empty_stage_playlist":"No music in this stage playlist yet. Add music to play during this training stage.",
+                "add_music":"Add music",
+                "user_music":"User music"
             },
 
             "BinauralBeats":{

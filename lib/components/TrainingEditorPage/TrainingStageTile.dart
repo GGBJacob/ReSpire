@@ -115,6 +115,14 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
     widget.onUpdate();
   }
 
+  void commitRepsDurationChange() {
+    int newReps = int.tryParse(repsController.text) ?? widget.trainingStage.reps;
+    newReps = newReps.clamp(1, 999);
+    widget.trainingStage.reps = newReps;
+    repsController.text = newReps.toString();
+    widget.onUpdate();
+  }
+
   void addBreathingPhase() {
     setState(() {
       widget.trainingStage.breathingPhases.add(
@@ -367,16 +375,16 @@ class _TrainingStageTileState extends State<TrainingStageTile> {
                             int? newReps = int.tryParse(value);
                             if (newReps != null && newReps > 0) {
                               setState(() {
-                                widget.trainingStage.reps = newReps;
+                                widget.trainingStage.reps = newReps.clamp(1, 999);
                               });
                             }
                           },
                           onEditingComplete: () {
-                            widget.onUpdate();
+                            commitRepsDurationChange();
                           },
                           onTapOutside: (event) {
                             FocusScope.of(context).unfocus();
-                            widget.onUpdate();
+                            commitRepsDurationChange();
                           },
                         ),
                       ),

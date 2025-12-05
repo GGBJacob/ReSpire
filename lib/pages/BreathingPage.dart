@@ -10,6 +10,7 @@ import 'package:respire/components/Global/Step.dart' as breathing_phase;
 import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TrainingController.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class BreathingPage extends StatefulWidget {
   final Training training;
@@ -37,6 +38,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
   @override
   void initState() {
     super.initState();
+    WakelockPlus.enable();
     WidgetsBinding.instance.addObserver(this);
     // Ensure sounds are properly propagated to breathing phases
     widget.training.updateSounds();
@@ -144,6 +146,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
 
   @override
   void dispose() {
+    WakelockPlus.disable();
     WidgetsBinding.instance.removeObserver(this);
     controller?.dispose();
     super.dispose();
@@ -212,7 +215,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
         currentlyLoading: _currentlyLoading,
       );
     }
-    
+    bool _displayStageInfo = false;
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
@@ -262,18 +265,18 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
             valueListenable: controller!.currentTrainingStageName,
             builder: (context, stageName, _) {
               final trimmed = stageName.trim();
-              final hasLabel = trimmed.isNotEmpty;
-              return Padding(
+              _displayStageInfo = trimmed.isNotEmpty && !_isPreloading;
+              return Visibility(
+                visible: _displayStageInfo,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Visibility(
-                      visible: hasLabel,
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: Text(
+                    Text(
                         translationProvider
                             .getTranslation("BreathingPage.current_training_stage_label"),
                         style: const TextStyle(
@@ -282,14 +285,8 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
                     const SizedBox(height: 4),
-                    Visibility(
-                      visible: hasLabel,
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: Text(
+                    Text(
                         trimmed,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
@@ -298,21 +295,22 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                           color: Colors.black,
                         ),
                       ),
-                    ),
                     const SizedBox(height: 8),
                     ValueListenableBuilder<int>(
                       valueListenable: controller!.breathingPhasesCount,
                       builder: (context, phaseCount, _) {
-                        if (phaseCount == 0) return const SizedBox.shrink();
-                        
                         return ValueListenableBuilder<int>(
                           valueListenable: controller!.currentStageIndex,
                           builder: (context, currentIndex, _) {
                             return ValueListenableBuilder<int>(
                               valueListenable: controller!.totalStages,
                               builder: (context, total, _) {
-                                if (total <= 1) return const SizedBox.shrink();
-                                return Container(
+                                return Visibility(
+                                  visible: _displayStageInfo,
+                                  maintainSize: true,
+                                  maintainAnimation: true,
+                                  maintainState: true,
+                                  child:Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
@@ -342,7 +340,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        '$currentIndex z $total',
+                                        '$currentIndex ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $total',
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -352,7 +350,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                                       ),
                                     ],
                                   ),
-                                );
+                                ));
                               },
                             );
                           },
@@ -362,6 +360,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                     const SizedBox(height: 12),
                   ],
                 ),
+              )
               );
             },
           ),

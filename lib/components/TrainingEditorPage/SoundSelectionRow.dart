@@ -13,6 +13,7 @@ class SoundSelectionRow extends StatelessWidget {
   final ValueChanged<SoundAsset> onChanged;
   final TextStyle? labelStyle;
   final bool blueBorder;
+  final bool isSoundSelection;
 
   const SoundSelectionRow({
     super.key,
@@ -23,6 +24,7 @@ class SoundSelectionRow extends StatelessWidget {
     required this.onChanged,
     this.labelStyle,
     this.blueBorder = false,
+    required this.isSoundSelection,
   });
 
   Future<void> _openPopup(BuildContext context) async {
@@ -32,6 +34,7 @@ class SoundSelectionRow extends StatelessWidget {
         includeVoiceOption: includeVoiceOption,
         listType: soundListType,
         selectedValue: selectedValue.name,
+        isSoundSelection: isSoundSelection,
       ),
     );
 

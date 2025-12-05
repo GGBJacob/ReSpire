@@ -313,13 +313,27 @@ class _TrainingPageState extends State<TrainingPage> {
         ),
       ),
       backgroundColor: mediumblue,
-      body:
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 200,
+            child: Opacity(
+              opacity: 1,
+              child: Lottie.asset(
+                'assets/animations/boat.json',
+                fit: BoxFit.fitWidth,
+                repeat: true,
+              ),
+            ),
+            ),
           Positioned.fill(
             child: Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 220), 
                     child: Column(
                       children: [
                         Row(children: [shareButton(), Spacer(), editButton(), deleteButton()]),
@@ -332,6 +346,8 @@ class _TrainingPageState extends State<TrainingPage> {
                 ),
               ],
             ),
+          ),
+        ],
       ),
     );
   }
