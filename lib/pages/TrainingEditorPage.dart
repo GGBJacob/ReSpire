@@ -10,6 +10,7 @@ import 'package:respire/components/Global/Settings.dart';
 import 'package:respire/components/TrainingEditorPage/TrainingStageTile.dart';
 import 'package:respire/components/TrainingEditorPage/SoundSelectionRow.dart';
 import 'package:respire/components/TrainingEditorPage/PlaylistEditor.dart';
+import 'package:respire/components/TrainingEditorPage/StagePhaseSoundEditor.dart';
 import 'package:respire/components/TrainingEditorPage/StagePlaylistsEditor.dart';
 import 'package:respire/services/SoundManagers/ISoundManager.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
@@ -666,7 +667,7 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                         ),
                                                       ] else if (_sounds.backgroundSoundScope == SoundScope.perPhase)
                                                         ...buildPhaseSoundRows(SoundListType.longSounds, false)
-                                                      else if (_sounds.backgroundSoundScope == SoundScope.perStage)
+                                                      else if (_sounds.backgroundSoundScope == SoundScope.perStage) ...[
                                                         Padding(
                                                           padding: const EdgeInsets.symmetric(vertical: 8),
                                                           child: StagePlaylistsEditor(
@@ -679,6 +680,20 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                             },
                                                           ),
                                                         ),
+                                                      ] else if (_sounds.backgroundSoundScope == SoundScope.perEveryPhaseInEveryStage) ...[
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                                          child: StagePhaseSoundEditor(
+                                                            stages: trainingStages,
+                                                            perEveryPhaseBreathingPhaseBackgrounds: _sounds.perEveryPhaseBreathingPhaseBackgrounds,
+                                                            onChanged: (newMap) {
+                                                              setState(() {
+                                                                _sounds.perEveryPhaseBreathingPhaseBackgrounds = newMap;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ]
                                                     ],
                                                   ),
                                                 ],
