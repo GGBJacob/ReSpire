@@ -528,6 +528,20 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                         })()
                                                       else if (_sounds.nextSoundScope == SoundScope.perPhase)
                                                         ...buildPhaseSoundRows(SoundListType.shortSounds, true)
+                                                      else if (_sounds.nextSoundScope == SoundScope.perEveryPhaseInEveryStage)
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                                          child: StagePhaseSoundEditor(
+                                                            stages: trainingStages,
+                                                            stagePhaseSounds: _sounds.perEveryPhaseBreathingPhaseCues,
+                                                            soundListType: SoundListType.shortSounds,
+                                                            onChanged: (newMap) {
+                                                              setState(() {
+                                                                _sounds.perEveryPhaseBreathingPhaseCues = newMap;
+                                                              });
+                                                            },
+                                                          ),
+                                                        )
                                                     ],
                                                   ),
                                                 ]
@@ -685,7 +699,8 @@ class _TrainingEditorPageState extends State<TrainingEditorPage> {
                                                           padding: const EdgeInsets.symmetric(vertical: 8),
                                                           child: StagePhaseSoundEditor(
                                                             stages: trainingStages,
-                                                            perEveryPhaseBreathingPhaseBackgrounds: _sounds.perEveryPhaseBreathingPhaseBackgrounds,
+                                                            stagePhaseSounds: _sounds.perEveryPhaseBreathingPhaseBackgrounds,
+                                                            soundListType: SoundListType.longSounds,
                                                             onChanged: (newMap) {
                                                               setState(() {
                                                                 _sounds.perEveryPhaseBreathingPhaseBackgrounds = newMap;

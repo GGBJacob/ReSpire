@@ -9,14 +9,16 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 class StagePhaseSoundEditor extends StatelessWidget {
   final List<TrainingStage> stages;
-  final Map<String, Map<BreathingPhaseType, SoundAsset>> perEveryPhaseBreathingPhaseBackgrounds;
+  final Map<String, Map<BreathingPhaseType, SoundAsset>> stagePhaseSounds;
   final ValueChanged<Map<String, Map<BreathingPhaseType, SoundAsset>>> onChanged;
+  final SoundListType soundListType;
 
   const StagePhaseSoundEditor({
     super.key,
     required this.stages,
-    required this.perEveryPhaseBreathingPhaseBackgrounds,
+    required this.stagePhaseSounds,
     required this.onChanged,
+    required this.soundListType,
   });
 
   @override
@@ -40,7 +42,7 @@ class StagePhaseSoundEditor extends StatelessWidget {
             labelStyle: const TextStyle(overflow: TextOverflow.ellipsis),
             label: translationProvider.getTranslation("BreathingPhaseType.${phase.name}"),
             selectedValue: _getSoundForStageAndPhase(stage.id, phase),
-            soundListType: SoundListType.longSounds,
+            soundListType: soundListType,
             onChanged: (sound) => _updateSound(stage.id, phase, sound),
             isSoundSelection: true,
           ),
@@ -49,8 +51,8 @@ class StagePhaseSoundEditor extends StatelessWidget {
   }
 
   SoundAsset _getSoundForStageAndPhase(String stageId, BreathingPhaseType phase) {
-    if (perEveryPhaseBreathingPhaseBackgrounds.containsKey(stageId)) {
-      final stageMap = perEveryPhaseBreathingPhaseBackgrounds[stageId]!;
+    if (stagePhaseSounds.containsKey(stageId)) {
+      final stageMap = stagePhaseSounds[stageId]!;
       if (stageMap.containsKey(phase)) {
         return stageMap[phase]!;
       }
@@ -59,7 +61,7 @@ class StagePhaseSoundEditor extends StatelessWidget {
   }
 
   void _updateSound(String stageId, BreathingPhaseType phase, SoundAsset sound) {
-    final newMap = Map<String, Map<BreathingPhaseType, SoundAsset>>.from(perEveryPhaseBreathingPhaseBackgrounds);
+    final newMap = Map<String, Map<BreathingPhaseType, SoundAsset>>.from(stagePhaseSounds);
     
     if (!newMap.containsKey(stageId)) {
       newMap[stageId] = {};
