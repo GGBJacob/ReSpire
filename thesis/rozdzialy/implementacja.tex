@@ -197,7 +197,7 @@ Dodatkowo utworzony został obiekt łączący \texttt{AnimatedCircle} oraz dwa k
 \end{itemize}
 Gdy zachodzi zmiana fazy, cała lista przesuwa się w lewo, a na końcu pojawia się nowy kafelek z~kolejną instrukcją.
 
-Obiekt przyjmuje trzy parametry - \textit{preparationTime}, czyli czas trwania fazy przygotowania przed treningiem, kolejkę \textit{breathingPhasesQueue}, która jest ciągiem faz w treningu oraz \textit{change}, która jest wyznacznikiem zmiany obecnie trwającej fazy. Framgment tworzenia klasy przedstawiony został w kodzie \ref{code/slider/constructor}.
+Obiekt przyjmuje trzy parametry - \textit{preparationTime}, czyli czas trwania fazy przygotowania przed treningiem, kolejkę \textit{breathingPhasesQueue}, która jest ciągiem faz oddechowych w treningu oraz \textit{change}, która jest wyznacznikiem zmiany obecnie trwającej fazy. Framgment tworzenia klasy przedstawiony został w kodzie \ref{code/slider/constructor}.
 
 \begin{figure}[h] 
 \centering
@@ -210,7 +210,7 @@ InstructionSlider({super.key,required this.preparationTime,  required this.breat
 \end{lstlisting}
 \end{figure}
 
-Podczas inicjalizacji obiekt tworzy pierwszy kafelek reprezentujący fazę przygotowania. Następnie dodawane są w formie kafelków dwie fazy z kolejki faz treningu. Każdy kafelek przechowuje tekst w postaci instrukcji dla użytkowanika i informację, na której pozycji ma się znaleźć. Fragment dodawania obiektów przedstawiono w kodzie \ref{code/slider/init}.
+Podczas inicjalizacji obiekt tworzy pierwszy kafelek reprezentujący fazę przygotowania. Następnie dodawane są dwie fazy z kolejki faz treningu w tej samej formie . Każdy kafelek przechowuje tekst w postaci instrukcji dla użytkowanika i informację, na której pozycji ma się znaleźć. Fragment dodawania obiektów przedstawiono w kodzie \ref{code/slider/init}.
 
 \begin{figure}[h] 
 \centering
