@@ -309,6 +309,24 @@ class TrainingController {
       return;
     }
 
+    if (_sounds.backgroundSoundScope == SoundScope.perPhase || 
+        _sounds.backgroundSoundScope == SoundScope.perEveryPhaseInEveryStage) {
+      if (_currentSound != null) {
+        if (_currentSound != nextBackgroundSound || _currentSound == "Odliczanie") {
+          await soundManager.pauseSoundFadeOut(_currentSound, changeTime); // we have to use both for some unknown reason, do not remove any
+        }
+        
+        if(_currentSound == "Odliczanie"){ //Odliczanie is a counting sound, we have to stop it fully
+          await soundManager.stopSound(_currentSound);
+        }
+      }
+      if (nextBackgroundSound != null && (_currentSound != nextBackgroundSound || _currentSound == "Odliczanie")) {
+        _currentSound = nextBackgroundSound;
+        soundManager.playSoundFadeIn(nextBackgroundSound, changeTime);
+      }
+      return;
+    }
+
     // Otherwise use single sound manager (for perPhase or single sounds)
     if (_currentSound != nextBackgroundSound) {
       // Stop playlist if it was playing
@@ -317,21 +335,6 @@ class TrainingController {
         _isUsingPlaylist = false;
       }
     }
-
-    if (_sounds.backgroundSoundScope == SoundScope.perPhase || 
-        _sounds.backgroundSoundScope == SoundScope.perEveryPhaseInEveryStage) {
-      if (_currentSound != null) {
-        await soundManager.pauseSoundFadeOut(_currentSound, changeTime); // we have to use both for some unknown reason, do not remove any
-        if(_currentSound == "Odliczanie"){
-          await soundManager.stopSound(_currentSound);
-        }
-      }
-      _currentSound = nextBackgroundSound;
-      if (nextBackgroundSound != null) {
-        soundManager.playSoundFadeIn(nextBackgroundSound, changeTime);
-      }
-    }
-    
   }
 
   void _start() {
@@ -451,6 +454,7 @@ class TrainingController {
             if (_stopTimer == 0) { // We've gone through all phases
               
               _endingInitiated = true; // Ending triggered
+              soundManager.stopSound(_currentSound);
               _playShortSound(parser.training.sounds.stageChangeSound.name);
               _remainingTime = _endingDuration;
               _currentSound = _sounds.endingTrack.name;

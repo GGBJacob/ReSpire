@@ -230,6 +230,14 @@ class TrainingJsonConverter {
       'breathingPhaseBackgrounds': sounds.breathingPhaseBackgrounds.map((type, s) {
         return MapEntry(type.name, SoundManager().isUserMusic(s.name) ? "" : s.name);
       }),
+      'perEveryPhaseBreathingPhaseBackgrounds': sounds.perEveryPhaseBreathingPhaseBackgrounds.map((stageId, phaseMap) {
+        return MapEntry(
+          _stageUuidMap[stageId] ?? stageId,
+          phaseMap.map((type, s) {
+            return MapEntry(type.name, SoundManager().isUserMusic(s.name) ? "" : s.name);
+          }),
+        );
+      }),
       'stageChangeSound': _changeSoundToString(sounds.stageChangeSound),
       'cycleChangeSound': _changeSoundToString(sounds.cycleChangeSound)
     };
@@ -273,6 +281,14 @@ class TrainingJsonConverter {
             BreathingPhaseType.values.firstWhere((e) => e.name == key),
             SoundManager().getAsset(value) ?? SoundAsset(),
         )) ?? {}
+      ..perEveryPhaseBreathingPhaseBackgrounds = (json['perEveryPhaseBreathingPhaseBackgrounds'] as Map<String, dynamic>?)
+        ?.map((stageId, phaseMap) {
+          final phases = (phaseMap as Map<String, dynamic>).map((key, value) => MapEntry(
+              BreathingPhaseType.values.firstWhere((e) => e.name == key),
+              SoundManager().getAsset(value) ?? SoundAsset(),
+          ));
+          return MapEntry(stageId, phases);
+        }) ?? {}
       ..stageChangeSound = _soundAssetFromString(json['stageChangeSound'])
       ..cycleChangeSound = _soundAssetFromString(json['cycleChangeSound']);
   }

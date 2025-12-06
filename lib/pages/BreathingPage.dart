@@ -263,6 +263,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
     controller!.setContext(context);
     bool _displayStageInfo = false;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         leading: ValueListenableBuilder<Queue<breathing_phase.BreathingPhase?>>(
