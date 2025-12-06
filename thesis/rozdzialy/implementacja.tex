@@ -1,9 +1,27 @@
 \chapter{Implementacja aplikacji mobilnej ReSpire}
 Projekt został wykonany w środowisku Flutter za pomocą zestawu narzędzi dla programistów Flutter w wersji 3.27.2 wspierającego język Dart w wersji 3.6.1. Ten zestaw narzędzi dla programistów umożliwia tworzenie aplikacji na platformy Android, iOS, Linux, macOS oraz Windows z wykorzystaniem jednej bazy kodu źródłowego. Wybór Fluttera był podyktowany jego wydajnością, bogatym zestawem narzędzi do tworzenia interfejsów użytkownika oraz szeroką społecznością wsparcia. Zapewnie trwałości danych między uruchomieniami zostało zrealizowane przy użyciu lokalnej, nierelacyjnej bazy danych Hive w wersji 2.2.3, skrojonej pod środowisko Flutter oraz język Dart.
 
+\section{Technologie}
+Aplikacja została napisana w jęzku Dart we frameworku Flutter.
+
 \section{Schemat plików/klas/modułów \Hania\ \Ola\ \Jakub\ \Karol}
 
-\section{Ciekawe fragmenty kodu \Hania\ \Ola\ \Jakub\ \Karol}
+\section{Podział prac w zespole \Jakub}
+
+Prace nad projektem realizowane były przy pełnym zaangażowaniu całego zespołu, którego priorytetem było osiągnięcie wysokiej jakości produktu końcowego. Członkowie grupy dynamicznie reagowali na informacje zwrotne, sprawnie wdrażając sugestie opiekuna oraz nowe koncepcje funkcjonalne. Dzięki bieżącej eliminacji błędów i iteracyjnemu wprowadzaniu udoskonaleń, zapewniono ciągłość procesu wytwórczego oraz stabilny rozwój systemu.
+\newline
+\subsection{Hanna}
+Hanna odpowiadała za projekt oraz implementację kluczowych komponentów służących do optymalizacji procesu pobierania i odtwarzania sesji treningowych - \texttt{TrainingController} oraz \texttt{TrainingParser}. Opracowała również wstępny projekt interfejsu użytkownika w środowisku Figma, który stanowił fundament dla dalszych prac deweloperskich. W warstwie widoku zaimplementowała moduł wizualizacji treningów wraz z walidacją danych wejściowych, a także stworzyła widok szczegółów treningu, stanowiący element nawigacyjny między stroną główną a odtwarzaczem.
+
+\subsection{Aleksandra}
+Do zadań Aleksandry należało opracowanie kompletnej identyfikacji wizualnej systemu - zaprojektowanie logotypu oraz zdefiniowanie spójnego motywu graficznego aplikacji (dobór kolorystyki i typografii), który stał się obowiązującym standardem dla wszystkich modułów aplikacji. W warstwie implementacyjnej przygotowała widok strony głównej, a także wzbogaciła interfejs użytkownika o animacje, zwiększające dynamikę i interaktywność aplikacji.
+
+\subsection{Jakub}
+Zadania Jakuba związane były z zaprojektowaniem i implementacją całej warstwy obsługi dźwięku w aplikacji. Jego głównym zadaniem było stworzenie architektury silnika audio, opartej na komponentach \texttt{SoundManager} oraz \texttt{SingleSoundManager}. Aby zapewnić płynność działania interfejsu i uniknąć blokowania głównego wątku aplikacji, zaimplementował on asynchroniczną obsługę odtwarzania multimediów. Ponadto zaprojektował kluczowe struktury danych oraz zaimplementował klasę \texttt{PlaylistManager}, zarządzającą logiką list odtwarzania. Dodatkowo wdrożył mechanizm internacjonalizacji (obsługę wielu języków) oraz funkcjonalność pozwalającą użytkownikom na import własnych plików dźwiękowych.
+
+\subsection{Karol}
+
+Karol był odpowiedzialny za implementację mechanizmu modyfikacji treningów w sposób intuicyjny dla użytkowników, a także za funkcjonalność importu i eksportu treningów. W obszarze przetwarzania sygnałów opracował moduł generujący dudnienia różnicowe (binaural beats). Ponadto zajął się optymalizacją wydajności poprzez wdrożenie mechanizmu ładowania zasobów z~wyprzedzeniem przed uruchomieniem treningu. W warstwie interfejsu stworzył edytor list odtwarzania plików audio.
 
 \section{Edytor treningów}
 
@@ -26,3 +44,191 @@ Proces eksportu danych może zostać zainicjowany w dwóch miejscach w aplikacji
 Struktura pliku eksportowego JSON jest kompletnym odzwierciedleniem modelu danych aplikacji. Zawiera ona metadane (tytuł, opis), pełną hierarchię etapów (\texttt{TrainingStage}) wraz z fazami oddechowymi (\texttt{BreathingPhase}) i ich parametrami czasowymi, a także szczegółową konfigurację ustawień (\texttt{Settings}) oraz mapę dźwięków (\texttt{Sounds}). Dzięki temu, wyeksportowany plik jest samowystarczalną jednostką informacji, możliwą do odtworzenia w dowolnej innej instancji aplikacji.
 
 Proces importu charakteryzuje się elastycznością dzięki dwóm wariantom eksportu. Metody parsujące w klasie \texttt{TrainingJsonConverter} zostały zaprojektowane tak, aby rozpoznawać i poprawnie przetwarzać zarówno pojedyncze obiekty treningów, jak i listy obiektów lub struktury opakowane (używane przy eksporcie masowym). Po wczytaniu danych następuje proces walidacji oraz integracji, w ramach którego odtwarzane są powiązania do zasobów dźwiękowych metodą \texttt{updateSounds()}. Poprawnie zweryfikowane treningi są następnie dodawane do lokalnej bazy danych Hive, a interfejs użytkownika jest natychmiastowo aktualizowany.
+
+
+\subsection{Menu - trening}
+\subsection{Menu - dźwięki}
+\subsection{Menu - inne}
+
+\section{Przebieg treningu \Hania}
+\subsection{Klasa TrainingParser}
+Klasa \texttt{TrainingParser} powstała w celu przekształcenia hierarchicznych danych treningowych pobranych z lokalnej bazy danych Hive w ciąg występujących po sobie faz, oparty na skonfigurowanym uprzednio przez użytkownika wzorcu oddychania. Jej zadaniem jest zwracanie kolejnych faz do obiektu \texttt{TrainingController}. Dzięki temu logika przełączania faz i powtórzeń jest odseparowana od interfejsu. 
+
+Konstruktor jako parametr przyjmuje obiekt klasy \texttt{Training} i zapisuje do zmiennej \textit{currentTrainingStage} pierwszy etap treningu. Fragment realizujący tą funkcjonalność przedstawiono poniżej w kodzie \ref{code/parser/constructor}.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={TrainingParser - konstruktor}, label={code/parser/constructor}]
+  Training training;
+  TrainingStage currentTrainingStage;
+  late breathing_phase.BreathingPhase currentBreathingPhase;
+
+  TrainingParser({required this.training})
+      : currentTrainingStage = training.trainingStages[0];
+\end{lstlisting}
+\end{figure}
+
+\newpage
+Zadaniem funkcji \texttt{nextInstruction}, przedstawionej na kodzie \ref{code/parser/nextInstruction}, jest zwrócenie danych dotyczącej kolejnej fazy oddechowej w postaci mapy \texttt{Map<String, dynamic>} lub wartości \texttt{null} w~przypadku zakończenia całego treningu. 
+
+W pierwszej kolejności analizowany jest aktualny indeks fazy oddechowej (\textit{breathingPhaseID}). Jeżeli wskazuje on ostatnią fazę w bieżącym etapie, oznacza to zakończenie jednego pełnego cyklu etapu. W takim przypadku indeks fazy jest zerowany (\textit{breathingPhaseID = 0}), a licznik wykonanych powtórzeń w etapie (\textit{doneReps}) zwiększany jest o jeden. Następnie sprawdzana jest liczba wykonanych powtórzeń w odniesieniu do wartości zdefiniowanej w obiekcie etapu (\textit{currentTrainingStage.reps}). W przypadku jej osiągnięcia następuje przejście do kolejnego etapu treningu poprzez inkrementację indeksu \textit{trainingStageID}. Jeżeli po tej operacji indeks ten osiągnie wartość równą liczbie wszystkich etapów w strukturze treningu, funkcja zwraca \textit{null}, sygnalizując zakończenie sesji. W przeciwnym razie wczytywany jest nowy etap (\textit{currentTrainingStage = training.trainingStages[trainingStageID]}), a licznik \textit{doneReps} zostaje zresetowany do zera. Gdy aktualna faza nie była ostatnią w cyklu, indeks \textit{breathingPhaseID} jest jedynie zwiększany o jeden. Po ustaleniu poprawnego indeksu do zmiennej \textit{currentBreathingPhase} przypisywana jest odpowiadająca mu faza oddechowa. Kolejnym etapem jest obliczenie rzeczywistego czasu trwania fazy z uwzględnieniem mechanizmu progresji. 
+
+Na podstawie obliczonego czasu tworzona jest zmienna \textit{progressedBreathingPhase}, w której pole \textit{duration} przyjmuje wartość \textit{durationSeconds}, natomiast pozostałe atrybuty (\textit{breathingPhaseType}, \textit{breathType}, \textit{breathDepth}, \textit{sounds}) są kopiowane z obecnej fazy oddechowej.
+
+Funkcja zwraca mapę zawierającą następujące klucze:
+\begin{itemize}
+    \item \textit{breathingPhase} - pełny obiekt fazy,
+    \item \textit{remainingTime} - czas trwania fazy wyrażony w milisekundach,
+    \item \textit{trainingStageName} - nazwę aktualnego etapu treningu.
+\end{itemize}
+
+W ten sposób \textit{nextInstruction()} pełni rolę centralnego mechanizmu sterującego przebiegiem treningu oddechowego, zapewniając poprawne przechodzenie pomiędzy fazami i etapami oraz automatyczne zwiększanie trudności zgodnie z zaimplementowanym modelem progresji liniowej.
+
+\newpage
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={TrainingParser - pobranie instrukcji}, label={code/parser/nextInstruction}]
+  Map<String, dynamic>? nextInstruction() {
+    if (breathingPhaseID == currentTrainingStage.breathingPhases.length - 1) {
+      breathingPhaseID = 0;
+      doneReps++;
+
+      if (doneReps == currentTrainingStage.reps) {
+        trainingStageID++;
+        if (trainingStageID == training.trainingStages.length) {
+          return null;
+        } else {
+          currentTrainingStage = training.trainingStages[trainingStageID];
+          doneReps = 0;
+        }
+      }
+    } else {
+      breathingPhaseID++;
+    }
+
+    currentBreathingPhase = currentTrainingStage.breathingPhases[breathingPhaseID];
+
+    double durationSeconds = currentBreathingPhase.duration + (currentTrainingStage.increment * doneReps);
+
+    final progressedBreathingPhase = breathing_phase.BreathingPhase(
+      duration: durationSeconds,
+      breathingPhaseType: currentBreathingPhase.breathingPhaseType,
+      breathType: currentBreathingPhase.breathType,
+      breathDepth: currentBreathingPhase.breathDepth,
+      sounds: currentBreathingPhase.sounds,
+    );
+
+    return {
+      "breathingPhase": progressedBreathingPhase,
+      "remainingTime": (durationSeconds * 1000).truncate(),
+      "trainingStageName": currentTrainingStage.name,
+    };
+  }
+\end{lstlisting}
+\end{figure}
+
+\subsection{TrainingController}
+\subsection{AnimatedCircle}
+Komponent \texttt{AnimatedCircle} odpowiada za wizualizację przebiegu fazy oddechowej w postaci animowanego koła. Wdech powoduje zwiększanie jego promienia, wydech - zmniejszanie, natomiast fazy retencji i regeneracji utrzymują stały rozmiar.
+
+Obiekt przyjmuje dwa parametry - obiekt typu \texttt{BreathingPhase?}, który reprezentuje aktualną fazę oddechową bądź wartość null w przypadku zakończenia treningu oraz obiekt typu \texttt{bool} \textit{isPaused}, reprezentujący stan wstrzymania treningu. Framgment tworzenia klasy przedstawiony został w kodzie \ref{code/circle/constructor}.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={AnimatedCircle - konstruktor}, label={code/circle/constructor}]
+  final breathing_phase.BreathingPhase? breathingPhase;
+  final bool isPaused;
+
+  const AnimatedCircle({super.key, required this.breathingPhase, required this.isPaused});
+\end{lstlisting}
+\end{figure}
+
+Po utworzeniu obiektu na początku zostaje obliczona wartość początkowa czasu trwania animacji, która zapisywana jest w zmiennej \textit{duration} na podstawie czasu trwania danej fazy. Następnie inicjowany jest kontroler animacji \textit{controller} oraz animacja zmiany promienia koła \textit{circleAnimation}. Kontrolwe ustawiany jest na stan początkowy (\textit{controller.value=0.0}). Jeżeli trening nie jest wstrzymany i dostępna jest faza oddechowa, uruchamiana jest odpowiednia animacja - rosnąca dla wdechu lub malejąca dla wydechu. Fragment funkcji init przedstawiono w kodzie \ref{code/circle/init}.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={AnimatedCircle - fragment funkcji init}, label={code/circle/init}]
+  @override
+  void initState() {
+    super.initState();
+
+    duration = widget.breathingPhase == null ? 0 : (widget.breathingPhase!.duration * 1000).toInt();
+
+    _controller = AnimationController(
+      duration: Duration(milliseconds: duration),
+      vsync: this,
+    );
+
+    _circleAnimation = Tween<double>(begin: 125.0, end: 300.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _controller.duration = Duration(milliseconds: duration);
+
+    _controller.value = 0.0;
+
+    if (!widget.isPaused && widget.breathingPhase != null) {
+      if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.inhale) {
+        _controller.forward(from: 0.0);
+      } else if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.exhale) {
+        _controller.reverse(from: 1.0);
+      }
+    }
+  }
+\end{lstlisting}
+\end{figure}
+
+Zachowanie koła zależne jest od jego poprzedniego stanu i zmiany parametrów wejściowych. Jeżeli faza oddechowa sie zmieniła względem ostatniego stanu następuje reakcja zmiany animacji. Ponownie obliczany jest czas trwania animacji (zmienna \textit{duration}) i ustawiane zostaje poprawne zachowanie - wzrost promienia dla wdechu i jego zmniejszenie dla wydechu. Aktualizację stanu przedstawiono w kodzie \ref{code/circle/update}
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={AnimatedCircle - aktualizacja stanu}, label={code/circle/update}]
+    if (widget.breathingPhase != oldWidget.breathingPhase && widget.breathingPhase != null) {
+      log("${widget.breathingPhase?.breathingPhaseType.name}");
+
+      duration = widget.breathingPhase == null ? 0 : (widget.breathingPhase!.duration * 1000).toInt();
+      _controller.duration = Duration(milliseconds: duration);
+
+      if (!widget.isPaused && widget.breathingPhase != null) {
+        if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.inhale) {
+          _controller.forward(from: 0.0);
+        } else if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.exhale) {
+          _controller.reverse(from: 1.0);
+        }
+      } else {
+        _controller.stop();
+      }
+    }
+\end{lstlisting}
+\end{figure}
+
+Koło \texttt{AnimatedCircle} reaguje również na zmianę parametru \textit{isPaused}, która określa czy trening został zatrzymany. Jeśli tak, animacja zostaje wstrzymana, w innym wypadku jeśli trening był zatrzymany i zostawł wznowiony, animacja zostaje kontynuowana w kierunku wynikającym z~bieżącej fazy. Fragment ten przedstawiono w kodzie \ref{code/circle/pause}.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={AnimatedCircle - reakcja na pauzę i wznowienie}, label={code/circle/pause}]
+if (widget.isPaused && !oldWidget.isPaused) {
+      _controller.stop();
+    } else if (!widget.isPaused && oldWidget.isPaused) {
+      if (widget.breathingPhase != null) {
+        if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.inhale) {
+          _controller.forward();
+        } else if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.exhale) {
+          _controller.reverse();
+        }
+      }
+    }
+\end{lstlisting}
+\end{figure}
+
+
+Dodatkowo utworzony został obiekt łączący \texttt{AnimatedCircle} oraz dwa koła statyczne typu \texttt{Container} wizualizujące maksymalną i minimalną wartość promiania koła \texttt{AnimatedCircle}, by umożliwić użytkownikowi lepiej ocenić przebieg wdechu i wydechu.
+
+\subsection{Instrukcja}
+
+\section{Dźwięki \Jakub}
+\subsection{SoundManager}
+\subsection{textToSpeach}
+
+\section{Języki}
+
+\section{Baza danych}

@@ -2,6 +2,7 @@
 *.aux
 *.bbl
 *.bcf
+*.blg
 *.fdb_latexmk
 *.fls
 *.lof
@@ -12,4 +13,6 @@
 *.synctex*
 *.toc
 *.tdo
-*.blg
+
+# Temporarily ignored
+*.pdf
