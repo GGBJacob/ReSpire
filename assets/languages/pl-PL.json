@@ -99,8 +99,8 @@
                     "global":"Ogólny dźwięk zmiany fazy",
                     "for_each_breathing_phase":"dźwięk zmiany dla każdej fazy"
                 },
-                "stage_change_sound": "Zmiana etapu",
-                "cycle_change_sound": "Zmiana cyklu"
+                "stage_change_sound": "Zakończenie etapu",
+                "cycle_change_sound": "Zakończenie cyklu"
             },
 
             "TrainingMusic":{

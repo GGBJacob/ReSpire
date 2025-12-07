@@ -99,8 +99,8 @@
                     "voice":"lector",
                     "for_each_breathing_phase":"change sound for each phase"
                 },
-                "stage_change_sound": "Stage change",
-                "cycle_change_sound": "Cycle change"
+                "stage_change_sound": "End of stage",
+                "cycle_change_sound": "End of cycle"
             },
 
             "TrainingMusic":{
