@@ -238,6 +238,14 @@ class TrainingJsonConverter {
           }),
         );
       }),
+      'perEveryPhaseBreathingPhaseCues': sounds.perEveryPhaseBreathingPhaseCues.map((stageId, phaseMap) {
+        return MapEntry(
+          _stageUuidMap[stageId] ?? stageId,
+          phaseMap.map((type, s) {
+            return MapEntry(type.name, SoundManager().isUserMusic(s.name) ? "" : s.name);
+          }),
+        );
+      }),
       'stageChangeSound': _changeSoundToString(sounds.stageChangeSound),
       'cycleChangeSound': _changeSoundToString(sounds.cycleChangeSound)
     };
@@ -283,6 +291,14 @@ class TrainingJsonConverter {
         )) ?? {}
       ..perEveryPhaseBreathingPhaseBackgrounds = (json['perEveryPhaseBreathingPhaseBackgrounds'] as Map<String, dynamic>?)
         ?.map((stageId, phaseMap) {
+          final phases = (phaseMap as Map<String, dynamic>).map((key, value) => MapEntry(
+              BreathingPhaseType.values.firstWhere((e) => e.name == key),
+              SoundManager().getAsset(value) ?? SoundAsset(),
+          ));
+          return MapEntry(stageId, phases);
+        }) ?? {}
+      ..perEveryPhaseBreathingPhaseCues = (json['perEveryPhaseBreathingPhaseCues'] as Map<String, dynamic>?)
+        ?.map((stageId, phaseMap) { 
           final phases = (phaseMap as Map<String, dynamic>).map((key, value) => MapEntry(
               BreathingPhaseType.values.firstWhere((e) => e.name == key),
               SoundManager().getAsset(value) ?? SoundAsset(),
