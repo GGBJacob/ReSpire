@@ -124,7 +124,7 @@ Map<String, dynamic>? nextInstruction() {
 
 \subsection{Klasa TrainingController}
 
-\texttt{TrainingController} jest centralnym kontrolerem sesji treningu w aplikacji. Odpowiada za precyzyjne, milisekundowe sterowanie czasem, płynne przechodzenie między fazami oddechowymi, inteligentne zarządzanie wszystkimi warstwami dźwiękowymi — muzyka w tle, playlisty, odliczanie, zapowiedzi i dudnienia różnicowe oraz poprawne przeprowadzenie użytkownika przez trzy główne etapy: przygotowanie, właściwy trening i fazę końcową. Komponent zarządza wieloma zmiennymi, które zostały przedstawione w tabeli \ref{tab/controller}.
+\texttt{TrainingController} jest centralnym kontrolerem sesji treningu w aplikacji. Odpowiada za precyzyjne, milisekundowe sterowanie czasem, płynne przechodzenie między fazami oddechowymi i inteligentne zarządzanie wszystkimi warstwami dźwiękowymi --- muzyka w tle, playlisty, odliczanie, zapowiedzi i dudnienia różnicowe. Zapewnia również poprawne przeprowadzenie użytkownika przez trzy główne etapy --- przygotowanie, właściwy trening i fazę końcową. Komponent zarządza wieloma zmiennymi, które zostały przedstawione w tabeli \ref{tab/controller}.
 
 \noindent\begin{minipage}{\textwidth}
 \centering
@@ -138,9 +138,6 @@ Równoległa kolejka ID etapów treningu (\texttt{Queue<String?>}). Pozwala wykr
 \hline
 \texttt{breathingPhasesQueue} &
 Nasłuchiwana przez obiekt \texttt{InstructionSlider} kolejka faz oddechowych (\texttt{ValueNotifier<Queue<BreathingPhase?>>}). Zawsze zawiera trzy elementy, które mogą również przyjąć wartość \texttt{null}. Pod indeksem 0 znajduje się obecnie trwająca faza oddechowa, a na kolejnych dwie przyszłe. Mechanizm umożliwia wcześniejsze odtwarzanie zapowiedzi i płynną zmianę dźwięku tła i animacji. \\
-\hline
-\texttt{\_trainingStageIdQueue} &
-Równoległa kolejka ID etapów treningu (\texttt{Queue<String?>}). Pozwala wykryć zmianę etapu przed rozpoczęciem pierwszej fazy nowego etapu, co jest kluczowe dla natychmiastowego przełączenia playlisty i dźwięku zmiany etapu. \\
 \hline
 \texttt{\_remainingTime} &
 Pozostały czas fazy bieżącej w milisekundach. \\
@@ -213,7 +210,7 @@ TrainingController(this.parser) {
 \end{lstlisting}
 \end{figure}
 
-Funkcja \texttt{\_preloadBreathingPhases} służy do pobrania dwóch pierwszych faz oddechowych w treningu do kolejki faz treningu. Przedtem jest jednak tworzoną pusta faza z wartościami \textit{null}. Spowodowane jest to potrzebą symulacji fazy przygotowania, która nie posiada żadnych wspólnych cech z pozostałymi fazami poza czasem trwania. Przypisanie wartości \textit{null} pozwala na rozróżnienie jej od właściwego treningu w wizualizacji instrukcji użytkownika w klasie \texttt{InstructionSlider}. Funkcję przedstawiono w kodzie \ref{code/controller/preload}.
+Funkcja \texttt{\_preloadBreathingPhases} służy do inicjalizacji kolejki faz oddechowych w treningu. Na początku tworzona jest pusta faza z wartościami \textit{null}. Spowodowane jest to potrzebą symulacji fazy przygotowania, która nie posiada żadnych wspólnych cech z pozostałymi fazami poza czasem trwania. Przypisanie wartości \textit{null} pozwala na rozróżnienie jej od właściwego treningu w wizualizacji instrukcji użytkownika w klasie \texttt{InstructionSlider}. Następnie dodawane są dwie pierwsze fazy oddechowe treningu. Funkcję przedstawiono w kodzie \ref{code/controller/preload}.
 
 \begin{figure}[h]
 \centering
@@ -230,7 +227,7 @@ void _preloadBreathingPhases() {
 \end{lstlisting}
 \end{figure}
 
-Pobieranie kolejnych faz realizowane jest za pomocą metody \textit{\_fetchNextBreathingPhase}. Dane instrukcji w postaci mapy uzyskiwane są z obiektu \textit{parser}. W przypadku zwrócenia przez parser wartości \textit{null}, oznaczającej zakończenie pobierania danych treningowych, następuje oznaczenie zakończenia ładowania w zmiennej \textit{\_finishedLoadingBreathingPhases} oraz dodanie końcowej fazy \textit{null}, reprezentującej fazę zakończenia. W przeciwnym razie wartości fazy, nazwa etapu treningowego, identyfikator etapu oraz czas pozostały są zapisywane do odpowiednich kolejek, a czas trwania nowej fazy zapamiętywany w polu \textit{\_newBreathingPhaseRemainingTime}. Metodę przedstawiono w kodzie \ref{code/controller/fetch}.
+Pobieranie kolejnych faz realizowane jest za pomocą metody \textit{\_fetchNextBreathingPhase}. Dane instrukcji w postaci mapy uzyskiwane są z obiektu \textit{parser}. W przypadku zwrócenia przez parser wartości \textit{null}, oznaczającej zakończenie pobierania danych treningowych, następuje oznaczenie zakończenia ładowania w zmiennej \textit{\_finishedLoadingBreathingPhases} oraz dodanie końcowej fazy \textit{null}, reprezentującej fazę zakończenia. W przeciwnym razie wartości fazy, nazwa etapu treningowego, identyfikator etapu oraz czas pozostały są zapisywane do odpowiednich kolejek, a czas trwania nowej fazy zapamiętywany jest w polu \textit{\_newBreathingPhaseRemainingTime}. Metodę przedstawiono w kodzie \ref{code/controller/fetch}.
 
 \begin{figure}[h]
 \centering
