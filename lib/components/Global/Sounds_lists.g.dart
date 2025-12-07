@@ -16,7 +16,6 @@ class ReSpireSounds {
     "Fireplace": SoundAsset(name: "Fireplace", path: "sounds/long/Fireplace.mp3", type: SoundType.melody),
     "Low hz": SoundAsset(name: "Low hz", path: "sounds/long/Low-hz.mp3", type: SoundType.melody),
     "Ocean": SoundAsset(name: "Ocean", path: "sounds/long/Ocean.mp3", type: SoundType.melody),
-    "Odliczanie   Copy": SoundAsset(name: "Odliczanie   Copy", path: "sounds/long/odliczanie - Copy.mp3", type: SoundType.melody),
     "Odliczanie wstecz": SoundAsset(name: "Odliczanie wstecz", path: "sounds/long/Odliczanie-wstecz.mp3", type: SoundType.melody),
     "Odliczanie": SoundAsset(name: "Odliczanie", path: "sounds/long/odliczanie.mp3", type: SoundType.melody),
     "Rain": SoundAsset(name: "Rain", path: "sounds/long/Rain.mp3", type: SoundType.melody),
