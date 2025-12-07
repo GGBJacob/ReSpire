@@ -60,8 +60,14 @@ class Training {
 
     // Update next phase sounds
     switch (sounds.nextSoundScope) {
-      case SoundScope.none:
       case SoundScope.perStage:
+        break;
+
+      
+      case SoundScope.none:
+        for (var stage in trainingStages) {
+          stage.propagateNextSound(SoundAsset(type: SoundType.none));
+        }
         break;
 
       case SoundScope.global:
