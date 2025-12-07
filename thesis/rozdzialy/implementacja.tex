@@ -1,13 +1,15 @@
-\chapter{Implementacja aplikacji mobilnej ReSpire}
+\chapter{Implementacja aplikacji mobilnej ReSpire \Hania\ \Ola\ \Jakub\ \Karol}
 Projekt został wykonany w środowisku Flutter za pomocą zestawu narzędzi dla programistów Flutter w wersji 3.27.2 wspierającego język Dart w wersji 3.6.1. Ten zestaw narzędzi dla programistów umożliwia tworzenie aplikacji na platformy Android, iOS, Linux, macOS oraz Windows z wykorzystaniem jednej bazy kodu źródłowego. Wybór Fluttera był podyktowany jego wydajnością, bogatym zestawem narzędzi do tworzenia interfejsów użytkownika oraz dużą dostępnością wsparcia. Zapewnie trwałości danych między uruchomieniami zostało zrealizowane przy użyciu lokalnej, nierelacyjnej bazy danych Hive w wersji 2.2.3, przygotowanej pod środowisko Flutter oraz język Dart.
 
-\section{Technologie}
+\section{Technologie \Karol}
 Aplikacja została napisana w jęzku Dart we frameworku Flutter.
 
 \section{Schemat plików/klas/modułów \Hania\ \Ola\ \Jakub\ \Karol}
 Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają się łącznie 63 pliki źródłowe w języku Dart. Projekt obejmuje 80 klas oraz ponad 400 metod realizujących logikę biznesową i interfejs użytkownika. Całkowity rozmiar projektu wynosi nieco ponad 10~KLOC (ang.\textit{ Thousands (kilo) Lines of Code} –- tysięcy linii kodu), z czego blisko 8900 stanowi tzw. czysty kod, określany jako SLOC (ang.\textit{Source Lines of Code} -- źródłowe linie kodu). Ze względu na taką złożoność struktury, diagramy klas i architektury zostały w niniejszej dokumentacji podzielone na logiczne fragmenty, aby zachować ich czytelność.
 
-\subsection{Klasy treningu} \label{subsec:training_classes}
+\subsection{Schemat plików \Ola}
+
+\subsection{Klasy treningu \Jakub} \label{subsec:training_classes}
 
 Na trening składa się 12 klas, z czego główną z nich jest \texttt{Training}. Zawiera ona główne informacje o ćwiczeniu takie jak tytuł, czy opis, a także listę etapów, dźwięki i ustawienia. Struktura dźwięków została opisana w rodziale \ref{sec:Sounds}. 
 
@@ -19,7 +21,7 @@ Na trening składa się 12 klas, z czego główną z nich jest \texttt{Training}
 \end{figure}
 
 
-\section{Edytor treningów}
+\section{Edytor treningów \Karol}
 
 Edytor treningów został zaimplementowany jako dedykowany widok \texttt{TrainingEditorPage}, który operuje bezpośrednio na obiekcie \texttt{Training}. Struktura treningu przechowywana jest w modelach Hive (\texttt{TrainingStage}, \texttt{BreathingPhase}, \texttt{Sounds}, \texttt{Settings}), dzięki czemu każda modyfikacja wprowadzona w interfejsie natychmiast trafia do tej samej instancji danych, którą aplikacja później serializuje. Cała logika edytora została podzielona na trzy zakładki sterowane przez komponent \texttt{CustomSlidingSegmentedControl}, co pozwoliło oddzielić edycję przebiegu treningu, konfigurację dźwięków oraz ustawienia uzupełniające, utrzymując jednocześnie wspólną nawigację i kontrolę zapisów. Sam \texttt{CustomSlidingSegmentedControl} jest komponentem zainspirowanym szeroko wykorzystywanym w systemie mobilnym Apple iOS oraz platformie technologicznej SwiftUI komponenetem \texttt{segmented}, który umożliwia przełączanie się między różnymi widokami w obrębie jednej strony aplikacji przy jednoczesnej informacji o dostępnych panelach oraz aktualnie włączonym panelu. Wpasowuje się to idealnie w nasze zapotrzebowanie, ponieważ każda zakładka reprezentuje inny, lecz integralny aspekt edycji treningu.
 
@@ -29,7 +31,7 @@ Druga zakładka skupia się na warstwie dźwiękowej i korzysta ze współdzielo
 
 Zakładka „Inne” obejmuje elementy opisowe: pole \texttt{TextField} do wprowadzenia opisu, a także licznik czasu przygotowawczego z własnym formatterem cyfr oraz walidacją wartości minimalnej. Wartości te trafiają do obiektu \texttt{Settings}, dzięki czemu są dostępne zarówno w podglądzie treningu, jak i w trakcie wykonywania sesji. Cały edytor jest przetłumaczony z użyciem \texttt{TranslationProvider}, co umożliwia dynamiczne zmiany języka i konsekwentne stosowanie lokalnych etykiet w dialogach, walidatorach czy komunikatach ostrzegawczych. Dzięki temu moduł edytora zachowuje spójność wizualną i logiczną z resztą aplikacji oraz zapewnia użytkownikowi poczucie kontroli nad każdym aspektem treningu bez konieczności przełączania kontekstu.
 
-\section{Importowanie oraz eksportowanie treningów} \label{sec:Import}
+\section{Importowanie oraz eksportowanie treningów \Karol} \label{sec:Import}
 
 Funkcjonalność importu i eksportu danych w aplikacji ReSpire została zaprojektowana w celu umożliwienia użytkownikom łatwej wymiany konfiguracji treningowych pomiędzy różnymi urządzeniami oraz tworzenia kopii zapasowych swoich ustawień. Moduł ten jest kluczowy dla zapewnienia przenośności danych w systemie, który nie polega na centralnym serwerze chmurowym do synchronizacji treści.
 
@@ -704,4 +706,4 @@ Konstruktor klasy przyjmuje parametr całkowitoliczbowy, definiujący rozmiar bu
 
 \section{Języki \Jakub} \label{sec:Languages}
 \todoJakub{jak odczytujemy jsony}
-\section{Baza danych}
+\section{Baza danych \Karol}
