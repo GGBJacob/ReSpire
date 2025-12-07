@@ -1,42 +1,186 @@
 \chapter{Analiza wymagań}
 
-W niniejszym rozdziale przedstawione zostały wymagania projektowanej aplikacji. Użyto w tym celu trzech modeli - przypadków użycia, klas oraz sterowania dźwiękami.
+W niniejszym rozdziale przedstawione zostały wymagania projektowanej aplikacji. Użyto w~tym celu trzech modeli - przypadków użycia, klas oraz sterowania dźwiękami.
 
 \section{Model przypadków użycia \Hania\ \Ola}
+Celem modelu jest określenie głównych funkcji aplikacji, aktorów oraz relacji między nimi. W jego zakres wchodzą wszystkie funkcje dostępne dla użytkownika końcowego. Wyróżnionych zostało czterech aktorów, w tym jeden ożwiony: osoba korzystająca z aplikacji oraz trzech nieożywionych: lokalna baza danych, syntezator mowy oraz odtwarzacz dźwięków. Ze względu na~czytelność, diagram przypadków użycia został podzielony na trzy mniejsze części, gdzie zgrupowane są przypadki ze sobą powiązane. 
 
-cel po co robimy: określić główne funkcje systemu, aktorów oraz relacje między nim
-zakres: wszystkie funkcje dostępne dla użytkownika końcowego
-Podzieliliśmy na 3 diagramy
-diagram 1 został przedstawiony na rysunku \ref{img/przypadki_uzycia_1}
-
-\begin{figure}[ht]
+Pierwszy z diagramów został przedstawiony na rysunku \ref{img/przypadki_uzycia_1}. Zawiera podstawowe przypadki użycia, takie jak: wyświetlanie strony treningu \ref{tab:wyswietlenie_strony_treningu} lub ustawień, usuwanie \ref{tab:usuwanie_treningu}, eksport \ref{tab:eksport_treningu}, import \ref{tab:import_treningu}, edycję \ref{tab:edycja_treningu}, dodawanie \ref{tab:dodawanie_treningu}, odtwarzanie \ref{tab:odtwarzanie_treningu} lub wyświetlanie listy albo szczegółów treningów oddechowych. Dla edycji, dodawania oraz odtwarzania związki rozszerzenia (ang. extend) i~zawierania (ang. include) z innymi przypadkami użycia zostały przedstawione na osobnych fragmentach.
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.37]{obrazki/analiza_wymagan/przypadki_uzycia_1.png}
+\includegraphics[scale=0.17]{obrazki/analiza_wymagan/przypadki_uzycia_1.jpg}
 \caption{Główne przypadki użycia dla aplikacji ReSpire}
 \label{img/przypadki_uzycia_1}
 \end{figure}
 
-opis diagramu 1, opis przypadków użycia
-diagram 2 został przedstawiony na rysunku \ref{img/przypadki_uzycia_2}
-
-\begin{figure}[ht]
+\begin{table}[H]
 \centering
-\includegraphics[scale=0.42]{obrazki/analiza_wymagan/przypadki_uzycia_2.png}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie listy treningów} \\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie wyświetlenia strony wybranego treningu.\\
+& 2. System wyświetla stronę zgodnie z żądaniem.\\
+& 3. Użytkownik może zgłosić żądanie edycji \ref{tab:edycja_treningu}, usunięcia \ref{tab:usuwanie_treningu}, eksportu \ref{tab:eksport_treningu} lub odtworzenia treningu \ref{tab:odtwarzanie_treningu}. \\ \hline
+\textbf{Przebieg alternatywny} & brak \\ \hline
+\textbf{Warunki końcowe} & brak \\ \hline
+\end{tabular}
+\caption{Wyświetlenie strony treningu}
+\label{tab:wyswietlenie_strony_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie strony treningu} \ref{tab:wyswietlenie_strony_treningu}\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie usunięcia treningu.\\
+& 2. System wyświetla okno z prośbą o potwierdzenie akcji.\\
+& 3. Użytkownik potwierdza żądanie.\\
+& 4. Użytkownik zgłasza żądanie opuszczenia strony edycji. \\
+& 5. System usuwa trening z bazy.\\\hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik nie zgłasza żadnego żądania modyfikacji treningu. \\ 
+& 3a1. Użytkownik zgłasza żądanie opuszczenia strony edycji.\\
+& 3a2. Przypadek użycia zostaje przerwany. \\ \hline
+\textbf{Warunki końcowe} & Trening jest poprawnie usunięty i nie wyświetla się na liście. \\ \hline
+\end{tabular}
+\caption{Usuwanie treningu}
+\label{tab:usuwanie_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Użytkownik znajduje się na stronie głównej\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie importu treningu.\\
+& 2. System wyświetla okno z eksploratorem plików.\\
+& 3. Użytkownik wybiera plik w formacie JSON do importu.\\\hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik wybiera plik o błędnym rozszerzeniu, złej strukturze lub przerywa akcję. \\ 
+& 3a1. Przypadek użycia zostaje przerwany, system wyświetla odpowiedni komunikat. \\ \hline
+\textbf{Warunki końcowe} & Trening lub treningi zostają poprawnie zaimportowane i pojawiają się na liście. \\ \hline
+\end{tabular}
+\caption{Import treningu}
+\label{tab:import_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie strony treningu} \ref{tab:wyswietlenie_strony_treningu} lub otwarta jest strona główna\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie eksportu treningu (lub treningów).\\
+& 2. System wyświetla okno eksploratora plików.\\
+& 3. Użytkownik wybiera tytuł pliku oraz jego lokalizację i potwierdza żądanie zapisu. \\
+& 4. System wyświetla potwierdzenie zapisu.\\\hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik przerywa akcję zapisu. \\ 
+& 3a1. Przypadek użycia zostaje przerwany, system wyświetla odpowiedni komunikat. \\ \hline
+\textbf{Warunki końcowe} & Trening w formacie JSON zostaje zapisany na urządzeniu użytkownika. \\ \hline
+\end{tabular}
+\caption{Eksport treningu}
+\label{tab:eksport_treningu}
+\end{table}
+
+
+Drugi diagram został przedstawiony na rysunku \ref{img/przypadki_uzycia_2}. Przedstawia wspomniane wcześniej: edycję treningu \ref{tab:edycja_treningu} oraz dodawnie treningu \ref{tab:dodawanie_treningu} wraz z powiązanymi z nim przypadkami.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.21]{obrazki/analiza_wymagan/przypadki_uzycia_2.jpg}
 \caption{Przypadki użycia dla aplikacji ReSpire - edycja treningu}
 \label{img/przypadki_uzycia_2}
 \end{figure}
 
-opis diagramu 2, opis przypadków użycia
-diagram 3 został przedstawiony na rysunku \ref{img/przypadki_uzycia_3}
-
-\begin{figure}[ht]
+\begin{table}[H]
 \centering
-\includegraphics[scale=0.38]{obrazki/analiza_wymagan/przypadki_uzycia_3.png}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, widok ze szczegółami treningu jest otwarty \\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie edycji treningu.\\
+& 2. System przenosi użytkownika na stronę edytora.\\
+& 3. Użytkownik może zgłosić żądania: edycji opisu, tytułu, dźwięków w~tle lub zmiany, dodania czy usunięcia etapu (wraz z fazami).\\
+& 4. Użytkownik zgłasza żądanie opuszczenia strony edytora. \\
+& 5. System dokonuje aktualizacji treningu o wprowadzone zmiany\\ \hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik nie zgłasza żadnego żądania modyfikacji treningu. \\ 
+& 3a1. Użytkownik zgłasza żądanie opuszczenia strony edytora.\\
+& 3a2. Przypadek użycia zostaje przerwany. \\ \hline
+\textbf{Warunki końcowe} & Trening jest poprawnie zaktualizowany o wprowadzone zmiany. \\ \hline
+\end{tabular}
+\caption{Edycja treningu}
+\label{tab:edycja_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, widok ze szczegółami treningu jest otwarty \\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie dodania treningu.\\
+& 2. System przenosi użytkownika na stronę edytora.\\
+& 3. Użytkownik zgłasza żądania dodania etapów wraz z fazami. \\
+& 4. Użytkownik może także zgłosić żądania: edycji opisu, tytułu, dźwięków w tle lub usunięcia etapów/faz.\\
+& 5. Użytkownik zgłasza żądanie opuszczenia strony edytora.\\
+& 6. System dokonuje aktualizacji listy treningów.\\ \hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik nie zgłasza żądania dodania żadnego elementu treningu.\\ 
+& 3a1. Użytkownik zgłasza żądanie opuszczenia strony edytora.\\
+& 3a2. System wyświetla komunikat o pustym treningu.\\
+& 3a3. Użytkownik potwierdza chęć przerwania dodawania treningu i~przypadek użycia zostaje przerwany lub wraca do punktu 3.\\ 
+& 3b. Użytkownik zgłasza żądanie dodania etapów bez dodania faz.\\ 
+& 3b1. System wyświetla komunikat o niepełnym treningu.\\
+& 3b2. Użytkownik uzupełnia trening o brakujące elementy, a następnie wraca~do punktu 4 lub rezygnuje z dodania treningu i~przypadek użycia zostaje przerwany.\\ \hline
+\textbf{Warunki końcowe} & Trening został dodany do listy. \\ \hline
+\end{tabular}
+\caption{Dodawanie treningu}
+\label{tab:dodawanie_treningu}
+\end{table}
+
+
+Ostatni, trzeci diagram został przedstawiony na rysunku \ref{img/przypadki_uzycia_3}.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{obrazki/analiza_wymagan/przypadki_uzycia_3.png}
 \caption{Przypadki użycia dla aplikacji ReSpire - odtwarzanie treningu}
 \label{img/przypadki_uzycia_3}
 \end{figure}
 
-opis diagramu 3, opis przypadków użycia
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie strony treningu} \ref{tab:wyswietlenie_strony_treningu}\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie odtworzenia treningu.\\
+& 2. System odtwarza trening z wizualizacją.\\
+& 3. Jeśli zostały ustwione odpowiednie parametry w edytorze syntezator mowy może zażądać odtworzenia instrukcji głosowych, a odtwarzacz dźwięków - odtwarzania dźwięków lub wybranych częstotliwości. \\
+& 4. Użytkownik może zażądać wstrzymania treningu.\\
+& 5. System zakańcza odtwarzanie treningu po upływie określonego czasu. \\ \hline
+\textbf{Przebieg alternatywny} 
+& 2a. Użytkownik zgłasza żądanie opuszczenia treningu. \\ 
+& 3a1. System wyświetla okno z zapytaniem o potwierdzenie akcji.\\
+& 3a2. Użytkownik potwierdza żądanie opuszczenia treningu i przypadek użycia zostaje przerwany lub analuje akcje i wraca do~punktu 2. \\ \hline
+\textbf{Warunki końcowe} & Następuje powrót na stronę szczegółów treningu. \\ \hline
+\end{tabular}
+\caption{Otwarzanie treningu}
+\label{tab:odtwarzanie_treningu}
+\end{table}
+
 
 \section{Modele klas \Jakub}
 \subsection{Model serwisów}

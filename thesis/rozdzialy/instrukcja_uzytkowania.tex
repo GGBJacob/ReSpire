@@ -1,63 +1,563 @@
 \chapter{Instrukcja użytkowania}
 Celem tego rozdziału jest przedstawienie zbioru funkcji aplikacji ReSpire. W kolejnych podrozdziałach opisano sposób instalacji aplikacji oraz wszystkie ekrany aplikacji zaprezentowane poprzez zrzuty ekranu. Aplikacja jest opisywana i prezentowana w polskiej wersji językowej.
 
-\section{Instalacja aplikacji \Ola}
-Na urządzenie mobilne z systemem Android należy pobrać plik instalacyjny aplikacji w formacie \textit{.apk}. Następnie należy uruchomić pobrany plik poprzez ppojedyncze kliknięcie i postępować zgodnie z instrukcjami na ekranie. Na ekranie telefonu może się wtedy pojawić okno z zapytaniem o zezwolenie na instalację aplikacji spoza Sklepu Google Play, jeśli to ustawienie jest wyłączone. Należy wtedy kliknąć przycisk \textit{Ustawienia}, a następnie zezwolić na instalację przesuwając przycisk w prawo. Można tego dokonać również poprzez wejście w odpowiednią zakładkę bezpośrednio z poziomu aplikacji ustawień (\textit{Aplikacje} -> \textit{Specjalny dostęp do aplikacji} -> \textit{Instalowanie nieznanych aplikacji} -> \textit{Files by Google lub inny eksplorator plików zainstalowany na urządzeniu}). Po pojawieniu się okna z zapytaniem o instalację należy kliknąć przycisk \textit{Zainstaluj} i poczekać na zakończenie instalacji. Aplikacja powinna następnie pojawić się na liście aplikacji na urządzeniu i być gotowa do uruchomienia.
+\section{Instalowanie, odinstalowanie, uruchamianie i aktualizacja aplikacji \Ola}
+W sekcji opisane zeostały kroki niezbędne do zainstalowania, uruchomienia, odinstalowania oraz aktualizacji aplikacji ReSpire na urządzeniu mobilnym z systemem Android.
 
+<<<<<<< HEAD
+\subsection{Instalowanie aplikacji}
+Na urządzenie należy pobrać plik instalacyjny aplikacji w formacie \textit{.apk}. Następnie należy uruchomić pobrany plik poprzez pojedyncze kliknięcie i postępować zgodnie z instrukcjami na ekranie. Na ekranie telefonu może się wtedy pojawić okno (przedstawione na rysunku \ref{img/instalacja_bezpieczenstwo}) z zapytaniem o zezwolenie na instalację aplikacji spoza Sklepu Google Play, jeśli to ustawienie jest wyłączone. Należy wtedy kliknąć przycisk \textit{Ustawienia}, a następnie zezwolić na instalację przesuwając przycisk w prawo. Można tego dokonać również poprzez wejście w odpowiednią zakładkę bezpośrednio z poziomu aplikacji ustawień (\textit{Aplikacje} -> \textit{Specjalny dostęp do aplikacji} -> \textit{Instalowanie nieznanych aplikacji} -> \textit{Files by Google lub inny eksplorator plików zainstalowany na urządzeniu}). Strona ustawień z włączoną opcją przedstawiona jest na rysunku \ref{img/zezwolenie_na_instalacje}.
+\begin{figure}[H] 
+    \centering 
+    \begin{minipage}{0.48\textwidth} 
+        \centering \includegraphics[scale=0.14]{obrazki/instrukcja/instalacja_i_aktualizacja/Powiadomienie_o_bezpieczenstwie.png} 
+        \caption{Okno dialogowe informujące o konieczności zezwolenia na instalację} 
+        \label{img/instalacja_bezpieczenstwo} 
+    \end{minipage} 
+    \hfill 
+    \begin{minipage}{0.48\textwidth} 
+            \centering 
+            \setlength{\fboxsep}{0pt} 
+            \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/instalacja_i_aktualizacja/Instalowanie_nieznanych_aplikacji_zezwolenie.png}} 
+            \caption{Strona ustawień z włączoną opcją instalacji aplikacji spoza Sklepu Google Play} 
+            \label{img/zezwolenie_na_instalacje} 
+        \end{minipage} 
+\end{figure} 
+=======
 \section{Strona główna} \label{sec:HomePage}
 Ekran główny aplikacji składa się z dwóch sekcji: u góry znajduje się pasek z opcjami, a~resztę ekranu zajmują kafelki z~dostępnymi treningami, zgodnie z~RYSUNEK. Na dole ekranu widoczna jest animacja fal.
+>>>>>>> 4a27bfa4665a42a158a2643454904d465ef33789
 
-Na środku paska znajduje się logo aplikacji. Po lewej stronie umieszczona jest ikona symbolizująca tryb zaznaczania, który jest aktywowany po kliknięciu. Tryb zmienia wygląd paska - po lewej stronie znajduje się symbol krzyżyka pozwalający opuścić tryb. Obok znajduje się informacja, że tryb zaznaczania jest aktywowany. Użytkownik może wybrać dowolne treningi z listy poprzez kliknięcie kafelków z~nazwami treningów - zaznaczone elementy oznaczone są ciemną, pogrubioną obwódką lub kilknąć przycisk \textit{Zaznacz wszystkie}, który zaznaczy automatycznie wszystkie dostępne treningi. Po wybraniu co najmniej jednego treningu pojawia się informacja o~ilości wybranych treningów. Treningi można także odznaczyć, jeśli użytkownik zmieni zdanie. Jeśli wybór treningów do eksportu jest satysfakcjonujący należy nacisnąć ikonę z~prawej strony paska. Po wybraniu miejsca eksportu w~eksploratorze plików, który się otworzy, opcjonalnie zmianie nazwy pliku i~kliknięciu przycisku \textit{Zapisz} plik w~formacie \textit{JSON} zostanie zapisany na urządzeniu. W aplikacji wyświetli się także odpowiedni komunikat mówiący o~tym, czy zapis się powiódł. (RYSUNEK). W przypadku eksportu kilku treningów, zostaną one zapisane w jednym pliku. Opcja eksportu treningu dostępna jest także z poziomu strony treningu, jednak w przeciwności do strony głównej, nie pozwala na eksport grupowy, a jedynie indywidualnego treningu. Istotny jest także fakt, że treningi eksportowane są z domyślnymi dźwiękami, a nie tymi wybranymi przez użytkownika. Eksport zachowuje jedynie strukturę treningu.
+\newpage
+Po pojawieniu się okna z zapytaniem o instalację widocznego na rysunku \ref{img/pytanie_o_instalacje} należy kliknąć przycisk \textit{Zainstaluj} i poczekać na zakończenie instalacji. Okno informujące o postępie w instalacji zostało przestawione na rysunku \ref{img/postep_w_instalacji}. W celu anulowania instalacji należy kliknąć przycisk \textit{Anuluj} w oknie z zapytaniem o instalację.
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.15]{obrazki/instrukcja/instalacja_i_aktualizacja/Zapytanie_o_instalacje.png}
+        \caption{Okno z zapytaniem o instalację aplikacji}
+        \label{img/pytanie_o_instalacje}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.16]{obrazki/instrukcja/instalacja_i_aktualizacja/Instalowanie_aplikacji.png}
+        \caption{Okno informujące o postępie w~instalacji aplikacji}
+        \label{img/postep_w_instalacji}
+    \end{minipage}
+\end{figure}
 
-W prawej części paska znajdują się dwie ikony: koło zębate przenoszące użytkownika na stronę ustawień oraz symbol ze~strzałką w~dół umożliwiający import zapisanych treningów. Po klikniknięciu w~ikonę importu następuje przeniesienie do eksploratora plików na urządzeniu z~domyślnie otworzonym folderem \textit{Pobrane} na urządzeniu, skąd można wybrać plik z~zapisanym wcześniej treningiem/treningami.
+\subsection{Uruchamianie aplikacji}
+Jeśli instalacja przebiegła pomyslnie, aplikacja powinna następnie pojawić się na liście aplikacji na urządzeniu i być gotowa do uruchomienia. Podczas uruchamiania widoczny jest ekran przedstawiony na~rysunku \ref{img/ekran_uruchamiania}.
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt} 
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/instalacja_i_aktualizacja/Ekran_uruchamiania.png}}
+        \caption{Ekran uruchamiania aplikacji ReSpire}
+        \label{img/ekran_uruchamiania}
+    \end{minipage}
+\end{figure}
 
-Na stronie widoczna jest lista treningów użytkownika w postaci klikalnych kafelków z~nazwą treningu i~ozdobnym detalem symbolizującym podmuch powietrza. Naciśnięcie kafelka przenosi na stronę treningu, która zawiera szczegóły, możliwość edycji, usunięcia, eskportu czy rozpoczęcia treningu. Domyślnie, po zainstalowaniu aplikacji, dostępne są trzy predefiniowane treningi, widoczne na RYSUNEK. W przypadku, gdy użytkownik chce dodać swój trening, może to zrobić klikając ikonę plusa w~białym okręgu z~niebieskim cieniem. Zostanie on~wtedy przeniesiony na~stronę konfiguracji treningu, która opisana jest w późniejszym podrozdziale LINK. Po dodaniu indywidualnie skonfigurowanego treningu wyświetli się on na liście.
+\subsection{Odinstalowanie aplikacji}
+Aplikację można odinstalować w standardowy sposób - należy nacisnąć i przytrzymać kilka sekund ikonę aplikacji, a następnie przeciągnąć ją na ikonę kosza na śmieci lub przycisk \textit{Odinstaluj}, który pojawi się na ekranie. Akcję należy potem potwierdzić w oknie dialogowym, które się pokaże.
 
+<<<<<<< HEAD
+\newpage
+\subsection{Aktualizacja aplikacji}
+W przypadku, gdy aplikacja jest już zainstalowana na urządzeniu, można ją zaktualizować poprzez pobranie pliku w formacie \textit{.apk} z nową wersją aplikacji i pojedyczne kliknięcie w plik, a~nastepnie przycisku \textit{Aktualizuj}. Okno z zapytaniem o aktualizację przedstawione jest na rysunku \ref{img/pytanie_o_aktualizacje}. Po zakończeniu aktualizacji aplikacja będzie gotowa do uruchomienia z nową wersją.
+\begin{figure}[H]
+    \centering
+        \centering
+        \includegraphics[scale=0.15]{obrazki/instrukcja/instalacja_i_aktualizacja/Aktualizacja_aplikacji.png}
+        \caption{Okno z zapytaniem o aktualizację aplikacji}
+        \label{img/pytanie_o_aktualizacje}
+\end{figure}
+=======
 \section{Strona szczegółów treningu} \label{sec:TrainingPage}
 Na stronę można przejść, klikając w kafelek z wybranym treningiem na stronie głównej. Na pasku u góry znajduje się tytuł treningu oraz strzałka umożliwiająca powrót na stronę główną. Niżej znajdują się klikalne ikony pozwalające na akcje związane z treningiem. Z lewej strony umieszczona została opcja eksportu, która działa analogicznie do strony głównej, z tą różnicą, że eksportujemy tylko jeden trening. Po prawej natomiast znajduje się opcja usunięcia treningu (oznaczona symbolem kosza na śmieci), a także możliość edycji treningu (symbol ołówka). Przy akcji usuwania wyświetla się okno z prośbą o jej potwierdzenie, co zapobiega przypadkowemu usunięciu treningu. Natomiast po wybraniu opcji edycji aplikacja przenosi użytkownika do opisywanej w kolejnym podrozdziale strony. LINK
+>>>>>>> 4a27bfa4665a42a158a2643454904d465ef33789
 
-Niżej znajduje się sekcja opisu treningu. Można go edytować lub dodać na stronie konfiguracji treningu. Predefiniowane treningi zawierają opisy, jednak nie jest to element wymagany.
+\section{Strona główna}\label{sec:HomePage}
+Ekran główny aplikacji ReSpire pokazuje się po jej uruchomieniu i stanowi jej centralną część. Składa się z dwóch komponentów: u góry znajduje się pasek z opcjami i logiem, natomiast resztę ekranu zajmują kafelki z~dostępnymi treningami oddechowymi. Na dole ekranu widoczna jest również animacja fal, które delikatnie poruszają się w tle, stanowiąc element dekoracyjny. Interfejs strony głównej został przedstawiony na rysunku \ref{img/strona_glowna}.
 
-Następnym elementem jest \textit{Przegląd treningu}, który po naciśnięciu strzałki po prawej stronie rozwija się, pokazując wszystkie etapy treningu wraz z ich nazwami, fazami oddechowymi i długościami ich trwania, a także liczbę powtórzeń oraz przyrost. Dzięki takiemu podsumowaniu użytkownik może łatwo przejrzeć strukturę treningu.
+\begin{figure}[H]
+    \centering
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/Ekran_glowny.png}}
+        \caption{Strona główna aplikacji ReSpire widoczna po jej uruchomieniu}
+        \label{img/strona_glowna}
+\end{figure}
 
-Na stronie znajduje się również przycisk \textit{Rozpocznij trening}, który przenosi użytkownika na stronę treningu oddechowego, rozpoczynając ćwiczenie.
+\newpage
+\subsection{Lista treningów}\label{subsec:lista_treningow}
+Na stronie widoczna jest lista wszytskich treningów dostępnych dla użytkownika przedstawiona w postaci klikalnych kafelków z~nazwą treningu i~ozdobnym detalem symbolizującym podmuch powietrza. Naciśnięcie kafelka przenosi na stronę szczegółów treningu opisaną dokładnie w sekcji \ref{sec:TrainingPage}. Zawiera ona szczegóły, możliwość edycji, usunięcia, eskportu czy rozpoczęcia treningu. Domyślnie, po zainstalowaniu aplikacji, dostępne są trzy predefiniowane treningi - \textit{Box Breathing}, \textit{4-7-8} oraz \textit{Coherent Method}. Są to popularne treningi oddechowe. W przypadku, gdy użytkownik chce dodać swój trening, może to zrobić klikając ikonę plusa w~białym okręgu z~niebieskim cieniem. Zostanie wtedy przeniesiony na~stronę edycji treningu, która opisana jest w~sekcji \ref{sec:edytor_treningu}. Po dodaniu indywidualnie skonfigurowanego treningu wyświetli się on na~końcu listy, tak jak przedstawiono na rysunku \ref{img/dodany_trening}.
+\begin{figure}[H]
+    \centering
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/Wlasny_trening_na_liscie.png}}
+        \caption{Lista predefiniowanych treningów oraz dodany przez użytkownika trening \textit{Mój Trening} umieszczony na~końcu listy}
+        \label{img/dodany_trening}
+\end{figure}
 
-Dodatkowym elementem strony jest animacja delikatnie falującej łódki.
+\subsection{Pasek z opcjami}
+Na środku paska z opcjami znajduje się logo aplikacji. W prawej części paska znajdują się dwie ikony: koło zębate przenoszące użytkownika na stronę ustawień (omówioną w rozdziale \ref{sec:strona_ustawien}) oraz symbol ze~strzałką w~dół umożliwiający import zapisanych treningów. Po klikniknięciu w~ikonę importu następuje przeniesienie do eksploratora plików na urządzeniu z~domyślnie otworzonym folderem \textit{Pobrane} na~urządzeniu widocznym na rysunku \ref{img/pobrane}, skąd można wybrać plik z~zapisanym wcześniej treningiem lub treningami. Folder można zmienić nawigując w~ekploratorze. Po imporcie zakończonym sukcesem trening pojawia się na końcu listy treningów opisanej w~podsekcji \ref{subsec:lista_treningow}. Użytkownik zostaje także powiadomiony o pomyślnym imporcie poprzez wyświetlenie w aplikacji komunikatu widocznego na rysunku \ref{img/komunikat_import_udany}.
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/Ekran_pobrane.png}}
+        \caption{Eksplorator plików otwarty w~folderze \textit{Pobrane} na~urządzeniu podczas wyboru pliku do importu treningów}
+        \label{img/pobrane}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/Komunikat_o_pomyslnym_imporcie.png}}
+        \caption{Komunikat informujący o pomyślnym imporcie treningu, na liście treningów widoczny jest zaimportowany trening o nazwie \textit{Mój Trening}}
+        \label{img/komunikat_import_udany}
+    \end{minipage}
+\end{figure}
 
-\section{Strona konfiguracji treningu}
-U góry strony konfiguracji treningu, na pasku, umieszczona jest nazwa treningu (przy tworzeniu nowego treningu jest ona nadawana automatycznie), strzałka umożliwiająca powrót do strony ze szczegółami treningu oraz ikona ołówka, po kliknięciu której wyświetla się okno edycji nazwy treningu. Po wprowadzeniu wybranej nazwy należy ją zatwierdzić przyciskiem \textit{Zapisz}, można także wyjść bez zapisu po kliknięciu \textit{Anuluj}. Długość nazwy treningu ograniczona jest do piętnastu znaków, po osiągnięciu tego limitu dalsze znaki nie będą wpisywane w pole edycji. Na dole, po jego prawej stronie, znajduje się licznik znaków, tak aby użytkownik wiedział, ile znaków pozostało jeszcze do wykorzystania. 
+Po lewej stronie paska umieszczona jest ikona symbolizująca tryb zaznaczania opisany w~podrozdziale \ref{subsec:tryb_zaznaczania}, który jest aktywowany po kliknięciu. Tryb zmienia wygląd paska w~sposób przedstawiony na rysunku \ref{img/tryb_zaznaczania_porownanie}. 
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.17]{obrazki/instrukcja/strona_glowna/tryb_zaznaczania/Standardowy_pasek.png}}
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.17]{obrazki/instrukcja/strona_glowna/tryb_zaznaczania/Tryb_zaznaczania.png}}
+    \caption{Porównanie paska z opcjami w trybie standardowym (po lewej) oraz z aktywowanym trybem zaznaczania (po prawej)}
+    \label{img/tryb_zaznaczania_porownanie}
+\end{figure}
 
-Konfigurator składa się z trzech zakładek: \textit{Trening}, \textit{Dźwięki} oraz \textit{Inne}, tak jak na widocznym RYSUNEK.
+\subsection{Tryb zaznaczania}\label{subsec:tryb_zaznaczania}
+Tryb zaznaczania służy do zbiorowego eksportu zaznaczonych trenigów. Użytkownik może wybrać dowolne treningi z listy poprzez kliknięcie kafelków z~ich nazwami - zaznaczone elementy zostają oznaczone są ciemniejszą, pogrubioną linią obwodzącą. Jeśli użytkownik chce wybrać wszystkie treningi może to zrobić w szybki i wygodny sposób - klikając przycisk \textit{Zaznacz wszystkie}, który zaznaczy automatycznie wszystkie dostępne treningi. Po wybraniu co najmniej jednego treningu pojawia się informacja o~liczbie wybranych treningów. Przykładowe zaznaczenie dwóch treningów zostało ukazane na rysunku \ref{img/zaznaczone_treningi}.
+Treningi można także odznaczyć, jeśli użytkownik zmieni zdanie. Jeśli wybór treningów do eksportu jest satysfakcjonujący należy nacisnąć ikonę z~prawej strony paska. Po wybraniu miejsca eksportu w~eksploratorze plików, który się otworzy, opcjonalnie zmianie nazwy pliku i~kliknięciu przycisku \textit{Zapisz} plik w~formacie \textit{JSON} zostanie zapisany na urządzeniu. W przypadku eksportu kilku treningów, zostaną one zapisane w jednym pliku. Opcja eksportu treningu dostępna jest także z poziomu strony treningu, jednak w przeciwności do strony głównej, nie pozwala na eksport grupowy, a jedynie indywidualnego treningu. 
 
+<<<<<<< HEAD
+\begin{figure}[H]
+    \centering
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/tryb_zaznaczania/Zaznaczone_treningi.png}}
+        \caption{Strona główna aplikacji w trybie zaznaczania z wybranymi dwoma treningami}
+        \label{img/zaznaczone_treningi}
+\end{figure}
+
+W aplikacji wyświetla się także odpowiedni komunikat mówiący o~tym, czy zapis się powiódł. Na rysunku \ref{img/zapis_udany} pokazany jest komunikat o pomyślnym eksporcie, natomiast na rysunku \ref{img/zapis_nieudany} - komunikat o próbie zapisania treningów bez wybrania żadnego, co skutkuje brakiem zapisu.
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/tryb_zaznaczania/Komunikat_o_pomyslnym_eksporcie.png}}
+        \caption{Komunikat o pomśylnym eksporcie zaznaczonych treningów}
+        \label{img/zapis_udany}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/tryb_zaznaczania/Komunikat_nie_wybrano_treningow.png}}
+        \caption{Komunikat informujący o nieudanym zapisie treningów z powodu braku zaznaczonych treningów}
+        \label{img/zapis_nieudany}
+    \end{minipage}
+\end{figure}
+=======
 \subsection{Zakładka Trening} \label{subsec:TrainingTab}
 Pierwsza z zakładek - \textit{Trening} - służy do tworzenia struktury nowego treningu lub edycji istniejącego. Przyciśnięcie przycisku \textit{Dodaj etap treningu} umożliwia użytkownikowi utworzenie i dołączenie nowego etapu do treningu, co skutkuje pojawieniem się na ekranie kafelka reprezentującego uwtorzony etap pod istniejącymi etapami. Można zmienić kolejność kafelków poprzez naciśnięcie i przytrzymanie symbolu dwóch równoległych kresek umieszczonego po lewej stronie, a następnie przesunięcie palcem po ekranie w górę lub dół, do momentu gdy kafelek znajdzie się w pożądanym miejscu. Każdy kafelek zawiera nazwę etapu, która jest dodawana domyślnie przy jego tworzeniu. Może ona zostać edytowana poprzez naciśnięcie na pole z nazwą znajdującą się w zaokrąglonej ramce, a następnie wprowadzenie zmian przy pomocy klawiatury, która pokaże się na ekranie. Nazwa etapu jest ograniczona do dwudziestu pięciu znaków. Po osiągnięciu limitu, użytkownik nie będzie miał możliwości wpisania więcej znaków. Licznik znaków wyświetlany jest pod polem z nazwą. Usunięcie etapu jest możliwe poprzez kliknięcie ikony kosza na śmieci znajdującej się po prawej stronie pola z nazwą treningu, a następnie potwierdzenie wykonania akcji klikając przycisk \textit{Usuń} w okienku, które się pokaże. Usuwanie można także anulować klikając przycisk \textit{Anuluj}. Poniżej znajdują się pola dedykowane liczbie powtórzeń danego etapu oraz przyrostowi wyrażonemu w sekundach. Liczba powtórzeń definiuje, ile razy po sobie będzie odtwarzany dany etap, natomiast przyrost - o ile sekund będzie dłuższa każda faza oddechowa w kolejnych powtórzeniach. Wartości można edytować poprzez naciśnięcie ikon plusa / minusa (odpowiednio zwiększenie / zmniejszenie wartości) lub klikając w pole z aktualną liczbą, co spowoduje pokazanie klawiatury na ekranie i umożliwi użytkownikowi wpisanie wybranej wartości. W przypadku używania przycisków plusa lub minusa dla powtórzeń wartość będzie się zmieniać o jedno powtórzenie, natomiast dla przyrostu - o jedną dziesiątą sekundy w przedziale od zera do jednej sekundy lub o jedną sekundę dla wartości większych niż jedna sekunda. Domyślnymi ustawieniami są trzy powtórzenia etapu oraz brak przyrostu (przyrost ustawiony na zero sekund). Za pomocą przycisku \textit{Dodaj fazę oddechu} użytkownik może dodać fazy oddechu do etapu, które wyświetlane są w postaci listy kafelków. Każda faza oddechu zawiera parametry takie jak czas trwania oraz typ. Czas trwania wyrażany jest w sekundach i może być zmodyfikowany poprzez naciśnięcie symbolu plus / minus (odpowiednio zwiększenie / zmniejszenie) lub kliknięcie w pole z aktualną wartością i wpisanie żadanej wartości z klawiatury, która się pokaże na ekranie. Wartości zmieniają się o jedną dziesiątą sekundy w zakresie od zera do jednej sekundy, natomiast później o pół sekundy. W przypadku wpisywania z klawiatury, jeśli podana wartość ma większą dokładność niż obsługiwana, wartość jest automatycznie zaokrąglana. Przykładowo, jeśli użytkownik wpisze wartość cztery sekundy i osiem dziesiątych, zostanie ona zaokrąglona do wartości 5 sekund. Typ można ustawić natomiast poprzez kliknięcie w pole pod napisem \textit{Typ} - pojawia się wówczas rozwijana lista, z której użytkownik może wybrać żądany typ po kliknięciu w wybraną opcję. Fazę można usunąć poprzez kliknięcie ikony kosza na śmieci umiejszonego po prawej stronie kafelka, a następnie potwierdzenia akcji za pomocą przycisku \textit{Usuń}. Można także zmienić kolejność faz poprzez naciśnięcie i przytrzymanie symbolu dwóch równoległych linii umieszczonego po lewej stronie kafelka, a następnie przesunięcie palcem w górę lub dół ekranu, tak aby kafelek znalazł się w pożądanym miejscu, analogicznie jak w przypadku etapów. Dostępna jest także opcja zwinięcia kafelka za pomocą strzałki w górę umieszczonej z jego prawej strony - nie wyświetlana jest wtedy lista faz oddechu dla danego treningu. Kafelek można z powrotem rozwinąć klikając strzałkę w dół znajdującą się w tym samym miejscu, co uprzednio strzałka w górę.
 
 \subsection{Zakładka Dźwięki} \label{subsec:SoundsTab}
 Zakładka \textit{Dźwięki} zawiera zbiór ustawień związanych z oprawą dźwiękową treningu. Składa się z trzech sekcji: \textit{Dźwięki treningu}, \textit{Muzyka treningu} oraz \textit{Dźwięki binauralne}. Sekcje \textit{Dźwięki treningu} oraz \textit{Muzyka treningu} podzielone są na podsekcje, które są oznaczone niebieską, zaokrągloną ramką. Każda z tych podsekcji odpowiada za inny element oprawy dźwiękowej treningu. Przy tworzeniu nowego treningu domyślnie ustawione są ściśle określone dźwięki i muzyka wybrane przez twórców aplikacji przy jej tworzeniu, natomiast można je zmienić lub wyłączyć postępując zgodnie z instrukcjami znajdującymi się w dalszym opisie. Użytkownik może wybierać spośród dźwięków dostępnych w aplikacji lub własnych, które samodzielnie doda. W niektórych podsekcjach dostępny jest także lektor.
+>>>>>>> 4a27bfa4665a42a158a2643454904d465ef33789
 
-Istotnym faktem, który jest kluczowy dla zrozumienia sposobu działania aplikacji, jest istnienie trzech zestawów dźwięków. Dźwięki zostały podzielone na długie (muzyka) - dla sekcji \textit{Muzyka treningu} oraz krótkie - dla sekcji \textit{Dźwięki treningu}, za wyjątkiem podsekcji \textit{Odliczanie} tej sekcji, która posiada trzeci, osobny zestaw. Dodanie własnego pliku nagrania dźwiękowego do jednego z tych zestawów spowoduje, że będzie on wyświetlany na liście w każdej podsekcji, która korzysta z danego zestawu dźwięków. Ważne, aby pamiętać, że w przypadku dźwięków krótkich najlepiej dodawać maksymalnie kilkusekundowe nagranie dźwiękowe, w celu uzyskania jak najlepszych wrażeń z korzystania z aplikacji - dłuższe dźwięki będą bowiem ucinane. 
+Eksport zachowuje nie tylko strukturę treningu, ale również ustawienia dźwiękowe i inne, skonfigurowane przez użytkownika. Istotny jest jednak fakt, że eksportowane są jedynie dźwięki domyślnie dostępne w aplikacji. Te dodane przez użytkownika zastępowane są natomiast brakiem dźwięku. Eksportowane treningi można przesyłać na inne urządzenia i importować je tam, aby korzystać z tych samych treningów na różnych urządzeniach. Przykładowe pliki z zapisanymi treningami pokazane są na rysunku \ref{img/pliki_z_zapisanymi_treningami}. Domyślnie nadawana nazwa pliku występuje w formacie \textit{respire\_trainings\_ZNACZNIK-CZASOWY.json}.
+\begin{figure}[H]
+    \centering
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_glowna/tryb_zaznaczania/Zapisane_treningi.png}}
+        \caption{Zapisane pliki z treningami w eksploratorze plików na urządzeniu, u góry - pakiet treningów z nazwą nadaną przez użytkownika, na dole - nazwa nadawana domyślnie przez aplikację przy eksporcie}
+        \label{img/pliki_z_zapisanymi_treningami}
+\end{figure}
 
-W każdej podsekcji, nazwa obecnie ustawionego nagrania dźwiękowego (lub informacja o jego braku czy wyborze lektora) wyświetlana jest po lewej stronie ikony nuty. Po kliknięcie w napis lub ikonę nuty otwiera się okno wyboru dźwięku lub muzyki zawierające listę dostępnych opcji. Szarym cieniem zaznaczony jest obecny wybór, tak jak na RYSUNEK. Jeśli użytkownik chce odsłuchać, jak brzmi dane nagranie dźwiękowe może to zrobić po kliknięciu w zieloną ikonę odtwarzania. Przycisk \textit{Anuluj} przerwa akcję wyboru dźwięku / muzyki, natomiast przycik \textit{Dodaj własny dźwięk} otwiera okno z plikami na telefonie użytkownika (domyślnie w folderze \textit{Pobrane}, jednak można przejść także do pozostałych folderów) i pozwala na wybór pliku nagrania dźwiękowego w formacie \textit{.mp3}. Dodany przez użytkownika dźwięk lub muzyka pojawi się następnie pod listą domyślnych dźwięków, pod napisem \textit{Dźwięki użytkownika} - RYSUNEK. W celu usunięcia dodanego przez użytkownika pliku należy nacisnąć czerwoną ikonę kosza na śmieci, a następnie potwierdzić tą akcję przyciskiem \textit{Usuń} w oknie, które się pojawi - RYSUNEK. Skutkiem będzie usunięcie dźwięku z listy dźwięków użytkownika. Aby wyłączyć dźwięk lub muzykę w danej podsekcji należy wybrać opcję \textit{Brak} z listy dostępnych dźwięków lub muzyki. W przypadku podsekcji \textit{Następna faza oddechu} lub \textit{Muzyka treningu}, które są bardziej rozbudowane, należy wybrać również opcję \textit{Brak}, natomiast znajduje się ona na liście, którą można otworzyć poprzez kliknięcie niebieskiej strzałki w dół w miejscu, gdzie w pozostałych podsekcjach znajduje się ikona nuty. 
+\section{Strona szczegółów treningu}\label{sec:TrainingPage}
+Na stronę można przejść, klikając w kafelek z wybranym treningiem na stronie głównej. Interfejs strony został przedstawiony na rysunku \ref{img/strona_szczegolow}. Wzbogaca go animacja łódki delikatnie kołyszacej się na fali.
 
-Sekcja \textit{Dźwięki treningu} korzysta z dwóch zestawów dźwięków krótkich i składa się z trzech podsekcji. Pierwsza z nich to \textit{Odliczanie}, zawierająca dźwięk odliczania czasu trwania faz oddechowych, przygotowania oraz zakończenia. Posiada ona własny zestaw dźwięków. Składa się on z dwóch dźwięków oraz lektora. RYSUNEK Po dodaniu własnego dźwięku przez użytkownika do tego zestawu nie pojawi się on na listach w pozostałych podsekcjach, ponieważ obie korzystają z osobnego zestawu dwunastu dźwięków. Kolejną, bardziej rozbudowaną podsekcją, jest \textit{Następna faza oddechu}. Zawiera trzy opcje do wyboru. Są one osiąglne z listy rozwijanej po kliknięciu niebieskiej strzałki. Opisywana podsekcja konfiguratora dźwięków definiuje dźwięk odtwarzany po zmianie fazy na inną. Można wyłączyć ten dźwięk klikając opcję \textit{Brak} lub wybrać globalny dźwięk na całą fazę (wspomniany wcześniej zestaw dwunastu krótkich dźwięków wzbogacony jest o lektora) lub osobne dźwięki dla każdej z czterech faz oddechu. Obie opisywane opcje przedstawione są na RYSUNEK. Ostatnią podsekcją jest \textit{Zmiana etapu}, w której użytkownik może wybrać dźwięk sygnalizujący zmianę etapu treningu.
+Na pasku u góry znajduje się tytuł treningu oraz strzałka umożliwiająca powrót na stronę główną. Niżej znajdują się klikalne ikony pozwalające na akcje związane z treningiem. Z lewej strony umieszczona została opcja eksportu, która działa analogicznie do strony głównej, z tą różnicą, że eksportujemy tylko jeden trening. Po prawej natomiast znajduje się opcja usunięcia treningu (oznaczona symbolem kosza na śmieci), a także możliość edycji treningu (symbol ołówka). Przy akcji usuwania wyświetla się okno z prośbą o jej potwierdzenie, co zapobiega przypadkowemu usunięciu treningu. Okno to zostało pokazane na rysunku \ref{img/usuwanie_treningu}. Natomiast po wybraniu opcji edycji aplikacja przenosi użytkownika do opisywanej w kolejnej sekcji strony edytora \ref{sec:edytor_treningu}.
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.18]{obrazki/instrukcja/strona_treningu/Usuwanie_treningu.png}}
+    \caption{Okno dialogowe z prośbą o potwierdzenie chęci usunięcia treningu}
+    \label{img/usuwanie_treningu}
+\end{figure}
 
-W sekcji\textit{Muzyka treningu} również znajdują się trzy podsekcje. Każda z nich korzysta z zestawu dźwięków długich (muzyki), co oznacza, że po dodaniu przez użytkownika własnej muzyki wyświetli się na listach we wszystkich podsekcjach. Na liście oprócz nazwy nagrania wyświetlany jest także jego czas trwania. Pierwsza z podsekcji opisywanej sekcji - \textit{Muzyka w tle} - jest bardziej rozbudowana, analogicznie do podsekcji \textit{Następna faza oddechu}. Po rozwinięciu listy za pomocą kliknięcia w niebieską strzałkę pozwala ustawić muzykę w tle treningu na różnym poziomie szczegółowości lub ją wyłączyć (opcja \textit{Brak}). Dostępne poziomy szczegółwości (zaczynając od najmniej szczegółowego) to: muzyka na cały trening, muzyka zdefiniowna dla kolejnych etapów treningu lub muzyka dla konkretnych faz oddechowych. Można wybrać więcej niż jeden plik dźwiękowy poprzez stworzenie kolejki z muzyką (ang. playlista). W tym celu należy kliknąć przycisk \textit{Dodaj muzykę}, wybrać nagranie z listy, a następnie powtórzyć te kroki żądaną ilość razy. W celu usunięcia muzyki z kolejki należy kliknąć ikonę kosza na śmieci. Symbol dwóch równoległych kresek służy natomiast, podobnie jak w przypadku kafelków z etapami czy fazami, do zmieniania kolejności. Przytrzymując symbol, a następnie przesuwając palcem w górę lub dół ekranu użytkownik może ułożyć nagrania w dowolnej kolejności. Jeśli użytkownik nie doda żadnego nagrania do kolejki otrzyma o tym stosowny komunikat w miejscu, gdzie wyświetlany jest aktualny stan kolejki RYSUNEK. W trakcie treningu muzyka będzie odtwarzana według kolejności określonej w kolejce. Jeśli kolejka zawiera tylko jeden plik z muzyką, będzie on odtwarzany w zapętleniu. Podsekcje \textit{Przygotowanie} oraz \textit{Zakończenie} definiują muzykę (lub jej brak) grającą odpowiednio podczas kroku przygotowania do treningu lub sygnalizują jego zakończenie.
+Niżej znajduje się sekcja opisu treningu. Można go edytować lub dodać na stronie edycji treningu. Predefiniowane treningi zawierają opisy, jednak nie jest to element wymagany.
 
-Sekcja \textit{Dźwięki binauralne} domyślnie jest wyłączona. Można ją aktywować za pomocą kliknięcia w przełącznik znajdujący się po prawej stronie napisu \textit{Włącz dźwięki binauralne}. Istotny jest fakt, że w przypadku włączenia tej opcji automatycznie nastąpi wyłączenie opcji muzyki w tle - zostanie ona zablokowana w interfejsie i oznaczona jaśniejszym kolorem, jak na RYSUNEK. Po aktywacji, sekcja się rozwija i pokazują się dwa suwaki, za pomocą których użytkownik może ustawić częstotliwości dudnienia synchronicznego (czyli dźwięku binauralnego) dla prawego oraz lewego ucha. Sumaryczna częstotliwość uderzenia wyświetlana jest na dole sekcji. Dudnienie synchroniczne odtwarzane jest w tle treningu, zamiast muzyki w tle.
+Następnym elementem jest \textit{Przegląd treningu}, który po naciśnięciu strzałki po prawej stronie rozwija się, pokazując wszystkie etapy treningu wraz z ich nazwami, fazami oddechowymi i~długościami ich trwania, a także liczbę powtórzeń oraz przyrost. Dzięki takiemu podsumowaniu użytkownik może łatwo przejrzeć strukturę treningu.
+
+Na stronie znajduje się również przycisk \textit{Rozpocznij trening}, który przenosi użytkownika na~stronę treningu oddechowego opisaną w sekcji \ref{sec:strona_treningu}, tym samym rozpoczynając ćwiczenie oddechowe odpowiadające szczegółom widocznym na tej stronie.
+\begin{figure}[H]
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_treningu/Strona_treningu.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_treningu/Strona_treningu_rozwiniety_przeglad.png}}
+    \caption{Strona szczegółów treningu oddechowego ze zwiniętym przeglądem treningu po lewej oraz~rozwiniętym po prawej}
+    \label{img/strona_szczegolow}
+\end{figure}
+
+\section{Strona edycji treningu}\label{sec:edytor_treningu}
+Edytor składa się z trzech głównych zakładek: \textit{Trening}, \textit{Dźwięki} oraz \textit{Inne}, tak jak na widocznym rysunku \ref{img/edytor_treningu} - zakładki oznaczono bordową ramką. Można pomiędzy nimi przechodzić poprzez kliknięcie na nazwę zakładki, która ma zostać otwarta. Zakładka, na której przebywa użytkownik w danym momencie wyróżnia się spośród pozostałych - posiada białe tło i niebieski kolor czcionki, podczas gdy zakładki nieaktywne mają odwrotną kolorystykę, czyli białą czcionkę na niebiekim tle. Strona edytora pozwala na szczegółowe definiowanie struktury oraz oprawy muzycznej treningu, umożliwiając użytkownikowi precyzyjne dostosowanie treningu do indywidualnych potrzeb. 
+
+Na pasku znajdującym się u góry strony edycji treningu umieszczone są następujące elementy: nazwa edytowanego treningu, strzałka umożliwiająca powrót do~strony ze szczegółami treningu (strona opisana została w sekcji \ref{sec:TrainingPage}) oraz ikona ołówka. Po~kliknięciu ikony na ekranie aplikacji wyświetla się okno edycji nazwy treningu ukazane na rysunku \ref{img/edycja_tytulu_treningu}. Po wprowadzeniu wybranej nazwy lub edycji istniejącej nazwy należy ją następnie zatwierdzić przyciskiem \textit{Zapisz} w celu zapisu. Można także wyjść bez zapisu po kliknięciu \textit{Anuluj}. Długość nazwy treningu ograniczona jest do piętnastu znaków. Po osiągnięciu tego limitu dalsze znaki nie będą pojawiały się w~polu edycji. Na dole, po jego prawej stronie, znajduje się licznik znaków, tak aby użytkownik wiedział, ile znaków pozostało mu jeszcze do~wykorzystania. Przy tworzeniu nowego treningu nazwa jest nadawana automatycznie - w polskiej wersji językowej aplikacji jest to \textit{Mój Trening}, natomiast w angielskiej \textit{My Training}. Pasek nie zmienia się w zależności od wybranej zakładki i pozostaje widoczny podczas edycji treningu.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.33]{obrazki/instrukcja/strona_edytora/trening/Edytor_treningu.png}}
+        \caption{Widok edytora treningu z trzema zakładkami oznaczonymi bordową ramką}
+        \label{img/edytor_treningu}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/trening/Edycja_nazwy_treningu.png}}
+        \caption{Okno edycji nazwy treningu z~ograniczeniem jej długości do piętnastu znaków}
+        \label{img/edycja_tytulu_treningu}
+    \end{minipage}
+\end{figure}
+
+\subsection{Zakładka Trening}\label{subsec:TrainingTab}
+Pierwsza z zakładek edytora - \textit{Trening} - służy do tworzenia struktury nowego treningu lub edycji jużistniejącego. Przyciśnięcie przycisku \textit{Dodaj etap treningu} umożliwia użytkownikowi utworzenie i~dołączenie nowego etapu do treningu, co skutkuje pojawieniem się na ekranie kafelka reprezentującego uwtorzony etap pod istniejącymi etapami. Można zmienić kolejność kafelków poprzez naciśnięcie i~przytrzymanie symbolu dwóch równoległych kresek umieszczonych po lewej stronie, a następnie przesunięcie palcem po ekranie w górę lub dół, do momentu gdy kafelek znajdzie się w pożądanym miejscu. Symbol przesuwania oznaczony został bordowym okręgiem na rysunku \ref{img/przesuwanie_kafelkow}, a ruch palca po ekranie symbolicznie przedstawiono przy pomocy bordowej strzałki. Każdy kafelek zawiera nazwę etapu, która jest dodawana domyślnie przy jego tworzeniu. Ma ona postać \textit{Etap treningu X}, gdzie \textit{X} to kolejne numery etapów, zaczynając od jedynki. Nazwa może zostać edytowana poprzez naciśnięcie na pole z nazwą znajdującą się w zaokrąglonej ramce, a następnie wprowadzenie zmian przy pomocy klawiatury, która pokaże się na ekranie. Nazwa etapu, podobnie jak nazwa treningu, jest ograniczona. Limit stanowi dwadzieścia pięć znaków, a po jego osiągnięciu użytkownik nie będzie miał możliwości wpisania więcej znaków. Licznik znaków wyświetlany jest pod polem z nazwą, co pozwala kontrolować liczbę wykorzystanych znaków.
+
+Usunięcie etapu jest możliwe poprzez kliknięcie ikony kosza na śmieci znajdującej się po~prawej stronie pola z nazwą treningu, a następnie potwierdzenie wykonania akcji klikając przycisk \textit{Usuń} w~okienku, które się pojawi na środku ekranu. Zostało ono przedstawione na rysunku \ref{img/usuwanie_etapu}. Usuwanie można także anulować klikając przycisk \textit{Anuluj}. 
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.33]{obrazki/instrukcja/strona_edytora/trening/Zmienianie_kolejnosci_etapow.png}}
+        \caption{Edytor treningu podczas zmieniania kolejności etapów treningu}
+        \label{img/przesuwanie_kafelkow}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/trening/Usuwanie_etapu.png}}
+        \caption{Okno pozwalające na potwierdzenie lub anulowanie akcji usunięcia etapu treningu}
+        \label{img/usuwanie_etapu}
+    \end{minipage}
+\end{figure}
+
+Poniżej znajdują się pola dedykowane liczbie powtórzeń danego etapu oraz przyrostowi wyrażonemu w sekundach. Liczba powtórzeń definiuje, ile razy po sobie będzie odtwarzany dany etap, natomiast przyrost - o ile sekund będzie dłuższa każda faza oddechowa w kolejnych powtórzeniach. Wartości można edytować poprzez naciśnięcie ikon plusa / minusa (odpowiednio zwiększenie / zmniejszenie wartości) lub klikając w pole z aktualną liczbą, co spowoduje pokazanie klawiatury na ekranie i umożliwi użytkownikowi wpisanie wybranej wartości. W przypadku używania przycisków plusa lub minusa dla powtórzeń wartość będzie się zmieniać o jedno powtórzenie, natomiast dla przyrostu - o jedną dziesiątą sekundy w przedziale od zera do jednej sekundy lub o jedną sekundę dla wartości większych niż jedna sekunda. Domyślnymi ustawieniami są trzy powtórzenia etapu oraz brak przyrostu (przyrost ustawiony na zero sekund). 
+
+Za pomocą przycisku \textit{Dodaj fazę oddechu} użytkownik może dodać fazy oddechu do etapu, które wyświetlane są w postaci listy kafelków. Każda faza oddechu zawiera parametry takie jak czas trwania oraz typ. Czas trwania wyrażany jest w sekundach i może być zmodyfikowany poprzez naciśnięcie symbolu plus / minus (odpowiednio zwiększenie / zmniejszenie) lub kliknięcie w~pole~z aktualną wartością i wpisanie żadanej wartości z klawiatury, która się pokaże na ekranie. Wartości zmieniają się o jedną dziesiątą sekundy w zakresie od zera do jednej sekundy, natomiast później o pół sekundy. W przypadku wpisywania z klawiatury, jeśli podana wartość ma większą dokładność niż obsługiwana, wartość jest automatycznie zaokrąglana. Przykładowo, jeśli użytkownik wpisze wartość cztery sekundy i osiem dziesiątych, zostanie ona zaokrąglona do wartości pięciu sekund. Typ można ustawić natomiast poprzez kliknięcie w pole pod napisem \textit{Typ} - pojawia się wówczas rozwijana lista, z której użytkownik może wybrać żądany typ po kliknięciu w wybraną opcję. Dostępne typy faz oddechu - \textit{wdech}, \textit{wydech}, \textit{wstrzymanie} oraz \textit{retencja} przedstawione zostały na rysunku \ref{img/typy_oddechu}. Fazę można usunąć poprzez kliknięcie ikony kosza na śmieci umiejszonego po prawej stronie kafelka, a następnie potwierdzenia akcji za pomocą przycisku \textit{Usuń} w~oknie, które się pojawi. Zostało ono przedstawione na rysunku \ref{img/usuwanie_fazy}. 
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/trening/Dostepne_typy_faz.png}}
+        \caption{Lista z dostępnymi typami faz oddechu - \textit{wdech}, \textit{wydech}, \textit{wstrzymanie} i \textit{retencja}}
+        \label{img/typy_oddechu}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.16]{obrazki/instrukcja/strona_edytora/trening/Usuwanie_fazy.png}}
+        \caption{Okno usuwania fazy oddechu z~etapu treningu}
+        \label{img/usuwanie_fazy}
+    \end{minipage}
+\end{figure}
+
+Można także zmienić kolejność faz oddechowych w danym etapie poprzez naciśnięcie i~przytrzymanie symbolu dwóch równoległych linii umieszczonych po lewej stronie kafelka, a następnie przesunięcie palcem w~górę lub dół ekranu, tak aby kafelek znalazł się w pożądanym miejscu, analogicznie jak w przypadku etapów. Pozwala to na łatwe i szybkie zarządzanie strukturą treningu tworzononego przez użytkownika. Zmiana kolejności faz oddechu została przedstawiona na rysunku \ref{img/przesuwanie_faz} - symbol przesuwania oznaczono bordowym okręgiem, a ruch palca po~ekranie w górę - strzałką w tym samym kolorze.
+
+Dostępna jest także opcja zwinięcia kafelka za pomocą strzałki w górę umieszczonej z~jego prawej strony, obok ikony kosza na śmieci - nie jest wyświetlana wtedy lista faz oddechu dla danego treningu. Kafelek można z powrotem rozwinąć klikając strzałkę w dół znajdującą się w tym samym miejscu, co uprzednio strzałka w górę. Stronę edytora ze zwiniętymi kafelkami przedstawiono na rysunku \ref{img/etapy_zwiniete}.
+
+Wszystkie zmiany wprowadzone do edytora zostają zapisane automatycznie po jego opuszczeniu - kliknięciu strzałki w~lewym górnym rogu paska strony. W przypadku próby zapisania kompletnie pustego treningu lub z pustymi etapami użytkownik otrzyma odpowiedni komunikat. Okna dialogowe z informacją dla obu z opisanych sytuacji widoczne są na rysunkach \ref{img/opuszczanie_edytora}. Użytkownik może wybrać, czy chce powrócić do edycji - przycisk \textit{Wróć do edycji}, czy wyjść z edytora bez zapisu pustych etapów bądź całego treningu - przycisk \textit{Wyjdź mimo to}.
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+    \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.33]{obrazki/instrukcja/strona_edytora/trening/Zmienianie_kolejnosci_faz.png}}
+        \caption{Zmiana kolejności faz oddechu w~etapie treningu poprzez przeciąganie kafelka w~górę}
+        \label{img/przesuwanie_faz}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+            \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/trening/Edytor_treningu_zwiniete_kafelki.png}}
+        \caption{Widok edytora treningu ze~zwiniętymi kafelkami etapów treningu - bez wyświetlonych faz oddechu}
+        \label{img/etapy_zwiniete}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/trening/Pusty_etap.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/trening/Trening_niekompletny.png}}
+    \caption{Okna dialogowe pojawiające się przy próbie opuszczenia edytora treningiem z brakujacymi fazami w etapach (po lewej) lub całkowicie pustym treningiem (po prawej)}
+    \label{img/opuszczanie_edytora}
+\end{figure}
+
+\newpage
+\subsection{Zakładka Dźwięki}\label{subsec:SoundsTab}
+Zakładka \textit{Dźwięki} zawiera rozbudowany zbiór ustawień związanych z oprawą dźwiękową treningu, która umożliwia wykonanie treningu z zamkniętymi oczami i kontroli kolejnych elementów treningu dzięki zmysłowi słuchu, a nie wzroku(obserwowanie animacji). Przedstawiona została na rysunku \ref{img/zakladka_dzwieki}. Zakładka składa się z trzech sekcji: \textit{Dźwięki treningu}, \textit{Muzyka treningu} oraz \textit{Dźwięki binauralne}. Sekcje \textit{Dźwięki treningu} oraz \textit{Muzyka treningu} podzielone są na podsekcje, które są oznaczone niebieską, zaokrągloną ramką. Każda z tych podsekcji odpowiada za inny element oprawy dźwiękowej treningu. Niektóre, bardziej rozbudowane podsekcje, składają się natomiast z opcji. 
+
+Przy tworzeniu nowego treningu domyślnie ustawione są ściśle określone dźwięki i muzyka wybrane przez twórców aplikacji przy jej tworzeniu, natomiast można je zmienić lub wyłączyć postępując zgodnie z instrukcjami znajdującymi się w dalszym opisie. Użytkownik może wybierać spośród dźwięków dostępnych w aplikacji lub własnych, które samodzielnie doda. W niektórych podsekcjach dostępny jest także lektor.
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Edytor_dzwiekow.png}}
+    \caption{Zakładka \textit{Dźwięki} edytora treningu umożliwiająca konfigurację oprawy dźwiękowej treningu}
+    \label{img/zakladka_dzwieki}
+\end{figure}
+
+Istotnym faktem, który jest kluczowy dla zrozumienia sposobu działania aplikacji, jest istnienie trzech zestawów dźwięków. Dźwięki zostały podzielone na krótkie - dla sekcji \textit{Dźwięki treningu} oraz długie (muzyka) - dla sekcji \textit{Muzyka treningu}. Wyjątkiem jest podsekcja \textit{Odliczanie} należąca do sekcji \textit{Dźwięki treningu}, która posiada trzeci, osobny zestaw. Dodanie własnego pliku nagrania dźwiękowego do jednego z tych zestawów spowoduje, że będzie on wyświetlany na liście w każdej podsekcji, która korzysta z danego zestawu dźwięków. Ważne, aby pamiętać, że w przypadku dźwięków krótkich najlepiej dodawać maksymalnie kilkusekundowe nagranie dźwiękowe, w celu uzyskania jak najlepszych wrażeń z korzystania z aplikacji - dłuższe dźwięki zostaną ucięte. 
+
+\newpage
+W każdej podsekcji, nazwa obecnie ustawionego nagrania dźwiękowego (lub informacja o~jego braku czy wyborze lektora) wyświetlana jest po lewej stronie ikony nuty. Po kliknięciu w~napis lub ikonę nuty otwiera się okno wyboru dźwięku lub muzyki zawierające listę dostępnych opcji. Szarym cieniem zaznaczony jest obecny wybór, tak jak przedstawiono to~na rysunku \ref{img/wybor_dzwieku}. Jeśli użytkownik chce odsłuchać, jak brzmi dane nagranie dźwiękowe może to zrobić po kliknięciu w~zieloną, trójkątną ikonę odtwarzania. Przycisk \textit{Anuluj} przerwa akcję wyboru dźwięku / muzyki, natomiast przycik \textit{Dodaj własny dźwięk} otwiera okno z plikami na telefonie użytkownika (domyślnie w folderze \textit{Pobrane}, jednak można przejść także do pozostałych folderów) i pozwala na wybór pliku nagrania dźwiękowego w~formacie \textit{.mp3}. Dodany przez użytkownika dźwięk lub muzyka pojawi się następnie pod listą domyślnych dźwięków, pod napisem \textit{Dźwięki użytkownika} - obrazuje to~rysunek \ref{img/dzwieki_uzytkownika}. 
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+    \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Dzwieki/Lista_dzwiekow_odliczania.png}}
+        \caption{Przykładowa lista dźwięków z~obecnym wyborem oznaczonym szarym cieniem}
+        \label{img/wybor_dzwieku}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Plik_uzytkownika/Muzyka_uzytkownika.png}}
+        \caption{Muzyka użytkownika dodana do listy dostępnych nagrań długich}
+        \label{img/dzwieki_uzytkownika}
+    \end{minipage}
+\end{figure}
+
+W celu usunięcia dodanego przez użytkownika pliku należy nacisnąć czerwoną ikonę kosza na śmieci, a następnie potwierdzić tą akcję przyciskiem \textit{Usuń} w oknie, które się pojawi - przedstawiono je na rysunku \ref{img/usuwanie_dzwieku_uzytkownika}. Skutkiem będzie usunięcie dźwięku z listy dźwięków użytkownika. Aby wyłączyć dźwięk lub muzykę w danej podsekcji należy wybrać opcję \textit{Brak} z listy dostępnych dźwięków lub muzyki. W przypadku podsekcji \textit{Następna faza oddechu} lub \textit{Muzyka treningu}, które są bardziej rozbudowane, należy wybrać również opcję \textit{Brak}, natomiast znajduje się ona na innej liście - tekstowej, a nie z dźwiękami - którą można otworzyć poprzez kliknięcie niebieskiej strzałki w dół w miejscu, gdzie w pozostałych podsekcjach znajduje się ikona nuty. 
+
+\newpage
+\par
+Sekcja \textit{Dźwięki treningu} korzysta z dwóch zestawów dźwięków krótkich i składa się z czterech podsekcji. Pierwsza z nich to \textit{Odliczanie}, zawierająca dźwięk odliczania czasu trwania faz oddechowych, przygotowania oraz zakończenia. Posiada ona własny zestaw dźwięków. Składa się on z dwóch dźwięków oraz lektora. Po dodaniu własnego dźwięku przez użytkownika do tego zestawu nie pojawi się on na listach w pozostałych podsekcjach, ponieważ korzystają one z~osobnego zestawu dwunastu dźwięków. 
+
+Kolejną, bardziej rozbudowaną podsekcją niż opisywane wcześniej, jest \textit{Następna faza oddechu}. Zawiera trzy opcje do wyboru. Są one osiągalne z listy, która rozwija się po kliknięciu niebieskiej strzałki. Po dokonaniu wyboru, informacja o obecnie obowiązującej opcji wyświetla się po dwukropku za nazwą podsekcji. Lista została przedstawiona na rysunku \ref{img/opcje_nastepnej_fazy}. 
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+    \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Plik_uzytkownika/Usuwanie_dzwieku_uzytkownika.png}}
+        \caption{Okno potwierdzenia usunięcia dźwięku użytkownika z listy dostępnych nagrań}
+        \label{img/usuwanie_dzwieku_uzytkownika}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Dzwieki/Opcje_nastepna_faza.png}}
+        \caption{Opcje dostępne do wyboru w~podsekcji \textit{Następna faza oddechu}}
+        \label{img/opcje_nastepnej_fazy}
+    \end{minipage}
+\end{figure}
+
+Opisywana podsekcja edytora dźwięków definiuje dźwięk odtwarzany po zmianie fazy oddechowej na inną. Można wyłączyć ten dźwięk klikając opcję \textit{Brak}. Kolejną opcją jest wybór globalnego dźwięku - tego samego dla każdej fazy (wspomniany wcześniej zestaw dwunastu krótkich dźwięków wzbogacony jest tu o lektora, który czyta nazwę fazy oddechowej). Ostatnią możliwością są osobne dźwięki dla każdej z czterech faz oddechu. Pozwala to użytkownikowi na stworzenie skojarzeń faza oddechowa - dźwięk. Dzięki temu może wykonywać trening z zamkniętymi oczami i~bez głosu lektora, wiedząc jaka jest kolejna faza, rozpoznając ją po nagraniu. Opisane opcje globalnego dźwięku oraz osobnych dźwięków dla faz oddechowych przedstawione zostały na rysunku \ref{img/szczegolowe_opcje_dzwieki}. 
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+    \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Dzwieki/Ogolny_dzwiek_zmiany_fazy.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Dzwieki/Dzwieki_dla_kazdej_fazy.png}}
+    \end{minipage}
+    \caption{Interfejs podsekcji \textit{Następna faza oddechu} z wybraną opcją ogólnego dźwięku zmiany fazy (po lewej) oraz z wybranymi osobnymi dźwiękami dla każdej z faz oddechu (po prawej)}
+    \label{img/szczegolowe_opcje_dzwieki}
+\end{figure}
+
+Kolejną podsekcją jest \textit{Zmiana etapu}, w której użytkownik może wybrać dźwięk sygnalizujący zmianę etapu treningu na kolejny.
+
+Ostatnia podsekcja to natomiast \textit{Zmiana cyklu}, która definiuje dźwięk otwarzany po zakończeniu cyklu (czyli powtórzenia) w obrębie etapu. Przy ostatnim cyklu etapu dźwięk ten nie jest odtwarzany - zamiast niego następuje przejście do kolejnego etapu (i odtworzenie dźwięku zmiany etapu, jeśli został on zdefiniowany) lub zakończenie treningu, jeśli był to ostatni etap.
+
+\par
+W sekcji \textit{Muzyka treningu} również znajdują się trzy podsekcje. Każda z nich korzysta z~zestawu szesnastu dźwięków długich (muzyki), co oznacza, że po dodaniu przez użytkownika własnej muzyki wyświetli się na listach we wszystkich podsekcjach. Na liście oprócz nazwy nagrania wyświetlany jest także jego czas trwania. 
+
+Pierwsza z podsekcji opisywanej sekcji - \textit{Muzyka w tle} - jest bardziej rozbudowana, analogicznie do podsekcji \textit{Następna faza oddechu}. Po rozwinięciu listy za pomocą kliknięcia w niebieską strzałkę, pozwala ustawić muzykę w tle treningu na różnym poziomie szczegółowości lub ją~wyłączyć (opcja \textit{Brak}). Dostępne poziomy szczegółwości przedstawione są na rysunku \ref{img/opcje_muzyki_w_tle}. Zaczynając od najmniej szczegółowego, poziomy te to: muzyka na cały trening (rysunek\ref{img/caly_trening}), muzyka zdefiniowna dla kolejnych etapów treningu lub muzyka dla konkretnych faz oddechowych - taka sama dla różnych etapów lub różna dla poszczególnych etapów (rysunek\ref{img/pozostale_opcje}). Dźwięki w tle są zapętlane w trakcie trwania treningu, etapu lub fazy oddechowej, w zależności od wybranej opcji. Można wybrać więcej niż jeden plik dźwiękowy poprzez stworzenie kolejki z muzyką (ang. playlista) dla etapów trenigu lub muzyki w tle dla całego treningu, co zostało opisane w dalszej części instrukcji \ref{par:playlisty}.
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+    \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Opcje_muzyka_w_tle.png}}
+        \caption{Opcje dostępne do wyboru w~podsekcji \textit{Muzyka w tle}}
+        \label{img/opcje_muzyki_w_tle}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Playlista_z_muzyka_uzytkownika.png}}
+        \caption{Opcja muzyki na cały trening wybrana w podsekcji \textit{Muzyka w tle}}
+        \label{img/caly_trening}
+    \end{minipage}
+\end{figure}
+\begin{figure}[H]
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Playlista_dla_etapow.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Muzyka_w_tle_dla_kazdej_fazy.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Muzyka_w_tle_dla_faz_w_etapie.png}}
+        \caption{Pozostałe opcje dostępne do wyboru w~podsekcji \textit{Muzyka w tle}. Od lewej: muzyka dla etapów treningu, muzyka dla faz oddechowych - ta sama dla różnych etapów oraz muzyka dla faz oddechowych - różna dla poszczególnych etapów}
+        \label{img/pozostale_opcje}
+\end{figure}
+
+\newpage
+\par\label{par:playlisty}
+ W celu uwtorzenia kolejki muzyki należy kliknąć przycisk \textit{Dodaj muzykę}, wybrać nagranie z~listy, a następnie powtórzyć te kroki żądaną ilość razy. W~celu usunięcia muzyki z kolejki należy kliknąć ikonę kosza na śmieci. Symbol dwóch równoległych kresek służy natomiast, podobnie jak w przypadku kafelków z etapami czy fazami, do zmieniania kolejności. Przytrzymując symbol, a~następnie przesuwając palcem w górę lub dół ekranu użytkownik może ułożyć nagrania w dowolnej kolejności. Jeśli użytkownik nie doda żadnego nagrania do kolejki otrzyma o tym stosowny komunikat w miejscu, gdzie wyświetlany jest aktualny stan kolejki. W trakcie treningu muzyka będzie odtwarzana według kolejności określonej w kolejce. Jeśli kolejka zawiera tylko jeden plik z~muzyką, będzie on odtwarzany w zapętleniu. W~przypadku muzyki w tle dla etapów treningu lub faz oddechowych w celu zwinięcia lub rozwinięcia widoku kolejki należy kliknąć w czarną strzałkę skierowaną odpowiednio w górę lub w dół. Zmienianie kolejności nagrań, komunikat o pustej kolejce oraz zwinięty widok kolejki przedstawiono na rysunku \ref{img/playlista_widoki}.
+\begin{figure}[H]
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Playlista_zmienianie_kolejnosci.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Pusta_playlista.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Muzyka/Playlista_dla_etapow_zwinieta.png}}
+        \caption{Różne widoki kolejki muzyki: zmienianie kolejności nagrań (po lewej), komunikat o pustej kolejce (w~środku) oraz zwinięty widok kolejki (po prawej)}
+        \label{img/playlista_widoki}
+\end{figure}
+
+Podsekcje \textit{Przygotowanie} oraz \textit{Zakończenie} definiują natomiast muzykę (lub jej brak) sygnalizujac odpowiednio rozpoczęcie treningu oraz jego zakończenie.
+
+\par
+Sekcja \textit{Dźwięki binauralne} domyślnie jest wyłączona. Można ją aktywować za pomocą kliknięcia w przełącznik znajdujący się po prawej stronie napisu \textit{Włącz dźwięki binauralne}. Istotny jest fakt, że w przypadku włączenia tej opcji automatycznie nastąpi wyłączenie opcji muzyki w tle - zostanie ona zablokowana w interfejsie i oznaczona jaśniejszym kolorem, jak na rysunku \ref{img/dzwieki_binauralne}. Po aktywacji, sekcja się rozwija i pokazują się dwa suwaki, za pomocą których użytkownik może ustawić częstotliwości dudnienia synchronicznego (czyli dźwięku binauralnego) dla prawego oraz lewego ucha. Sumaryczna częstotliwość uderzenia wyświetlana jest na dole sekcji. Dudnienie synchroniczne odtwarzane jest w tle treningu, zamiast muzyki w tle - stąd opisywana blokada tej funkcjonalności. 
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/dzwieki/Dzwieki_binauralne.png}}
+    \caption{Aktywowane dudnienia synchroniczne wraz z zablokowaną opcją muzyki w tle}
+    \label{img/dzwieki_binauralne}
+\end{figure}
 
 \subsection{Zakładka Inne}
-W zakładce \textit{Inne} znajdują się pozostałe ustawienia - możliwe jest dodanie nowego lub modyfikacja istniejącego opisu treningu oraz ustawianie długości trwania przygotowania. Należy to zrobić używając przycisków plusa / minusa (odpowiednio zwiększenie / zmniejszenie wartości) lub klikając w okno z aktualnie ustawioną liczbą, a następnie wpisując wybraną liczbę z klawiatury, która się pokaże.
+W zakładce \textit{Inne}, której interfejs został ukazany na rysunku \ref{img/zakladka_inne}, znajdują się pozostałe ustawienia. Możliwe jest dodanie nowego lub modyfikacja istniejącego opisu treningu. Po kliknięciu wewnątrz ramki pod napisem \textit{Opis treningu} na ekranie pokazuje się klawiatura oraz kursor, a~ramka zmienia kolor na~niebieski - aktywowany zostaje tryb edycji opisu. Po schowaniu klawiatury i przejsciu do innej zakładki lub wyjściu z edytora zmiany zostają zapisane. Pole opisu rozszerza się w miarę potrzeby, gdy wpisywany tekst jest długi. Edycja opisu została przedstawiona na rysunku \ref{img/edytowanie_opisu}.
 
-Wszystkie zmiany wprowadzone do konfiguratora zostaną zapisane automatycznie po jego opuszczeniu (czyli kliknięciu strzałki w lewym górnym rogu paska strony). W przypadku próby zapisania treningu z pustymi etapami użytkownik otrzyma komunikat widoczny na RYSUNEK.
+Dostępna jest także opcja ustawiania długości trwania przygotowania. Należy to zrobić używając przycisków plusa lub minusa (odpowiednio zwiększenie lub zmniejszenie wartości) lub klikając w okno z aktualnie ustawioną liczbą, a następnie wpisując wybraną liczbę z klawiatury, która się pokaże. Domyslnie czas przygotowania do treningu ustawiony jest na trzy sekundy. 
 
-\section{Strona treningu oddechowego}
-Podczas wczytywania strony treningu oddechowego może się pojawić komunikat informujący o ładowaniu dźwięków. U góry strony widoczny jest tytuł odtworzonego treningu, a także strzałka umożliwiająca powrót do strony szczegółów treningu oraz po prawej stronie przycisk pauzy, jeśli użytkownik chce wstrzymać trening. W celu wznowienia treningu należy nacisnąć ikonę odtwarzania, która pojawi się w miejsce ikony pauzy lub napis \textit{Wznów} w środku opisanej poniżej animacji.
+Poniżej znajduje się sekcja, która pozwala ustawić długość zakończenia treningu, domyślnie trwającego pięć sekund. Jej obsługa jest analogiczna do sekcji z długością czasu przygotowania. W przypadku wyboru czasu przygotowania lub zakończenia treningu równego zeru sekund oraz równoczesnym ustawieniu muzyki dla tych elementów treningu, będą one trwały tyle, ile trwa wybrana muzyka. Użytkownik zostaje powiadomiony o takim zachowaniu aplikacji poprzez wyświetlony żółty trójkąt ostrzegawczy, po kliknięciu którego pokazuje się stosowny komunikat pokazany na rysunku \ref{img/ostrzezenie}.
 
-Podczas treningu wyświetlana jest nazwa aktualnego etapu treningu, a poniżej niej - informacja na którym etapie z ilu łącznie jest użytkownik. Na ekranie znajduje się także karuzela z kafelkami, które przesuwają się wraz z przbiegiem treningu. Kafelki zawierają nazwę kroku (fazy oddechowej, rozpoczęcia lub zakończenia treningu) oraz czas jego trwania. Centralny, największy kafelek symbolizuje obecnie trwający krok, kafelek na lewo od niego - poprzedni krok, a kafelek na prawo od centralnego - kolejny krok. Dzięki temu użytkownik może śledzić przebieg treningu oraz przygotować się na nadchodzący krok. Poniżej karuzeli znajduje się licznik wszystkich kroków, co pozwala mniej więcej zorientować się, jak daleko jest od początku treningu.
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/inne/Edytor_inne.png}}
+        \caption{Zakładka \textit{Inne} w edytorze treningu oddechowego, ramka opisu treningu jest szara, ponieważ nie jest w trybie edycji}
+        \label{img/zakladka_inne}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+    \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/inne/Edycja_opisu.png}}
+        \caption{Proces edycji opisu treningu, ramka opisu zmieniona na kolor na niebieski, aby zasygnalizować tryb edycji}
+        \label{img/edytowanie_opisu}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_edytora/inne/Ostrzezenie.png}}
+    \caption{Ostrzeżenie informujące o zachowaniu aplikacji przy ustawieniu czasu przygotowania lub zakończenia treningu na zero sekund wraz z jednoczesnym ustawieniem muzyki}
+    \label{img/ostrzezenie}
+\end{figure}
+
+\section{Strona treningu oddechowego}\label{sec:strona_treningu}
+Podczas wczytywania strony treningu oddechowego może się pojawić podstrona z komunikatem informujący o ładowaniu dźwięków przedstawiona na rysunku \ref{img/ladowanie_dzwiekow}. Sygnalizuje ona, że~trening jest przygotowywany do poprawnego startu. 
+\begin{figure}[H]
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_oddychania/Ladowanie_audio.png}}
+        \caption{Podstrona informująca o ładowaniu dźwięków przed rozpoczęciem treningu}
+        \label{img/ladowanie_dzwiekow}
+\end{figure}
+
+U góry strony treningu oddechowego, której interfejs ilustruje rysunek \ref{img/strona_treningu_oddechowego}, widoczny jest tytuł odtworzonego treningu, a także strzałka umożliwiająca powrót do strony szczegółów treningu oraz po prawej stronie przycisk pauzy, jeśli użytkownik chce wstrzymać trening. Następuje wówczas zastopowanie dźwięków i muzyki w tle, a także ruchu kafelków. W celu wznowienia treningu należy nacisnąć ikonę odtwarzania, która pojawia się w miejsce ikony pauzy lub napis \textit{Wznów} umieszczony w środku opisanej poniżej animacji. Zatrzymany trening został ukazany na rysunku \ref{img/trening_wstrzymany}. Podczas trwania treningu ekran urządzenia nie wygasza się, aby użytkownik mógł w pełni skupić się na ćwiczeniu oddechowym i nie musiał odblokowywać ekranu po jego wygaszeniu w~celu kontynuowania treningu.
+
+Na stronie treningu wyświetlana jest nazwa aktualnego etapu treningu, a poniżej niej - informacja na którym etapie z~ilu łącznie jest użytkownik. Wyświetlany jest także licznik wszystkich faz, co~pozwala mniej więcej zorientować się, jak dużo faz oddechowych zostało do końca treningu. Na ekranie znajduje się także karuzela z~kafelkami, które przesuwają się wraz z przbiegiem treningu. Kafelki zawierają nazwę kroku (fazy oddechowej, rozpoczęcia lub zakończenia treningu) oraz czas jego trwania. Centralny, największy kafelek symbolizuje obecnie trwający krok, kafelek na~lewo od niego - poprzedni krok, a kafelek na prawo od centralnego - kolejny krok. Dzięki temu użytkownik może śledzić przebieg treningu oraz odpowiednio wcześniej przygotować się na nadchodzący krok. Poniżej karuzeli dostępna jest także informacja o tym, który cykl powtórzeń etapu jest aktualnie wykonywany.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_oddychania/Strona_treningu_oddechowego.png}}
+        \caption{Strona treningu oddechowego podczas aktywnego treningu}
+        \label{img/strona_treningu_oddechowego}
+    \end{minipage}
+    \hfill
+    \centering
+     \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_oddychania/Zatrzymany_trening.png}}
+        \caption{Zatrzymany trening oddechowy}
+        \label{img/trening_wstrzymany}
+    \end{minipage}
+\end{figure}
 
 Głównym elementem strony jest animacja koła, które zmienia się zgodnie z przebiegiem treningu. Podczas wdechu koło powiększa się, a podczas wydechu - pomniejsza. W czasie trwania fazy regneracji lub wstrzymania koło jest natomiast statyczne. Obrazuje to użytkownikowi, jaką fazę oddechową powinien obecnie wykonywać. Na środku animacji znajduje się także licznik czasu przeznaczonego na dany krok.
 
-Jeśli użytkownik kliknie strzałkę powrotu do strony szczegółów treningu, zostanie zapytany o powterdzenie swojej akcji, w celu zapobiegnięcia przypadkowemu opszczeniu treningu.
+Jeśli użytkownik kliknie strzałkę powrotu do strony szczegółów treningu, zostanie zapytany o potwierdzenie swojej akcji, w celu zapobiegnięcia przypadkowemu opszczeniu treningu. Okno dialogowe wyświetlane użytkownikowi przedstawia rysunek \ref{img/okno_opuszczenia_treningu}. Po zakończeniu treningu oraz upływie czasu zakończenia użytkownik zostaje przeniesiony automatycznie na stronę szczegółów treningu.
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \fbox{\includegraphics[scale=0.14]{obrazki/instrukcja/strona_oddychania/Przerywanie_treningu.png}}
+    \caption{Okno dialogowe z prośbą o~potwierdzenie chęci opuszczenia treningu wyświetlane podczas próby opuszczenia treningu}
+    \label{img/okno_opuszczenia_treningu}
+\end{figure}
 
-\section{Strona ustawień}
-Strona ustawień zawiera dwie sekcje: wybór języka aplikacji oraz notatkę o ReSpire informującą, jaki jest cel aplikacji. W celu zmiany języka aplikacji należy nacisnąć strzałkę obok informacji o obecnie ustawionym języku, a następnie dokonać wyboru poprzez kliknięcie jednej z dwóch opcji - języka angielskiego lub języka polskiego. RYSUNEK wersja polska aplikacji, a następnie wersja angielska po zmianie języka na przykładzie strony ustawień.
+\section{Strona ustawień}\label{sec:strona_ustawien}
+Strona ustawień przedstawiona na rysunku \ref{img/ustawienia} zawiera dwie sekcje: wybór języka aplikacji oraz notatkę o ReSpire informującą, jaki jest cel aplikacji. W celu zmiany języka aplikacji należy nacisnąć strzałkę obok informacji o obecnie ustawionym języku, a następnie dokonać wyboru poprzez kliknięcie jednej z~dwóch opcji - języka angielskiego lub języka polskiego, które pokazują się na rozwijanej liście ukazanej na rysunku \ref{img/wybor_jezyka}.
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_ustawien/Ustawienia_jezyk_polski.png}}
+        \caption{Strona ustawień w aplikacji ReSpire}
+        \label{img/ustawienia}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_ustawien/Wybor_jezyka.png}}
+        \caption{Wybór języka aplikacji}
+        \label{img/wybor_jezyka}
+    \end{minipage}
+\end{figure}
+
+Przykładowe strony aplikacji po zmianie języka widoczne są na rysunku \ref{img/przykladowe_strony_angielski}.
+\begin{figure}[H]
+        \centering
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_ustawien/Ustawienia_jezyk_angielski.png}}
+        \setlength{\fboxsep}{0pt}
+        \fbox{\includegraphics[scale=0.12]{obrazki/instrukcja/strona_ustawien/Edytor_jezyk_angielski.png}}
+    \caption{Widok przykładowych stron aplikacji - strony ustawień (po lewej) oraz edytora dźwięków (po~prawej) - po zmianie języka na angielski}
+    \label{img/przykladowe_strony_angielski}
+\end{figure}
