@@ -8,7 +8,7 @@
 ReSpire to aplikacja mobilna wspierająca trening oddechowy. Umożliwia użytkownikom projektowanie i zarządzanie spersonalizowanymi sesjami treningu oddechowego. Dzięki szerokim możliwościom personalizacji, ReSpire pozwala na tworzenie unikalnych planów treningowych i ich realizację w intuicyjny sposób. 
 Aplikacja wychodzi naprzeciw potrzebie złożonej konfiguracji ćwiczeń oddechowych. Służy ona jak najlepszemu dopasowaniu treningów do użytkowników i ich potrzeb, zapewniając dużą elastyczność i swobodę. To wyróżnia ją od innych aplikacji dostępnych na rynku, które nie pozwalają na dostosowywanie w tak znacznym stopniu. Jednocześnie zaspokaja również potrzeby osób, których nie interesuje personalizacja i wolą skorzystać       z gotowych, prostszych treningów oddechowych.
 
-Celem projektu jest stworzenie tworzenie intuicyjnej i funkcjonalnej aplikacji mobilnej, umożliwiającej użytkownikom skuteczny trening oddechowy, która ma pomagać w poprawie kontroli oddechu, redukcji stresu oraz zwiększeniu świadomości oddechowej. Aplikacja zostanie opublikowana w Google Play i App Store, aby dotrzeć do jak najszerszego grona użytkowników w Polsce. Projekt stanowi część pracy inżynierskiej.
+Celem projektu jest stworzenie tworzenie intuicyjnej i funkcjonalnej aplikacji mobilnej, umożliwiającej użytkownikom skuteczny trening oddechowy, która ma pomagać w poprawie kontroli oddechu, redukcji stresu oraz zwiększeniu świadomości oddechowej. Aplikacja zostanie opublikowana w Google Play i Apple App Store, aby dotrzeć do jak najszerszego grona użytkowników w Polsce. Projekt stanowi część pracy inżynierskiej.
 
 Zakres projektu obejmuje pełny cykl tworzenia aplikacji mobilnej ReSpire, od fazy projektowania po wdrożenie i publikację. 
 
@@ -17,8 +17,28 @@ Zwieńczeniem projektu będzie publikacja aplikacji w sklepach Google Play i App
 
 \section{Jakie mają być główne funkcjonalności? \Jakub\ \Karol\ \Ola}
 
+Główne funkcjonalności aplikacji ReSpire zostały zaprojektowane tak, aby zapewnić użytkownikowi pełną kontrolę nad procesem treningowym oraz wysoką jakość doświadczenia audio-wizualnego. Do kluczowych funkcji systemu należą:
+
+\begin{itemize}
+    \item \textbf{Zaawansowany Edytor Treningów}: Narzędzie umożliwiające tworzenie złożonych, wieloetapowych sesji treningowych. System pozwala na definiowanie etapów składających się z konfigurowalnych faz (wdech, wstrzymanie, wydech, regeneracja). Kluczową funkcjonalnością jest obsługa pętli (powtórzeń) oraz dynamiczna inkrementacja czasu trwania faz w kolejnych cyklach, co umożliwia realizację treningów progresywnych (np. stopniowe wydłużanie wdechu).
+    
+    \item \textbf{Wielopoziomowy System Audio}: Złożony mechanizm zarządzania dźwiękiem, pozwalający na przypisywanie tła akustycznego na trzech poziomach hierarchii: globalnym (cały trening), etapu (zmiana nastroju w trakcie sesji) oraz fazy (unikalne dźwięki dla wdechu i wydechu). System zapewnia płynne przejścia (crossfading) między ścieżkami oraz obsługuje komunikaty głosowe (TTS) i sygnały dźwiękowe (cues) informujące o zmianie fazy bez konieczności patrzenia na ekran.
+    
+    \item \textbf{Generator Dudnień Różnicowych (Binaural Beats)}: Funkcjonalność generująca w czasie rzeczywistym dźwięki o różnej częstotliwości dla lewego i prawego kanału audio. Wywołuje to efekt psychoakustyczny stymulujący fale mózgowe (np. stan relaksacji Alpha lub Theta). Generowanie odbywa się dynamicznie na podstawie zadanych parametrów częstotliwości nośnej i różnicowej, bez konieczności przechowywania gotowych plików.
+    
+    \item \textbf{Silnik Wykonywania Treningu}: Moduł odpowiedzialny za egzekucję sesji w czasie rzeczywistym. Precyzyjnie synchronizuje timer, animacje interfejsu oraz warstwę audio, zapewniając płynne działanie nawet przy skomplikowanych strukturach treningowych. Zarządza również specjalnymi fazami przygotowania (rozbieg) oraz wygaszenia (zakończenie) treningu.
+    
+    \item \textbf{Persystencja i Zarządzanie Danymi}: Możliwość zapisu stworzonych treningów i ustawień w lokalnej, wydajnej bazie danych na urządzeniu, co pozwala na pełną funkcjonalność w trybie offline. Dodatkowo system umożliwia eksport i import definicji treningów w uniwersalnym formacie (JSON), co ułatwia dzielenie się nimi między użytkownikami.
+\end{itemize}
+
 \section{Jacy użytkownicy są przewidziani? \Jakub\ \Karol\ \Ola}
+Ze względu na specyfikę aplikacji przewidujemy podział użytkowników na dwie główne grupy:
+
+\begin{itemize}
+    \item Użytkownicy podstawowi - osoby o bardzo zróżnicowanym profilu będące nowicjuszami w dziedzinie treningów oddechowych. Wymagają oni jedynie możliwości zaimportowania oraz odtworzenia gotowego treningu. Nie chcą oni nadmiernie ingerować w strukturę swoich treningów.
+    \item Użytkownicy zaawansowani - osoby zainteresowane szczegółową personalizacją ze względu na swoją głęboką znajomość praktyk treningów oddechowych. Wymagają oni wysoce wyszukanych możliwości konfiguracji każdego aspektu sekwencji treningowej. 
 
 \section{Czy i ew. z jakimi systemami ma współpracować? \Jakub\ \Karol\ \Ola}
+Rozważana jest implementacja zaawansowanego systemu sprzężenia zwrotnego dla użytkownika wykonującego analizę wykonywania treningu w trakcie jego odtwarzania. System ten nagrywałby krótkie fragmenty dźwięku z mikrofonów telefonu lub podłączonego zestawu słuchawkowego (konfiguracja preferowana dla lepszej izolacji dźwięku zbieranego oraz dźwięku emitowanego przez aplikację). Następnie fragmenty te byłyby przetwarzane równolegle względem głównych procesów aplikacji. Polegałoby to na transformacji fragmentów dźwiękowych na odpowiadające im mel-spektrogramy a następnie przekazanie ich jako wartości wejściowe do wytrenowanego predykcyjnego modelu uczenia maszynowego w celu uzyskania danych zwrotnych oceniających precyzję wykonania przez użytkownika zadanego treningu oddechowego.
 
 \section{Pozostałe założenia \Jakub\ \Karol\ \Ola}
