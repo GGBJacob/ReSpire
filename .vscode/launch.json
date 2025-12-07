@@ -7,19 +7,22 @@
         {
             "name": "ReSpire",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "preLaunchTask": "generate-sounds"
         },
         {
             "name": "ReSpire (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "preLaunchTask": "generate-sounds"
         },
         {
             "name": "ReSpire (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "preLaunchTask": "generate-sounds"
         }
     ]
 }
