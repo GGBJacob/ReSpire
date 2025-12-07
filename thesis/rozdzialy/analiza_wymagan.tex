@@ -181,29 +181,25 @@ Ostatni, trzeci diagram został przedstawiony na rysunku \ref{img/przypadki_uzyc
 \label{tab:odtwarzanie_treningu}
 \end{table}
 
-
-\section{Modele klas \Jakub}
-\subsection{Model serwisów}
-\subsection{Model treningu}
-
+\newpage
 \section{Model sterowania dźwiękami \Hania}
 
-oś czasu z zaznaczonymi zdarzeniami
-cel: żeby pokazać logikę ich odtwarzania w czasie
-opis diagramu i logiki
-diagram przedtawiono na rysunku \ref{img/dzwieki_w_tle}, \ref{img/dzwieki_w_etapie}
+W celu zobrazowania logiki sterowania warstwą dźwiękową i dostępnych strategii organizacji dźwięków w opracowanej aplikacji treningu oddechowego przygotowano dwa diagramy --- sterowania muzyką w tle i dźwiękami w etapie. Przyjęto jednolitą konwencję graficzną, w której prostokąty z przerywaną ramką oznaczają ścieżki dźwiękowe, natomiast prostokąty z ciągłą ramką reprezentują struktury logiczne aplikacji, takie jak etapy, cykle i fazy oddechowe. Identyczny kolor wypełnienia wskazuje na tę samą ścieżkę dźwiękową, a strzałka pozioma symbolizuje oś czasu. Warto wspomnieć, iż każdy dźwięk przedstawiony w poniższych diagramach może również zostać wyłączony, jeśli użytkownik preferuje wykonywać ćwiczenia w ciszy.
+
+Diagram sterowania muzyką w tle przedstawiony został na rysunku \ref{img/dzwieki_w_tle}. Prezentuje on cztery dostępne tryby konfiguracji warstwy muzycznej całej sesji treningowej. We wszystkich trybach występują muzyka rozpoczęcia i muzyka zakończenia. Pierwszy tryb przewiduje jedną, wspólną ścieżkę muzyczną odtwarzaną przez cały czas trwania głównej części treningu. Drugi tryb umożliwia przypisanie osobnej muzyki do każdego etapu treningu, dzięki czemu zmiana utworu wyraźnie sygnalizuje przejście do kolejnej sekwencji faz. Trzeci tryb uzależnia wybór muzyki wyłącznie od rodzaju fazy oddechowej (wdech, retencja, wydech, regeneracja), co oznacza, że ta sama faza w różnych etapach korzysta z identycznej ścieżki. Najbardziej elastyczny, czwarty tryb łączy zależności opcji drugiej i trzeciej --- muzyka zależy jednocześnie od etapu i rodzaju fazy, pozwalając na przykład na zróżnicowanie charakteru wszystkich wdechów w etapie pierwszym od wdechów w etapie drugim.
+
 \begin{figure}[ht]
 \centering
-\hspace*{-2cm}
-\includegraphics[scale=0.25]{obrazki/analiza_wymagan/dzwieki_w_tle.jpg}
-\caption{Diagram sterowania dźwiękami w tle}
+\includegraphics[width=\textwidth]{obrazki/analiza_wymagan/dzwieki_w_tle.jpg}
+\caption{Diagram sterowania muzyką w tle}
 \label{img/dzwieki_w_tle}
 \end{figure}
 
+Diagram sterowania krótkimi dźwiękami w etapie przedstawiony został na rysunku \ref{img/dzwieki_w_etapie}. Ilustruje on sposób wyzwalania dźwięków sygnalizujących zmiany oraz odliczanie czasu w fazach. Zaprojektowano dwa wzajemnie wykluczające się warianty --- dźwięk zmiany etapu, odtwarzany wyłącznie na początku pierwszego cyklu nowego etapu, oraz dźwięk zmiany cyklu, pojawiający się na starcie każdego kolejnego cyklu w obrębie tego samego etapu. Po sygnale zmiany następuje właściwy cykl oddechowy, w którym na początku każdej fazy odtwarzany jest krótki sygnał informujący o jej rozpoczęciu. Następnie w fazach odtwarzana jest sekwencja odliczająca, reprezentowana przez bloki "3", "2" i "1". Rozwiązanie to zapewnia precyzyjne prowadzenie użytkownika w czasie rzeczywistym.
+
 \begin{figure}[ht]
 \centering
-\hspace*{-2cm}
-\includegraphics[scale=0.25]{obrazki/analiza_wymagan/dzwieki_w_etapie.jpg}
+\includegraphics[width=\textwidth]{obrazki/analiza_wymagan/dzwieki_w_etapie.jpg}
 \caption{Diagram sterowania dźwiękami w etapie}
 \label{img/dzwieki_w_etapie}
 \end{figure}
