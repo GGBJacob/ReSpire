@@ -5,7 +5,7 @@ Projekt został wykonany w środowisku Flutter za pomocą zestawu narzędzi dla 
 Aplikacja została napisana w jęzku Dart we frameworku Flutter.
 
 \section{Schemat plików/klas/modułów \Hania\ \Ola\ \Jakub\ \Karol}
-Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają się łącznie 63 pliki źródłowe w języku Dart. Projekt obejmuje 80 klas oraz ponad 400 metod realizujących logikę biznesową i interfejs użytkownika. Całkowity rozmiar projektu wynosi nieco ponad 10 kLOC (ang. Kilo Lines of Code – tysięcy linii kodu), z czego blisko 8900 stanowi tzw. czysty kod, określany jako SLOC (ang. Source Lines of Code). Ze względu na taką złożoność struktury, diagramy klas i architektury zostały w niniejszej dokumentacji podzielone na logiczne fragmenty, aby zachować ich czytelność.
+Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają się łącznie 63 pliki źródłowe w języku Dart. Projekt obejmuje 80 klas oraz ponad 400 metod realizujących logikę biznesową i interfejs użytkownika. Całkowity rozmiar projektu wynosi nieco ponad 10 kLOC (\textit{ang. kilo Lines of Code} – tysięcy linii kodu), z czego blisko 8900 stanowi tzw. czysty kod, określany jako SLOC (\textit{ang. Source Lines of Code}). Ze względu na taką złożoność struktury, diagramy klas i architektury zostały w niniejszej dokumentacji podzielone na logiczne fragmenty, aby zachować ich czytelność.
 
 \subsection{Klasy treningu} \label{subsec:training_classes}
 
@@ -15,6 +15,7 @@ Na trening składa się 12 klas, z czego główną z nich jest \texttt{Training}
   \centering
   \includegraphics[width=\textwidth]{diagramy/class_diagram.png}
   \caption{Diagram klas treningu}
+  \label{img/class_diagram}
 \end{figure}
 
 
@@ -28,7 +29,7 @@ Druga zakładka skupia się na warstwie dźwiękowej i korzysta ze współdzielo
 
 Zakładka „Inne” obejmuje elementy opisowe: pole \texttt{TextField} do wprowadzenia opisu, a także licznik czasu przygotowawczego z własnym formatterem cyfr oraz walidacją wartości minimalnej. Wartości te trafiają do obiektu \texttt{Settings}, dzięki czemu są dostępne zarówno w podglądzie treningu, jak i w trakcie wykonywania sesji. Cały edytor jest przetłumaczony z użyciem \texttt{TranslationProvider}, co umożliwia dynamiczne zmiany języka i konsekwentne stosowanie lokalnych etykiet w dialogach, walidatorach czy komunikatach ostrzegawczych. Dzięki temu moduł edytora zachowuje spójność wizualną i logiczną z resztą aplikacji oraz zapewnia użytkownikowi poczucie kontroli nad każdym aspektem treningu bez konieczności przełączania kontekstu.
 
-\section{Importowanie oraz eksportowanie treningów}
+\section{Importowanie oraz eksportowanie treningów} \label{sec:Import}
 
 Funkcjonalność importu i eksportu danych w aplikacji ReSpire została zaprojektowana w celu umożliwienia użytkownikom łatwej wymiany konfiguracji treningowych pomiędzy różnymi urządzeniami oraz tworzenia kopii zapasowych swoich ustawień. Moduł ten jest kluczowy dla zapewnienia przenośności danych w systemie, który nie polega na centralnym serwerze chmurowym do synchronizacji treści.
 
@@ -300,27 +301,72 @@ if(oldWidget.change != widget.change) {
 
 \section{Dźwięki \Jakub} \label{sec:Sounds}
 
-Wysoki stopień konfigurowalności warstwy audio przez użytkownika wymusił dekompozycję logiki biznesowej aplikacji na klasy odpowiedzialne za poszczególne przypadki użycia, postępując zgodnie z zasadą pojedynczej odpowiedzialności. 
-
+Wysoki stopień konfigurowalności warstwy audio przez użytkownika i chęć postępowania zgodnie z \textit{Single Responsibility Principle} (pol. zasadą pojedynczej odpowiedzialności), sformułowaną przez R. C. Martina~\cite{agile}, wymusiły dekompozycję logiki biznesowej aplikacji na klasy odpowiedzialne za poszczególne przypadki użycia. Podział ten reprezentuje rysunek \ref{img/soundManagers}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{diagramy/soundManagers_diagram.png}
-  \caption{Diagram klas dźwiękowych}
+  \caption{Struktura klas obsługi dźwięków}
+  \label{img/soundManagers}
 \end{figure}
 
 \subsection{SoundManager} \label{subsec:SoundManager}
-Centralnym elementem modułu audio jest klasa \texttt{SoundManager}. Ze względu na konieczność zapewnienia globalnego punktu dostępu do listy załadowanych plików oraz potrzebę współdzielenia jednej instancji obiektu przez wiele komponentów aplikacji, zastosowano w niej wzorzec projektowy Singleton. W polach wspomnianej instancji przechowywane są listy dźwięków krótkich, jak i długich. Rozróżnienie na typy dźwięków było niezbędne ze względu na odmienne ładowanie i odtwarzanie plików. Krótkie efekty dźwiękowe wymagają minimalnej latencji (czasu reakcji) przy odtwarzaniu, natomiast długie ścieżki dźwiękowe, charakteryzujące się rzadszą rotacją i mniejszą dynamiką zmian, nie podlegają tak rygorystycznym wymogom czasowym przy inicjalizacji. Do osiągnięcia tego wymagania należało zastosować oddzielne konfiguracje odtwarzaczy dźwięków (komponentów klasy \texttt{AudioPlayer}) — low latency mode (tryb minimalnego czasu reakcji) lub media player mode (tryb odtwarzania media). Mimo zastosowania tych trybów wysoki narzut obliczeniowy związany z  częstą inicjalizacją odtwarzaczy uniemożliwił odtwarzanie sygnałów dźwiękowych z wymaganą precyzją. Ograniczenie to zmusiło nas do wprowadzenia mechanizmu puli obiektów — \texttt{AudioPlayerPool} \ref{subsec:AudioPlayerPool}.
+Centralnym elementem modułu audio jest klasa \texttt{SoundManager}. Ze względu na konieczność zapewnienia globalnego punktu dostępu do listy załadowanych plików oraz potrzebę współdzielenia jednej instancji obiektu przez wiele komponentów aplikacji, zastosowano w niej wzorzec projektowy Singleton. Obiekt ten agreguje kluczowe struktury danych: mapy powiązań odtwarzaczy oraz zbiór dostępnych plików dźwiękowych. Ten ostatni został podzielony na dwie odrębne kolekcje dedykowane odpowiednio krótkim i długim formom audio.
 
- \todoJakub{Rozpisz poniższe}
-- fade in/out
-- ustawienie by dźwięki mogły lecieć razem
+Rozróżnienie na typy dźwięków było niezbędne ze względu na odmienną logikę ładowania i odtwarzania plików. Krótkie efekty dźwiękowe wymagają minimalnej latencji (czasu reakcji) przy odtwarzaniu i częstych powtórzeń, natomiast długie ścieżki dźwiękowe charakteryzują się rzadszą rotacją i mniejszą dynamiką zmian, przez co nie podlegają tak rygorystycznym wymogom czasowym przy inicjalizacji. Do osiągnięcia tego wymagania należało zastosować oddzielne konfiguracje odtwarzaczy dźwięków (komponentów klasy \texttt{AudioPlayer}) --- \textit{low latency mode} (pol. tryb minimalnego czasu reakcji) lub \textit{media player mode} (pol. tryb odtwarzania media).
+
+Mimo zastosowania dedykowanych trybów, rozwiązanie to napotkało szereg barier technologicznych. Po pierwsze, tryb minimalnego czasu reakcji nie udostępniał mechanizmu zdarzeń, co uniemożliwiało detekcję momentu zakończenia odtwarzania. Z kolei własna implementacja powodowała wysoki narzut obliczeniowy, uniemożliwiając emisję sygnałów dźwiękowych z wymaganą precyzją. Ograniczenia te wymusiły wprowadzenie mechanizmu puli obiektów --- \texttt{AudioPlayerPool} opisanego w rozdziale~\ref{subsec:AudioPlayerPool}. 
+
+Kluczowym aspektem konfiguracji było również zapewnienie współbieżności emisji, umożliwiającej równoczesne odtwarzanie wielu nakładających się na siebie dźwięków. W połączeniu~z mechanizmem  płynnych przejść, który obejmuje obsługę efektów \textit{fade-in} (pol. stopniowego podgłaśniania przy rozpoczynaniu odtwarzania) oraz \textit{fade-out} (pol. wyciszania przy jego zatrzymywaniu), rozwiązanie to zapewnia profesjonalną i przyjemną w odbiorze warstwę audio.
 
 \subsection{SingleSoundManager} \label{subsec:SingleSoundManager}
+
+Klasa \texttt{SingleSoundManager} dedykowana jest do obsługi odtwarzania sygnałów w trybie wyłączności. W warstwie implementacyjnej deleguje ona zadania do globalnego \texttt{SoundManagera}~\ref{subsec:SoundManager}, jednak w przeciwieństwie do niego, uniemożliwia współbieżne odtwarzanie wielu ścieżek --- w danym momencie odtwarzany może być tylko jeden plik.
+
+Informacja o aktywnym zasobie przechowywana jest w polu \texttt{currentlyPlaying}. Co istotne, odtwarzanie realizowane jest tutaj wyłącznie w trybie \textit{media player}. Pozwala to na nasłuchiwanie zdarzeń zakończenia emisji i automatyczne czyszczenie stanu zmiennej. Mechanizm ten znajduje zastosowanie m.in. podczas wyboru dźwięków w edytorze treningu, umożliwiając dynamiczną aktualizację interfejsu użytkownika w zależności od stanu odtwarzacza.
+
+\todoJakub{ref do podglądu dźwięków}
 \subsection{PlaylistManager} \label{subsec:PlaylistManager}
+
+Za obsługę sekwencyjnego odtwarzania zbiorów plików muzycznych w trakcie treningu odpowiada klasa \texttt{PlaylistManager}. Enkapsuluje ona stan procesu, przechowując flagi sterujące (typu logicznego, \texttt{boolean}), kursor bieżącego utworu oraz listę ścieżek. Istotnym elementem jest również obiekt typu \texttt{Completer}, pełniący rolę prymitywu synchronizacyjnego służącego do obsługi zdarzeń przerwania odtwarzania. 
+
+Do realizacji swoich funkcji klasa deleguje zadania do \texttt{SingleSoundManagera}~\ref{subsec:SingleSoundManager}. Decyzja ta podyktowana jest koniecznością precyzyjnej detekcji momentu zakończenia utworu, co jest natywną funkcjonalnością wykorzystywanego modułu. Mechanizm przełączania ścieżek opiera się na asynchronicznym oczekiwaniu na pierwsze z dwóch zdarzeń: naturalne zakończenie odtwarzania przez odtwarzacz lub wymuszone przerwanie (sygnalizowane przez \texttt{\_playlistCompleter}). Logikę tę obrazuje kod~\ref{code/PlaylistManager/await}.
+
+\begin{figure}[H] 
+\centering
+\begin{lstlisting}[caption={PlaylistManager - obsługa przerwania lub zakończenia dźwięku}, label={code/PlaylistManager/await}]
+  await Future.any([player.onPlayerComplete.first, _playlistCompleter.future]);
+  if(_paused || _stopped) {
+      dev.log('PlaylistManager: Playback interrupted (paused=$_paused, stopped=$_stopped)');
+      return;
+    }
+
+    _currentIndex++;
+    _playNextSound();
+\end{lstlisting}
+\end{figure}
+
 \subsection{AudioPlayerPool} \label{subsec:AudioPlayerPool}
-\subsection{textToSpeech} \label{subsec:TTS}
 
-\section{Języki} \label{sec:Languages}
+Implementacja klasy \texttt{AudioPlayerPool} wynika bezpośrednio ze zidentyfikowanych ograniczeń technicznych --- braku obsługi zdarzeń zakończenia odtwarzania w trybie minimalnego czasu reakcji. Celem tego modułu jest umożliwienie emisji krótkich sygnałów dźwiękowych o wysokiej częstotliwości (w odstępach rzędu 100 ms).
 
+Konstruktor klasy przyjmuje parametr całkowitoliczbowy, definiujący rozmiar bufora cyklicznego, w którym przechowywane są instancje odtwarzaczy. Mechanizm pobierania zasobu z puli realizuje strategię rotacji i odświeżania: obiekt znajdujący się pod bieżącym wskaźnikiem podlega zniszczeniu i na jego miejsce tworzony jest nowy. Podejście to jest kluczowe przy kolejnych obiegach listy, aby wyeliminować błędy wynikające z próby ponownego użycia odtwarzacza posiadającego zablokowany stan po poprzednim odtworzeniu. Logikę pobierania instancji przedstawia kod~\ref{code/AudioPlayerPool/next}.
+
+\begin{figure}[H] 
+\centering
+\begin{lstlisting}[caption={AudioPlayerPool - pobieranie kolejnego elementu z puli}, label={code/AudioPlayerPool/next}]
+  AudioPlayer get next {
+    _cursor++;
+    if (_cursor >= _items.length) {
+      _cursor = 0;
+    }
+    _items[_cursor].dispose();
+    _items[_cursor] = AudioPlayer();
+    return _items[_cursor];
+  }
+\end{lstlisting}
+\end{figure}
+
+\section{Języki \Jakub} \label{sec:Languages}
+\todoJakub{jak odczytujemy jsony}
 \section{Baza danych}
