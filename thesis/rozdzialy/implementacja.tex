@@ -124,7 +124,7 @@ Map<String, dynamic>? nextInstruction() {
 
 \subsection{Klasa TrainingController}
 
-\texttt{TrainingController} jest centralnym kontrolerem sesji treningu w aplikacji. Odpowiada za precyzyjne, milisekundowe sterowanie czasem, płynne przechodzenie między fazami oddechowymi, inteligentne zarządzanie wszystkimi warstwami dźwiękowymi — muzyka w tle, playlisty, odliczanie, zapowiedzi i binaural beats \todoHania{Help me pls, co z tymi beatsami} oraz poprawne przeprowadzenie użytkownika przez trzy główne etapy: przygotowanie, właściwy trening i fazę końcową. Komponent zarządza wieloma zmiennymi, które zostały przedstawione w tabeli \ref{tab/controller}.
+\texttt{TrainingController} jest centralnym kontrolerem sesji treningu w aplikacji. Odpowiada za precyzyjne, milisekundowe sterowanie czasem, płynne przechodzenie między fazami oddechowymi, inteligentne zarządzanie wszystkimi warstwami dźwiękowymi — muzyka w tle, playlisty, odliczanie, zapowiedzi i dudnienia różnicowe oraz poprawne przeprowadzenie użytkownika przez trzy główne etapy: przygotowanie, właściwy trening i fazę końcową. Komponent zarządza wieloma zmiennymi, które zostały przedstawione w tabeli \ref{tab/controller}.
 
 \noindent\begin{minipage}{\textwidth}
 \centering
@@ -345,7 +345,7 @@ if (_remainingTime > elapsed) {
 \end{lstlisting}
 \end{figure}
 
-Po osiągnięciu zera przez licznik czasu bieżącej fazy następuje przejście do kolejnej fazy oddechowej. W przypadku pierwszej fazy treningu właściwego, jeżeli użytkownik włączył bicie binauralne \todoHania{pls help me}, obliczana jest całkowita długość części głównej treningu, a następnie uruchamiany jest generator binauralny z zadanymi częstotliwościami lewego i prawego kanału. Równolegle, przy pierwszym przejściu z fazy przygotowawczej do treningu właściwego, zatrzymywany jest aktualnie odtwarzany dźwięk przygotowawczy i faza przygotowawcza oznaczana jest jako zakończona. Aktywowane jest również wyświetlanie etykiet w interfejsie (\textit{showLabels}). Następnie, w zależności od ustawiono globalny zakres muzyki tła, aktywowany zostaje tryb odtwarzania playlisty. Natomiast, jeśli ustawiony jest zakres dla etapu, wywoływana jest metoda \textit{\_switchToStagePlaylist}, która inicjuje odtwarzanie playlisty przypisanej do danego etapu. Fragment przedstawiono w kodzie \ref{code/controller/playlist}.
+Po osiągnięciu zera przez licznik czasu bieżącej fazy następuje przejście do kolejnej fazy oddechowej. W przypadku pierwszej fazy treningu właściwego, jeżeli użytkownik włączył dudnienia różnicowe, obliczana jest całkowita długość części głównej treningu, a następnie uruchamiany jest generator dudnienień różnicowych z zadanymi częstotliwościami lewego i prawego kanału. Równolegle, przy pierwszym przejściu z fazy przygotowawczej do treningu właściwego, zatrzymywany jest aktualnie odtwarzany dźwięk przygotowawczy i faza przygotowawcza oznaczana jest jako zakończona. Aktywowane jest również wyświetlanie etykiet w interfejsie (\textit{showLabels}). Następnie, w zależności od ustawiono globalny zakres muzyki tła, aktywowany zostaje tryb odtwarzania playlisty. Natomiast, jeśli ustawiony jest zakres dla etapu, wywoływana jest metoda \textit{\_switchToStagePlaylist}, która inicjuje odtwarzanie playlisty przypisanej do danego etapu. Fragment przedstawiono w kodzie \ref{code/controller/playlist}.
 
 \begin{figure}[h]
 \centering
