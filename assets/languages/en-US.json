@@ -20,7 +20,7 @@
         "select_all":"Select all",
         "deselect_all":"Deselect all",
         "export_selected":"Export",
-        "export_selected_count":"Export ({count})",
+        "export_selected_count":"Selected({count})",
         "export_multiple_success":"Trainings exported successfully",
         "no_trainings_selected":"No trainings selected",
         "import_multiple_success":"{count} trainings imported successfully",
@@ -30,7 +30,10 @@
     "SettingsPage":{
         "page_title":"Settings",
         "app_section_title":"App",
-        "language_label":"Language"
+        "language_label":"Language",
+        "app_second_section_title":"About ReSpire",
+        "app_description":"ReSpire offers full control over breath training. It is an app designed to help all users, regardless of their skill level. You can start your journey with ready-made exercises or quickly and conveniently create your own trainings tailored to your needs. \nSit back, relax and ReSpire.",
+        "copyright":"All rights reserved"
     },
 
     "TrainingPage":{
@@ -43,7 +46,7 @@
             "reps":"Reps",
             "increment":"Inc"
         },
-        "delete_training_dialog_title":"Delete Training",
+        "delete_training_dialog_title":"Delete training",
         "delete_training_dialog_content":"Are you sure you want to delete this training?",
         "export_success":"Training exported successfully.",
         "export_error":"Export error.",
@@ -95,7 +98,9 @@
                     "global":"Global phase change sound",
                     "voice":"lector",
                     "for_each_breathing_phase":"change sound for each phase"
-                }
+                },
+                "stage_change_sound": "Stage change",
+                "cycle_change_sound": "Cycle change"
             },
 
             "TrainingMusic":{
@@ -111,17 +116,23 @@
                 }
             },
 
-            "AudioSelectionPopup":{
-                "title":"Select audio",
+            "AudioSelectionPopupSound":{
+                "title":"Select sound",
                 "user_sounds":"User sounds",
                 "add_custom_sound_button_label":"Add custom sound"
             },
 
+            "AudioSelectionPopupMusic":{
+                "title":"Select music",
+                "user_music":"User music",
+                "add_custom_music_button_label":"Add custom music"
+            },
+
             "PlaylistEditor":{
-                "empty_playlist":"Playlist is empty. Add sounds using the button below.",
-                "empty_stage_playlist":"No sounds in this stage playlist yet. Add sounds to play during this training stage.",
-                "add_sound":"Add sound",
-                "user_sound":"User sound"
+                "empty_playlist":"Playlist is empty. Add music using the button below.",
+                "empty_stage_playlist":"No music in this stage playlist yet. Add music to play during this training stage.",
+                "add_music":"Add music",
+                "user_music":"User music"
             },
 
             "BinauralBeats":{
@@ -147,7 +158,11 @@
             "training_description_label":"Training description",
             "training_description_hint":"Describe your training...",
             "training_preparation_label":"Training preparation",
-            "preparation_duration_label":"Preparation time (s)"
+            "preparation_duration_label":"Preparation time (s)",
+            "preparation_sound_warning": "Preparation duration is set to 0 with preparation music selected. The music will play for its full duration.",
+            "training_ending_label":"Training ending",
+            "ending_duration_label":"Ending time (s)",
+            "ending_sound_warning": "Ending duration is set to 0 with ending music selected. The music will play for its full duration."
         },
 
                     
@@ -170,7 +185,8 @@
 
         "PreloadingScreen":{
             "title":"Loading Audio",
-            "subtitle":"Please wait while we prepare your training session..."
+            "subtitle":"Please wait while we prepare your training session...",
+            "finalizing":"Finalizing..."
         },
 
         "InstructionSlider":{
@@ -180,7 +196,10 @@
 
         "Counter":{
             "connector": "out of"
-        }
+        },
+
+        "phases":"phases in total",
+        "cycles":"cycles"
     },
 
     "BreathingPhaseType":{
@@ -194,6 +213,12 @@
         "none":"None",
         "global":"For whole training",
         "perStage":"For training stages",
-        "perPhase":"For each breathing phase"
+        "perPhase":"For each breathing phase",
+        "perEveryPhaseInEveryStage":"For phases in stage"
+    },
+
+    "FilePicker":{
+        "save_training": "Save training",
+        "save_trainings": "Save trainings"
     }
 }

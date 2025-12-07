@@ -2,12 +2,9 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:respire/components/Global/Step.dart' as breathing_phase;
+import 'package:respire/components/Global/BreathingPhase.dart' as breathing_phase;
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'dart:developer' as dev;
-
-final blockSize = 130.0;
-final sliderWidth = 400.0;
 
 class InstructionBlock {
   final String text;
@@ -19,10 +16,11 @@ class InstructionBlock {
 class InstructionSlider extends StatefulWidget {
 
   double preparationTime;
+  double endingTime;
   Queue<breathing_phase.BreathingPhase?> breathingPhasesQueue = Queue<breathing_phase.BreathingPhase?>();
   int change; 
 
-  InstructionSlider({super.key,required this.preparationTime,  required this.breathingPhasesQueue, required this.change});
+  InstructionSlider({super.key,required this.preparationTime, required this.endingTime, required this.breathingPhasesQueue, required this.change});
 
   @override
   State<InstructionSlider> createState() => InstructionSliderState();
@@ -108,7 +106,7 @@ class InstructionSliderState extends State<InstructionSlider>
       _logSlider('phase duration', detail: 'Duration: $phaseDuration ms');
       _controller.duration = Duration(milliseconds: min(phaseDuration,400));
       _controller.forward();
-      if(_blocks.last.text!=translationProvider.getTranslation("BreathingPage.InstructionSlider.ending_tile_text")) {
+      if(!_blocks.last.text.startsWith(translationProvider.getTranslation("BreathingPage.InstructionSlider.ending_tile_text"))) {
         addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(2));
       }
     }
@@ -122,7 +120,7 @@ class InstructionSliderState extends State<InstructionSlider>
 
   void addNewBreathingPhase(breathing_phase.BreathingPhase? breathingPhase) {
     final double position = _blocks.isEmpty ? 0.0 : _blocks.last.position + 1.0;
-    String breathingPhaseName = breathingPhase==null ? translationProvider.getTranslation("BreathingPage.InstructionSlider.ending_tile_text") : _breathingPhaseType(breathingPhase);
+    String breathingPhaseName = breathingPhase==null ? translationProvider.getTranslation("BreathingPage.InstructionSlider.ending_tile_text") + "\n${widget.endingTime} s" : _breathingPhaseType(breathingPhase);
     _blocks.add(
       InstructionBlock(
         text: breathingPhaseName, 
@@ -136,16 +134,6 @@ class InstructionSliderState extends State<InstructionSlider>
     return str[0].toUpperCase() + str.substring(1);
   }
 
-   String _breathDepth(breathing_phase.BreathingPhase? breathingPhase) {
-    if (breathingPhase!.breathDepth == null) return "";
-    return _firstToUpperCase(breathingPhase.breathDepth!.name);
-  }
-
-  String _breathType(breathing_phase.BreathingPhase? breathingPhase) {
-    if (breathingPhase!.breathType == null) return "";
-    return _firstToUpperCase(translationProvider.getTranslation("BreathingPhaseType.${breathingPhase.breathType!.name}"));
-  }
-
   String _breathingPhaseType(breathing_phase.BreathingPhase? breathingPhase) {
     if (breathingPhase == null) return "";
 
@@ -155,14 +143,6 @@ class InstructionSliderState extends State<InstructionSlider>
 
       case breathing_phase.BreathingPhaseType.inhale:
       case breathing_phase.BreathingPhaseType.exhale:
-        if (breathingPhase.breathType!=null) {
-          str += "\n${_breathType(breathingPhase)}";
-        }
-        if (breathingPhase.breathDepth!=null) {
-          str += "\n${_breathDepth(breathingPhase)}";
-        }
-        break;
-
       default:
         break;  
     }
@@ -179,13 +159,15 @@ class InstructionSliderState extends State<InstructionSlider>
   Widget _buildBlock(
       {required double positionX,
       required double scale,
-      required String text}) {
+      required String text,
+      required double blockSize,
+      required double sliderWidth}) {
 
       final isCenter = (positionX / spacing).round() == 0;
 
     return Positioned(
       left: sliderWidth / 2 + positionX - blockSize / 2, // offset to center + half block width
-      top: 50,
+      top: 20,
       child: Transform.scale(
         scale: scale,
         child: Container(
@@ -220,7 +202,7 @@ class InstructionSliderState extends State<InstructionSlider>
           ),
           child: Text(
             text,
-            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: sliderWidth*0.04, color: Colors.white, fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
         ),
@@ -230,11 +212,13 @@ class InstructionSliderState extends State<InstructionSlider>
 
   @override
   Widget build(BuildContext context) {
+    final sliderWidth = MediaQuery.of(context).size.width;
+    final blockSize = sliderWidth * 0.32;
     return Column(
       children: [
         SizedBox(
           width: sliderWidth,
-          height: 220,
+          height: 190,
           child: AnimatedBuilder(
             animation: _animation,
             builder: (_, __) {
@@ -245,6 +229,8 @@ class InstructionSliderState extends State<InstructionSlider>
                     positionX: animatedPos * spacing,
                     scale: _calculateScale(animatedPos),
                     text: block.text,
+                    blockSize: blockSize,
+                    sliderWidth: sliderWidth,
                   );
                 }).toList(),
               );

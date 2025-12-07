@@ -20,7 +20,7 @@
         "select_all":"Zaznacz wszystkie",
         "deselect_all":"Odznacz wszystkie",
         "export_selected":"Eksportuj",
-        "export_selected_count":"Eksportuj ({count})",
+        "export_selected_count":"Wybrano ({count})",
         "export_multiple_success":"Treningi zostały wyeksportowane",
         "no_trainings_selected":"Nie wybrano treningów",
         "import_multiple_success":"{count} treningów zostało pomyślnie zaimportowanych",
@@ -30,7 +30,10 @@
     "SettingsPage":{
         "page_title":"Ustawienia",
         "app_section_title":"Aplikacja",
-        "language_label":"Język"
+        "language_label":"Język",
+        "app_second_section_title":"O ReSpire",
+        "app_description":"ReSpire oferuje pełną kontrolę nad treningiem oddechowym. To aplikacja, która została zaprojektowana, aby pomóc wszystkim użytkownikom, niezależnie od ich poziomu zaawansowania. Można rozpocząć swoją przygodę z gotowymi ćwiczeniami lub szybko i wygodnie stworzyć własne treningi, dostosowane do swoich potrzeb. \nUsiądź wygodnie, zrelaksuj się i ReSpire.",
+        "copyright":"Wszelkie prawa zastrzeżone"
     },
 
     "TrainingPage":{
@@ -43,7 +46,7 @@
             "reps":"Powtórzenia",
             "increment":"Przyrost"
         },
-        "delete_training_dialog_title":"Usuwanie Treningu",
+        "delete_training_dialog_title":"Usuwanie treningu",
         "delete_training_dialog_content":"Na pewno chcesz usunąć ten trening?",
         "export_success":"Trening został pomyślnie wyeksportowany.",
         "export_error":"Błąd eksportu.",
@@ -63,8 +66,8 @@
             "edit_title_dialog_title":"Edytuj nazwę treningu",
             "edit_title_dialog_hint":"Wpisz nazwę treningu",
             "error":"Tytuł nie może być pusty",
-            "remove_training_stage_dialog_title":"Usunąć fazę treningu?",
-            "remove_training_stage_dialog_content":"Na pewno chcesz usunąć fazę treningu?",
+            "remove_training_stage_dialog_title":"Usunąć etap treningu?",
+            "remove_training_stage_dialog_content":"Czy na pewno chcesz usunąć etap treningu?",
             "add_training_stage_button_label":"Dodaj etap treningu",
             "default_training_stage_name":"Etap treningu",
 
@@ -95,7 +98,9 @@
                     "voice":"lektor",
                     "global":"Ogólny dźwięk zmiany fazy",
                     "for_each_breathing_phase":"dźwięk zmiany dla każdej fazy"
-                }
+                },
+                "stage_change_sound": "Zmiana etapu",
+                "cycle_change_sound": "Zmiana cyklu"
             },
 
             "TrainingMusic":{
@@ -111,17 +116,23 @@
                 }
             },
 
-            "AudioSelectionPopup":{
+            "AudioSelectionPopupSound":{
                 "title":"Wybierz dźwięk",
                 "user_sounds":"Dźwięki użytkownika",
                 "add_custom_sound_button_label":"Dodaj własny dźwięk"
             },
 
+             "AudioSelectionPopupMusic":{
+                "title":"Wybierz muzykę",
+                "user_music":"Muzyka użytkownika",
+                "add_custom_music_button_label":"Dodaj własną muzykę"
+            },
+
             "PlaylistEditor":{
-                "empty_playlist":"Playlista jest pusta. Dodaj dźwięki za pomocą przycisku poniżej.",
-                "empty_stage_playlist":"Brak dźwięków w playliście dla tego etapu. Dodaj dźwięki, które będą odtwarzane podczas tego etapu treningu.",
-                "add_sound":"Dodaj dźwięk",
-                "user_sound":"Dźwięk użytkownika"
+                "empty_playlist":"Playlista jest pusta. Dodaj muzykę za pomocą przycisku poniżej.",
+                "empty_stage_playlist":"Brak muzyki w playliście dla tego etapu. Dodaj muzykę, która będzie odtwarzana podczas tego etapu treningu.",
+                "add_music":"Dodaj muzykę",
+                "user_music":"Muzyka użytkownika"
             },
 
             "BinauralBeats":{
@@ -147,7 +158,11 @@
             "training_description_label":"Opis treningu",
             "training_description_hint":"Wpisz opis treningu...",
             "training_preparation_label":"Przygotowanie do treningu",
-            "preparation_duration_label":"Czas przygotowania (s)"
+            "preparation_duration_label":"Czas przygotowania (s)",
+            "preparation_sound_warning": "Czas przygotowania jest ustawiony na 0, a muzyka przygotowania jest wybrana. Muzyka zostanie odtworzona w całości.",
+            "training_ending_label":"Zakończenie treningu",
+            "ending_duration_label":"Czas zakończenia (s)",
+            "ending_sound_warning": "Czas zakończenia jest ustawiony na 0, a muzyka zakończenia jest wybrana. Muzyka zostanie odtworzona w całości."
         },
 
         "Alert":{
@@ -169,7 +184,8 @@
         
         "PreloadingScreen":{
             "title":"Ładowanie audio",
-            "subtitle":"Proszę czekać, przygotowujemy sesję treningową..."
+            "subtitle":"Proszę czekać, przygotowujemy sesję treningową...",
+            "finalizing":"Finalizacja..."
         },
         
         "InstructionSlider":{
@@ -179,7 +195,10 @@
 
         "Counter":{
             "connector": "z"
-        }
+        },
+
+        "phases":"faz łącznie",
+        "cycles":"cykli"
     },
 
     "BreathingPhaseType":{
@@ -193,6 +212,12 @@
         "none":"Brak",
         "global":"Na cały trening",
         "perStage":"Dla etapów treningu",
-        "perPhase":"Dla każdej fazy oddechowej"
+        "perPhase":"Dla każdej fazy oddechowej",
+        "perEveryPhaseInEveryStage":"Dla faz w etapie"
+    },
+
+    "FilePicker":{
+        "save_training": "Zapisz trening",
+        "save_trainings": "Zapisz treningi"
     }
 }

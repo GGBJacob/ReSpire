@@ -1,12 +1,27 @@
-\chapter{Testowanie aplikacji i wnioski}
+\chapter{Testowanie aplikacji}
+\todoHania{SIEROTY!!!!}
+W tym rozdziale przedstawione zostały sposoby testowania tworzonej aplikacji mobilnej. Terminologia i podział technik testowych są zgodne z aktualnym syllabusem ISTQB (\textit{ang. International Software Testing Qualifications Board}) Foundation Level (wersja 4.0) oraz polskimi odpowiednikami zawartymi w Glosariuszu SJSI. Ze względu na mały zespół i charakter projektu większość czynności miała charakter manualny i opierała się na wzajemnej weryfikacji członków zespołu i opiekuna pracy. Opis przeprowadzonego testowania podzielono na dwie części - testowanie statyczne i testowanie dynamiczne.
 
-\section{Testy jednostkowe \Hania\ \Ola\ \Jakub\ \Karol}
+\section{Testowanie statyczne}
+Testowanie statyczne stanowiło jeden z kluczowych elementów zapewnienia jakości w niniejszym projekcie. W odróżnieniu od testowania dynamicznego, wszystkie czynności statyczne realizowano bez konieczności uruchamiania kodu wykonawczego. Zamiast tego analizie poddane były artefakty wytwarzane na każdym etapie, w tym: kod źródłowy, modele i diagramy oraz wymagania. Dzięki temu możliwe było wczesne wykrycie błędów, niezgodności, problemów z jakością czy naruszenia standardów. 
 
-\section{Testy integracyjne \Hania\ \Ola\ \Jakub\ \Karol}
+Główną formę testowania statycznego stosowanego w projekcie stanowiły przeglądy kodu (\textit{ang. Code Review}). Każdy fragment kodu, niezależnie od tego, czy była to nowa funkcjonalność czy drobna poprawka, musiał przejść nieformalny przegląd przez co najmniej jedną, a najczęściej dwie inne osoby z zespołu. Czynności te odbywały się na bieżąco po każdym przyroście przed dołączeniem (\textit{ang. merge}) do głównej gałęzi roboczej \textit{dev}. Ich celem było wykrycie błędów przed połączeniem z już działającym kodem.
 
-\section{Testy systemowe \Hania}
+Często odbywały się również przeglądy techniczne, których celem było podjęcie decyzji w~sprawie problemu technicznego. W spotkaniach tego typu brał udział cały zespół, co skutkowało większą liczbą wykreowanych pomysłów i prowadziło do osiągnięcia konsensusu. Zdarzało się jednak, iż przegląd odbywał się w formie przeglądu parami (\textit{ang. pair reviewing}), gdy problem wymagał osób dysponujących specyficznymi kwalifikacjami technicznymi lub problem nie wymagał obecności wszystkich członków zespołu.
 
-\section{Testy użytkowe \Hania}
+Wszystkie inne artefakty, takie jak wymagania, modele czy diagramy były wielokrotnie omawiane i poprawiane w trakcie wspólnych sesji. Często dochodziło do kilku iteracji, aż cały zespół w pełni rozumiał i akceptował przedstawione rozwiązanie. Szczególną uwagę zwracano na spójność, brak sprzeczności oraz jednoznaczność opisów.
 
-Aplikacja została przetestowana przez $x$ osób z $y$ grup wiekowych - 20-22 lata, 30-40 lat i 50-60 lat. Testerzy używali ReSpire przez okres od dwóch do trzech tygodni.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum arcu nec blandit aliquam. Integer eros dolor, molestie eget dictum quis, luctus sit amet sapien. Proin dignissim felis in ornare volutpat. Morbi vulputate rutrum efficitur. Ut vehicula vehicula metus, et iaculis tortor mattis vel. Nam blandit, arcu quis ultricies blandit, libero ante commodo augue, in accumsan dui leo at orci. Phasellus in augue et velit pulvinar malesuada ut et sem. Nulla vehicula nibh eu odio sollicitudin sagittis. Praesent condimentum semper neque, tincidunt luctus nisl scelerisque sed. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+Dzięki małemu zespołowi i kulturze otwartej komunikacji każdy mógł w dowolnym momencie zweryfikować kod innego członka zespołu i zadać pytanie, zasugerować zmiany lub wskazać potencjalny problem. Ta nieformalna, ale niezwykle częsta sytuacja była jednym z najskuteczniejszych mechanizmów wczesnego wykrywania defektów.
+
+\newpage
+
+\section{Testowanie dynamiczne}
+Testowanie dynamiczne obejmowało wszytskie czynności wymagające uruchomienia kodu źródłowego aplikacji mobilnej. Ze względu na rozmiar zespołu ograniczono się do testów manualnych, jednak prowadzonych systematycznie i z dużym nakładem czasowym. Skupiono się na tych rodzajach testów, które dają największą wartość w kontekście aplikacji czasu rzeczywistego pracującej bezpośrednio ze sprzętem.
+
+Najważniejszą i najobszerniejszą część testowania dynamicznego stanowiły testy eksploracyjne. Regularnie, po każdym większym przyroście aplikacji i łączeniu zmian na główną gałąź roboczą, co najmniej dwie osoby z zespołu uruchamiały aplikację na fizycznych urządzeniach różniących się od siebie modelem i wersją systemu operacyjnego Android, a także wielkością. Przeprowadzali oni testy równocześnie projektowane i wykonywane w czasie zapoznawania się ze zmianami w oparciu o swoją wiedzę.  Pozwoliło to na wykrycie większej ilości błędów interfejsu użytkownika, a także ze względu na indywidualne doświadczenie każdej osoby, wykrywane były błędy nieoczywiste, w tym defekty związane z wartościami brzegowymi, błędy związane z~nietypowem wyborem opcji konfiguracyjnych czy problemy z użytkowaniem aplikacji.
+
+Ważnym elementem testów dynamicznych były testy potwierdzające wykonywane po każdej zmianie usuwającej błęd. Ich celem było sprawdzenie czy pierwotny defekt został pomyślnie usunięty. Wykonywane były wtedy wszystkie te przypadki testowe, które wcześniej nie zostały zaliczone lub tworzone nowe, w celu pokrycia ewentualnych zmian, które były niezbędne do wykonania. 
+
+Kolejnym stosowanym typem były manualne testy regresji przeprowadzane przed każdym udostępnieniem nowej wersji aplikacji. Wykonywano pełny, powtarzalny zestaw testów, który obejmował najważniejsze funkcje aplikacji, w tym tworzenie, edycję i przebieg treningu. Dzięki takiemu podejściu udało się znaleźć negatywne konsekwencje spowodowane przez wprowadzane zmiany w innych, nieedytowanych fragmentach oprogramowania.
+
+Ostatnim rodzajem wykonywanych testów były testy akceptacyjne, przeprowadzane z udziałem interesariuszy, takich jak opiekun pracy i potencjalni użytkownicy aplikacji. Każde postanowienia były spisywane, omawiane przez zespół i po zatwierdzeniu wprowadzane w nowej wersji aplikacji. Testy tego typu pozwoliły na dopracowanie użytkowalności aplikacji i wprowadzenie funkcji opartych na różnych perspektywach i potencjalnych wykorzystaniach aplikacji.

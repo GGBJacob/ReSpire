@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:respire/components/Global/Step.dart' as breathing_phase;
+import 'package:respire/components/Global/BreathingPhase.dart' as breathing_phase;
 
 class AnimatedCircle extends StatefulWidget {
   final breathing_phase.BreathingPhase? breathingPhase;

@@ -6,10 +6,11 @@ import 'package:respire/components/BreathingPage/PreloadingScreen.dart';
 import 'package:respire/components/BreathingPage/TrainingParser.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/Training.dart';
-import 'package:respire/components/Global/Step.dart' as breathing_phase;
+import 'package:respire/components/Global/BreathingPhase.dart' as breathing_phase;
 import 'package:respire/services/SoundManagers/SoundManager.dart';
 import 'package:respire/services/TrainingController.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class BreathingPage extends StatefulWidget {
   final Training training;
@@ -33,10 +34,15 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
   int _loadedCount = 0;
   int _totalCount = 0;
   String? _currentlyLoading;
+  bool _loadingFinalizing = false;
+
+  late double preparationDuration;
+  late double endingDuration;
 
   @override
   void initState() {
     super.initState();
+    WakelockPlus.enable();
     WidgetsBinding.instance.addObserver(this);
     // Ensure sounds are properly propagated to breathing phases
     widget.training.updateSounds();
@@ -132,6 +138,19 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
       // Small delay to show progress (optional, for UX)
       await Future.delayed(const Duration(milliseconds: 50));
     }
+
+    // Finalizing loading
+    if (mounted) {
+      setState(() {
+        _currentlyLoading = null;
+        _loadingFinalizing = true;
+      });
+    }
+    
+    loadPreparationLength();
+    loadEndingLength();
+
+    await Future.delayed(const Duration(milliseconds: 50));
     
     // All sounds loaded, create controller and show training
     if (mounted) {
@@ -142,8 +161,37 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
     }
   }
 
+  void loadPreparationLength() async {
+    SoundManager soundManager = SoundManager();
+    if(widget.training.settings.preparationDuration == 0)
+    {
+      if(widget.training.sounds.preparationTrack.type != SoundType.none) {
+        preparationDuration = (await soundManager.getSoundDuration(widget.training.sounds.preparationTrack.name))?.inSeconds.toDouble() ?? 0.0;
+      } else {
+        preparationDuration = 0.0;
+      }
+    } else {
+      preparationDuration = widget.training.settings.preparationDuration.toDouble();
+    }
+  }
+
+  void loadEndingLength() async {
+    SoundManager soundManager = SoundManager();
+    if(widget.training.settings.endingDuration == 0)
+    {
+      if(widget.training.sounds.endingTrack.type != SoundType.none) {
+        endingDuration = (await soundManager.getSoundDuration(widget.training.sounds.endingTrack.name))?.inSeconds.toDouble() ?? 0.0;
+      } else {
+        endingDuration = 0.0;
+      }
+    } else {
+      endingDuration = widget.training.settings.endingDuration.toDouble();
+    }
+  }
+
   @override
   void dispose() {
+    WakelockPlus.disable();
     WidgetsBinding.instance.removeObserver(this);
     controller?.dispose();
     super.dispose();
@@ -157,7 +205,6 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
           title: Text(translationProvider.getTranslation("BreathingPage.exit_popup_title")),
           content: Text(
             translationProvider.getTranslation("BreathingPage.exit_popup_message")),
-              //textAlign: TextAlign.center),
           actions: [
             TextButton(
               onPressed: () {
@@ -171,7 +218,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text(translationProvider.getTranslation("PopupButton.yes")),
+              child: Text(translationProvider.getTranslation("PopupButton.yes"), style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -210,10 +257,13 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
         loadedCount: _loadedCount,
         totalCount: _totalCount,
         currentlyLoading: _currentlyLoading,
+        finalizing: _loadingFinalizing
       );
     }
-    
+    controller!.setContext(context);
+    bool _displayStageInfo = false;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         leading: ValueListenableBuilder<Queue<breathing_phase.BreathingPhase?>>(
@@ -262,18 +312,18 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
             valueListenable: controller!.currentTrainingStageName,
             builder: (context, stageName, _) {
               final trimmed = stageName.trim();
-              final hasLabel = trimmed.isNotEmpty;
-              return Padding(
+              _displayStageInfo = trimmed.isNotEmpty && !_isPreloading;
+              return Visibility(
+                visible: _displayStageInfo,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Visibility(
-                      visible: hasLabel,
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: Text(
+                    Text(
                         translationProvider
                             .getTranslation("BreathingPage.current_training_stage_label"),
                         style: const TextStyle(
@@ -282,14 +332,8 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
                     const SizedBox(height: 4),
-                    Visibility(
-                      visible: hasLabel,
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: Text(
+                    Text(
                         trimmed,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
@@ -298,21 +342,22 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                           color: Colors.black,
                         ),
                       ),
-                    ),
                     const SizedBox(height: 8),
                     ValueListenableBuilder<int>(
                       valueListenable: controller!.breathingPhasesCount,
                       builder: (context, phaseCount, _) {
-                        if (phaseCount == 0) return const SizedBox.shrink();
-                        
                         return ValueListenableBuilder<int>(
                           valueListenable: controller!.currentStageIndex,
                           builder: (context, currentIndex, _) {
                             return ValueListenableBuilder<int>(
                               valueListenable: controller!.totalStages,
                               builder: (context, total, _) {
-                                if (total <= 1) return const SizedBox.shrink();
-                                return Container(
+                                return Visibility(
+                                  visible: _displayStageInfo,
+                                  maintainSize: true,
+                                  maintainAnimation: true,
+                                  maintainState: true,
+                                  child:Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
@@ -342,7 +387,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        '$currentIndex z $total',
+                                        '$currentIndex ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $total',
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -352,7 +397,7 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                                       ),
                                     ],
                                   ),
-                                );
+                                ));
                               },
                             );
                           },
@@ -362,9 +407,37 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                     const SizedBox(height: 12),
                   ],
                 ),
+              )
               );
             },
           ),
+
+          ValueListenableBuilder<bool>(
+            valueListenable: controller!.showLabels,
+            builder: (context, phaseCount, _) {
+              return controller!.showLabels.value ? 
+                ValueListenableBuilder<int>(
+                  valueListenable: controller!.breathingPhasesCount,
+                  builder: (context, breathingPhasesDone, _) {
+                    return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(44, 173, 196, 1).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${breathingPhasesDone <= breathingPhases ? breathingPhasesDone : breathingPhases} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $breathingPhases ${translationProvider.getTranslation("BreathingPage.phases")}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(44, 173, 196, 1),
+                          ),
+                        ),
+                      );
+                  },
+                ) 
+                : SizedBox(height: 0);
+            }),
 
           //instructions
           ValueListenableBuilder<Queue<breathing_phase.BreathingPhase?>>(
@@ -374,7 +447,8 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
                 valueListenable: controller!.breathingPhasesCount,
                 builder: (context, change, _) {
                   return InstructionSlider(
-                      preparationTime: widget.training.settings.preparationDuration.toDouble(), 
+                      preparationTime: preparationDuration,
+                      endingTime: endingDuration, 
                       breathingPhasesQueue: breathingPhasesQueue, 
                       change: change);
                 },
@@ -382,27 +456,40 @@ class _BreathingPageState extends State<BreathingPage> with WidgetsBindingObserv
             },
           ),
 
-          //breathing phase counter
-          ValueListenableBuilder<int>(
-            valueListenable: controller!.breathingPhasesCount,
-            builder: (context, breathingPhasesDone, _) {
-              return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(44, 173, 196, 1).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${breathingPhasesDone <= breathingPhases ? breathingPhasesDone : breathingPhases} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} $breathingPhases',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(44, 173, 196, 1),
-                    ),
-                  ),
-                );
-            },
-          ),
+          ValueListenableBuilder<bool>(
+            valueListenable: controller!.showLabels,
+            builder: (context, phaseCount, _) {
+              return controller!.showLabels.value ? 
+                //cycles counter
+                ValueListenableBuilder<int>(
+                  valueListenable: controller!.currentCycleIndex,
+                  builder: (context, phaseCount, _) {
+                    return 
+                    ValueListenableBuilder<int>(
+                      valueListenable: controller!.totalCycles,
+                      builder: (context, phaseCount, _) {
+                        return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(44, 173, 196, 1).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          "${controller!.currentCycleIndex.value} ${translationProvider.getTranslation("BreathingPage.Counter.connector")} ${controller!.totalCycles.value} ${translationProvider.getTranslation("BreathingPage.cycles")}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(44, 173, 196, 1),
+                          ),
+                        ),
+                      );
+                      }
+                    );
+                  }
+                )
+                : SizedBox(height: 0);
+            }),
 
           //circles
           ValueListenableBuilder<bool>(

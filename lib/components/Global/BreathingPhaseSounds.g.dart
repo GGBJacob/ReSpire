@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'PhaseSounds.dart';
+part of 'BreathingPhaseSounds.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -8,7 +8,7 @@ part of 'PhaseSounds.dart';
 
 class BreathingPhaseSoundsAdapter extends TypeAdapter<BreathingPhaseSounds> {
   @override
-  final int typeId = 11;
+  final int typeId = 9;
 
   @override
   BreathingPhaseSounds read(BinaryReader reader) {

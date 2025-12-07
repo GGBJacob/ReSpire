@@ -1,9 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
-import 'package:respire/components/Global/Step.dart';
+import 'package:respire/components/Global/BreathingPhase.dart';
 import 'package:uuid/uuid.dart';
 
-part 'Phase.g.dart';
+part 'TrainingStage.g.dart';
 
 @HiveType(typeId: 2)
 class TrainingStage {

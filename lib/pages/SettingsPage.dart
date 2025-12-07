@@ -4,6 +4,7 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:respire/services/TranslationProvider/AppLanguage.dart';
 import 'package:respire/services/SettingsProvider.dart';
+import 'package:respire/utils/TextUtils.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -22,26 +23,33 @@ class _SettingsPageState extends State<SettingsPage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 6,
+          offset: Offset(0, 3),)
+        ]
       ),
       child: Column(
         children: [
           SizedBox(height: 10),
           Text(
             translationProvider.getTranslation("SettingsPage.app_section_title"),
-            style: TextStyle(fontSize: 30, fontFamily: 'Glacial'),
+            style: TextStyle(fontSize: 26, fontFamily: 'Glacial', fontWeight: FontWeight.w300, color: Colors.black),
           ),
-          SizedBox(height: 10),
           Card(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: mediumblue, width: 1),
             ),
             color: Colors.white,
             child: Padding(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(translationProvider.getTranslation("SettingsPage.language_label")),
+                  Text(translationProvider.getTranslation("SettingsPage.language_label"), style: TextStyle(fontSize: 16)),
                   DropdownButton2<AppLanguage>(
                     underline: SizedBox(),
                     value: SettingsProvider().currentLanguage,
@@ -75,6 +83,66 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  Widget _secondBox(double screenWidth) {
+  return Container(
+    width: screenWidth * 0.9,
+    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 6,
+          offset: Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        Text(
+          translationProvider.getTranslation("SettingsPage.app_second_section_title"),
+          style: TextStyle(
+            fontSize: 26,
+            fontFamily: 'Glacial',
+            fontWeight: FontWeight.w300,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child:
+            Text(
+            TextUtils.addNoBreakingSpaces(translationProvider.getTranslation("SettingsPage.app_description")),
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          ),
+        SizedBox(height: 20),
+        Icon(
+          Icons.air,
+          size: 70,
+          color: darkerblue,
+        ),
+        SizedBox(height: 20),
+        Text(
+          "© ${DateTime.now().year} ${translationProvider.getTranslation("SettingsPage.copyright")}",
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -99,14 +167,22 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.white,
       ),
       backgroundColor: mediumblue,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _firstBox(screenWidth),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0), 
+        child: 
+          Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center, 
+            children: [
+              _firstBox(screenWidth),
+              SizedBox(height: 20),
+              _secondBox(screenWidth),
+            ],
+          ),
         ),
       ),
+    ),
     );
   }
 }

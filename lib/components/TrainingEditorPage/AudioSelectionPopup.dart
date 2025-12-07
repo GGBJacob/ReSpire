@@ -11,8 +11,10 @@ import 'package:respire/theme/Colors.dart';
 class AudioSelectionPopup extends StatefulWidget {
   final SoundListType listType;
   final bool includeVoiceOption;
+  final bool includeNoneOption;
   final String? selectedValue;
-  const AudioSelectionPopup({super.key, required this.listType, required this.selectedValue, required this.includeVoiceOption});
+  final bool isSoundSelection;
+  const AudioSelectionPopup({super.key, required this.listType, required this.selectedValue, required this.includeVoiceOption, this.includeNoneOption = true, required this.isSoundSelection, });
 
   @override
   State<AudioSelectionPopup> createState() => _AudioSelectionPopupState();
@@ -41,6 +43,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
     };
 
     final itemsMap = {
+      if (widget.includeNoneOption)
       _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.None"):SoundAsset(type: SoundType.none),
       if (widget.includeVoiceOption)
         _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.Voice"):SoundAsset(type: SoundType.voice),
@@ -69,7 +72,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
           ],
         ),
       ],
-      title: Text(_translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopup.title")),
+      title: widget.isSoundSelection ? Text(_translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopupSound.title")) : Text(_translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopupMusic.title")),
       content: SizedBox(
         width: 300,
         child: ConstrainedBox(
@@ -196,7 +199,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
     return TextButton.icon(
       onPressed: _addCustomSound,
       icon: const Icon(Icons.add, color: Colors.white),
-      label: Text(_translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopup.add_custom_sound_button_label"), style: TextStyle(color: Colors.white)),
+      label: widget.isSoundSelection ? Text(_translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopupSound.add_custom_sound_button_label"), style: TextStyle(color: Colors.white)) : Text(_translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopupMusic.add_custom_music_button_label"), style: TextStyle(color: Colors.white)),
       style: ElevatedButton.styleFrom(backgroundColor: darkerblue),
     );
   }
@@ -208,7 +211,7 @@ class _AudioSelectionPopupState extends State<AudioSelectionPopup>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopup.user_sounds"),
+                widget.isSoundSelection ? _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopupSound.user_sounds") : _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.AudioSelectionPopupMusic.user_music"),
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               const Divider(thickness: 1),

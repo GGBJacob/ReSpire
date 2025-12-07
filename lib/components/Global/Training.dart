@@ -1,10 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/TrainingStage.dart';
 import 'package:respire/components/Global/Settings.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Sounds.dart';
-import 'package:respire/components/Global/Step.dart';
+import 'package:respire/components/Global/BreathingPhase.dart';
 
 part 'Training.g.dart';
 
@@ -62,6 +62,7 @@ class Training {
     switch (sounds.nextSoundScope) {
       case SoundScope.none:
       case SoundScope.perStage:
+      case SoundScope.perEveryPhaseInEveryStage:
         break;
 
       case SoundScope.global:
@@ -89,6 +90,9 @@ class Training {
             }
           }
         }
+
+        
+
         break; 
 
     }
@@ -124,6 +128,27 @@ class Training {
           }
         }
         break;
+        
+      case SoundScope.perEveryPhaseInEveryStage:
+          for (int i=0; i<trainingStages.length; i++) {
+            for (var phase in trainingStages[i].breathingPhases){
+              switch(phase.breathingPhaseType) {
+                case BreathingPhaseType.inhale:
+                  phase.sounds.background = sounds.perEveryPhaseBreathingPhaseBackgrounds[trainingStages[i].id]?[BreathingPhaseType.inhale] ?? SoundAsset();
+                  break;
+                case BreathingPhaseType.retention:
+                  phase.sounds.background = sounds.perEveryPhaseBreathingPhaseBackgrounds[trainingStages[i].id]?[BreathingPhaseType.retention] ?? SoundAsset();
+                  break;
+                case BreathingPhaseType.exhale:
+                  phase.sounds.background = sounds.perEveryPhaseBreathingPhaseBackgrounds[trainingStages[i].id]?[BreathingPhaseType.exhale] ?? SoundAsset();
+                  break;
+                case BreathingPhaseType.recovery:
+                  phase.sounds.background = sounds.perEveryPhaseBreathingPhaseBackgrounds[trainingStages[i].id]?[BreathingPhaseType.recovery] ?? SoundAsset();
+                  break;
+              }
+            }
+          }
+          break;
     }
   }
 }

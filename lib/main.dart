@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/TrainingStage.dart';
 import 'package:respire/components/Global/Settings.dart';
 import 'package:respire/components/Global/SoundScope.dart';
 import 'package:respire/components/Global/Sounds.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
-import 'package:respire/components/Global/Step.dart';
-import 'package:respire/components/Global/StepIncrement.dart';
+import 'package:respire/components/Global/BreathingPhase.dart';
+import 'package:respire/components/Global/BreathingPhaseIncrement.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/pages/HomePage.dart';
 import 'package:respire/services/TextToSpeechService.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/services/UserSoundsDataBase.dart';
-import 'package:respire/components/Global/PhaseSounds.dart';
+import 'package:respire/components/Global/BreathingPhaseSounds.dart';
 import 'theme/Colors.dart';
 
 void main() async{
@@ -28,11 +28,9 @@ Future<void> initialize() async
   await Hive.initFlutter();
   // If any changes in loaded data occur, uncomment the following
   // line to delete the data and load it again
-  //await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
+  // await Hive.deleteBoxFromDisk('respire'); // disable deleting local storage to retain presets between restarts
   Hive.registerAdapter(BreathingPhaseAdapter());
   Hive.registerAdapter(BreathingPhaseTypeAdapter());
-  Hive.registerAdapter(BreathTypeAdapter());
-  Hive.registerAdapter(BreathDepthAdapter());
   Hive.registerAdapter(BreathingPhaseIncrementTypeAdapter());
   Hive.registerAdapter(BreathingPhaseIncrementAdapter());
   Hive.registerAdapter(TrainingStageAdapter());

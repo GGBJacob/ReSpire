@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:respire/components/Global/Step.dart' as respire;
+import 'package:respire/components/Global/BreathingPhase.dart' as respire;
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/theme/Colors.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -21,7 +21,7 @@ class CommaToDecimalFormatter extends TextInputFormatter {
 
 class BreathingPhaseTile extends StatefulWidget {
   final respire.BreathingPhase breathingPhase;
-  final Function(respire.BreathingPhase newStep) onBreathingPhaseChanged;
+  final Function(respire.BreathingPhase newBreathingPhase) onBreathingPhaseChanged;
   final VoidCallback onDelete;
   final VoidCallback onUpdate;
 
@@ -91,8 +91,6 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
       duration: currentDuration,
       increment: widget.breathingPhase.increment,
       breathingPhaseType: widget.breathingPhase.breathingPhaseType,
-      breathType: widget.breathingPhase.breathType,
-      breathDepth: widget.breathingPhase.breathDepth,
     );
     widget.onBreathingPhaseChanged(newBreathingPhase);
     widget.onUpdate();
@@ -104,8 +102,6 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
         duration: widget.breathingPhase.duration,
         increment: widget.breathingPhase.increment,
         breathingPhaseType: newType,
-        breathType: widget.breathingPhase.breathType,
-        breathDepth: widget.breathingPhase.breathDepth,
       );
       widget.onBreathingPhaseChanged(newBreathingPhase);
     }
@@ -192,7 +188,7 @@ class _BreathingPhaseTileState extends State<BreathingPhaseTile> {
                       Expanded(
                         child: TextField(
                           key: ValueKey(
-                              'duration_${widget.breathingPhase.breathingPhaseType}_${widget.breathingPhase.breathType}'),
+                              'duration_${widget.breathingPhase.breathingPhaseType}'),
                           controller: durationController,
                           focusNode: durationFocusNode,
                           keyboardType:

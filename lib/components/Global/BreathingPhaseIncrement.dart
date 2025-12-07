@@ -1,8 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-part 'StepIncrement.g.dart';
+part 'BreathingPhaseIncrement.g.dart';
 
-@HiveType(typeId: 7)
+@HiveType(typeId: 5)
 enum BreathingPhaseIncrementType {
   @HiveField(0)
   percentage, 
@@ -11,7 +11,7 @@ enum BreathingPhaseIncrementType {
   value
 }
 
-@HiveType(typeId: 8)
+@HiveType(typeId: 6)
 ///In order to edit breathing phase incrementation, simply replace the old object with a new one
 class BreathingPhaseIncrement {
   

@@ -1,9 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/TrainingStage.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/SoundScope.dart';
-import 'package:respire/components/Global/Step.dart';
-import 'package:respire/components/Global/StepIncrement.dart';
+import 'package:respire/components/Global/BreathingPhase.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 import 'package:respire/services/SoundManagers/SoundManager.dart';
@@ -41,7 +40,7 @@ class PresetDataBase {
         }
       }
     } catch (e) {
-      print('Error loading presets: $e – resetting to default presets.');
+      print('Error loading presets: $e - resetting to default presets.');
       _box.delete('presets');
       createInitialData();
       updateDataBase();
@@ -83,7 +82,7 @@ class PresetDataBase {
 
     Training(
       title: "Box Breathing",
-      description: "Technique used by Navy SEALs to enhance focus and reduce stress",
+      description: "Technique used by Navy SEALs to enhance focus and reduce stress.",
       trainingStages: [
         TrainingStage(
           reps: 5,

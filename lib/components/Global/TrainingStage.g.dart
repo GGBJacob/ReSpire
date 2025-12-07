@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'Phase.dart';
+part of 'TrainingStage.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator

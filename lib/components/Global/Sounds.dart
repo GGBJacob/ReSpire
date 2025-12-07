@@ -1,12 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:respire/components/Global/SoundAsset.dart';
 import 'package:respire/components/Global/SoundScope.dart';
-import 'package:respire/components/Global/Step.dart';
+import 'package:respire/components/Global/BreathingPhase.dart';
 import 'package:respire/services/SoundManagers/SoundManager.dart';
 
 part 'Sounds.g.dart';
 
-@HiveType(typeId: 9)
+@HiveType(typeId: 7)
 class Sounds {
 
   // === GLOBAL / TRAINING LEVEL ===
@@ -59,6 +59,18 @@ class Sounds {
     for (var type in BreathingPhaseType.values) type: SoundAsset()
   };
 
+  /// Background sounds for each breathing phase in every stage
+  @HiveField(11)
+  Map<String, Map<BreathingPhaseType, SoundAsset>> perEveryPhaseBreathingPhaseBackgrounds = {};
+
+  /// Sound played between stages
+  @HiveField(12)
+  SoundAsset stageChangeSound = SoundManager.shortSounds["Bell"]!;
+
+  /// Sound played between cycles (repeated stage)
+  @HiveField(13)
+  SoundAsset cycleChangeSound = SoundManager.shortSounds["Beep"]!;
+
   void clearUserSound(String soundName) {
     if (countingSound.name == soundName) {
       countingSound = SoundAsset();
@@ -76,6 +88,10 @@ class Sounds {
 
     for (var stage in stagePlaylists.keys) {
       stagePlaylists[stage]!.removeWhere((sound) => sound.name == soundName);
+    }
+
+    if(cycleChangeSound.name == soundName) {
+      cycleChangeSound = SoundAsset();
     }
 
     breathingPhaseCues.forEach((key, value) {

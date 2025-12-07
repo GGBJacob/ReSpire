@@ -3,7 +3,7 @@ import 'package:respire/services/TranslationProvider/TranslationProvider.dart';
 
 part 'SoundScope.g.dart';
 
-@HiveType(typeId: 15)
+@HiveType(typeId: 12)
 enum SoundScope {
   @HiveField(0)
   none,
@@ -16,6 +16,9 @@ enum SoundScope {
 
   @HiveField(3)
   perPhase,
+
+  @HiveField(4)
+  perEveryPhaseInEveryStage
 }
 
 extension SoundScopeX on SoundScope {
@@ -29,10 +32,12 @@ extension SoundScopeX on SoundScope {
         return TranslationProvider().getTranslation("SoundScope.perStage");
       case SoundScope.perPhase:
         return TranslationProvider().getTranslation("SoundScope.perPhase");
+      case SoundScope.perEveryPhaseInEveryStage:
+        return TranslationProvider().getTranslation("SoundScope.perEveryPhaseInEveryStage");
     }
   }
 
   static List<SoundScope> get nextPhaseScopeValues {
-    return SoundScope.values.where((scope) => scope != SoundScope.perStage).toList();
+    return SoundScope.values.where((scope) => scope != SoundScope.perStage && scope != SoundScope.perEveryPhaseInEveryStage).toList();
   }
 }

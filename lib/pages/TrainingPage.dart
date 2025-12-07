@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:respire/components/Global/Phase.dart';
+import 'package:respire/components/Global/TrainingStage.dart';
 import 'package:respire/components/Global/Training.dart';
 import 'package:respire/pages/BreathingPage.dart';
 import 'package:respire/pages/TrainingEditorPage.dart';
@@ -313,13 +313,27 @@ class _TrainingPageState extends State<TrainingPage> {
         ),
       ),
       backgroundColor: mediumblue,
-      body:
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 200,
+            child: Opacity(
+              opacity: 1,
+              child: Lottie.asset(
+                'assets/animations/boat.json',
+                fit: BoxFit.fitWidth,
+                repeat: true,
+              ),
+            ),
+            ),
           Positioned.fill(
             child: Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 220), 
                     child: Column(
                       children: [
                         Row(children: [shareButton(), Spacer(), editButton(), deleteButton()]),
@@ -332,6 +346,8 @@ class _TrainingPageState extends State<TrainingPage> {
                 ),
               ],
             ),
+          ),
+        ],
       ),
     );
   }
@@ -356,6 +372,7 @@ class _TrainingPageState extends State<TrainingPage> {
                 setState(() {});
                 Navigator.pop(context, true);
               },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: Text(translationProvider.getTranslation("PopupButton.delete")),
             ),
           ],
@@ -373,7 +390,9 @@ class _TrainingPageState extends State<TrainingPage> {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(translationProvider.getTranslation('TrainingPage.export_success')),
+            content: Text(translationProvider.getTranslation('TrainingPage.export_success'), 
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.white),),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),

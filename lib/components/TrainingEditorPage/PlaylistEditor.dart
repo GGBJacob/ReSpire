@@ -61,8 +61,10 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
       context: context,
       builder: (_) => AudioSelectionPopup(
         includeVoiceOption: false,
+        includeNoneOption: false,
         listType: SoundListType.longSounds,
         selectedValue: null,
+        isSoundSelection: false,
       ),
     );
 
@@ -118,7 +120,7 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
         children: [
           Icon(
             Icons.music_off,
-            size: 40,
+            size: 30,
             color: Colors.grey.shade400,
           ),
           const SizedBox(height: 8),
@@ -210,9 +212,9 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
               ),
           ],
         ),
-        subtitle: sound.type == SoundType.melody
+        subtitle: _soundManager.isUserMusic(sound.name)
             ? Text(
-                _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.PlaylistEditor.user_sound"),
+                _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.PlaylistEditor.user_music"),
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey.shade600,
@@ -236,7 +238,7 @@ class _PlaylistEditorState extends State<PlaylistEditor> {
       onPressed: _addSound,
       icon: const Icon(Icons.add, color: Colors.white),
       label: Text(
-        _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.PlaylistEditor.add_sound"),
+        _translationProvider.getTranslation("TrainingEditorPage.SoundsTab.PlaylistEditor.add_music"),
         style: const TextStyle(color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(

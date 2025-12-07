@@ -1,0 +1,137 @@
+@startuml
+!pragma useIntermediatePackages false
+'hide methods 
+set namespaceSeparator ::
+
+remove dart::core::Enum
+remove respire::components::Global::Sounds_lists.g.dart
+
+class "respire::components::Global::BreathingPhase.dart::BreathingPhase" {
+  +double duration
+  +BreathingPhaseIncrement? increment
+  +BreathingPhaseType breathingPhaseType
+  +BreathingPhaseSounds sounds
+  +double getBreathingPhaseDuration()
+}
+
+"respire::components::Global::BreathingPhase.dart::BreathingPhase" *-- "respire::components::Global::BreathingPhaseIncrement.dart::BreathingPhaseIncrement"
+"respire::components::Global::BreathingPhase.dart::BreathingPhase" *-- "respire::components::Global::BreathingPhase.dart::BreathingPhaseType"
+"respire::components::Global::BreathingPhase.dart::BreathingPhase" *-- "respire::components::Global::BreathingPhaseSounds.dart::BreathingPhaseSounds"
+
+class "respire::components::Global::BreathingPhase.dart::BreathingPhaseType" {
+  {static} +BreathingPhaseType inhale
+  {static} +BreathingPhaseType exhale
+  {static} +BreathingPhaseType retention
+  {static} +BreathingPhaseType recovery
+}
+
+class "respire::components::Global::BreathingPhaseIncrement.dart::BreathingPhaseIncrement" {
+  +double value
+  +BreathingPhaseIncrementType type
+}
+
+"respire::components::Global::BreathingPhaseIncrement.dart::BreathingPhaseIncrement" *-- "respire::components::Global::BreathingPhaseIncrement.dart::BreathingPhaseIncrementType"
+
+class "respire::components::Global::BreathingPhaseIncrement.dart::BreathingPhaseIncrementType" {
+  {static} +BreathingPhaseIncrementType percentage
+  {static} +BreathingPhaseIncrementType value
+}
+
+class "respire::components::Global::BreathingPhaseSounds.dart::BreathingPhaseSounds" {
+  +SoundAsset preBreathingPhase
+  +SoundAsset background
+}
+
+"respire::components::Global::BreathingPhaseSounds.dart::BreathingPhaseSounds" o-- "respire::components::Global::SoundAsset.dart::SoundAsset"
+
+class "respire::components::Global::Settings.dart::Settings" {
+  +int preparationDuration
+  +int endingDuration
+  +bool binauralBeatsEnabled
+  +double binauralLeftFrequency
+  +double binauralRightFrequency
+}
+
+class "respire::components::Global::SoundAsset.dart::SoundAsset" {
+  -String _name
+  +String path
+  +SoundType type
+  +String name
+  +String toString()
+}
+
+"respire::components::Global::SoundAsset.dart::SoundAsset" *-- "respire::components::Global::SoundAsset.dart::SoundType"
+
+class "respire::components::Global::SoundAsset.dart::SoundType" {
+  {static} +SoundType voice
+  {static} +SoundType melody
+  {static} +SoundType cue
+  {static} +SoundType counting
+  {static} +SoundType none
+}
+
+class "respire::components::Global::Sounds.dart::Sounds" {
+  +SoundAsset countingSound
+  +SoundScope nextSoundScope
+  +SoundAsset nextSound
+  +SoundAsset preparationTrack
+  +SoundAsset endingTrack
+  +SoundScope backgroundSoundScope
+  +List<SoundAsset> trainingBackgroundPlaylist
+  +Map<String, List<SoundAsset>> stagePlaylists
+  +Map<BreathingPhaseType, SoundAsset> breathingPhaseCues
+  +Map<BreathingPhaseType, SoundAsset> breathingPhaseBackgrounds
+  +Map<String, Map<BreathingPhaseType, SoundAsset>> perEveryPhaseBreathingPhaseBackgrounds
+  +SoundAsset stageChangeSound
+  +SoundAsset cycleChangeSound
+  +void clearUserSound()
+}
+
+"respire::components::Global::Sounds.dart::Sounds" o-- "respire::components::Global::SoundAsset.dart::SoundAsset"
+"respire::components::Global::Sounds.dart::Sounds" o-- "respire::components::Global::SoundScope.dart::SoundScope"
+
+class "respire::components::Global::SoundScope.dart::SoundScope" {
+  {static} +SoundScope none
+  {static} +SoundScope global
+  {static} +SoundScope perStage
+  {static} +SoundScope perPhase
+  {static} +SoundScope perEveryPhaseInEveryStage
+}
+
+class "respire::components::Global::Sounds_lists.g.dart::ReSpireSounds" {
+  +Map<String, SoundAsset> longSounds
+  +Map<String, SoundAsset> shortSounds
+  +Map<String, SoundAsset> countingSounds
+}
+
+class "respire::components::Global::Training.dart::Training" {
+  +String title
+  +String description
+  +List<TrainingStage> trainingStages
+  +Sounds sounds
+  +Settings settings
+  +int countEmptyStages()
+  +void deleteEmptyStages()
+  +bool isEmpty()
+  +void updateSounds()
+}
+
+"respire::components::Global::Training.dart::Training" *-down- "respire::components::Global::Sounds.dart::Sounds"
+"respire::components::Global::Training.dart::Training" *-down- "respire::components::Global::Settings.dart::Settings"
+"respire::components::Global::Training.dart::Training" *-down- respire::components::Global::TrainingStage.dart::TrainingStage
+
+"respire::components::Global::TrainingStage.dart::TrainingStage" *-down- "respire::components::Global::BreathingPhase.dart::BreathingPhase"
+
+class "respire::components::Global::TrainingStage.dart::TrainingStage" {
+  +String id
+  +String name
+  +int reps
+  +double increment
+  +List<BreathingPhase> breathingPhases
+  +void addBreathingPhase()
+  +void propagateNextSound()
+  +void propagateBackgroundSound()
+}
+
+
+@enduml

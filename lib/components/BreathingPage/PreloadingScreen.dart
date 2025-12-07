@@ -7,12 +7,14 @@ class PreloadingScreen extends StatelessWidget {
   final int loadedCount;
   final int totalCount;
   final String? currentlyLoading;
+  final bool finalizing;
 
   const PreloadingScreen({
     super.key,
     required this.progress,
     required this.loadedCount,
     required this.totalCount,
+    required this.finalizing,
     this.currentlyLoading,
   });
 
@@ -89,20 +91,22 @@ class PreloadingScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 
                 // Progress text
-                Text(
-                  '$loadedCount / $totalCount',
+                Visibility(
+                  visible: !finalizing,
+                  child:Text(
+                  '$loadedCount / ${totalCount}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
-                ),
+                )),
                 const SizedBox(height: 8),
                 
                 // Currently loading file
-                if (currentlyLoading != null)
+                if (currentlyLoading != null || finalizing)
                   Text(
-                    currentlyLoading!,
+                    finalizing ? translationProvider.getTranslation("BreathingPage.PreloadingScreen.finalizing") : currentlyLoading!,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white.withOpacity(0.7),

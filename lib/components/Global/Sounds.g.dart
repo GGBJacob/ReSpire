@@ -8,7 +8,7 @@ part of 'Sounds.dart';
 
 class SoundsAdapter extends TypeAdapter<Sounds> {
   @override
-  final int typeId = 9;
+  final int typeId = 7;
 
   @override
   Sounds read(BinaryReader reader) {
@@ -29,13 +29,18 @@ class SoundsAdapter extends TypeAdapter<Sounds> {
       ..breathingPhaseCues =
           (fields[9] as Map).cast<BreathingPhaseType, SoundAsset>()
       ..breathingPhaseBackgrounds =
-          (fields[10] as Map).cast<BreathingPhaseType, SoundAsset>();
+          (fields[10] as Map).cast<BreathingPhaseType, SoundAsset>()
+      ..perEveryPhaseBreathingPhaseBackgrounds = (fields[11] as Map).map(
+          (dynamic k, dynamic v) => MapEntry(
+              k as String, (v as Map).cast<BreathingPhaseType, SoundAsset>()))
+      ..stageChangeSound = fields[12] as SoundAsset
+      ..cycleChangeSound = fields[13] as SoundAsset;
   }
 
   @override
   void write(BinaryWriter writer, Sounds obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(13)
       ..writeByte(1)
       ..write(obj.countingSound)
       ..writeByte(2)
@@ -55,7 +60,13 @@ class SoundsAdapter extends TypeAdapter<Sounds> {
       ..writeByte(9)
       ..write(obj.breathingPhaseCues)
       ..writeByte(10)
-      ..write(obj.breathingPhaseBackgrounds);
+      ..write(obj.breathingPhaseBackgrounds)
+      ..writeByte(11)
+      ..write(obj.perEveryPhaseBreathingPhaseBackgrounds)
+      ..writeByte(12)
+      ..write(obj.stageChangeSound)
+      ..writeByte(13)
+      ..write(obj.cycleChangeSound);
   }
 
   @override
