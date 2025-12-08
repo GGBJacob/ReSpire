@@ -37,7 +37,7 @@ Proces importu charakteryzuje się elastycznością dzięki dwóm wariantom eksp
 \subsection{Menu - inne}
 
 \section{Przebieg treningu \Hania}
-\subsection{Klasa TrainingParser}
+\subsection{Klasa TrainingParser} \label{subsec:TrainingParser}
 Klasa \texttt{TrainingParser} powstała w celu przekształcenia hierarchicznych danych treningowych pobranych z lokalnej bazy danych \textit{Hive} w ciąg występujących po sobie faz, oparty na skonfigurowanym uprzednio przez użytkownika wzorcu oddychania. Jej zadaniem jest zwracanie kolejnych faz do obiektu \texttt{TrainingController}. Dzięki temu logika przełączania faz i powtórzeń jest odseparowana od interfejsu. 
 
 Konstruktor jako parametr przyjmuje obiekt klasy \texttt{Training} i zapisuje do zmiennej \textit{currentTrainingStage} pierwszy etap treningu. Fragment realizujący tę funkcjonalność przedstawiono poniżej w kodzie \ref{code/parser/constructor}.
@@ -448,7 +448,7 @@ else {
 \end{figure}
 
 
-\subsection{Klasa AnimatedCircle}
+\subsection{Klasa AnimatedCircle} \label{subsec:AnimatedCircle}
 Komponent \texttt{AnimatedCircle} odpowiada za wizualizację przebiegu fazy oddechowej w postaci animowanego koła. Wdech powoduje zwiększanie jego promienia, wydech - zmniejszanie, natomiast fazy retencji i regeneracji utrzymują stały rozmiar.
 
 Obiekt przyjmuje dwa parametry — obiekt typu \texttt{BreathingPhase?}, który reprezentuje aktualną fazę oddechową bądź wartość null w przypadku zakończenia treningu oraz obiekt typu \texttt{bool} \textit{isPaused}, reprezentujący stan wstrzymania treningu. Framgment tworzenia klasy przedstawiony został w kodzie \ref{code/circle/constructor}.
@@ -692,5 +692,57 @@ Konstruktor klasy przyjmuje parametr całkowitoliczbowy, definiujący rozmiar bu
 \end{figure}
 
 \section{Języki \Jakub} \label{sec:Languages}
-\todoJakub{jak odczytujemy jsony}
+
+Interfejs użytkownika został przystosowany do obsługi wielu wersji językowych, oferując obecnie pełne wsparcie dla języka polskiego oraz angielskiego. Zasoby tekstowe przechowywane są w zewnętrznych plikach formatu JSON, umieszczonych w katalogu \textit{assets/}. Przyjęta konwencja nazewnictwa plików opiera się na standardowych kodach lokalizacji (np. \texttt{pl\_PL.json}).
+
+Za warstwę logiczną odpowiada serwis \texttt{TranslationProvider}. Przechowuje on w pamięci operacyjnej stan wybranego języka oraz załadowany słownik tłumaczeń w strukturze \texttt{Map<String, dynamic>} zachowując pierwotną, hierarchiczną formę. Pobieranie fraz realizuje metoda~\texttt{getTranslation}, która interpretuje argument wejściowy jako ścieżkę nawigacji w strukturze JSON (gdzie poszczególne węzły rozdzielone są separatorem kropki, np. \texttt{"home.title"}). Algorytm dzieli przekazany klucz, a następnie przechodzi przez kolejne poziomy mapy w poszukiwaniu docelowego tekstu. Jeśli wskazana ścieżka jest poprawna, przypisana do niej wartość zostaje zwrócona. W przeciwnym razie (np. błędny klucz lub brak węzła) system zwraca pierwotny klucz, co stanowi mechanizm zabezpieczający. Implementację tej logiki przedstawiono w kodzie~\ref{code/TranslationProvider/getTranslation}, natomiast przykładową strukturę danych wykorzystywaną przez moduł tłumaczeń zaprezentowano w kodzie~\ref{code/TranslationProvider/example}.
+
+
+\begin{figure}[H]
+  \centering
+  \begin{lstlisting}[caption={TranslationProvider - pobieranie tłumaczenia}, label={code/TranslationProvider/getTranslation}]
+  String getTranslation(String key) {
+    if (_translations.isEmpty) {
+      return key;
+    }
+
+    List<String> parts = key.split('.');
+    dynamic value = _translations;
+
+    for(String part in parts){
+      if (value is Map<String, dynamic> && value.containsKey(part)) {
+        value = value[part];
+      } else {
+        return key;
+      }
+    }
+
+    return value is String ? value : key;
+  }
+  \end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Fragment struktury pliku tłumaczeń (en\_EN.json)}, label={code/TranslationProvider/example}]
+{
+   "SoundsTab":{
+      "TrainingSounds":{
+        "title": "Training sounds",
+        "counting_sound": "Counting",
+        "NextBreathingPhaseSounds":{
+          "title":"Next breathing phase: ",
+          "none": "no sound",
+          "global":"Global phase change sound",
+          "voice":"lector",
+          "for_each_breathing_phase":"change sound for each phase"
+        },
+        "stage_change_sound": "End of stage",
+        "cycle_change_sound": "End of cycle"
+      },
+    }
+}
+\end{lstlisting}
+\end{figure}
+
 \section{Baza danych \Karol}
