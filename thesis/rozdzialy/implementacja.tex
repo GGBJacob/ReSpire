@@ -870,9 +870,8 @@ Kluczowym aspektem konfiguracji było również zapewnienie współbieżności e
 
 Klasa \texttt{SingleSoundManager} dedykowana jest do obsługi odtwarzania sygnałów w trybie wyłączności. W warstwie implementacyjnej deleguje ona zadania do globalnego \texttt{SoundManagera} opisanego w~rozdziale~\ref{subsec:SoundManager}, jednak w przeciwieństwie do niego, uniemożliwia współbieżne odtwarzanie wielu ścieżek --- w danym momencie odtwarzany może być tylko jeden plik.
 
-Informacja o aktywnym zasobie przechowywana jest w polu \texttt{currentlyPlaying}. Co istotne, odtwarzanie realizowane jest tutaj wyłącznie w trybie \textit{media player}. Pozwala to na nasłuchiwanie zdarzeń zakończenia emisji i automatyczne czyszczenie stanu zmiennej. Mechanizm ten znajduje zastosowanie m.in. podczas wyboru dźwięków w edytorze treningu, umożliwiając dynamiczną aktualizację interfejsu użytkownika w zależności od stanu odtwarzacza.
+Informacja o aktywnym zasobie przechowywana jest w polu \texttt{currentlyPlaying}. Co istotne, odtwarzanie realizowane jest tutaj wyłącznie w trybie \textit{media player}. Pozwala to na nasłuchiwanie zdarzeń zakończenia emisji i automatyczne czyszczenie stanu zmiennej. Mechanizm ten znajduje zastosowanie m.in. podczas wyboru dźwięków w edytorze treningu (w dodatku A, rozdział~\ref{img/dzwieki_uzytkownika}), umożliwiając dynamiczną aktualizację interfejsu użytkownika w zależności od stanu odtwarzacza.
 
-\todoJakub{ref do podglądu dźwięków}
 \subsection{PlaylistManager} \label{subsec:PlaylistManager}
 
 Za obsługę sekwencyjnego odtwarzania zbiorów plików muzycznych w trakcie treningu odpowiada klasa \texttt{PlaylistManager}. Enkapsuluje ona stan procesu, przechowując flagi sterujące (typu logicznego, \texttt{boolean}), kursor bieżącego utworu oraz listę ścieżek. Istotnym elementem jest również obiekt typu \texttt{Completer}, pełniący rolę prymitywu synchronizacyjnego służącego do obsługi zdarzeń przerwania odtwarzania. 
