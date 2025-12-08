@@ -901,6 +901,8 @@ Do realizacji swoich funkcji klasa deleguje zadania do \texttt{SingleSoundManage
 
 Implementacja klasy \texttt{AudioPlayerPool} wynika bezpośrednio ze zidentyfikowanych ograniczeń technicznych --- braku obsługi zdarzeń zakończenia odtwarzania w trybie minimalnego czasu reakcji. Celem tego modułu jest umożliwienie emisji krótkich sygnałów dźwiękowych o wysokiej częstotliwości (w odstępach rzędu 100 ms).
 
+Konstruktor klasy przyjmuje parametr całkowitoliczbowy, definiujący rozmiar bufora cyklicznego, w którym przechowywane są instancje odtwarzaczy. Mechanizm pobierania zasobu z puli realizuje strategię rotacji i odświeżania: obiekt znajdujący się pod bieżącym wskaźnikiem podlega zniszczeniu i na jego miejsce tworzony jest nowy. Podejście to jest kluczowe przy kolejnych obiegach listy, aby wyeliminować błędy wynikające z próby ponownego użycia odtwarzacza posiadającego zablokowany stan po poprzednim odtworzeniu. Logikę pobierania instancji przedstawia kod~\ref{code/AudioPlayerPool/next}.
+
 \begin{figure}[H] 
 \centering
 \begin{lstlisting}[caption={AudioPlayerPool - pobieranie kolejnego elementu z puli}, label={code/AudioPlayerPool/next}]
