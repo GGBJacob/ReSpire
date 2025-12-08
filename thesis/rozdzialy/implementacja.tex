@@ -9,18 +9,6 @@ Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają 
 
 \subsection{Schemat plików \Ola}
 
-\subsection{Klasy treningu \Jakub} \label{subsec:training_classes}
-
-Na trening składa się 12 klas, z czego główną z nich jest \texttt{Training}. Zawiera ona główne informacje o ćwiczeniu takie jak tytuł, czy opis, a także listę etapów, dźwięki i ustawienia. Struktura dźwięków została opisana w rodziale \ref{sec:Sounds}. 
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{diagramy/class_diagram.png}
-  \caption{Diagram klas treningu}
-  \label{img/class_diagram}
-\end{figure}
-
-
 \section{Edytor treningów \Karol}
 
 Edytor treningów został zaimplementowany jako dedykowany widok \texttt{TrainingEditorPage}, który operuje bezpośrednio na obiekcie \texttt{Training}. Struktura treningu przechowywana jest w modelach Hive (\texttt{TrainingStage}, \texttt{BreathingPhase}, \texttt{Sounds}, \texttt{Settings}), dzięki czemu każda modyfikacja wprowadzona w interfejsie natychmiast trafia do tej samej instancji danych, którą aplikacja później serializuje. Cała logika edytora została podzielona na trzy zakładki sterowane przez komponent \texttt{CustomSlidingSegmentedControl}, co pozwoliło oddzielić edycję przebiegu treningu, konfigurację dźwięków oraz ustawienia uzupełniające, utrzymując jednocześnie wspólną nawigację i kontrolę zapisów. Sam \texttt{CustomSlidingSegmentedControl} jest komponentem zainspirowanym szeroko wykorzystywanym w systemie mobilnym Apple iOS oraz platformie technologicznej SwiftUI komponenetem \texttt{segmented}, który umożliwia przełączanie się między różnymi widokami w obrębie jednej strony aplikacji przy jednoczesnej informacji o dostępnych panelach oraz aktualnie włączonym panelu. Wpasowuje się to idealnie w nasze zapotrzebowanie, ponieważ każda zakładka reprezentuje inny, lecz integralny aspekt edycji treningu.
@@ -66,7 +54,6 @@ Konstruktor jako parametr przyjmuje obiekt klasy \texttt{Training} i zapisuje do
 \end{lstlisting}
 \end{figure}
 
-\newpage
 Zadaniem funkcji \texttt{nextInstruction}, przedstawionej na kodzie \ref{code/parser/nextInstruction}, jest zwrócenie danych dotyczącej kolejnej fazy oddechowej w postaci mapy \texttt{Map<String, dynamic>} lub wartości \texttt{null} w~przypadku zakończenia całego treningu. 
 
 W pierwszej kolejności analizowany jest aktualny indeks fazy oddechowej (\textit{breathingPhaseID}). Jeżeli wskazuje on ostatnią fazę w bieżącym etapie, oznacza to zakończenie jednego pełnego cyklu etapu. W takim przypadku indeks fazy jest zerowany (\textit{breathingPhaseID = 0}), a licznik wykonanych powtórzeń w etapie (\textit{doneReps}) zwiększany jest o jeden. Następnie sprawdzana jest liczba wykonanych powtórzeń w odniesieniu do wartości zdefiniowanej w obiekcie etapu (\textit{currentTrainingStage.reps}). W przypadku jej osiągnięcia następuje przejście do kolejnego etapu treningu poprzez inkrementację indeksu \textit{trainingStageID}. Jeżeli po tej operacji indeks ten osiągnie wartość równą liczbie wszystkich etapów w strukturze treningu, funkcja zwraca \textit{null}, sygnalizując zakończenie sesji. W przeciwnym razie wczytywany jest nowy etap (\textit{currentTrainingStage = training.trainingStages[trainingStageID]}), a licznik \textit{doneReps} zostaje zresetowany do zera. Gdy aktualna faza nie była ostatnią w cyklu, indeks \textit{breathingPhaseID} jest jedynie zwiększany o jeden. Po ustaleniu poprawnego indeksu do zmiennej \textit{currentBreathingPhase} przypisywana jest odpowiadająca mu faza oddechowa. Kolejnym etapem jest obliczenie rzeczywistego czasu trwania fazy z uwzględnieniem mechanizmu progresji. 
@@ -125,7 +112,7 @@ Map<String, dynamic>? nextInstruction() {
 \end{lstlisting}
 \end{figure}
 
-\subsection{Klasa TrainingController}
+\subsection{Klasa TrainingController} \label{subsec:TrainingController}
 
 \texttt{TrainingController} jest centralnym kontrolerem sesji treningu w aplikacji. Odpowiada za precyzyjne, milisekundowe sterowanie czasem, płynne przechodzenie między fazami oddechowymi i inteligentne zarządzanie wszystkimi warstwami dźwiękowymi --- muzyka w tle, playlisty, odliczanie, zapowiedzi i dudnienia różnicowe. Zapewnia również poprawne przeprowadzenie użytkownika przez trzy główne etapy --- przygotowanie, właściwy trening i fazę końcową. Komponent zarządza wieloma zmiennymi, które zostały przedstawione w tabeli \ref{tab/controller}.
 
