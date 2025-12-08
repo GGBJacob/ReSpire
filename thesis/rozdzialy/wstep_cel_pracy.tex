@@ -1,11 +1,11 @@
 \chapter{Wstęp i cel pracy \Hania\ \Jakub} 
 
-\section{Wprowadzenie \Hania}
-W ostatnich latach obserwuje się wzrost zainteresowania technikami wspierającymi zdrowie psychiczne oraz treningi fizjologiczne.Ważną rolę w tym obszarze odgrywają ćwiczenia oddechowe wykorzystywane w sporcie, terapii i codziennym dbaniu o dobre samopoczucie. Aplikacje mobilne pełnią w tym zakresie istotną rolę, sprzyjając ich popularności. Umożliwiają użytkownikom stały dostęp do zindywidualizowanych programów treningowych z dowolnego miejsca i~w~dowolnym czasie, pozwalając użytkownikowi dopasować przebieg ćwiczenia do własnych preferencji i celów.
+\section{Wprowadzenie (problemy) \Hania}
+W ostatnich latach obserwuje się wzrost zainteresowania technikami wspierającymi zdrowie psychiczne oraz treningi fizjologiczne. Ważną rolę w tym obszarze odgrywają ćwiczenia oddechowe wykorzystywane w sporcie, terapii i codziennym dbaniu o dobre samopoczucie. Aplikacje mobilne pełnią w tym zakresie istotną rolę, sprzyjając ich popularności. Umożliwiają użytkownikom stały dostęp do zindywidualizowanych programów treningowych z dowolnego miejsca i~w~dowolnym czasie, pozwalając użytkownikowi dopasować przebieg ćwiczenia do własnych preferencji i celów.
 
 Niniejsza praca koncentruje się na zaprojektowaniu aplikacji mobilnej, która umożliwia wykonywanie treningów oddechowych z wykorzystaniem konfigurowalnych wzorców oddechowych i~czytelnej prezentacji ich przebiegu.
 
-\section{Motywacje \Hania}
+\section{Motywacje (korzyści) \Hania\ \Karol}
 Motywacją do realizacji projektu jest stworzenie narzędzia ułatwiającego wykonywanie ćwiczeń oddechowych, które mogą wspierać zarówno zdrowie psychiczne, jak i fizyczne. Regularne treningi oddechowe znajdują zastosowanie w wielu grupach odbiorców.
 
 Badania naukowe wskazują na terapeutyczny potencjał regularnych ćwiczeń oddechowych. Systematyczne przeglądy literatury potwierdzają, że techniki takie jak oddychanie przez zaciśnięte usta (ang. \textit{pursed lip breathing}), oddychanie przeponowe oraz techniki jogiczne (np. pranajama) przyczyniają się do istotnej poprawy jakości życia oraz zmniejszenia odczuwania duszności u pacjentów z przewlekłymi chorobami układu oddechowego, takimi jak POChP czy astma \cite{Breathing_Review}. Analiza ta, obejmująca również metody takie jak technika Buteyko \cite{Buteyko_Trial} czy metoda Papworth \cite{Papworth_Trial}, wskazuje na wysoki poziom bezpieczeństwa tych interwencji - w przeglądanych badaniach nie odnotowano istotnych działań niepożądanych związanych z samym treningiem. Jest to kluczowy argument przemawiający za zasadnością udostępniania tych narzędzi w formie aplikacji mobilnej do samodzielnego stosowania. 
@@ -46,7 +46,7 @@ Zadania Jakuba związane były z zaprojektowaniem i implementacją całej warstw
 
 \subsection{Karol Zwierz}
 
-Karol był odpowiedzialny za implementację mechanizmu modyfikacji treningów w sposób intuicyjny dla użytkowników (\ref{subsec:TrainingTab}), a także za funkcjonalność ich importu i eksportu (\ref{sec:Import}). W obszarze przetwarzania sygnałów opracował moduł generujący dudnienia różnicowe (binaural beats w \ref{subsec:SoundsTab}). Ponadto zajął się optymalizacją wydajności poprzez wdrożenie mechanizmu ładowania zasobów z~wyprzedzeniem przed uruchomieniem treningu. W warstwie interfejsu stworzył edytor list odtwarzania plików audio.
+Karol był odpowiedzialny za pierwotny projekt struktury danych, implementację mechanizmu wytwarzania oraz modyfikacji treningów w sposób intuicyjny dla użytkowników (\ref{subsec:TrainingTab}), a także za funkcjonalność ich importu i eksportu (\ref{sec:Import}). W obszarze przetwarzania sygnałów opracował moduł generujący dudnienia różnicowe (binaural beats w \ref{subsec:SoundsTab}). Ponadto zajął się optymalizacją wydajności poprzez wdrożenie mechanizmu ładowania zasobów z~wyprzedzeniem przed uruchomieniem treningu. W warstwie interfejsu stworzył edytor list odtwarzania plików audio. Wykonał również analizę kontekstu naukowego naszego rozwiązania.
 
 \section{Struktura rozdziałów \Hania}
 W celu przejrzystego przedstawienia realizacji projektu i ułatwienia odbioru pracy została ona podzielona na dziewięć rozdziałów opisanych poniżej.

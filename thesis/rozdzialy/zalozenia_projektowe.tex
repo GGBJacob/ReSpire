@@ -1,6 +1,7 @@
 \chapter{Założenia projektowe \Karol}
 
-\section{Dla kogo rozwiązanie jest przeznaczone?  \Karol}
+% Do usunięcia? Jest już wcześniej o tym we wstępie
+\section{Dla kogo rozwiązanie jest przeznaczone?  \Jakub\ \Karol\ \Ola}
 
 \section{Jakie korzyści ma dostarczać? \Karol}
 \textbf{//na razie z RPI}
@@ -8,7 +9,7 @@
 ReSpire to aplikacja mobilna wspierająca trening oddechowy. Umożliwia użytkownikom projektowanie i zarządzanie spersonalizowanymi sesjami treningu oddechowego. Dzięki szerokim możliwościom personalizacji, ReSpire pozwala na tworzenie unikalnych planów treningowych i ich realizację w intuicyjny sposób. 
 Aplikacja wychodzi naprzeciw potrzebie złożonej konfiguracji ćwiczeń oddechowych. Służy ona jak najlepszemu dopasowaniu treningów do użytkowników i ich potrzeb, zapewniając dużą elastyczność i swobodę. To wyróżnia ją od innych aplikacji dostępnych na rynku, które nie pozwalają na dostosowywanie w tak znacznym stopniu. Jednocześnie zaspokaja również potrzeby osób, których nie interesuje personalizacja i wolą skorzystać       z gotowych, prostszych treningów oddechowych.
 
-Celem projektu jest stworzenie tworzenie intuicyjnej i funkcjonalnej aplikacji mobilnej, umożliwiającej użytkownikom skuteczny trening oddechowy, która ma pomagać w poprawie kontroli oddechu, redukcji stresu oraz zwiększeniu świadomości oddechowej. Aplikacja zostanie opublikowana w Google Play i App Store, aby dotrzeć do jak najszerszego grona użytkowników w Polsce. Projekt stanowi część pracy inżynierskiej.
+Celem projektu jest stworzenie tworzenie intuicyjnej i funkcjonalnej aplikacji mobilnej, umożliwiającej użytkownikom skuteczny trening oddechowy, która ma pomagać w poprawie kontroli oddechu, redukcji stresu oraz zwiększeniu świadomości oddechowej. Aplikacja zostanie opublikowana w Google Play i Apple App Store, aby dotrzeć do jak najszerszego grona użytkowników w Polsce. Projekt stanowi część pracy inżynierskiej.
 
 Zakres projektu obejmuje pełny cykl tworzenia aplikacji mobilnej ReSpire, od fazy projektowania po wdrożenie i publikację. 
 
@@ -17,8 +18,27 @@ Zwieńczeniem projektu będzie publikacja aplikacji w sklepach Google Play i App
 
 \section{Jakie mają być główne funkcjonalności? \Karol}
 
+Główne funkcjonalności aplikacji ReSpire zostały zaprojektowane tak, aby zapewnić użytkownikowi pełną kontrolę nad procesem treningowym oraz wysoką jakość doświadczenia audio-wizualnego. Do kluczowych funkcji systemu należą:
+
+\begin{itemize}
+    \item \textbf{Zaawansowany edytor treningów}: Narzędzie umożliwiające tworzenie złożonych, wieloetapowych sesji treningowych. System pozwala na definiowanie konfigurowalnych etapów składających się z faz różnego typu. Kluczową funkcjonalnością jest obsługa powtórzeń z inkrementacja czasu trwania faz w kolejnych cyklach, co umożliwia realizację treningów progresywnych (np. stopniowe wydłużanie faz).
+    
+    \item \textbf{Wielopoziomowy system audio}: Złożony mechanizm konfigurowania dźwięku, pozwalający na przypisywanie tła akustycznego, wskazówek audio, etc. na trzech poziomach hierarchii: globalnym (cały trening), etapu oraz fazy (unikalne dźwięki dla wdechu, wydechu, wstrzymania, regeneracji). System obsługuje komunikaty głosowe zrealizowane za pomocą generowania audio na podstawie tekstu. Umożliwiałoby to wykonywanie treningu bez patrzenia w ekran telefonu.
+    
+    \item \textbf{Generator dudnień różnicowych}: Funkcjonalność emitująca w czasie rzeczywistym dźwięki o różnej częstotliwości dla lewego i prawego kanału audio. Wywołuje to odczucie słyszenia jedynie małej różnicy częstotliwości między częstotliwościami kanałów. Generowanie odbywa się dynamicznie na podstawie zadanych parametrów częstotliwości obu kanałów, bez konieczności dostarczania gotowych plików.
+    
+    \item \textbf{Silnik wykonywania treningu}: Moduł odpowiedzialny za odtworzenie sesji w czasie rzeczywistym. Precyzyjnie synchronizuje timer, animacje interfejsu oraz warstwę audio, zapewniając płynne działanie nawet przy skomplikowanych strukturach treningowych. Zarządza również specjalnymi fazami przygotowania oraz zakończenia treningu.
+    
+    \item \textbf{Persystencja i udostępnianie treningów}: Możliwość zapisu stworzonych treningów i ustawień w lokalnej, wydajnej bazie danych na urządzeniu, co pozwala na pełną funkcjonalność w trybie offline. Dodatkowo system umożliwia import i eksport zrzutów danych treningów w przenośnym formacie, co ułatwia dzielenie się nimi między użytkownikami.
+\end{itemize}
+
 \section{Jacy użytkownicy są przewidziani? \Karol}
+Ze względu na specyfikę aplikacji przewidujemy podział użytkowników na dwie główne grupy:
+
+\begin{itemize}
+    \item Użytkownicy podstawowi - osoby o bardzo zróżnicowanym profilu będące nowicjuszami w dziedzinie treningów oddechowych. Wymagają oni jedynie możliwości zaimportowania oraz odtworzenia gotowego treningu. Nie chcą oni nadmiernie ingerować w strukturę swoich treningów.
+    \item Użytkownicy zaawansowani - osoby zainteresowane szczegółową personalizacją ze względu na swoją głęboką znajomość praktyk treningów oddechowych. Wymagają oni wysoce wyszukanych możliwości konfiguracji każdego aspektu sekwencji treningowej. 
+\end{itemize}
 
 \section{Czy i ew. z jakimi systemami ma współpracować? \Karol}
-
-\section{Pozostałe założenia \Karol}
+Rozważana jest implementacja zaawansowanego systemu sprzężenia zwrotnego dla użytkownika wykonującego analizę wykonywania treningu w trakcie jego odtwarzania. System ten nagrywałby krótkie fragmenty dźwięku z mikrofonów telefonu lub podłączonego zestawu słuchawkowego (konfiguracja preferowana dla lepszej izolacji dźwięku zbieranego oraz dźwięku emitowanego przez aplikację). Następnie fragmenty te byłyby przetwarzane równolegle względem głównych procesów aplikacji. Polegałoby to na transformacji fragmentów dźwiękowych na odpowiadające im mel-spektrogramy a następnie przekazanie ich jako wartości wejściowe do wytrenowanego predykcyjnego modelu uczenia maszynowego w celu uzyskania danych zwrotnych oceniających precyzję wykonania przez użytkownika zadanego treningu oddechowego.
