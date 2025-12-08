@@ -166,6 +166,21 @@ Wstępny projekt nie zakładał opisu treningu, który został dodany dopiero na
 \label{img/respire_settings}
 \end{figure}
 
+\subsection{Zrealizowany wygląd interfejsu użytkownika aplikacji}
+Finalnie zrealizowany projekt graficznego interfejsu użytkownika składa się z 8 głównych, pełnoekranowych widoków oraz \textit{splash screen'a} (pol. ekranu powitalnego) z dodatkowymi wyskakującymi oknami dialogowymi.
+Na rysunku \ref{img/view_transitions} przedstawiono diagram przejść między widokami. Strzałki obrazują nawigację, która odbywa się poprzez interakcję z elementami interfejsu (głównie przyciskami).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{obrazki/projekt_rozwiazania/view-transitions.png}
+    \caption{Możliwe przejścia między widokami w trakcie użytkowania aplikacji.}
+    \label{img/view_transitions}
+\end{figure}
+
+Wejściowym punktem aplikacji jest widok \texttt{HomePage}, do którego użytkownik trafia po wyświetleniu \textit{SplashScreen} w momencie uruchomienia aplikacji. Z poziomu ekranu głównego użytkownik ma dostęp do przejścia do widoku wybranego treningu (\texttt{TrainingPage}) poprzez kliknięcie w odpowiadający mu kafelek (\texttt{PresetTile}) lub przejście do strony ustawień aplikacji (\texttt{SettingsPage}) za pomocą przycisku koła zębatego w prawym górnym rogu ekranu. Z poziomu widoku danego treningu użytkownik ma możliwość natychmiastowego uruchomienia treningu poprzez kliknięcie przycisku "Rozpocznij trening". Użytkownik przenoszony jest wówczas na chwilę na ekran ładowania (\texttt{PreloadingScreen}), by następnie zostać przekierowanym przez aplikację do odtwarzacza zadanego treningu (\texttt{BreathingPage}). Po naciśnięciu przycisku edycji na ekranie treningu (\texttt{TrainingPage}) użytkownik przenosi się do edytora (\texttt{TrainingEditorPage}), a konkretniej do panelu edycji struktury treningu. Za pomocą górnej kontrolki \texttt{CustomSlidingSegmentedControl} (zachowującej się jak \textit{radio button} (pol. przycisk opcji)) użytkownik może przełączać między aktualnymi aspektami edycji treningu (między strukturą, dźwiękami a zakładką "inne").
+
+Powrót do poprzedniego widoku realizowany jest standardowo poprzez przycisk wstecz w~lewym górnym rogu ekranu lub gest systemowy.
+
 \subsection{Identyfikacja wizualna aplikacji}
 W celu zapewnienia spójności wyglądu oraz estetyki aplikacji ReSpire przygotowana została identyfikacja wizualna obejmująca logo, kolory oraz czcionkę.
 
