@@ -2,6 +2,78 @@
 
 \section{Projekt architektury systemu \Ola}
 
+\subsection{Model serwisów}
+
+Warstwa logiczna aplikacji została zaprojektowana na podstawie architektury modułowej, obejmującej łącznie 12 wyspecjalizowanych serwisów. Każdy z komponentów realizuje odrębną domenę funkcjonalną, co pozwala na skuteczną separację logiki biznesowej od warstwy prezentacji. Zależności oraz relacje między kluczowymi modułami przedstawiono na rysunku~\ref{img/ServiceDiagram}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{diagramy/service_diagram_clean.png}
+    \caption{Uproszczony model architektury serwisów}
+    \label{img/ServiceDiagram}
+\end{figure}
+
+\noindent
+Poniżej przedstawiono krótki opis głównych odpowiedzialności poszczególnych komponentów:
+
+
+\begin{itemize}
+    \item \texttt{TrainingController} --- centralny moduł aplikacji, koordynujący przebieg sesji treningowej. Odpowiada za zarządzanie stanem ćwiczenia, odliczanie czasu oraz synchronizację warstwy audio z wizualizacją. Jego szczegółowa budowa została omówiona w dedykowanym rozdziale~\ref{subsec:TrainingController}.
+    
+    \item \texttt{SoundManager} --- globalny zarządca zasobów dźwiękowych. Odpowiada za ładowanie plików do pamięci, zarządzanie pulami odtwarzaczy oraz emisję sygnałów audio. Został dokładnie opisany wraz z innymi serwisami audio w rozdziale~\ref{sec:Sounds}.
+    
+    \item \texttt{SingleSoundManager} --- zarządca odtwarzania pojedynczych ścieżek, zapewniający obsługę zdarzeń zakończenia utworu.
+
+    \item \texttt{PlaylistManager} --- moduł sterujący sekwencyjnym odtwarzaniem utworów, delegujący zadania wykonawcze do niższych warstw systemu audio.
+    
+    \item \texttt{BinauralBeatGenerator} --- serwis odpowiedzialny za syntezę dudnień różnicowych w czasie rzeczywistym.
+    
+    \item \texttt{TextToSpeechService} --- moduł wykorzystujący bibliotekę \texttt{flutter\_tts} do odczytywania liczb i nazw faz oddechowych przez syntezator mowy.
+
+    \item \texttt{SettingsProvider} --- komponent zarządzający trwałym zapisem konfiguracji użytkownika (np. wybór języka, lektora).
+    
+    \item \texttt{TranslationProvider} --- serwis dostarczający tłumaczenia interfejsu w zależności od wybranego języka. Logika komponentu została szczegółowo opisana w rozdziale~\ref{sec:Languages}.
+    
+    \item \texttt{PresetDataBase} --- klasa odpowiedzialna za zarządzanie bazą danych treningów zapisanych na urządzeniu użytkownika.
+    
+    \item \texttt{TrainingImportExportService} --- moduł odpowiedzialny za operacje wejścia/wyjścia oraz wymianę danych z zewnętrznym systemem plików. Umożliwia trwały zapis treningów oraz ich udostępnianie pomiędzy różnymi urządzeniami. Proces importu i eksportu danych omówiono szerzej w sekcji~\ref{sec:Import}.
+    
+    \item \texttt{TrainingJsonConverter} --- warstwa transformacji danych, realizująca proces serializacji oraz deserializacji. Zapewnia standaryzację struktury plików treningowych, gwarantując ich poprawną interpretację podczas importu.
+    
+\end{itemize}
+
+\subsection{Model treningu} \label{subsec:TrainingModel}
+
+W celu zapewnienia elastyczności konfiguracji, model danych treningu został poddany dekompozycji i zgodnie z założeniami projektowymi, architektura opiera się na trzech głównych filarach. Uzupełnieniem tego modelu jest dziewięć klas pomocniczych, realizujących specyficzne, mniejsze zadania lub pełniących funkcję kontenerów danych. Taki podział zapewnia czytelność kodu oraz znacząco usprawnił implementację kolejnych funkcjonalności. Końcową architekturę przedstawia rysunek~\ref{img/class_diagram}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{diagramy/class_diagram.png}
+    \caption{Diagram klas treningowych}
+    \label{img/class_diagram}
+\end{figure}
+
+\noindent
+Rdzeń modelu danych stanowią trzy kluczowe klasy tworzące strukturę hierarchiczną: \texttt{Trening}, \texttt{TrainingStage} oraz \texttt{BreathingPhase}. Relacja między nimi opiera się na kompozycji: obiekt nadrzędny (\texttt{Trening}) agreguje kolekcję etapów (\texttt{TrainingStage}), które z kolei zawierają listy faz oddechowych (\texttt{BreathingPhase}). Uzupełnione są one o następujące klasy pomocnicze:
+
+\begin{itemize}
+    \item \texttt{Sounds} --- klasa kontenerowa agregująca konfigurację dźwięków zdefiniowaną przez użytkownika, uwzględniająca ich zakresy obowiązywania (zdefiniowane przez \texttt{SoundScope}).
+    
+    \item \texttt{SoundScope} --- typ wyliczeniowy określający zasięg odtwarzania przypisanego dźwięku. Dostępne warianty to: brak (\texttt{None}), globalny (\texttt{global}), dla etapu (\texttt{perStage}), dla fazy (\texttt{perPhase}) oraz cykliczny dla każdej fazy w etapie (\texttt{perEveryPhaseInEveryStage}).
+    
+    \item \texttt{SoundAsset} --- struktura danych reprezentująca pojedynczy zasób audio. Przechowuje metadane pliku, takie jak nazwa wyświetlana oraz ścieżka dostępu do zasobu w systemie plików.
+    
+    \item \texttt{SoundType} --- typ wyliczeniowy kategoryzujący rodzaje sygnałów dźwiękowych. Zbiór wartości obejmuje: brak (\texttt{None}), głos lektora (\texttt{Voice}), melodię tła (\texttt{Melody}), sygnał dźwiękowy (\texttt{Cue}) oraz odliczanie (\texttt{Counting}).
+    
+    \item \texttt{BreathingPhaseSounds} --- klasa konfigurująca oprawę audio dla pojedynczej fazy oddechowej. Umożliwia zdefiniowanie ścieżki tła oraz sygnału poprzedzającego rozpoczęcie danej fazy.
+    
+    \item \texttt{BreathingPhaseType} --- typ wyliczeniowy definiujący rodzaj czynności oddechowej. Wartości obejmują: wdech (\texttt{inhale}), wydech (\texttt{exhale}), zatrzymanie powietrza (\texttt{retention}) oraz regenerację (\texttt{recovery}).
+    
+    \item \texttt{BreathingPhaseIncrement} --- struktura definiująca parametr progresji czasu trwania fazy. Określa wartość (wyrażoną w sekundach), o którą wydłużana jest faza w każdym kolejnym cyklu treningowym.
+    
+    \item \texttt{BreathingPhaseIncrementType} --- typ wyliczeniowy określający jednostkę przyrostu czasu (obecnie obsługiwane są sekundy). Struktura ta została zachowana w celu zapewnienia elastyczności modelu pod kątem przyszłej implementacji inkrementacji procentowej.
+    
+    \item \texttt{Settings} --- klasa agregująca globalne parametry sesji treningowej. Przechowuje konfigurację czasów przygotowania (\texttt{preparationDuration}) i zakończenia (\texttt{endingDuration}), a~także ustawienia generatora dudnień różnicowych (status aktywacji oraz częstotliwość fali).
+\end{itemize}
 
 \section{Projekt logiki aplikacji \Hania}
 
@@ -96,10 +168,19 @@ Poniżej przedstawiono listę kolorów zapisanych w~dwóch powszechnie stosowany
 \definecolor{colB}{HTML}{32B7CF}
 \definecolor{colC}{HTML}{7BDEF0}
 
-\noindent
-\colorbox{colA}{\phantom{XXXX}} \quad \textbf{HEX:} \#1A93A8, \textbf{RGB:} (26, 147, 168) \\[3pt]
-\colorbox{colB}{\phantom{XXXX}} \quad \textbf{HEX:} \#32B7CF, \textbf{RGB:} (50, 183, 207) \\[3pt]
-\colorbox{colC}{\phantom{XXXX}} \quad \textbf{HEX:} \#7BDEF0, \textbf{RGB:} (123, 22, 240)
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{l l l}
+        
+        \colorbox{colA}{\phantom{XXXX}} & \textbf{HEX:} \#1A93A8 & \textbf{RGB:} (26, 147, 168) \\[6pt]
+        \colorbox{colB}{\phantom{XXXX}} & \textbf{HEX:} \#32B7CF & \textbf{RGB:} (50, 183, 207) \\[6pt]
+        \colorbox{colC}{\phantom{XXXX}} & \textbf{HEX:} \#7BDEF0 & \textbf{RGB:} (123, 222, 240)
+        
+    \end{tabular}
+    
+    \caption{Paleta kolorów głównych aplikacji}
+    \label{fig:color_palette}
+\end{figure}
 
 Jedna z dwóch czcionek użytych w logo - \textit{Glacial Indifference} \cite{font} - została również wykorzystana w~aplikacji, zapewniając jej unikatowy charakter. Jest to darmowy, otwartoźródłowy krój pisma zaprojektowany przez \textit{Hanken Design Co.} z~licencją \textit{SIL OPEN FONT LICENSE Version 1.1} \cite{font_license} pozwalającą na użytek zarówno prywatny, jak i komercyjny. Przykładowy tekst oraz znaki zapisane użytą czcionką przedstawione zostały na rysunku \ref{img/czcionki}. Wykorzystana została także domyślna czcionka \textit{Fluttera} dla aplikacji na systemie \textit{Android} - \textit{Roboto}.
 \begin{figure}[H]
@@ -132,7 +213,7 @@ W aplikacji zastosowano lekkie, łatwo skalowalne animacje w formacie Lottie \ci
 
 \section{Projekt struktury danych (treningi) \Jakub}
 
-Model danych oparto na strukturze hierarchicznej, której fundament stanowią trzy kluczowe klasy: \texttt{Trening}, \texttt{EtapTreningu} oraz \texttt{FazaOddechowa}. Główna encja, \texttt{Trening}, składa się z co najmniej jednego \texttt{EtapuTreningu} (relacja jeden do wielu). Każdy etap charakteryzuje się zdefiniowaną liczbą cykli (powtórzeń) oraz parametrem przyrostu czasu. Na najniższym poziomie hierarchii znajduje się \texttt{FazaOddechowa}. Etapy składają się z sekwencji faz o określonym czasie trwania oraz typie, wybieranym ze zbioru zdefiniowanych wartości: wdech, wydech, regeneracja lub~wstrzymanie. Opisywany projekt przedstawia rysunek~\ref{img/training_structure}, natomiast rozwinięcie i implementację tej struktury danych opisano w sekcji \ref{subsec:training_classes}.
+Model danych oparto na strukturze hierarchicznej, której fundament stanowią trzy kluczowe klasy: \texttt{Trening}, \texttt{EtapTreningu} oraz \texttt{FazaOddechowa}. Główna encja, \texttt{Trening}, składa się z co najmniej jednego \texttt{EtapuTreningu} (relacja jeden do wielu). Każdy etap charakteryzuje się zdefiniowaną liczbą cykli (powtórzeń) oraz parametrem przyrostu czasu. Na najniższym poziomie hierarchii znajduje się \texttt{FazaOddechowa}. Etapy składają się z sekwencji faz o określonym czasie trwania oraz typie, wybieranym ze zbioru zdefiniowanych wartości: wdech, wydech, regeneracja lub~wstrzymanie. Opisywany projekt przedstawia rysunek~\ref{img/training_structure}, natomiast rozwinięcie i implementację tej struktury danych opisano w sekcji~\ref{subsec:TrainingModel}.
 
 \begin{figure}[H]
     \centering
