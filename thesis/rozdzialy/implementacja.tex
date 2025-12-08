@@ -18,32 +18,180 @@ Na trening składa się 12 klas, z czego główną z nich jest \texttt{Training}
 \end{figure}
 
 
-\section{Edytor treningów}
+\section{Edytor treningów \Karol}
 
-Edytor treningów został zaimplementowany jako dedykowany widok \texttt{TrainingEditorPage}, który operuje bezpośrednio na obiekcie \texttt{Training}. Struktura treningu przechowywana jest w modelach Hive (\texttt{TrainingStage}, \texttt{BreathingPhase}, \texttt{Sounds}, \texttt{Settings}), dzięki czemu każda modyfikacja wprowadzona w interfejsie natychmiast trafia do tej samej instancji danych, którą aplikacja później serializuje. Cała logika edytora została podzielona na trzy zakładki sterowane przez komponent \texttt{CustomSlidingSegmentedControl}, co pozwoliło oddzielić edycję przebiegu treningu, konfigurację dźwięków oraz ustawienia uzupełniające, utrzymując jednocześnie wspólną nawigację i kontrolę zapisów. Sam \texttt{CustomSlidingSegmentedControl} jest komponentem zainspirowanym szeroko wykorzystywanym w systemie mobilnym Apple iOS oraz platformie technologicznej SwiftUI komponenetem \texttt{segmented}, który umożliwia przełączanie się między różnymi widokami w obrębie jednej strony aplikacji przy jednoczesnej informacji o dostępnych panelach oraz aktualnie włączonym panelu. Wpasowuje się to idealnie w nasze zapotrzebowanie, ponieważ każda zakładka reprezentuje inny, lecz integralny aspekt edycji treningu.
+Edytor treningów został wykonany jako dedykowany widok \texttt{TrainingEditorPage}, który operuje bezpośrednio na przekazanym mu przez referencję konkretnym obiekcie \texttt{Training}. Struktura treningu przechowywana jest w odpowiednich obiektach klas (\texttt{TrainingStage}, \texttt{BreathingPhase}, \texttt{Sounds}, \texttt{Settings}), dzięki czemu każda modyfikacja wprowadzona w interfejsie natychmiast zostaje zapisana w pamięci a następnie po przejściu do poprzedniego etapu zostaje przekazana do zapisu stałego w bazie danych. 
 
-Pierwsza zakładka "Trening" odpowiada za logiczny układ sesji oddechowej. Reprezentowana jest przez \texttt{ReorderableListView}, w którym wyświetlane są kolejne etapy treningu \\(\texttt{TrainingStageTile}). Każdy kafel umożliwia zmianę nazwy, liczby powtórzeń i przyrostu czasów, a także usuwanie całego etapu treningu po potwierdzeniu w oknie dialogowym. Wewnątrz każdego etapu treningu umieszczona jest lista faz oddechu (wdechu, zatrzymania, wydechu czy regeneracji) reprezentowana przez sekwencję komponentów \texttt{BreathingPhaseTile}. Zarówno etapy treningu w obrębie całego treningu jak i fazy oddechu w obrębie etapu można uporządkować w kolejności zgodnej z upodobaniem użytkownika w trybie „przeciągnij i upuść”. Pola numeryczne panelu edycji etapu treningu (liczba powtórzeń, przyrost) oraz fazy oddechu (czas trwania) wykorzystują \texttt{TextEditingController} oraz \texttt{FocusNode}, aby zatwierdzać poprawne wartości dopiero po utracie skupienia na danym elemencie wprowadzania danych, a dodatkowe przyciski +/- umożliwiają inkrementalne korekty w krokach od 0{,}1 do 0{,}5 s. Dodawanie nowych faz i etapów wywołuje przewinięcie listy oraz zdejmuje fokus z aktywnych pól, co zapobiega konfliktom z klawiaturą ekranową. Przy próbie opuszczenia ekranu edycji treningu komponent opakowujący \texttt{WillPopScope} sprawdza, czy wszystkie etapy treningu zawierają przynajmniej jedną fazę, i w razie potrzeby wyświetla komunikat z możliwością wyboru automatycznego usunięcia pustych etapów treningu lub powrotem do edycji.
+Obsługa edytora została podzielona na trzy logiczne panele. Aktualnie wyświetlaną zakładkę można wybrać poprzez komponent \texttt{CustomSlidingSegmentedControl} inspirowany obecnym w komponencie \texttt{segmented} z systemu Apple iOS. Pozwoliło to oddzielić edycję przebiegu treningu, konfigurację dźwięków oraz ustawienia uzupełniające, utrzymując jednocześnie wspólną nawigację i kontrolę zapisów. 
 
-Druga zakładka skupia się na warstwie dźwiękowej i korzysta ze współdzielonego obiektu \texttt{Sounds}. Użytkownik może ustawić sygnał odliczania, sposób odtwarzania komunikatów o nadejściu kolejnej fazy (globalnie, per faza) oraz zdefiniować tło muzyczne w jednym z trzech zakresów: globalnym, per faza albo per etap. W trybie globalnym wykorzystywany jest komponent \texttt{PlaylistEditor}, który obsługuje listy odtwarzania poprzez przeciąganie pozycji, usuwanie oraz dodawanie nowych ścieżek z okna \texttt{AudioSelectionPopup}. Dla wariantu per etap zastosowano \texttt{StagePlaylistsEditor}, mapujący listy na identyfikatory etapów (\texttt{TrainingStage.id}). Użytkownik może importować własne pliki audio poprzez \texttt{file\_picker}; pliki są zapisywane w lokalnej bazie i natychmiast dostępne w oknie wyboru, gdzie można je odsłuchiwać dzięki \texttt{SingleSoundMana-} \texttt{ger}. Dodatkowo przewidziano osobne pola dla muzyki przygotowawczej i końcowej oraz sekcję kontroli dudnień binauralnych, która po aktywacji blokuje klasyczne tło i pozwala regulować częstotliwości składowych suwakami.
+\subsection{Menu - trening}
+Pierwsza zakładka \texttt{Trening} odpowiada za logiczny układ hierarchicznej sesji oddechowej. Reprezentowana jest przez listę o zmiennym porządku - \texttt{ReorderableListView}, w której wyświetlane są kolejne etapy treningu (\texttt{TrainingStageTile}). Każdy kafelek etapu treningu umożliwia zmianę jego nazwy, liczby powtórzeń i iteracyjnego przyrostu czasów, a także usunięcie całego etapu treningu za potwierdzeniem w wyskakującym oknie dialogowym zaimplementowanym za pomocą \texttt{AlertDialog}. Wewnątrz każdego kafelka etapu treningu umieszczona jest lista faz oddechu reprezentowana przez sekwencję komponentów \texttt{BreathingPhaseTile} zagnieżdżonych w kolejnej \texttt{ReorderableListView}. Dzięki temu zarówno etapy treningu w obrębie całego treningu jak i fazy oddechu w obrębie etapu można uporządkować w kolejności zgodnej z upodobaniem użytkownika w trybie „przeciągnij za kontrolkę i upuść”. Pola numeryczne panelu edycji etapu treningu (liczba powtórzeń, przyrost) oraz fazy oddechu (czas trwania) wykorzystują \texttt{TextEditingController} oraz \texttt{FocusNode}, aby zatwierdzać zmienione wartości dopiero po utracie skupienia na danym elemencie wprowadzania danych, a dodatkowe przyciski +/- umożliwiają inkrementalne korekty w krokach od 0{,}1 do 0{,}5 s. Dodawanie nowych faz i etapów wywołuje przewinięcie listy oraz zdejmuje skupienie z aktywnych pól, co zostało wprowadzone w celu zapobiegania konfliktom z klawiaturą ekranową. Przy próbie opuszczenia ekranu edycji treningu komponent opakowujący \texttt{WillPopScope} sprawdza, czy wszystkie etapy treningu zawierają przynajmniej jedną fazę, i w razie potrzeby wyświetla komunikat z możliwością wyboru automatycznego usunięcia pustych etapów treningu lub powrotu do edycji treningu oddechowego.
 
-Zakładka „Inne” obejmuje elementy opisowe: pole \texttt{TextField} do wprowadzenia opisu, a także licznik czasu przygotowawczego z własnym formatterem cyfr oraz walidacją wartości minimalnej. Wartości te trafiają do obiektu \texttt{Settings}, dzięki czemu są dostępne zarówno w podglądzie treningu, jak i w trakcie wykonywania sesji. Cały edytor jest przetłumaczony z użyciem \texttt{TranslationProvider}, co umożliwia dynamiczne zmiany języka i konsekwentne stosowanie lokalnych etykiet w dialogach, walidatorach czy komunikatach ostrzegawczych. Dzięki temu moduł edytora zachowuje spójność wizualną i logiczną z resztą aplikacji oraz zapewnia użytkownikowi poczucie kontroli nad każdym aspektem treningu bez konieczności przełączania kontekstu.
+\subsection{Menu - dźwięki}
+Druga zakładka służy do zarządzania warstwą dźwiękową. Korzysta w tym celu ze współdzielonego obiektu klasy \texttt{Sounds}. Sprowadza się ona do przypisywania plików dźwiękowych do konkretnych sytuacji w treningu. Zakładka ta dzieli się na 3 grupy. \\
+
+W \texttt{Dźwiękach treningu} użytkownik może ustawić sygnał odliczania, sposób odtwarzania komunikatów o nadejściu kolejnej fazy (brak, per faza, globalnie - wybierane z listy rozwijalnej) i wybrać wskazówki audio zmiany etapu oraz cyklu. \\
+
+W grupie \texttt{Muzyka treningu} może zdefiniować tło muzyczne w jednym z pięciu zakresów wybieranych z listy rozwijalnej: brak, globalnie, per etap, per faza, per faza w danym etapie. W trybie globalnym oraz trybie per etap wykorzystywane są komponenty edycji list odtwarzania. W zakresie globalnym jest to \texttt{PlaylistEditor}, który obsługują listy odtwarzania poprzez przeciąganie pozycji, usuwanie oraz dodawanie nowych ścieżek z okna \texttt{AudioSelectionPopup}. Dla wariantu per etap zastosowano \texttt{StagePlaylistsEditor} (korzystający z \texttt{PlaylistEditor}), przyporządkowujący listy odtwarzania na identyfikatory etapów (\texttt{TrainingStage.id}). We wszystkich miejscach obsługiwanych przez \texttt{AudioSelectionPopup} użytkownik może także zaimportować własne pliki audio poprzez \texttt{file\_picker}; pliki są zapisywane w lokalnym systemie plików aplikacji i natychmiast dostępne. Ponadto wszystkie dźwięki w \texttt{AudioSelectionPopup} można odsłuchiwać dzięki \texttt{SingleSoundManager}. Dodatkowo przewidziano osobne pola wyboru dla muzyki odtwarzanej podczas specjalnych faz przygotowawczej i końcowej. 
+
+W trzeciej grupie zatytułowanej \texttt{Dźwięki Binauralne} aplikacja umożliwia wyłączenie muzyki w tle i zamiast niej włączenie odtwarzania tzw. dudnień binauralnych z regulacją częstotliwościami składowymi tychże dźwięków.
+
+Istotnym aspektem edytora jest również zaawansowana konfiguracja listy odtwarzania dla każdego etapu. Widget \texttt{PlaylistEditor} (Listing \ref{code/editor/playlist}) umożliwia użytkownikom nie tylko wybór plików dźwiękowych, ale także ich intuicyjne porządkowanie. Wykorzystano tu komponent \texttt{ReorderableListView}, który obsługuje gesty przeciągania elementów. Dodatkowo, w celu poprawy doświadczenia użytkowników, czasy trwania utworów są ładowane asynchronicznie, co zapobiega blokowaniu interfejsu podczas odczytu metadanych plików audio.
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Logika zarządzania listą odtwarzania w uproszczonym kodzie edytora (PlaylistEditor)}, label={code/editor/playlist}]
+class _PlaylistEditorState extends State<PlaylistEditor> {
+  final Map<String, Duration?> _durationCache = {};
+
+  Future<void> _loadDurations() async {
+    for (var sound in widget.playlist) {
+      if (!_durationCache.containsKey(sound.name)) {
+        final duration = await _soundManager.getSoundDuration(sound.name);
+        if (mounted) {
+          setState(() {
+            _durationCache[sound.name] = duration;
+          });
+        }
+      }
+    }
+  }
+
+  void _reorderSounds(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final newPlaylist = List<SoundAsset>.from(widget.playlist);
+    final item = newPlaylist.removeAt(oldIndex);
+    newPlaylist.insert(newIndex, item);
+    widget.onChanged(newPlaylist);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // ... 
+        ReorderableListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.playlist.length,
+          onReorder: _reorderSounds,
+          itemBuilder: (context, index) {
+            final sound = widget.playlist[index];
+            return _buildSoundTile(sound, index);
+          },
+        ),
+        // ... 
+      ],
+    );
+  }
+}
+\end{lstlisting}
+\end{figure}
+
+\subsection{Menu - inne}
+Zakładka „Inne” obsługuje edycję obiektu klasy \texttt{Settings}. Zawiera pole \texttt{TextField} do wprowadzenia opisu treningu, a także licznik czasu przygotowawczego z własnym formatterem cyfr oraz walidacją wartości minimalnej. 
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Obsługa pola tekstowego z walidacją dla czasu przygotowania}]
+TextField(
+  key: ValueKey('preparation_${widget.training.hashCode}'),
+  controller: preparationController,
+  focusNode: preparationFocusNode,
+  keyboardType: TextInputType.number,
+  textAlign: TextAlign.center,
+  inputFormatters: [
+    FilteringTextInputFormatter.digitsOnly,
+  ],
+  onChanged: (value) {
+    int newValue = int.tryParse(value) ?? 0;
+    setState(() {
+      widget.training.settings.preparationDuration = newValue;
+    });
+  },
+  // ...
+)
+\end{lstlisting}
+\end{figure}
+
+Tak jak każdy element graficznego interfejsu użytkownika w aplikacji, edytor jest przetłumaczony z użyciem \texttt{TranslationProvider}, co umożliwia dynamiczne zmiany języka i konsekwentne stosowanie lokalnych etykiet w dialogach, walidatorach czy komunikatach ostrzegawczych. Dzięki temu moduł edytora zachowuje spójność wizualną i logiczną z resztą aplikacji oraz zapewnia użytkownikowi poczucie kontroli nad każdym aspektem treningu bez konieczności przełączania kontekstu.
 
 \section{Importowanie oraz eksportowanie treningów}
 
-Funkcjonalność importu i eksportu danych w aplikacji ReSpire została zaprojektowana w celu umożliwienia użytkownikom łatwej wymiany konfiguracji treningowych pomiędzy różnymi urządzeniami oraz tworzenia kopii zapasowych swoich ustawień. Moduł ten jest kluczowy dla zapewnienia przenośności danych w systemie, który nie polega na centralnym serwerze chmurowym do synchronizacji treści.
+Funkcjonalności importu oraz eksportu treningów w aplikacji zostały zaimplementowane w celu zapewnienia użytkownikom łatwej wymiany konfiguracji treningowych pomiędzy różnymi urządzeniami oraz tworzenia kopii zapasowych swoich ustawień pod nieobecność systemu scentralizowanego serwera do persystencji i synchronizacji danych.
 
-Architektura rozwiązania opiera się na dedykowanym serwisie \texttt{TrainingImportExportService}, który pełni rolę fasady dla wszystkich operacji wejścia-wyjścia związanych z plikami treningowymi. Implementacja wykorzystuje bibliotekę \texttt{file\_picker} do obsługi natywnych, systemowych okien dialogowych wyboru i zapisu plików, zapewniając spójne doświadczenie użytkownika niezależnie od platformy (Android/iOS). Do serializacji i deserializacji obiektów domenowych wykorzystano standardową bibliotekę \texttt{dart:convert}, wspieraną przez pomocniczą klasę \texttt{TrainingJsonConverter}.
+Rozwiązanie jest realizowane przez dedykowany serwis {TrainingImportExportService}. Pełni on rolę fasady dla operacji wejści-wyjścia związanych z plikami treningowymi, lecz sam nie zajmuje się logiką biznesową. Logikę biznesową wykonuje na żądanie wcześniej wymienionego serwisu klasa pomocnicza \texttt{TrainingJsonConverter}, która zajmuje się operacjami serializacji obiektów treningów i deseralizacji zrzutów danych. W celu wywołania natywnych, systemowych okien dialogowych wyboru i zapisu plików została wykorzystana biblioteka \texttt{file\_picker} zapewniająca spójne doświadczenie użytkowników niezależnie od platformy (Android/iOS).
 
-Proces eksportu danych może zostać zainicjowany w dwóch miejscach w aplikacji. Pierwsza opcja to naciśnięcie przycisku eksportu dostępnego z poziomu widoku szczegółów treningu (\texttt{TrainingPage}), pozwala na wyeksportowanie pojedynczej konfiguracji. W tym przypadku nazwa pliku jest generowana dynamicznie na podstawie tytułu treningu, po uprzedniej sanityzacji znaków specjalnych. Drugą możliwością jest, zaimplementowany na ekranie głównym (\texttt{HomePage}), przycisk umożliwiający masowy eksport wielu treningów jednocześnie. Użytkownik, korzystając z trybu wyboru, zaznacza poprzez dotknięcie interesujące go pozycje, które następnie są pakowane w zbiorczą strukturę JSON. Proces wybierania został celowo zaprojektowany w sposób zbliżony do zaznaczania plików w managerach plików systemów moiblnych. Plik wynikowy otrzymuje nazwę zawierającą znacznik czasu, co ułatwia katalogowanie kopii zapasowych.
+Eksport danych możemy wykonać z dwóch miejsc w aplikacji. Pierwszą możliwością jest naciśnięcie przycisku udostępniania dostępnego z poziomu widoku szczegółów treningu (\texttt{TrainingPage}). Można w ten sposób wyeksportować pojedynczy trening okraszony dynamicznie wygenerowaną na podstawie tytułu treningu nazwą pliku. Drugim punktem wywołania eksportu jest zaimplementowany na ekranie głównym (\texttt{HomePage}), przycisk umożliwiający masowy eksport wielu treningów jednocześnie. Użytkownik, korzystając z trybu wyboru, zaznacza poprzez dotknięcie interesujące go pozycje, które następnie są pakowane w zbiorczą strukturę JSON. Proces wybierania został celowo zaprojektowany w sposób zbliżony do zaznaczania plików w managerach plików systemów moiblnych. Plik wynikowy otrzymuje nazwę zawierającą znacznik czasu, co ułatwia katalogowanie kopii zapasowych.
 
-Struktura pliku eksportowego JSON jest kompletnym odzwierciedleniem modelu danych aplikacji. Zawiera ona metadane (tytuł, opis), pełną hierarchię etapów (\texttt{TrainingStage}) wraz z fazami oddechowymi (\texttt{BreathingPhase}) i ich parametrami czasowymi, a także szczegółową konfigurację ustawień (\texttt{Settings}) oraz mapę dźwięków (\texttt{Sounds}). Dzięki temu, wyeksportowany plik jest samowystarczalną jednostką informacji, możliwą do odtworzenia w dowolnej innej instancji aplikacji.
+Struktura wyeksportowanego pliku JSON jest kompletnym odzwierciedleniem modelu danych aplikacji. Zawiera ona metadane (tytuł, opis), pełną hierarchię etapów (\texttt{TrainingStage}) wraz z fazami oddechowymi (\texttt{BreathingPhase}) i ich parametrami czasowymi, a także szczegółową konfigurację ustawień (\texttt{Settings}) oraz zależności dźwięków (\texttt{Sounds}). Dzięki temu, wyeksportowany plik jest samowystarczalną jednostką informacji, możliwą do osadzenia w dowolnej innej instancji aplikacji.
 
-Proces importu charakteryzuje się elastycznością dzięki dwóm wariantom eksportu. Metody parsujące w klasie \texttt{TrainingJsonConverter} zostały zaprojektowane tak, aby rozpoznawać i poprawnie przetwarzać zarówno pojedyncze obiekty treningów, jak i listy obiektów lub struktury opakowane (używane przy eksporcie masowym). Po wczytaniu danych następuje proces walidacji oraz integracji, w ramach którego odtwarzane są powiązania do zasobów dźwiękowych metodą \texttt{updateSounds()}. Poprawnie zweryfikowane treningi są następnie dodawane do lokalnej bazy danych Hive, a interfejs użytkownika jest natychmiastowo aktualizowany.
+Metody parsujące w klasie pomocniczej \texttt{TrainingJsonConverter} zostały zaprojektowane tak, aby rozpoznawać i poprawnie przetwarzać zarówno pojedyncze obiekty treningów, jak i listy obiektów lub struktury opakowane (używane przy eksporcie masowym). Po wczytaniu danych następuje proces walidacji oraz integracji, w ramach którego odtwarzane są powiązania do zasobów dźwiękowych metodą \texttt{updateSounds()}. Poprawnie zweryfikowane treningi są następnie dodawane do lokalnej bazy danych Hive, a interfejs użytkownika jest natychmiastowo odświeżany.
 
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Metoda eksportu treningu}, label={code/import_export/export}]
+static Future<bool> exportTraining(Training training, {String? fileName}) async {
+  try {
+    final String defaultFileName = fileName ??
+        '${TextUtils.sanitizeFileName(training.title)}_training.json';
+    
+    final String jsonString = TrainingJsonConverter.toJson(training);
+    final Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
+    
+    String? outputPath = await FilePicker.platform.saveFile(
+      dialogTitle: TranslationProvider().getTranslation("FilePicker.save_training"),
+      fileName: defaultFileName,
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      bytes: bytes,
+    );
+    
+    return outputPath != null;
+  } catch (e) {
+    debugPrint('Error during training export: $e');
+    return false;
+  }
+}
+\end{lstlisting}
+\end{figure}
 
-\subsection{Menu - trening}
-\subsection{Menu - dźwięki}
-\subsection{Menu - inne}
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Metoda importu treningów}, label={code/import_export/import}]
+static Future<List<Training>?> importTrainings() async {
+  try {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      allowMultiple: false,
+    );
+    
+    if (result == null || result.files.isEmpty) {
+      return null;
+    }
+    
+    final PlatformFile file = result.files.single;
+    String? jsonString;
+    
+    if (file.bytes != null) {
+      jsonString = utf8.decode(file.bytes!);
+    } else if (file.path != null) {
+      jsonString = await File(file.path!).readAsString();
+    }
+
+    if (jsonString == null) return null;
+
+    return TrainingJsonConverter.fromJsonMultiple(jsonString);
+  } catch (e) {
+    debugPrint('Error during training import: $e');
+    return null;
+  }
+}
+\end{lstlisting}
+\end{figure}
 
 \section{Przebieg treningu \Hania}
 \subsection{Klasa TrainingParser}\label{subsec:TrainingParser}
@@ -323,4 +471,167 @@ Centralnym elementem modułu audio jest klasa \texttt{SoundManager}. Ze względu
 
 \section{Języki} \label{sec:Languages}
 
-\section{Baza danych}
+\section{Baza danych \Karol}
+W celu zapewnienia persystencji danych użytkownika w naszej aplikacji mobilnej zaimplementowaliśmy lokalną bazę danych. Zważywszy na wybrane wcześniej środowisko Flutter, wymaganie wspierania wielu platform oraz wysoką gęstość zapisu danych, wybraliśmy napisaną w języku Dart nierelacyjną bazę Hive w wersji 2.2.3. Jest to lekka baza typu \textit{key-value store}, która przechowuje dane w formacie binarnym bezpośrednio na urządzeniu użytkownika, bez konieczności łączenia się z serwerem zewnętrznym.
+
+\subsection{Architektura i generowanie kodu}
+Hive wykorzystuje mechanizm generowania kodu adapterów zajmujących się niskopoziomowymi operacjami na plikach bazy danych. Dzięki bardzo dobrej integracji z językiem Dart umożliwia łatwe odwzorowanie klas w bazie danych poprzez adnotacje \texttt{@HiveType()} oraz \texttt{@HiveField()}. Adnotacja \texttt{@HiveType(typeId: n)} oznacza klasę jako typ możliwy do serializacji, gdzie \texttt{typeId} musi być unikalnym identyfikatorem liczbowym. Adnotacja \texttt{@HiveField(n)} oznacza poszczególne pola klasy, które mają być zapisywane do bazy.
+
+Listing \ref{code/hive/settings} przedstawia przykładową klasę \texttt{Settings} z adnotacjami Hive:
+
+\begin{lstlisting}[caption={Klasa Settings z adnotacjami Hive}, label={code/hive/settings}]
+import 'package:hive_flutter/hive_flutter.dart';
+
+part 'Settings.g.dart';
+
+@HiveType(typeId: 8)
+class Settings {
+  
+  @HiveField(0)
+  int preparationDuration = 3;
+  
+  @HiveField(1)
+  int endingDuration = 5;
+
+  @HiveField(2)
+  bool binauralBeatsEnabled = false;
+  
+  @HiveField(3)
+  double binauralLeftFrequency = 200.0;
+  
+  @HiveField(4)
+  double binauralRightFrequency = 210.0;
+}
+\end{lstlisting}
+
+Po oznaczeniu klasy danych adnotacjami i uruchomieniu polecenia \texttt{flutter pub run build\_runner build}, generator automatycznie tworzy pliki z rozszerzeniem \texttt{.g.dart} zawierające klasy \texttt{TypeAdapter}. Adaptery te implementują logikę serializacji i deserializacji obiektów do formatu binarnego:
+\begin{itemize}
+    \item metoda \texttt{read()} -- odczytuje dane binarne z bazy i odtwarza obiekt Dart,
+    \item metoda \texttt{write()} -- przetwarza obiekt Dart na ciąg bajtów do zapisu.
+\end{itemize}
+
+Listing \ref{code/hive/adapter} przedstawia fragment automatycznie wygenerowanego adaptera dla klasy \texttt{Settings}:
+
+\begin{lstlisting}[caption={Wygenerowany SettingsAdapter}, label={code/hive/adapter}]
+part of 'Settings.dart';
+
+class SettingsAdapter extends TypeAdapter<Settings> {
+  @override
+  final int typeId = 8;
+
+  @override
+  Settings read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) 
+        reader.readByte(): reader.read(),
+    };
+    return Settings()
+      ..preparationDuration = fields[0] as int
+      ..endingDuration = fields[1] as int
+      ..binauralBeatsEnabled = fields[2] as bool
+      ..binauralLeftFrequency = fields[3] as double
+      ..binauralRightFrequency = fields[4] as double;
+  }
+
+  @override
+  void write(BinaryWriter writer, Settings obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.preparationDuration)
+      ..writeByte(1)
+      ..write(obj.endingDuration)
+      ..writeByte(2)
+      ..write(obj.binauralBeatsEnabled)
+      ..writeByte(3)
+      ..write(obj.binauralLeftFrequency)
+      ..writeByte(4)
+      ..write(obj.binauralRightFrequency);
+  }
+
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SettingsAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+\end{lstlisting}
+
+\subsection{Model danych}
+W aplikacji zdefiniowaliśmy następujące typy danych przechowywane w bazie Hive:
+\begin{itemize}
+    \item \texttt{Training} (typeId: 1) -- kompletny trening oddechowy zawierający tytuł, opis, listę etapów, ustawienia dźwięków oraz konfigurację,
+    \item \texttt{TrainingStage} (typeId: 2) -- pojedynczy etap treningu z liczbą powtórzeń, przyrostem czasowym oraz listą faz oddechowych,
+    \item \texttt{BreathingPhaseType} (typeId: 3) -- typ wyliczeniowy określający rodzaj fazy oddechowej (wdech, wydech, zatrzymanie, regeneracja),
+    \item \texttt{BreathingPhase} (typeId: 4) -- faza oddechowa z określonym czasem trwania, typem i przypisanymi dźwiękami,
+    \item \texttt{BreathingPhaseIncrementType} (typeId: 5) -- typ wyliczeniowy określający sposób inkrementacji czasu (procentowy lub stała wartość),
+    \item \texttt{BreathingPhaseIncrement} (typeId: 6) -- konfiguracja przyrostu czasowego dla poszczególnych faz,
+    \item \texttt{Sounds} (typeId: 7) -- kontener przechowujący kompletne ustawienia dźwiękowe dla treningu,
+    \item \texttt{Settings} (typeId: 8) -- globalne ustawienia treningu, w tym konfiguracja dudnień binauralnych,
+    \item \texttt{BreathingPhaseSounds} (typeId: 9) -- zestaw dźwięków przypisanych do konkretnej fazy oddechowej (dźwięk tła i wskazówka rozpoczęcia),
+    \item \texttt{SoundAsset} (typeId: 10) -- reprezentacja zasobu dźwiękowego z informacją o ścieżce pliku i jego typie,
+    \item \texttt{SoundType} (typeId: 11) -- typ wyliczeniowy kategoryzujący dźwięki (np. głos, melodia, sygnał),
+    \item \texttt{SoundScope} (typeId: 12) -- typ wyliczeniowy definiujący zakres obowiązywania tła muzycznego (np. globalnie, per etap).
+\end{itemize}
+
+\subsection{Organizacja danych w Box'ach}
+Hive organizuje dane w strukturach zwanych \textit{Box}'ami, które odpowiadają tabelom w bazach relacyjnych lub kolekcjom w bazach dokumentowych. Każdy Box przechowuje pary klucz-wartość i musi zostać otwarty przed użyciem. W naszej aplikacji zdefiniowaliśmy cztery Box'y:
+\begin{itemize}
+    \item \texttt{respire} -- główny Box przechowujący presety treningowe oraz ich wersję migracyjną,
+    \item \texttt{userShortSounds} -- Box na krótkie dźwięki dodane przez użytkownika,
+    \item \texttt{userLongSounds} -- Box na długie dźwięki tła dodane przez użytkownika,
+    \item \texttt{userCountingSounds} -- Box na dźwięki odliczania dodane przez użytkownika.
+\end{itemize}
+
+\subsection{Inicjalizacja bazy danych}
+Inicjalizacja bazy danych odbywa się w funkcji \texttt{initialize()} wywoływanej przy starcie aplikacji. Proces ten obejmuje:
+\begin{enumerate}
+    \item Inicjalizację silnika bazy danych -- \texttt{Hive.initFlutter()}
+    \item Rejestrację wszystkich adapterów typów -- \texttt{Hive.registerAdapter()}
+    \item Otwarcie wszystkich Box'ów -- \texttt{Hive.openBox()}.
+\end{enumerate}
+
+\begin{lstlisting}[caption={Inicjalizacja bazy danych Hive}, label={code/hive/init}]
+Future<void> initialize() async {
+  await Hive.initFlutter();
+  
+  Hive.registerAdapter(BreathingPhaseAdapter());
+  Hive.registerAdapter(BreathingPhaseTypeAdapter());
+  Hive.registerAdapter(TrainingStageAdapter());
+  Hive.registerAdapter(TrainingAdapter());
+  Hive.registerAdapter(SoundAssetAdapter());
+  Hive.registerAdapter(SoundsAdapter());
+  Hive.registerAdapter(SettingsAdapter());
+  Hive.registerAdapter(BreathingPhaseSoundsAdapter());
+  
+  await Hive.openBox('respire');
+  await Hive.openBox('userShortSounds');
+  await Hive.openBox('userLongSounds');
+  await Hive.openBox('userCountingSounds');
+}
+\end{lstlisting}
+
+Operacje na danych wykonywane są poprzez metody Box'a: \texttt{put(key, value)} do zapisu, \texttt{get(key)} do odczytu oraz \texttt{delete(key)} do usuwania. Przykładowe operacje na danych - w tym przypadku ładowania treningów i dodawanie ich do listy presetów - pokazano w kodzie \ref{code/hive/operations}.
+
+\begin{lstlisting}[caption={Operacje na danych w Hive}, label={code/hive/operations}]
+final _box = Hive.box('respire');
+
+void loadData() {
+  final stored = _box.get('presets');
+  if (stored != null) {
+    presetList = List<Training>.from(stored);
+  }
+}
+
+void updateDataBase() {
+  _box.put('presets', presetList);
+}
+\end{lstlisting}
+
+Dzięki generowanym adapterom Hive automatycznie serializuje złożone obiekty wraz z ich zagnieżdżonymi strukturami, co umożliwia zapisanie całego drzewa obiektu \texttt{Training} wraz ze wszystkimi etapami, fazami i dźwiękami w jednej operacji.

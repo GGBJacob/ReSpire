@@ -1,5 +1,6 @@
 \chapter{Założenia projektowe}
 
+% Do usunięcia? Jest już wcześniej o tym we wstępie
 \section{Dla kogo rozwiązanie jest przeznaczone?  \Jakub\ \Karol\ \Ola}
 
 \section{Jakie korzyści ma dostarczać? \Jakub\ \Karol\ \Ola}
@@ -15,30 +16,29 @@ Zakres projektu obejmuje pełny cykl tworzenia aplikacji mobilnej ReSpire, od fa
 W ramach prac zostanie zaprojektowany i zaimplementowany intuicyjny interfejs użytkownika, który umożliwi łatwe zarządzanie sesjami treningu oddechowego. Kluczowym aspektem aplikacji będzie szeroka personalizacja poprzez wybór parametrów takich jak typ kroku (wdech, wydech, przerwa), długość kroku, inkrementacja czy powtórzeń. Projekt zakłada również opracowanie mechanizmów interaktywnych, takich jak wizualizacje wspomagające kontrolę oddechu.
 Zwieńczeniem projektu będzie publikacja aplikacji w sklepach Google Play i App Store, co umożliwi szeroką dostępność wśród użytkowników w Polsce, jak i za granicą.
 
-\section{Jakie mają być główne funkcjonalności? \Jakub\ \Karol\ \Ola}
+\section{Jakie mają być główne funkcjonalności? \Karol}
 
 Główne funkcjonalności aplikacji ReSpire zostały zaprojektowane tak, aby zapewnić użytkownikowi pełną kontrolę nad procesem treningowym oraz wysoką jakość doświadczenia audio-wizualnego. Do kluczowych funkcji systemu należą:
 
 \begin{itemize}
-    \item \textbf{Zaawansowany Edytor Treningów}: Narzędzie umożliwiające tworzenie złożonych, wieloetapowych sesji treningowych. System pozwala na definiowanie etapów składających się z konfigurowalnych faz (wdech, wstrzymanie, wydech, regeneracja). Kluczową funkcjonalnością jest obsługa pętli (powtórzeń) oraz dynamiczna inkrementacja czasu trwania faz w kolejnych cyklach, co umożliwia realizację treningów progresywnych (np. stopniowe wydłużanie wdechu).
+    \item \textbf{Zaawansowany edytor treningów}: Narzędzie umożliwiające tworzenie złożonych, wieloetapowych sesji treningowych. System pozwala na definiowanie konfigurowalnych etapów składających się z faz różnego typu. Kluczową funkcjonalnością jest obsługa powtórzeń z inkrementacja czasu trwania faz w kolejnych cyklach, co umożliwia realizację treningów progresywnych (np. stopniowe wydłużanie faz).
     
-    \item \textbf{Wielopoziomowy System Audio}: Złożony mechanizm zarządzania dźwiękiem, pozwalający na przypisywanie tła akustycznego na trzech poziomach hierarchii: globalnym (cały trening), etapu oraz fazy (unikalne dźwięki dla wdechu, wydechu, wstrzymania, regeneracji). System obsługuje komunikaty głosowe zrealizowane za pomocą  i sygnały dźwiękowe informujące o zmianie fazy bez konieczności patrzenia na ekran.
+    \item \textbf{Wielopoziomowy system audio}: Złożony mechanizm konfigurowania dźwięku, pozwalający na przypisywanie tła akustycznego, wskazówek audio, etc. na trzech poziomach hierarchii: globalnym (cały trening), etapu oraz fazy (unikalne dźwięki dla wdechu, wydechu, wstrzymania, regeneracji). System obsługuje komunikaty głosowe zrealizowane za pomocą generowania audio na podstawie tekstu. Umożliwiałoby to wykonywanie treningu bez patrzenia w ekran telefonu.
     
-    \item \textbf{Generator Dudnień Różnicowych (Binaural Beats)}: Funkcjonalność generująca w czasie rzeczywistym dźwięki o różnej częstotliwości dla lewego i prawego kanału audio. Wywołuje to efekt psychoakustyczny stymulujący fale mózgowe (np. stan relaksacji Alpha lub Theta). Generowanie odbywa się dynamicznie na podstawie zadanych parametrów częstotliwości nośnej i różnicowej, bez konieczności przechowywania gotowych plików.
+    \item \textbf{Generator dudnień różnicowych}: Funkcjonalność emitująca w czasie rzeczywistym dźwięki o różnej częstotliwości dla lewego i prawego kanału audio. Wywołuje to odczucie słyszenia jedynie małej różnicy częstotliwości między częstotliwościami kanałów. Generowanie odbywa się dynamicznie na podstawie zadanych parametrów częstotliwości obu kanałów, bez konieczności dostarczania gotowych plików.
     
-    \item \textbf{Silnik Wykonywania Treningu}: Moduł odpowiedzialny za egzekucję sesji w czasie rzeczywistym. Precyzyjnie synchronizuje timer, animacje interfejsu oraz warstwę audio, zapewniając płynne działanie nawet przy skomplikowanych strukturach treningowych. Zarządza również specjalnymi fazami przygotowania oraz zakończenia treningu.
+    \item \textbf{Silnik wykonywania treningu}: Moduł odpowiedzialny za odtworzenie sesji w czasie rzeczywistym. Precyzyjnie synchronizuje timer, animacje interfejsu oraz warstwę audio, zapewniając płynne działanie nawet przy skomplikowanych strukturach treningowych. Zarządza również specjalnymi fazami przygotowania oraz zakończenia treningu.
     
-    \item \textbf{Persystencja i Zarządzanie Danymi}: Możliwość zapisu stworzonych treningów i ustawień w lokalnej, wydajnej bazie danych na urządzeniu, co pozwala na pełną funkcjonalność w trybie offline. Dodatkowo system umożliwia eksport i import definicji treningów w uniwersalnym formacie (JSON), co ułatwia dzielenie się nimi między użytkownikami.
+    \item \textbf{Persystencja i udostępnianie treningów}: Możliwość zapisu stworzonych treningów i ustawień w lokalnej, wydajnej bazie danych na urządzeniu, co pozwala na pełną funkcjonalność w trybie offline. Dodatkowo system umożliwia import i eksport zrzutów danych treningów w przenośnym formacie, co ułatwia dzielenie się nimi między użytkownikami.
 \end{itemize}
 
-\section{Jacy użytkownicy są przewidziani? \Jakub\ \Karol\ \Ola}
+\section{Jacy użytkownicy są przewidziani? \Karol}
 Ze względu na specyfikę aplikacji przewidujemy podział użytkowników na dwie główne grupy:
 
 \begin{itemize}
     \item Użytkownicy podstawowi - osoby o bardzo zróżnicowanym profilu będące nowicjuszami w dziedzinie treningów oddechowych. Wymagają oni jedynie możliwości zaimportowania oraz odtworzenia gotowego treningu. Nie chcą oni nadmiernie ingerować w strukturę swoich treningów.
     \item Użytkownicy zaawansowani - osoby zainteresowane szczegółową personalizacją ze względu na swoją głęboką znajomość praktyk treningów oddechowych. Wymagają oni wysoce wyszukanych możliwości konfiguracji każdego aspektu sekwencji treningowej. 
+\end{itemize}
 
-\section{Czy i ew. z jakimi systemami ma współpracować? \Jakub\ \Karol\ \Ola}
+\section{Czy i ew. z jakimi systemami ma współpracować? \Karol}
 Rozważana jest implementacja zaawansowanego systemu sprzężenia zwrotnego dla użytkownika wykonującego analizę wykonywania treningu w trakcie jego odtwarzania. System ten nagrywałby krótkie fragmenty dźwięku z mikrofonów telefonu lub podłączonego zestawu słuchawkowego (konfiguracja preferowana dla lepszej izolacji dźwięku zbieranego oraz dźwięku emitowanego przez aplikację). Następnie fragmenty te byłyby przetwarzane równolegle względem głównych procesów aplikacji. Polegałoby to na transformacji fragmentów dźwiękowych na odpowiadające im mel-spektrogramy a następnie przekazanie ich jako wartości wejściowe do wytrenowanego predykcyjnego modelu uczenia maszynowego w celu uzyskania danych zwrotnych oceniających precyzję wykonania przez użytkownika zadanego treningu oddechowego.
-
-\section{Pozostałe założenia \Jakub\ \Karol\ \Ola}
