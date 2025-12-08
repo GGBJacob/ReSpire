@@ -1,13 +1,92 @@
-\chapter{Implementacja aplikacji mobilnej ReSpire \Hania\ \Ola\ \Jakub\ \Karol}
-Projekt został wykonany w środowisku Flutter za pomocą zestawu narzędzi dla programistów Flutter w wersji 3.27.2 wspierającego język Dart w wersji 3.6.1. Ten zestaw narzędzi dla programistów umożliwia tworzenie aplikacji na platformy Android, iOS, Linux, macOS oraz Windows z wykorzystaniem jednej bazy kodu źródłowego. Wybór Fluttera był podyktowany jego wydajnością, bogatym zestawem narzędzi do tworzenia interfejsów użytkownika oraz dużą dostępnością wsparcia. Zapewnie trwałości danych między uruchomieniami zostało zrealizowane przy użyciu lokalnej, nierelacyjnej bazy danych Hive w wersji 2.2.3, przygotowanej pod środowisko Flutter oraz język Dart.
-
-\section{Technologie \Karol}
-Aplikacja została napisana w jęzku Dart we frameworku Flutter.
+\chapter{Implementacja aplikacji mobilnej ReSpire \Hania \Jakub\ \Karol}
+Projekt został wykonany w środowisku Flutter za pomocą zestawu narzędzi dla programistów Flutter w wersji 3.27.2 wspierającego język Dart w wersji 3.6.1. Ten zestaw narzędzi dla programistów umożliwia tworzenie aplikacji na platformy Android, iOS, Linux, macOS oraz Windows z wykorzystaniem jednej bazy kodu źródłowego. Wybór Fluttera był podyktowany jego wydajnością, bogatym zestawem narzędzi do tworzenia interfejsów użytkownika oraz dużą dostępnością wsparcia. Zapewnie trwałości danych między uruchomieniami zostało zrealizowane przy użyciu lokalnej, nierelacyjnej bazy danych Hive w wersji 2.2.3, przygotowanej pod środowisko Flutter oraz obiektowy język programowania Dart.
 
 \section{Schemat plików/klas/modułów \Hania\ \Ola\ \Jakub\ \Karol}
-Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają się łącznie 63 pliki źródłowe w języku Dart. Projekt obejmuje 80 klas oraz ponad 400 metod realizujących logikę biznesową i interfejs użytkownika. Całkowity rozmiar projektu wynosi nieco ponad 10~KLOC (ang.\textit{ Thousands (kilo) Lines of Code} –- tysięcy linii kodu), z czego blisko 8900 stanowi tzw. czysty kod, określany jako SLOC (ang.\textit{Source Lines of Code} -- źródłowe linie kodu). Ze względu na taką złożoność struktury, diagramy klas i architektury zostały w niniejszej dokumentacji podzielone na logiczne fragmenty, aby zachować ich czytelność.
+Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają się łącznie 63 pliki źródłowe w języku Dart. Projekt obejmuje 80 klas oraz ponad 400 metod realizujących logikę biznesową i interfejs użytkownika. Całkowity rozmiar projektu wynosi nieco ponad 10~KLOC (ang.\textit{ Thousands (kilo) Lines of Code} -- tysięcy linii kodu), z czego blisko 8900 stanowi tzw. czysty kod, określany jako SLOC (ang.\textit{Source Lines of Code} -- źródłowe linie kodu). Ze względu na taką złożoność struktury, diagramy klas i architektury zostały w niniejszej dokumentacji podzielone na logiczne fragmenty, aby zachować ich czytelność.
 
-\subsection{Schemat plików \Ola}
+\subsection{Struktura plików \Ola}
+Kod aplikacji składa się z wielu folderów, gdzie struktura i zawartość większości z nich została automatycznie wygnerowana przy tworzeniu projektu za pomocą zestawu narzędzi \textit{Flutter}, zapewniając elementy niezbędne do uruchomienia aplikacji na różnych platformach. Zostały one pokazane na rysunku \ref{fig:drzewko_glowne}. Foldery \textit{android/}, \textit{ios/}, \textit{macos/}, \textit{windows/} oraz \textit{linux/} zawierają natywne projekty dla platform mobilnych oraz systemów operacyjnych. W katalogu \textit{.idea/} umieszczone są pliki konfiguracji dla \textit{Android Studio}, natomiast zawartość folderu \textit{build/} jest automatycznie generowana przy budowie aplikacji. Główny kod źródłowy, który został napisany podczas tworzenia aplikacji, znajduje się w~folderze \textit{lib/}.
+
+\begin{figure}[H] 
+\large
+\dirtree{%
+.1 ReSpire/.
+.2 dart\_tool/....
+.2 idea/....
+.2 android/....
+.2 assets/....
+.2 build/....
+.2 ios/....
+.2 lib/....
+.2 linux/....
+.2 macos/....
+.2 scripts/....
+.2 web/....
+.2 windows/....
+.2 ....
+}
+\caption{Struktura plików projektu - główne foldery} 
+\label{fig:drzewko_glowne} 
+\end{figure}
+
+\newpage
+Konstrukcja folderu \textit{lib/} została przedstawiona na rysunku \ref{fig:drzewko_plikow}. Podział na podfoldery zgodnie ze ścisłą strukturą ułatwił organizację projektu oraz umożliwił zachowanie porządku w obszernym kodzie projektu. W folderze \textit{components/} zostały umieszczone pliki zawierające bazę danych oraz elementy używane do budowania widoków aplikacji, które są natomiast zawarte w~katalogu \textit{pages/}. Na tym samym poziomie zagłębienia utworzony został folder \textit{services/}, który przechowuje wszystkie serwisy i kontrolery, w tym dwa podfoldery \textit{SoundManagers} oraz \textit{TranslationProvider} dedykowane odpowiednio klasom zarządzającym dźwiękami w treningu oraz zmianą języka aplikacji. Pozostałe foldery - \textit{theme/} oraz \textit{utils/} zawierają natomiast pliki dotyczące kolorów używanych w aplikacji oraz funkcje pomocne w~formatowaniu tekstu czy jednostek czasowych. Jedynym plikiem umieszczonym poza podkatalogami jest \textit{main.dart}, który stanowi punkt wejścia do aplikacji.
+\begin{figure}[H] 
+{\large
+\dirtree{%
+.1 lib/.
+.2 components/.
+.3 BreathingPage/....
+.3 Global/....
+.3 HomePage/....
+.3 Settings/....
+.3 TrainingEditorPage/....
+.2 pages/....
+.2 services/.
+.3 SoundManagers/....
+.3 TranslationProvider/....
+.3 ....
+.2 theme/.
+.3 Colors.dart.
+.2 utils/.
+.3 DurationFormatter.dart.
+.3 TextUtils.dart.
+.2 main.dart.
+}}
+\caption{Struktura plików projektu - kod źródłowy} 
+\label{fig:drzewko_plikow} 
+\end{figure}
+
+Zasoby dostarczane do aplikacji umieszczone zostały w folderze \textit{assets/} znajdującym się na tym samym poziomie zagłębienia, co \textit{lib/}. Schemat przedstawiony został na rysunku \ref{fig:drzewko_zasobow}. Zasoby złożone są z: animacji przechowywanych w katalogu \textit{animations/}, plików JSON będących słownikami używanymi do tłumaczenia aplikacji w folderze\textit{languages/} oraz dźwięki w katalogu \textit{sounds/}, który został podzielony na trzy podfoldery dla różnych typów plików dźwiękowych. Do~zasobów należą także ilustracje logo umieszczone bezpośrednio w opisywanym folderze.
+\begin{figure}[H] 
+{\large
+\dirtree{%
+.1 assets/.
+.2 animations/....
+.2 languages/....
+.2 sounds/.
+.3 counting/....
+.3 long/....
+.3 short/....
+.3 gnerator.dart.
+.2 ....
+}}
+\caption{Struktura plików projektu - pliki zasobów} 
+\label{fig:drzewko_zasobow} 
+\end{figure}
+
+\newpage
+\subsection{Klasy treningu \Jakub} \label{subsec:training_classes}
+
+Na trening składa się 12 klas, z czego główną z nich jest \texttt{Training}. Zawiera ona główne informacje o ćwiczeniu takie jak tytuł, czy opis, a także listę etapów, dźwięki i ustawienia. Struktura dźwięków została opisana w rodziale \ref{sec:Sounds}. 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{diagramy/class_diagram.png}
+  \caption{Diagram klas treningu}
+  \label{img/class_diagram}
+\end{figure}
+
 
 \section{Edytor treningów \Karol}
 
@@ -893,6 +972,42 @@ Za warstwę logiczną odpowiada serwis \texttt{TranslationProvider}. Przechowuje
 
 \section{Baza danych \Karol}
 
+\section{Generator list dźwięków \Ola}
+W celu automatyzacji pracy i wyeliminowania ryzyka błędów z powodu ręcznego wprowadzania nazw oraz ścieżek do plików dźwiękowych, stworzony został prosty generator list dźwięków. Został on umieszczony w folderze \textit{assets/}, w podfolderze \textit{sounds/}, w pliku \textit{generator.dart}. Narzędzie to generuje plik \textit{Sounds\_lists.g.dart} zapisywany w folderze \textit{lib/} w podkatalogu \textit{components/Global}. Zawiera on klasę \texttt{ReSpireSounds}, w której znajdują się trzy mapy z kluczem będącym łańcuchem znaków reprezentującym nazwę dźwięku oraz wartością będącą typu \texttt{SoundAsset}. Ma on parametry takie jak nazwa, ścieżka do pliku oraz rodzaj dźwięku podawane w konstruktorze. Wyróżnione zostały trzy rodzaje dźwięków opisywane przez typ wyliczeniowy \texttt{SoundType}: krótkie efekty dźwiękowe (\texttt{SoundType.cue}), dłuższe nagrania (\texttt{SoundType.melody}) oraz dźwięki odliczania (\texttt{SoundType.counting}). Każda z trzech map grupuje dźwięki konkretnego typu. Przykładowy fragment wygenerowanego pliku przedstawiono w kodzie \ref{code/mapa}.
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Mapa dźwięków odliczania wygnerowana automatycznie}, label={code/mapa}]
+  final Map<String, SoundAsset> countingSounds = {
+    "Clock": SoundAsset(name: "Clock", path: "sounds/counting/Clock.mp3", type: SoundType.counting),
+    "Metronome": SoundAsset(name: "Metronome", path: "sounds/counting/Metronome.mp3", type: SoundType.counting),
+  };
+\end{lstlisting}
+\end{figure}
+
+Uniknięcie powtarzalności kodu generatora zostało osiągnięte dzięki użyciu dodatkowej struktury - klasy \texttt{SoundsInfo} przedstawionej w kodzie \ref{code/sounds_info}. Zawiera ona trzy pola typu tekstowego: \textit{soundType} określające typ dźwięku, \textit{directory} przechowujące nazwę podfolderu zawierającego dźwięk danego typu oraz \textit{mapName} definiujące mapę dedykowaną temu typowi. Tworzona jest lista obiektów tej klasy, dzięki czemu  można wykonać jedną pętlę po trzech różnych typach dźwięków, zmieniając jedynie parametry.
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Klasa \texttt{SoundsInfo}}, label={code/sounds_info}]
+class SoundsInfo {
+  final String soundType;
+  final String directory;
+  final String mapName;
+}
+\end{lstlisting}
+\end{figure}
+
+W celu wywołania generatora należy uruchomić w terminalu nastepujące polecenie: \texttt{dart run assets/sounds/generator.dart}, będąc w katalogu głównym projektu (folder \textit{ReSpire/}). Pliki dźwiękowe muszą być umieszczone w~odpowiednich podfolderach w~katalogu \textit{assets/sounds/}, aby zostały poprawnie wykryte przez generator. Są to kolejno: \textit{cues/} dla krótkich efektów dźwiękowych, \textit{melodies/} dla dłuższych nagrań oraz \textit{counting/} dla dźwięków odliczania, analogicznie jak w przypadku struktury map w wygenerowanym pliku. Istotne jest, aby pliki miały odpowiednie nazwy - są one później wykorzystywane jako nazwa tworzonego obiektu klasy \texttt{SoundAsset} oraz klucz w~mapie, tak jak przedstawiono we fragmencie kodu \ref{code/tworzenie_assetu}. Znaki \textit{-} oraz \textit{\_} w nazwach plików są automatycznie zamieniane na spacje, aby zapewnić czytelność nazw dźwięków w interfejsie użytkownika, a pierwsza litera nazwy jest zamieniana na wielką w razie potrzeby. Dokonuje tego funkcja \texttt{capitalizeAndRemoveTextSeparators()} pochodząca z klasy \texttt{TextUtils}. Linijki tworzące kolejne wpisy w mapie są zapisywane do bufora, a następnie cały bufor jest zapisywany do pliku docelowego. 
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Proces wpisywania do bufora linijek tworzących kolejne wpisy w mapie}, label={code/tworzenie_assetu}]
+  for (var name in filesList[i]) {
+      final displayName = TextUtils.capitalizeAndRemoveTextSeparators(name);
+      buffer.writeln(
+          '    "$displayName": SoundAsset(name: "$displayName", path: "sounds/${sounds.directory}/$name.mp3", type: SoundType.${sounds.soundType}),');
+    }
+\end{lstlisting}
+\end{figure}
 \section{Baza danych \Karol}
 W celu zapewnienia persystencji danych użytkownika w naszej aplikacji mobilnej zaimplementowaliśmy lokalną bazę danych. Zważywszy na wybrane wcześniej środowisko Flutter, wymaganie wspierania wielu platform oraz wysoką gęstość zapisu danych, wybraliśmy napisaną w języku Dart nierelacyjną bazę Hive w wersji 2.2.3. Jest to lekka baza typu \textit{key-value store}, która przechowuje dane w formacie binarnym bezpośrednio na urządzeniu użytkownika, bez konieczności łączenia się z serwerem zewnętrznym.
 

@@ -1,7 +1,36 @@
 \chapter{Projekt rozwiązania \Hania\ \Ola\ \Jakub}
 
 \section{Projekt architektury systemu \Ola}
+Przy projektowaniu architektury aplikacji wzięte pod uwagę zostały dobre praktyki i koncepty proponowane w dokumentacji Fluttera \cite{flutter_architecture}, a także wzorce projektowe. Celem było stworzenie struktury, która będzie łatwa w utrzymaniu i rozwoju, ale równocześnie stabilna i wydajna.
 
+\subsection{Architektura warstwowa}
+Aplikacja została zaprojektowana zgodnie z architekturą warstwową, zgodnie z wytycznymi Fluttera. Składa się z trzech głównych warstw: prezentacji, logiki oraz danych. Zostały one przedstawione na rysunku \ref{img/warstwy}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.12]{obrazki/projekt_rozwiazania/architektura_warstwowa.jpg}
+    \caption{Architektura warstwowa aplikacji ReSpire}
+    \label{img/warstwy} 
+\end{figure}
+Warstwy komunikują się jedynie z warstwami bezpośrednio nad lub pod nimi - oznacza to, że warstwa prezentacji nie powinna wiedzieć o istnieniu warstwy danych i na odwrót.
+
+Warstwy aplikacji i ich rola:
+\begin{itemize}
+    \item \textit{Warstwa prezentacji} - wyświetla dane otrzymane poprzez warstwę logiki użytkownikowi oraz obsługuje żądania użytkownika. W ReSpire jest reprezentowana poprzez komponenty oraz składające się z nich strony.
+    \item \textit{Warstwa logiki} - implementuje logikę biznesową i jest pośrednikiem między dwoma pozostałymi warstwami. Klasy stanowiące tę warstwę znajdują się w folderze \textit{service/} (pol. serwis) i obsługują różne funkcjonalności w aplikacji, takie jak na przykład tłumaczenie aplikacji, zarządzanie i odtwarzanie dźwięków, kontrola przebiegu treningu czy zamiana tekstu na mowę.
+    \item \textit{Warstwa danych} - odpowiada za interakcje z bazą danych i przekazywanie danych do warstwy logiki. W aplikacji dane przechowywane są w lekkiej bazie \textit{Hive} i z niej są pobierane.
+\end{itemize}
+
+\subsection{Architektura monolityczna}
+ReSpire to aplikacja monolityczna - nie posiada podziału na mikroserwisy ani inne niezależne usługi. Wszystkie funkcje i komponenty są zintegrowane w jednym kodzie źródłowym. Ułatwia to zarządzanie projektem i redukuje niedgogodności związane z komunikacją między usługami, z którymi muszą się mierzyć systemy rozproszone. Aplikacja działa lokalnie, nie komunikuje się z zewnętrznym serwerem - posiada lekką, wbudowaną bazę danych. Nie jest przeznaczona dla bardzo dużego grona odbiorców, więc nie musi cechować się wyjątkową wydajnością. Cała logika biznesowa, interfejs użytkownika i zarządzanie danymi są zawarte w jednej aplikacji. Do zalet monolitu należą szybkość implementacji, łatwość zaprojektowania oraz zrozumienia. Architektura ta może natomiast powodować potencjalne problemy ze skalowalnością i elastycznością aplikacji w przyszłości. Obecne wymagania sprawiaja jednak, że architektura monolityczna jest odpowiednia dla tego projektu i jej zalety przewyższają wady.
+
+\subsection{Modularny podział aplikacji}
+System oparty jest na modularnym podziale, czyli składa się z mniejszych komponentów. Dzięki temu możliwe jest niezależne rozwijanie, testowanie, zmienianie i utrzymywanie poszczególnych modułów, a także ich wielokrotne użycie. Pozwala to również uporządkować kod i architekturę systemu. Poszczególne elementy warstwy prezentacji zostały wydzielone z widoków - na przykład strona treningu oddechowego posiada karuzelę z instrukcjami oraz animowane koło jako osobne komponenty. Łączy się to z zasadą \textit{Separation of concerns} (pol. podział zagadnień), gdzie każdy moduł skupia się na innym, określonym obszarze funkcjonalnym. Zmiany w jedym komponencie nie wpływają na pozostałe, co ułatwia zarządzanie nimi i wprowadzanie zmian.
+
+\subsection{Model obiektów stron}
+Widoki aplikacji zostały zamodelowane zgodnie z \textit{Page Object Model} (pol. model obiektów stron), który określa, że strony powinny być osobnymi klasami. Dostępne jest pięć widoków: strona główna, szczegółów treningu, treningu oddechowego, ustawień oraz edytora. Każdy z nich jest oddzielną klasą umieszczoną w osobnym pliku (w folderze \textit{pages/}). Skutkuje to czytelnością i łatwiejszym zarządzaniem kodem.
+
+\subsection{Stan aplikacji i warstwa prezentacji}
+Zgodnie z zasadą Fluttera "UI is a function of state" (pol. Warstwa widoku jest funkcją stanu), warstwa prezentacji jest bezpośrednio powiązana ze stanem aplikacji. Dzięki deklaratywnemu podejściu zmiany w danych automatycznie odzwierciedlane są w interfejsie użytkownika, co zapewnia spójność i aktualność prezentowanych informacji. Dane są trwałe i niemodyfikowalne - po ich utworzeniu nie można ich zmienić, a jedynie stworzyć nowe na ich podstawie. Ułatwia to zarządzanie stanem aplikacji i~minimalizuje ryzyko błędów wynikających z nieoczekiwanych zmian danych. Widoki aplikacji są sterowane danymi i zawierają minimalną logikę biznesową, skupiając się głównie na prezentacji informacji i interakcji z użytkownikiem. Jest to osiągane między innymi poprzez stosowanie klasy \texttt{ChangeNotifier} i jej pochodnych, która powiadamia widoki o zmianach stanu. Flutter udostępnia także dwa typy widgetów: \texttt{StatelessWidget} (niemodyfikowalny) i \texttt{StatefulWidget} (modyfikowalny), które zapewniają efektywne i wydajne działanie. W aplikacji ReSpire wykorzystywane są oba typy, w zależności od potrzeb danego widoku.
 \subsection{Model serwisów}
 
 Warstwa logiczna aplikacji została zaprojektowana na podstawie architektury modułowej, obejmującej łącznie 12 wyspecjalizowanych serwisów. Każdy z komponentów realizuje odrębną domenę funkcjonalną, co pozwala na skuteczną separację logiki biznesowej od warstwy prezentacji. Zależności oraz relacje między kluczowymi modułami przedstawiono na rysunku~\ref{img/ServiceDiagram}.
