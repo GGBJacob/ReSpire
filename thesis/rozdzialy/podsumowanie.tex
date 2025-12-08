@@ -1,9 +1,19 @@
 \chapter{Podsumowanie \Karol}
 
-\section{Co się udało}
+\section{Osiągnięte rezultaty}
 W trakcie trwania naszego inżynierskiego projektu dyplomowego udało nam sie zrealizować w pełni funkcjonalną aplikację umożliwiającą kompleksową konfigurację skomplikowanych treningów oddechowych. Aplikacja umożliwia importowanie gotowych treningów lub grup treningów, tworzenie treningów, elastyczną konfigurację ich struktury oraz wielowarstwową edycję audio dla każdego elementu treningu. Następnie nasze rozwiązanie umożliwia odtworzenie treningu z wykorzystaniem wszystkich skofngiurowanych wskazówek audiowizualnych lub eksport jednego lub wybranej przez użytkownika grupy treningów do pliku JSON.
 
-\section{Czego się nie udało}
-Niestety, z powodu braku dostarczenia nam modelu lub serwisu z modelem do ewaluacji treningu przez nagrywki audio użytkownika oraz decyzji o skupieniu się na rozbudowie konfigurowalności, nie udało nam się zaimplementować sprzężenia zwrotnego określającego jakość wykonania przez użytkownika treningu.
+\section{Napotkane problemy i ogarniczenia}
+Niestety, z powodu braku dostarczenia nam modelu lub serwisu z modelem do ewaluacji treningu przez nagrania audio użytkownika oraz decyzji o skupieniu się na rozbudowie konfigurowalności, nie udało nam się zaimplementować sprzężenia zwrotnego określającego jakość wykonania przez użytkownika treningu.
 
 \section{Wnioski na przyszłość}
+
+\section{Porównanie opracowanego rozwiązania z istniejącymi rozwiązaniami}
+Wśród ograniczeń opisywanych istniejących rozwiązań \ref{sec:istniejace_rozwiazania} najczęściej powtarzającym się była ograniczona możliwość edycji / tworzenia treningów, nawet w aplikacjach przedstawianych jako umożliwiające pełną personalizację. Zauważonymi problemami były: brak możliwości ustawienia długości trwania faz, sztywno narzucone szablony treningów, mocne ograniczenie funkcjonalności dla użytkowników bez subskrypcji czy wręcz brak opcji dodawania własnych treningów. Jako wady rozwiązań na rynku wymieniane były także przestarzały lub nieprzejrzysty wygląd, brak możliwości śledzenia statystyk i poprawności wykonywania treningu, problemy z poprawnym odtwarzaniem dźwięków czy brak możliwości zatrzymania treningu.
+
+ReSpire cechuje się prostym, ale nowoczesnym wyglądem, posiada możliwość zatrzymywania treningów. Tak jak w innych aplikacjach, brakuje jej możliwości śledzenia na bieżąco poprawności wykonywanych ćwiczeń, natomiast rozwiązuje główny problem z elastycznością. Treningi są w pełni konfigurowalne przy pomocy zaawansowanego edytorze, pozwalając dobrać typy i długości faz oddechowych oraz skomponować je według własnych potrzeb. Mimo to aplikacja nadaje się zarówno dla osób doświadczonych, jak i początkujących. Udało się połączyć potrzeby obu grup użytkowników, bez potrzeby kompromisów w zakresie konfiguracji. Elementem wyróżniającym ReSpire na tle opisywanych rozwiązań jest także z pewnością rozbudowana oprawa dźwiękowa treningu. Użytkownik może wybierać spośród różnych poziomów szczegółowości, ustawiając dźwięki od faz w poszczególnych etapach po muzykę w tle treningu.
+
+Opracowana aplikacja rozwiązuje część problemów zauważonych w istniejących rozwiązaniach. Ma potencjał na dalsze udoskonalenia, jednak jest w pewien sposób innowacyjna.
+
+\section{Możliwości rozwoju}
+Aplikacja jest obecnie w pełni funkcjonalna i stabilna, natomiast posiada perspektywy dalszego rozwoju. Jedną z nich jest integracja z modelem oceniającym w czasie rzeczywistym na podstawie nagrań audio dokładności wykonywanych treningów i wyświetlanie ich w formie przyjaznych statystyk. System można by także wzbogacić o mechanizm powiadomień, aby użytkownik pamiętał o regularnych treningach oddechowych, a także wprowadzić system gratyfikacji motywujący do używania ReSpire. Kolejnym potencjalnym obszarem rozwoju jest wprowadzenie innych wersji językowych --- obecnie aplikacja obsługuje jedynie polski oraz angielski. Pomimo tego, że aplikacja posiada silną i spójną identyfikację wizualną, warto rozważyć także dodanie motywu ciemnego lub innych motywów kolorystycznych. Etapem pozwalającym udostępnić aplikację szerszemu gronu użytkowników byłoby wprowadzenie jej do sklepu \textit{GooglePlay} i/lub \textit{Apple App Store}, co z~kolei stanowiłoby podstawę do dodania funkcjonalności społeczności do ReSpire --- na przykład udostępniania treningów między użytkownikami bezpośrednio przez platformę.
