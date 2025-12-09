@@ -21,10 +21,10 @@ Warstwy aplikacji i ich rola:
 \end{itemize}
 
 \subsection{Architektura monolityczna}
-ReSpire to aplikacja monolityczna --- nie posiada podziału na mikroserwisy ani inne niezależne usługi. Wszystkie funkcje i komponenty są zintegrowane w jednym kodzie źródłowym. Ułatwia to zarządzanie projektem i redukuje niedgogodności związane z komunikacją między usługami, z którymi muszą się mierzyć systemy rozproszone. Aplikacja działa lokalnie, nie komunikuje się z zewnętrznym serwerem --- posiada lekką, wbudowaną bazę danych. Nie jest przeznaczona dla bardzo dużego grona odbiorców, więc nie musi cechować się wyjątkową wydajnością. Cała logika biznesowa, interfejs użytkownika i zarządzanie danymi są zawarte w jednej aplikacji. Do~zalet monolitu należą szybkość implementacji, łatwość zaprojektowania oraz zrozumienia. Architektura ta może natomiast powodować potencjalne problemy ze skalowalnością i elastycznością aplikacji w przyszłości. Obecne wymagania sprawiaja jednak, że architektura monolityczna jest odpowiednia dla tego projektu i jej zalety przewyższają wady.
+ReSpire to aplikacja monolityczna --- nie posiada podziału na mikroserwisy ani inne niezależne usługi. Wszystkie funkcje i komponenty są zintegrowane w jednym kodzie źródłowym. Ułatwia to zarządzanie projektem i redukuje niedogodności związane z komunikacją między usługami, z którymi muszą się mierzyć systemy rozproszone. Aplikacja działa lokalnie, nie komunikuje się z zewnętrznym serwerem --- posiada lekką, wbudowaną bazę danych. Nie jest przeznaczona dla bardzo dużego grona odbiorców, więc nie musi cechować się wyjątkową wydajnością. Cała logika biznesowa, interfejs użytkownika i zarządzanie danymi są zawarte w jednej aplikacji. Do~zalet monolitu należą szybkość implementacji, łatwość zaprojektowania oraz zrozumienia. Architektura ta może natomiast powodować potencjalne problemy ze skalowalnością i elastycznością aplikacji w przyszłości. Obecne wymagania sprawiają jednak, że architektura monolityczna jest odpowiednia dla tego projektu i jej zalety przewyższają wady.
 
 \subsection{Modularny podział aplikacji}
-System oparty jest na modularnym podziale, czyli składa się z mniejszych komponentów. Zaletą tego podejścia jest możliwość niezależnego rozwijania i testowania poszczególnych klas. Korzyścią jest także prostsze utrzymywanie poszczególnych modułów oraz umożliwienie wielokrotnego wykorzystania. W efekcie zastosowania modułów kod projektu oraz architektura systemu są bardziej uporządkowane. W ReSpire poszczególne elementy warstwy prezentacji zostały wydzielone z widoków --- na przykład strona treningu oddechowego posiada karuzelę z instrukcjami oraz animowane koło jako osobne komponenty. Odpowiada to zadadzie \textit{Separation of concerns} (pol. podział zagadnień), gdzie każdy moduł skupia się na innym, określonym obszarze funkcjonalnym. Zmiany w jednym komponencie nie wpływają na pozostałe, co ułatwia zarządzanie nimi oraz wprowadzanie poprawek.
+System oparty jest na modularnym podziale, czyli składa się z mniejszych komponentów. Zaletą tego podejścia jest możliwość niezależnego rozwijania i testowania poszczególnych klas. Korzyścią jest także prostsze utrzymywanie poszczególnych modułów oraz umożliwienie wielokrotnego wykorzystania. W efekcie zastosowania modułów kod projektu oraz architektura systemu są bardziej uporządkowane. W ReSpire poszczególne elementy warstwy prezentacji zostały wydzielone z widoków --- na przykład strona treningu oddechowego posiada karuzelę z instrukcjami oraz animowane koło jako osobne komponenty. Odpowiada to zasadzie \textit{Separation of concerns} (pol. podział zagadnień), gdzie każdy moduł skupia się na innym, określonym obszarze funkcjonalnym. Zmiany w jednym komponencie nie wpływają na pozostałe, co ułatwia zarządzanie nimi oraz wprowadzanie poprawek.
 
 \subsection{Model obiektów stron}
 Widoki aplikacji zostały zamodelowane zgodnie z \textit{Page Object Model} (pol. model obiektów stron), który określa, że strony powinny być osobnymi klasami. Dostępne jest pięć widoków: strona główna, szczegółów treningu, treningu oddechowego, ustawień oraz edytora. Każdy z nich jest oddzielną klasą umieszczoną w osobnym pliku (w folderze \textit{pages/}). Skutkuje to czytelnością i łatwiejszym zarządzaniem kodem.
@@ -151,7 +151,7 @@ Przebieg treningu oddechowego w prototypie aplikacji ReSpire zaprojektowano w sp
 \label{img/respire_training}
 \end{figure}
 
-Ekran edycji treningu w pierwotym projekcie zawiera w górnej części tytuł, a w dolnej przycisk zapisu \textit{Save}, z którego w wersji ostatecznej zrezygnowano, ze względu na wprowadzenie mechanizmu automatycznego zapisu zmian. Główną część ekranu stanowi panel z trzema zakładkami:
+Ekran edycji treningu w pierwotnym projekcie zawiera w górnej części tytuł, a w dolnej przycisk zapisu \textit{Save}, z którego w wersji ostatecznej zrezygnowano, ze względu na wprowadzenie mechanizmu automatycznego zapisu zmian. Główną część ekranu stanowi panel z trzema zakładkami:
 \begin{itemize}
     \item \textit{Training} --- sekcja służąca do tworzenia i edycji własnych schematów oddechowych,
     \item \textit{Sound} --- ustawienia muzyki i sygnałów dźwiękowych,
@@ -203,7 +203,7 @@ Logo aplikacji zostało zaprojektowane w narzędziu \textit{Canva}, a część j
 \end{figure}
 
 
-W oparciu o kolorystykę elementów w logo zostały wybrane trzy główne kolory aplikacji. Są to~odcienie niebieskiego. Kolor ten jest kojarzony z poczuciem spokoju i bezpieczeństwa \cite{blue}. Dzięki temu aplikacja jest spójna kolorystycznie, a także wywołuje przyjemne odczucia w użytkowniku, zapewniając wyciszenie i harmonię. 
+Na podstawie kolorystyki elementów w logo zostały wybrane trzy główne kolory aplikacji. Są to~odcienie niebieskiego. Kolor ten jest kojarzony z poczuciem spokoju i bezpieczeństwa \cite{blue}. Dzięki temu aplikacja jest spójna kolorystycznie, a także wywołuje przyjemne odczucia w użytkowniku, zapewniając wyciszenie i harmonię. 
 Poniżej przedstawiono listę kolorów zapisanych w~dwóch powszechnie stosowanych systemach zapisu barw oraz ich wizualizację:
 \definecolor{colA}{HTML}{1A93A8}
 \definecolor{colB}{HTML}{32B7CF}
