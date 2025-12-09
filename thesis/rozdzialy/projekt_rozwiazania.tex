@@ -11,26 +11,26 @@ Aplikacja została zaprojektowana zgodnie z architekturą warstwową, zgodnie z 
     \caption{Architektura warstwowa aplikacji ReSpire}
     \label{img/warstwy} 
 \end{figure}
-Warstwy komunikują się jedynie z warstwami bezpośrednio nad lub pod nimi - oznacza to, że warstwa prezentacji nie powinna wiedzieć o istnieniu warstwy danych i na odwrót.
+Warstwy komunikują się jedynie z warstwami bezpośrednio nad lub pod nimi --- oznacza to, że warstwa prezentacji nie powinna wiedzieć o istnieniu warstwy danych i na odwrót.
 
 Warstwy aplikacji i ich rola:
 \begin{itemize}
-    \item \textit{Warstwa prezentacji} - wyświetla dane otrzymane poprzez warstwę logiki użytkownikowi oraz obsługuje żądania użytkownika. W ReSpire jest reprezentowana poprzez komponenty oraz składające się z nich strony.
-    \item \textit{Warstwa logiki} - implementuje logikę biznesową i jest pośrednikiem między dwoma pozostałymi warstwami. Klasy stanowiące tę warstwę znajdują się w folderze \textit{service/} (pol. serwis) i obsługują różne funkcjonalności w aplikacji, takie jak na przykład tłumaczenie aplikacji, zarządzanie i odtwarzanie dźwięków, kontrola przebiegu treningu czy zamiana tekstu na mowę.
-    \item \textit{Warstwa danych} - odpowiada za interakcje z bazą danych i przekazywanie danych do warstwy logiki. W aplikacji dane przechowywane są w lekkiej bazie \textit{Hive} i z niej są pobierane.
+    \item \textit{Warstwa prezentacji} --- wyświetla dane otrzymane poprzez warstwę logiki użytkownikowi oraz obsługuje żądania użytkownika. W ReSpire jest reprezentowana poprzez komponenty oraz składające się z nich strony.
+    \item \textit{Warstwa logiki} --- implementuje logikę biznesową i jest pośrednikiem między dwoma pozostałymi warstwami. Klasy stanowiące tę warstwę znajdują się w folderze \textit{service/} (pol. serwis) i obsługują różne funkcjonalności w aplikacji, takie jak na przykład tłumaczenie aplikacji, zarządzanie i odtwarzanie dźwięków, kontrola przebiegu treningu czy zamiana tekstu na mowę.
+    \item \textit{Warstwa danych} --- odpowiada za interakcje z bazą danych i przekazywanie danych do warstwy logiki. W aplikacji dane przechowywane są w lekkiej bazie \textit{Hive} i z niej są pobierane.
 \end{itemize}
 
 \subsection{Architektura monolityczna}
-ReSpire to aplikacja monolityczna - nie posiada podziału na mikroserwisy ani inne niezależne usługi. Wszystkie funkcje i komponenty są zintegrowane w jednym kodzie źródłowym. Ułatwia to zarządzanie projektem i redukuje niedgogodności związane z komunikacją między usługami, z którymi muszą się mierzyć systemy rozproszone. Aplikacja działa lokalnie, nie komunikuje się z zewnętrznym serwerem - posiada lekką, wbudowaną bazę danych. Nie jest przeznaczona dla bardzo dużego grona odbiorców, więc nie musi cechować się wyjątkową wydajnością. Cała logika biznesowa, interfejs użytkownika i zarządzanie danymi są zawarte w jednej aplikacji. Do zalet monolitu należą szybkość implementacji, łatwość zaprojektowania oraz zrozumienia. Architektura ta może natomiast powodować potencjalne problemy ze skalowalnością i elastycznością aplikacji w przyszłości. Obecne wymagania sprawiaja jednak, że architektura monolityczna jest odpowiednia dla tego projektu i jej zalety przewyższają wady.
+ReSpire to aplikacja monolityczna --- nie posiada podziału na mikroserwisy ani inne niezależne usługi. Wszystkie funkcje i komponenty są zintegrowane w jednym kodzie źródłowym. Ułatwia to zarządzanie projektem i redukuje niedgogodności związane z komunikacją między usługami, z którymi muszą się mierzyć systemy rozproszone. Aplikacja działa lokalnie, nie komunikuje się z zewnętrznym serwerem --- posiada lekką, wbudowaną bazę danych. Nie jest przeznaczona dla bardzo dużego grona odbiorców, więc nie musi cechować się wyjątkową wydajnością. Cała logika biznesowa, interfejs użytkownika i zarządzanie danymi są zawarte w jednej aplikacji. Do zalet monolitu należą szybkość implementacji, łatwość zaprojektowania oraz zrozumienia. Architektura ta może natomiast powodować potencjalne problemy ze skalowalnością i elastycznością aplikacji w przyszłości. Obecne wymagania sprawiaja jednak, że architektura monolityczna jest odpowiednia dla tego projektu i jej zalety przewyższają wady.
 
 \subsection{Modularny podział aplikacji}
-System oparty jest na modularnym podziale, czyli składa się z mniejszych komponentów. Dzięki temu możliwe jest niezależne rozwijanie, testowanie, zmienianie i utrzymywanie poszczególnych modułów, a także ich wielokrotne użycie. Pozwala to również uporządkować kod i architekturę systemu. Poszczególne elementy warstwy prezentacji zostały wydzielone z widoków - na przykład strona treningu oddechowego posiada karuzelę z instrukcjami oraz animowane koło jako osobne komponenty. Łączy się to z zasadą \textit{Separation of concerns} (pol. podział zagadnień), gdzie każdy moduł skupia się na innym, określonym obszarze funkcjonalnym. Zmiany w jedym komponencie nie wpływają na pozostałe, co ułatwia zarządzanie nimi i wprowadzanie zmian.
+System oparty jest na modularnym podziale, czyli składa się z mniejszych komponentów. Dzięki temu możliwe jest niezależne rozwijanie, testowanie, zmienianie i utrzymywanie poszczególnych modułów, a także ich wielokrotne użycie. Pozwala to również uporządkować kod i architekturę systemu. Poszczególne elementy warstwy prezentacji zostały wydzielone z widoków --- na przykład strona treningu oddechowego posiada karuzelę z instrukcjami oraz animowane koło jako osobne komponenty. Łączy się to z zasadą \textit{Separation of concerns} (pol. podział zagadnień), gdzie każdy moduł skupia się na innym, określonym obszarze funkcjonalnym. Zmiany w jedym komponencie nie wpływają na pozostałe, co ułatwia zarządzanie nimi i wprowadzanie zmian.
 
 \subsection{Model obiektów stron}
 Widoki aplikacji zostały zamodelowane zgodnie z \textit{Page Object Model} (pol. model obiektów stron), który określa, że strony powinny być osobnymi klasami. Dostępne jest pięć widoków: strona główna, szczegółów treningu, treningu oddechowego, ustawień oraz edytora. Każdy z nich jest oddzielną klasą umieszczoną w osobnym pliku (w folderze \textit{pages/}). Skutkuje to czytelnością i łatwiejszym zarządzaniem kodem.
 
 \subsection{Stan aplikacji i warstwa prezentacji}
-Zgodnie z zasadą Fluttera "UI is a function of state" (pol. Warstwa widoku jest funkcją stanu), warstwa prezentacji jest bezpośrednio powiązana ze stanem aplikacji. Dzięki deklaratywnemu podejściu zmiany w danych automatycznie odzwierciedlane są w interfejsie użytkownika, co zapewnia spójność i aktualność prezentowanych informacji. Dane są trwałe i niemodyfikowalne - po ich utworzeniu nie można ich zmienić, a jedynie stworzyć nowe na ich podstawie. Ułatwia to zarządzanie stanem aplikacji i~minimalizuje ryzyko błędów wynikających z nieoczekiwanych zmian danych. Widoki aplikacji są sterowane danymi i zawierają minimalną logikę biznesową, skupiając się głównie na prezentacji informacji i interakcji z użytkownikiem. Jest to osiągane między innymi poprzez stosowanie klasy \texttt{ChangeNotifier} i jej pochodnych, która powiadamia widoki o zmianach stanu. Flutter udostępnia także dwa typy widgetów: \texttt{StatelessWidget} (niemodyfikowalny) i \texttt{StatefulWidget} (modyfikowalny), które zapewniają efektywne i wydajne działanie. W aplikacji ReSpire wykorzystywane są oba typy, w zależności od potrzeb danego widoku.
+Zgodnie z zasadą Fluttera "UI is a function of state" (pol. Warstwa widoku jest funkcją stanu), warstwa prezentacji jest bezpośrednio powiązana ze stanem aplikacji. Dzięki deklaratywnemu podejściu zmiany w danych automatycznie odzwierciedlane są w interfejsie użytkownika, co zapewnia spójność i aktualność prezentowanych informacji. Dane są trwałe i niemodyfikowalne --- po ich utworzeniu nie można ich zmienić, a jedynie stworzyć nowe na ich podstawie. Ułatwia to zarządzanie stanem aplikacji i~minimalizuje ryzyko błędów wynikających z nieoczekiwanych zmian danych. Widoki aplikacji są sterowane danymi i zawierają minimalną logikę biznesową, skupiając się głównie na prezentacji informacji i interakcji z użytkownikiem. Jest to osiągane między innymi poprzez stosowanie klasy \texttt{ChangeNotifier} i jej pochodnych, która powiadamia widoki o zmianach stanu. Flutter udostępnia także dwa typy widgetów: \texttt{StatelessWidget} (niemodyfikowalny) i \texttt{StatefulWidget} (modyfikowalny), które zapewniają efektywne i wydajne działanie. W aplikacji ReSpire wykorzystywane są oba typy, w zależności od potrzeb danego widoku.
 \subsection{Model serwisów}
 
 Warstwa logiczna aplikacji została zaprojektowana na podstawie architektury modułowej, obejmującej łącznie 12 wyspecjalizowanych serwisów. Każdy z komponentów realizuje odrębną domenę funkcjonalną, co pozwala na skuteczną separację logiki biznesowej od warstwy prezentacji. Zależności oraz relacje między kluczowymi modułami przedstawiono na rysunku~\ref{img/ServiceDiagram}.
@@ -120,49 +120,49 @@ Spośród wymagań niefunkcjonalnych szczególnie uwzględniono:
     \item częściową zgodność z wytycznymi dostępności WCAG~2.1 na poziomie~AA.
 \end{itemize}
 
-Przy projektowaniu świadomie kierowano się wytycznymi dostępności WCAG~2.1 jako punktem odniesienia. Większość kluczowych zaleceń tego standardu - w tym odpowiedni kontrast tekstu (minimum 4.5:1), widoczny wskaźnik aktywnej klawiatury czy tekstowe alternatywy dla elementów nietekstowych - została zastosowana. Ze względu na prototypowy charakter projektu wykonanego w narzędziu Figma, pełna zgodność z WCAG~2.1~AA nie była celem, a jedynie wskazówką projektową.
+Przy projektowaniu świadomie kierowano się wytycznymi dostępności WCAG~2.1 jako punktem odniesienia. Większość kluczowych zaleceń tego standardu --- w tym odpowiedni kontrast tekstu (minimum 4.5:1), widoczny wskaźnik aktywnej klawiatury czy tekstowe alternatywy dla elementów nietekstowych --- została zastosowana. Ze względu na prototypowy charakter projektu wykonanego w narzędziu Figma, pełna zgodność z WCAG~2.1~AA nie była celem, a jedynie wskazówką projektową.
 
 Proces projektowania oparto na następujących metodykach i podejściach:
 \begin{itemize}
-    \item \textit{Mobile-first} - projekt został stworzony skupiając się w pierwszej kolejności na użytkownikach urządzeń mobilnych,
-    \item \textit{Design System} - zbudowano spójny system projektowy obejmujący paletę kolorów, typografię i komponenty, gwarantując jednolity wygląd i zachowanie aplikacji,
-    \item \textit{Atomic Design} - interfejs skonstruowano w oparcie o hierarchię komponentów.
+    \item \textit{Mobile-first} --- projekt został stworzony skupiając się w pierwszej kolejności na użytkownikach urządzeń mobilnych,
+    \item \textit{Design System} --- zbudowano spójny system projektowy obejmujący paletę kolorów, typografię i komponenty, gwarantując jednolity wygląd i zachowanie aplikacji,
+    \item \textit{Atomic Design} --- interfejs skonstruowano w oparcie o hierarchię komponentów.
 \end{itemize}
 
 \subsection{Projekt w narzędziu Figma} \label{subsec:Figma}
 Do zaprojektowania interfejsu użytkownika wybrano narzędzie Figma, które oferuje zaawansowane prototypowanie, w tym reakcję zmiany widoków po kliknięciu w dany obiekt. Dodatkowo narzędzie zostało wybrane również ze względu na jego znajomość przez członków zespołu, możliwość współpracy i łatwego udostępniania gotowego projektu.
 
-W pierwotnej wersji ekran główny aplikacji stanowiła lista treningów oddechowych prezentowana w formie kafelków. Dodawanie nowego treningu realizowane było za pomocą przycisku pływającego, umieszczonego pod kafelkami. Dostępne były również opcje w prawym górnym rogu. Każdy kafelek treningu obsługiwał gesty przesunięcia w lewo, dając możliwość jego usunięcia, i w prawo - dając możliwość jego edycji. Projekt można zobaczyć na rysunku \ref{img/respire_home}. 
+W pierwotnej wersji ekran główny aplikacji stanowiła lista treningów oddechowych prezentowana w formie kafelków. Dodawanie nowego treningu realizowane było za pomocą przycisku pływającego, umieszczonego pod kafelkami. Dostępne były również opcje w prawym górnym rogu. Każdy kafelek treningu obsługiwał gesty przesunięcia w lewo, dając możliwość jego usunięcia, i w prawo --- dając możliwość jego edycji. Projekt można zobaczyć na rysunku \ref{img/respire_home}. 
 Mechanizm przesuwalnych kafelków okazał się jednak nieintuicyjny dla użytkowników i postanowiono z niego zrezygnować. W finalnej wersji aplikacji każdy kafelek treningu po kliknięciu przenosi użytkownika na dedykowany ekran szczegółów treningu, na którym w wyraźny sposób udostępniono przyciski do edycji, usunięcia i włączenia treningu.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{obrazki/projekt_rozwiazania/figma_home.png}
-\caption{Pierwszy projekt aplikacji ReSpire - Strona Główna}
+\caption{Pierwszy projekt aplikacji ReSpire --- Strona Główna}
 \label{img/respire_home}
 \end{figure}
 
-Przebieg treningu oddechowego w prototypie aplikacji ReSpire zaprojektowano w sposób maksymalnie intuicyjny i czytelny dla użytkownika. W centralnej części ekranu znajduje się element animowany w postaci koła, które płynnie zmienia swój promień i wyświetla pozostały czas do końca obecnej fazy oddechowej. Bezpośrednio nad nim znajduje się komponent wyświetlający instrukcje w postaci trzech kafelków, przedstawiających kolejno od lewej fazę poprzednią, obecną i następną. Dodatkowo w tym samym obszarze prezentowany był globalny postęp treningu - liczba ukończonych cykli w stosunku do zaplanowanej liczby wszystkich cykli. Kliknięcie w~centralne koło miało powodować natychmiastowe wstrzymanie treningu, a ponowne jego kliknięcie wznawiało sesję od miejsca przerwania. Przy próbie opuszczenia ekranu treningu aplikacja miała wyświetlać potwierdzenie z informacją, iż bieżąca sesja zostanie przerwana i jej postęp nie zostanie zapisany. Projekt przebiegu treningu przedstawiono na rysunku \ref{img/respire_training}. 
+Przebieg treningu oddechowego w prototypie aplikacji ReSpire zaprojektowano w sposób maksymalnie intuicyjny i czytelny dla użytkownika. W centralnej części ekranu znajduje się element animowany w postaci koła, które płynnie zmienia swój promień i wyświetla pozostały czas do końca obecnej fazy oddechowej. Bezpośrednio nad nim znajduje się komponent wyświetlający instrukcje w postaci trzech kafelków, przedstawiających kolejno od lewej fazę poprzednią, obecną i następną. Dodatkowo w tym samym obszarze prezentowany był globalny postęp treningu --- liczba ukończonych cykli w stosunku do zaplanowanej liczby wszystkich cykli. Kliknięcie w~centralne koło miało powodować natychmiastowe wstrzymanie treningu, a ponowne jego kliknięcie wznawiało sesję od miejsca przerwania. Przy próbie opuszczenia ekranu treningu aplikacja miała wyświetlać potwierdzenie z informacją, iż bieżąca sesja zostanie przerwana i jej postęp nie zostanie zapisany. Projekt przebiegu treningu przedstawiono na rysunku \ref{img/respire_training}. 
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.45]{obrazki/projekt_rozwiazania/figma_training.png}
-\caption{Pierwszy projekt aplikacji ReSpire - przebieg treningu}
+\caption{Pierwszy projekt aplikacji ReSpire --- przebieg treningu}
 \label{img/respire_training}
 \end{figure}
 
 Ekran edycji treningu w pierwotym projekcie zawiera w górnej części tytuł, a w dolnej przycisk zapisu \textit{Save}, z którego w wersji ostatecznej zrezygnowano, ze względu na wprowadzenie mechanizmu automatycznego zapisu zmian. Główną część ekranu stanowi panel z trzema zakładkami:
 \begin{itemize}
-    \item \textit{Training} - sekcja służąca do tworzenia i edycji własnych schematów oddechowych,
-    \item \textit{Sound} - ustawienia muzyki i sygnałów dźwiękowych,
-    \item \textit{Other} - pozostałe preferencje dotyczące treningu.
+    \item \textit{Training} --- sekcja służąca do tworzenia i edycji własnych schematów oddechowych,
+    \item \textit{Sound} --- ustawienia muzyki i sygnałów dźwiękowych,
+    \item \textit{Other} --- pozostałe preferencje dotyczące treningu.
 \end{itemize}
 Wstępny projekt nie zakładał opisu treningu, który został dodany dopiero na późniejszych etapach rozwoju aplikacji. Prototyp przedstawiono na rysunku \ref{img/respire_settings}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.42]{obrazki/projekt_rozwiazania/figma_settings.png}
-\caption{Pierwszy projekt aplikacji ReSpire - edycja treningu}
+\caption{Pierwszy projekt aplikacji ReSpire --- edycja treningu}
 \label{img/respire_settings}
 \end{figure}
 
@@ -223,12 +223,12 @@ Poniżej przedstawiono listę kolorów zapisanych w~dwóch powszechnie stosowany
     \label{fig:color_palette}
 \end{figure}
 
-Jedna z dwóch czcionek użytych w logo - \textit{Glacial Indifference} \cite{font} - została również wykorzystana w~aplikacji, zapewniając jej unikatowy charakter. Jest to darmowy, otwartoźródłowy krój pisma zaprojektowany przez \textit{Hanken Design Co.} z~licencją \textit{SIL OPEN FONT LICENSE Version 1.1} \cite{font_license} pozwalającą na użytek zarówno prywatny, jak i komercyjny. Przykładowy tekst oraz znaki zapisane użytą czcionką przedstawione zostały na rysunku \ref{img/czcionki}. Wykorzystana została także domyślna czcionka \textit{Fluttera} dla aplikacji na systemie \textit{Android} - \textit{Roboto}.
+Jedna z dwóch czcionek użytych w logo --- \textit{Glacial Indifference} \cite{font} --- została również wykorzystana w~aplikacji, zapewniając jej unikatowy charakter. Jest to darmowy, otwartoźródłowy krój pisma zaprojektowany przez \textit{Hanken Design Co.} z~licencją \textit{SIL OPEN FONT LICENSE Version 1.1} \cite{font_license} pozwalającą na użytek zarówno prywatny, jak i komercyjny. Przykładowy tekst oraz znaki zapisane użytą czcionką przedstawione zostały na rysunku \ref{img/czcionki}. Wykorzystana została także domyślna czcionka \textit{Fluttera} dla aplikacji na systemie \textit{Android} --- \textit{Roboto}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/czcionka_pogrubiona.jpg}
     \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/czcionka_regularna_tekst.jpg}
-    \caption{Czcionka \textit{Glacial Indifference} użyta w logo oraz aplikacji - po lewej w wersji pogrubionej, a~po~prawej w standardowej}
+    \caption{Czcionka \textit{Glacial Indifference} użyta w logo oraz aplikacji --- po lewej w wersji pogrubionej, a~po~prawej w standardowej}
     \label{img/czcionki}
 \end{figure}
 
@@ -249,7 +249,7 @@ Wszytskie ikony używane w aplikacji pochodzą z otwartoźródłowej biblioteki 
     \label{img/ikony}
 \end{figure}
 
-W aplikacji zastosowano lekkie, łatwo skalowalne animacje w formacie Lottie \cite{animations}. Umożliwia on zapis w formie plików JSON, są bazowane na grafice wektorowej i idealnie nadaje się do aplikacji mobilnych, zapewniając wysoką płynność i niskie wykorzystanie zasobów. Wykorzystane zostały dwie darmowe animacje - fala \cite{wave_animation} wykonana przez \textit{CosmoYo} oraz łódka \cite{boat_animation}, której autorem jest \textit{Sergey Riznyk} na podstawie licencji \textit{Lottie Simple License (FL 9.13.21)} \cite{animations_license}. Zostały one dostosowane do potrzeb aplikacji poprzez między innymi: zmianę kolorów, usunięcie niektórych elementów, spowolnienie tempa odtwarzania czy zmianę orientacji. Animacje ożywiają warstwę prezentacji, dopełniając przestrzenie ekranu głównego i strony ze szczegółami treningu. Dzięki powolnemu tempu wprowadzają spokój.
+W aplikacji zastosowano lekkie, łatwo skalowalne animacje w formacie Lottie \cite{animations}. Umożliwia on zapis w formie plików JSON, są bazowane na grafice wektorowej i idealnie nadaje się do aplikacji mobilnych, zapewniając wysoką płynność i niskie wykorzystanie zasobów. Wykorzystane zostały dwie darmowe animacje --- fala \cite{wave_animation} wykonana przez \textit{CosmoYo} oraz łódka \cite{boat_animation}, której autorem jest \textit{Sergey Riznyk} na podstawie licencji \textit{Lottie Simple License (FL 9.13.21)} \cite{animations_license}. Zostały one dostosowane do potrzeb aplikacji poprzez między innymi: zmianę kolorów, usunięcie niektórych elementów, spowolnienie tempa odtwarzania czy zmianę orientacji. Animacje ożywiają warstwę prezentacji, dopełniając przestrzenie ekranu głównego i strony ze szczegółami treningu. Dzięki powolnemu tempu wprowadzają spokój.
 
 
 \section{Projekt struktury danych (\Jakub)}
