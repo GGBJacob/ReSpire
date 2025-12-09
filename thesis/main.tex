@@ -3,7 +3,6 @@
 %-------------------- Dodatkowe pakiety ---------------------
 \usepackage{listing}
 \usepackage{dirtree}
-\renewcommand{\lstlistingname}{Kod}
 \usepackage[x11names]{xcolor} % colorful text with the most amount of colors enabled (x11names)
 \usepackage[backend=biber,
             style=ieee,
@@ -16,10 +15,10 @@
 \addbibresource{refs.bib}
 %------------------------------------------------------------
 %------------------Definicja własnych komend-----------------
-\DeclareRobustCommand{\Hania}[0]{\textcolor{SlateBlue1}{Hania}}
-\DeclareRobustCommand{\Jakub}[0]{\textcolor{green}{Jakub}}
-\DeclareRobustCommand{\Karol}[0]{\textcolor{Tan1}{Karol}}
-\DeclareRobustCommand{\Ola}[0]{\textcolor{Maroon0}{Ola}}
+\DeclareRobustCommand{\Hania}[0]{\small{Hanna Banasiak}}
+\DeclareRobustCommand{\Jakub}[0]{\small{Jakub Romanowski}}
+\DeclareRobustCommand{\Karol}[0]{\small{Karol Zwierz}}
+\DeclareRobustCommand{\Ola}[0]{\small{Aleksandra Bujny}}
 
 \newcommand{\todoHania}[1]{\todo[color=SlateBlue1!35]{Hania: #1}}
 \newcommand{\todoKarol}[1]{\todo[color=Tan1!50]{Karol: #1}}
@@ -35,19 +34,19 @@
 %------------------------------------------------------------
 %  Dodanie strony tytułowej wygenerowanej z MojaPG oraz oświadczenia
 
-\includepdf[pages=-]{meta/StronaTytulowa_193078.pdf}
+\includepdf[pages=-]{meta/StronaTytulowa_193637.pdf}
 %\includepdf{meta/oswiadczenie.pdf}
 
 %------------------------------------------------------------
 %  Dodanie streszczenia i abstract
 %  						
 
-%\input{meta/streszczenie.tex}
-%\input{meta/abstract.tex}
+\input{meta/streszczenie.tex}
+\input{meta/abstract.tex}
 
 %------------------------------------------------------------
 %   Lista komentarzy
-\listoftodos
+% \listoftodos
 
 %------------------------------------------------------------
 %	Utworzenie spisu treści pracy dyplomowej
@@ -84,12 +83,12 @@
 
 % ---------------------- DODATKI -----------------------\
 \appendix
-\chapter*{Dodatek A}
 %\addcontentsline{toc}{chapter}{Dodatek A}
 % Zależnie od dodatku, zaleca się dodawnie dodatków jako
 % dokumenty PDF
 % \includepdf{dodatki/dodatek1.pdf}
-\include{rozdzialy/instrukcja_uzytkowania}
+\include{dodatki/instrukcja_uzytkowania}
+\include{dodatki/repozytorium}
 
 % -----------------------------------------------------------
 \end{document}

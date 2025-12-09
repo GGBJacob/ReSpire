@@ -1,6 +1,6 @@
-\chapter{Projekt rozwiązania \Hania\ \Ola\ \Jakub}
+\chapter{Projekt rozwiązania (\Hania,\ \Ola,\ \Jakub)}
 
-\section{Projekt architektury systemu \Ola}
+\section{Projekt architektury systemu (\Ola)}
 Przy projektowaniu architektury aplikacji wzięte pod uwagę zostały dobre praktyki i koncepty proponowane w dokumentacji Fluttera \cite{flutter_architecture}, a także wzorce projektowe. Celem było stworzenie struktury, która będzie łatwa w utrzymaniu i rozwoju, ale równocześnie stabilna i wydajna.
 
 \subsection{Architektura warstwowa}
@@ -104,9 +104,7 @@ Rdzeń modelu danych stanowią trzy kluczowe klasy tworzące strukturę hierarch
     \item \texttt{Settings} --- klasa agregująca globalne parametry sesji treningowej. Przechowuje konfigurację czasów przygotowania (\texttt{preparationDuration}) i zakończenia (\texttt{endingDuration}), a~także ustawienia generatora dudnień różnicowych (status aktywacji oraz częstotliwość fali).
 \end{itemize}
 
-\section{Projekt logiki aplikacji \Hania}
-
-\section{Projekt interfejsu użytkownika \Hania\ \Ola}
+\section{Projekt interfejsu użytkownika (\Hania,\ \Ola,\ \Karol)}
 Podrozdział ten poświęcony jest projektowaniu interfejsu użytkownika opracowanej aplikacji mobilnej. Głównym celem było stworzenie intuicyjnej, wizualnie estetycznej oraz w pełni responsywnej warstwy użytkownika, zapewniającego pozytywne doświadczenia przy jednoczesnym spełnieniu wcześniej zdefiniowanych wymagań funkcjonalnych i niefunkcjonalnych.
 Do~kluczowych wymagań funkcjonalnych interfejsu należały:
 \begin{itemize}
@@ -139,7 +137,7 @@ Mechanizm przesuwalnych kafelków okazał się jednak nieintuicyjny dla użytkow
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{obrazki/projekt_rozwiazania/figma_home.png}
+\includegraphics[scale=0.35]{obrazki/projekt_rozwiazania/figma_home.png}
 \caption{Pierwszy projekt aplikacji ReSpire - Strona Główna}
 \label{img/respire_home}
 \end{figure}
@@ -168,7 +166,21 @@ Wstępny projekt nie zakładał opisu treningu, który został dodany dopiero na
 \label{img/respire_settings}
 \end{figure}
 
-\newpage
+\subsection{Zrealizowany wygląd interfejsu użytkownika aplikacji}
+Finalnie zrealizowany projekt graficznego interfejsu użytkownika składa się z 8 głównych, pełnoekranowych widoków oraz \textit{splash screen'a} (pol. ekranu powitalnego) z dodatkowymi wyskakującymi oknami dialogowymi.
+Na rysunku \ref{img/view_transitions} przedstawiono diagram przejść między widokami. Strzałki obrazują nawigację, która odbywa się poprzez interakcję z elementami interfejsu (głównie przyciskami).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{obrazki/projekt_rozwiazania/view-transitions.png}
+    \caption{Możliwe przejścia między widokami w trakcie użytkowania aplikacji.}
+    \label{img/view_transitions}
+\end{figure}
+
+Wejściowym punktem aplikacji jest widok \texttt{HomePage}, do którego użytkownik trafia po wyświetleniu \textit{SplashScreen} w momencie uruchomienia aplikacji. Z poziomu ekranu głównego użytkownik ma dostęp do przejścia do widoku wybranego treningu (\texttt{TrainingPage}) poprzez kliknięcie w odpowiadający mu kafelek (\texttt{PresetTile}) lub przejście do strony ustawień aplikacji (\texttt{SettingsPage}) za pomocą przycisku koła zębatego w prawym górnym rogu ekranu. Z poziomu widoku danego treningu użytkownik ma możliwość uruchomienia treningu poprzez kliknięcie przycisku "Rozpocznij trening". Użytkownik przenoszony jest wówczas na chwilę na ekran ładowania (\texttt{PreloadingScreen}), by następnie zostać przekierowanym przez aplikację do odtwarzacza zadanego treningu \linebreak(\texttt{BreathingPage}). Po naciśnięciu przycisku edycji na ekranie treningu (\texttt{TrainingPage}) użytkownik przenosi się do edytora (\texttt{TrainingEditorPage}), a konkretniej do panelu edycji struktury treningu. Za pomocą górnej kontrolki \texttt{CustomSlidingSegmentedControl} (zachowującej się jak \textit{radio button} (pol. przycisk opcji)) użytkownik może przełączać między aktualnymi aspektami edycji treningu (między strukturą, dźwiękami a zakładką "inne").
+
+Powrót do poprzedniego widoku realizowany jest standardowo poprzez przycisk wstecz w~lewym górnym rogu ekranu lub gest systemowy.
+
 \subsection{Identyfikacja wizualna aplikacji}
 W celu zapewnienia spójności wyglądu oraz estetyki aplikacji ReSpire przygotowana została identyfikacja wizualna obejmująca logo, kolory oraz czcionkę.
 
@@ -216,7 +228,7 @@ Jedna z dwóch czcionek użytych w logo - \textit{Glacial Indifference} \cite{fo
     \centering
     \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/czcionka_pogrubiona.jpg}
     \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/czcionka_regularna_tekst.jpg}
-    \caption{Czcionka \textit{GlacialIndeifference} użyta w logo oraz aplikacji - po lewej w wersji pogrubionej, a~po~prawej w standardowej}
+    \caption{Czcionka \textit{Glacial Indifference} użyta w logo oraz aplikacji - po lewej w wersji pogrubionej, a~po~prawej w standardowej}
     \label{img/czcionki}
 \end{figure}
 
@@ -229,7 +241,7 @@ Elementy charakterystyczne dla wyglądu ReSpire przedstawione zostały na rysunk
 \end{figure}
 
 
-Wszytskie ikony używane w aplikacji pochodzą z otwartoźródłowej biblioteki \textit{Material Icons} \cite{icons} należącej do \textit{Google}. Są intuicyjne i minimalistyczne, dzięki czemu wygląd aplikacji jest spójny oraz przejrzysty dla użytkownika. Można je wykorzystywać na podstawie licencji \textit{Apache License, Version 2.0} \cite{font_license}.
+Wszytskie ikony używane w aplikacji pochodzą z otwartoźródłowej biblioteki \textit{Material Icons} \cite{icons} należącej do \textit{Google}. Są intuicyjne i minimalistyczne, dzięki czemu wygląd aplikacji jest spójny oraz przejrzysty dla użytkownika. Można je wykorzystywać na podstawie licencji \textit{Apache License, Version 2.0} \cite{font_license}. Przykładowe ikony przedstawiono na rysunku \ref{img/ikony}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.35]{obrazki/projekt_rozwiazania/ikony.png}
@@ -240,7 +252,7 @@ Wszytskie ikony używane w aplikacji pochodzą z otwartoźródłowej biblioteki 
 W aplikacji zastosowano lekkie, łatwo skalowalne animacje w formacie Lottie \cite{animations}. Umożliwia on zapis w formie plików JSON, są bazowane na grafice wektorowej i idealnie nadaje się do aplikacji mobilnych, zapewniając wysoką płynność i niskie wykorzystanie zasobów. Wykorzystane zostały dwie darmowe animacje - fala \cite{wave_animation} wykonana przez \textit{CosmoYo} oraz łódka \cite{boat_animation}, której autorem jest \textit{Sergey Riznyk} na podstawie licencji \textit{Lottie Simple License (FL 9.13.21)} \cite{animations_license}. Zostały one dostosowane do potrzeb aplikacji poprzez między innymi: zmianę kolorów, usunięcie niektórych elementów, spowolnienie tempa odtwarzania czy zmianę orientacji. Animacje ożywiają warstwę prezentacji, dopełniając przestrzenie ekranu głównego i strony ze szczegółami treningu. Dzięki powolnemu tempu wprowadzają spokój.
 
 
-\section{Projekt struktury danych (treningi) \Jakub}
+\section{Projekt struktury danych (\Jakub)}
 
 Model danych oparto na strukturze hierarchicznej, której fundament stanowią trzy kluczowe klasy: \texttt{Trening}, \texttt{EtapTreningu} oraz \texttt{FazaOddechowa}. Główna encja, \texttt{Trening}, składa się z co najmniej jednego \texttt{EtapuTreningu} (relacja jeden do wielu). Każdy etap charakteryzuje się zdefiniowaną liczbą cykli (powtórzeń) oraz parametrem przyrostu czasu. Na najniższym poziomie hierarchii znajduje się \texttt{FazaOddechowa}. Etapy składają się z sekwencji faz o określonym czasie trwania oraz typie, wybieranym ze zbioru zdefiniowanych wartości: wdech, wydech, regeneracja lub~wstrzymanie. Opisywany projekt przedstawia rysunek~\ref{img/training_structure}, natomiast rozwinięcie i implementację tej struktury danych opisano w sekcji~\ref{subsec:TrainingModel}.
 

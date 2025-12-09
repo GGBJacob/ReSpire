@@ -1,8 +1,8 @@
-\chapter{Analiza wymagań \Hania\ \Ola\ \Jakub}
+\chapter{Analiza wymagań (\Hania,\ \Ola)}
 
 W niniejszym rozdziale przedstawione zostały wymagania projektowanej aplikacji. Użyto w~tym celu trzech modeli - przypadków użycia, klas oraz sterowania dźwiękami.
 
-\section{Model przypadków użycia \Ola}
+\section{Model przypadków użycia (\Ola)}
 Celem modelu jest określenie głównych funkcji aplikacji, aktorów oraz relacji między nimi. W jego zakres wchodzą wszystkie funkcje dostępne dla użytkownika końcowego. Wyróżnionych zostało czterech aktorów, w tym jeden ożwiony: osoba korzystająca z aplikacji oraz trzech nieożywionych: lokalna baza danych, syntezator mowy oraz odtwarzacz dźwięków. Ze względu na~czytelność, diagram przypadków użycia został podzielony na trzy mniejsze części, gdzie zgrupowane są przypadki ze sobą powiązane. 
 
 Pierwszy z diagramów został przedstawiony na rysunku \ref{img/przypadki_uzycia_1}. Zawiera podstawowe przypadki użycia, takie jak: wyświetlanie strony treningu (opis przypadku w tabeli \ref{tab:wyswietlenie_strony_treningu}) lub ustawień, usuwanie (tabela \ref{tab:usuwanie_treningu}), eksport (tabela \ref{tab:eksport_treningu}), import (tabela \ref{tab:import_treningu}), edycję (tabela \ref{tab:edycja_treningu}), dodawanie (tabela \ref{tab:dodawanie_treningu}), odtwarzanie (tabela \ref{tab:odtwarzanie_treningu}) lub wyświetlanie listy albo szczegółów treningów oddechowych. Relacje include (pol. zawierania) i extend (pol. rozszerzenia) powiązane z przypadkami dodawania, edycji oraz odtwarzania zostały przedstawione na kolejnych, odrębnych diagramach.
@@ -182,7 +182,7 @@ Ostatni, trzeci diagram został przedstawiony na rysunku \ref{img/przypadki_uzyc
 \end{table}
 
 \newpage
-\section{Model sterowania dźwiękami \Hania}
+\section{Model sterowania dźwiękami (\Hania)}
 
 W celu zobrazowania logiki sterowania warstwą dźwiękową i dostępnych strategii organizacji dźwięków w opracowanej aplikacji treningu oddechowego przygotowano dwa diagramy --- sterowania muzyką w tle i dźwiękami w etapie. Przyjęto jednolitą konwencję graficzną, w której prostokąty z przerywaną ramką oznaczają ścieżki dźwiękowe, natomiast prostokąty z ciągłą ramką reprezentują struktury logiczne aplikacji, takie jak etapy, cykle i fazy oddechowe. Identyczny kolor wypełnienia wskazuje na tę samą ścieżkę dźwiękową, a strzałka pozioma symbolizuje oś czasu. Warto wspomnieć, iż każdy dźwięk przedstawiony w poniższych diagramach może również zostać wyłączony, jeśli użytkownik preferuje wykonywać ćwiczenia w ciszy.
 
