@@ -265,13 +265,17 @@ Model danych oparto na strukturze hierarchicznej, której fundament stanowią tr
 
 \section{Wybór lokalnej bazy danych}
 
-W związku z potrzebą zapewnienia trwałości informacji między uruchomieniami w celu przechowywania danych treningów konieczne było wykonanie analizy kompatybilnych z Flutterem oraz Dartem baz danych, aby na podstawie tego dokonać wyboru tej odpowiedniej dla naszego rozwiązania. 
+W dynamicznie ewoluującym świecie wytwarzania oprogramowania mobilnego wybór odpowiedniej warstwy przechowywania danych stanowi jedną z najbardziej fundamentalnych decyzji architektonicznych. W związku z potrzebą zapewnienia trwałości informacji między uruchomieniami aplikacji ReSpire - w szczególności w celu przechowywania danych treningów i ustawień użytkownika - konieczne było przeprowadzenie kompleksowej ewaluacji dostępnych technologii trwałego zapisu danych.
 
-Naszą analizę zawęziliśmy do tych zgodnych z Flutterem i Dartem. W ten sposób otrzymaliśmy 6 produktów do wyboru: Hive, Isar, ObjectBox, SQLite (sqflite), Drift, Floor.
+Specyfika projektu ReSpire, zdefiniowana jako „mała skala, offline-first”, stała się kluczowym filtrem, przez który analizowano potencjalne rozwiązania. W przeciwieństwie do systemów klasy korporacyjnej wymagających synchronizacji w czasie rzeczywistym, priorytetami dla ReSpire są: szybkość uruchamiania, minimalizacja narzutu kodu oraz wydajność ładowania danych.
 
-Jeśli chodzi o parametry porównawcze wybraliśmy: wydajność na relatywnie małej ilości danych, krzywa uczenia, otwartoźródłowość, relacyjność,  oraz licencję.
+Do analizy zakwalifikowano sześć wiodących rozwiązań kompatybilnych ze środowiskiem Flutter: Hive, Isar, ObjectBox, SQLite (sqflite), Drift oraz Floor.
 
-Typ bazy, model danych, język rdzenia, wydajność na małych danych, czas inicjalizacji, narzut kodu konfiguracyjnego, bezpieczeństwo typów, migracja schematu, wpływ na rozmiar APK, złożoność zapytań, pobrania (pub.dev), polubienia (pub.dev), popularność (gwiazdki na GitHub), popularność (Google Trends), status rozwoju, ryzyko projektowe,
+\subsection{Kryteria oceny i analiza porównawcza}
+
+Jako parametry porównawcze przyjęto zestaw metryk obejmujący zarówno wskaźniki popularności, jak i aspekty ściśle techniczne: typ bazy, język implementacji, wydajność na małych zbiorach danych, czas inicjalizacji, bezpieczeństwo typów oraz łatwość migracji schematu.
+
+Poniższa tabela (Tab. \ref{tab:db_comparison}) prezentuje zestawienie ilościowe i jakościowe analizowanych technologii.
 
 \begin{table}[H]
     \centering
@@ -280,10 +284,72 @@ Typ bazy, model danych, język rdzenia, wydajność na małych danych, czas inic
     \resizebox{\textwidth}{!}{
     \begin{tabular}{|l|c|c|c|c|c|c|}
         \hline
-        \textbf{Parametr porównawczy} & \textbf{Hive} & \textbf{Isar} & \textbf{ObjectBox} & \textbf{SQLite (sqflite)} & \textbf{Drift} & \textbf{Floor} \\
+        \textbf{Parametr porównawczy} & \textbf{Hive} & \textbf{Isar} & \textbf{ObjectBox} & \textbf{\begin{tabular}{@{}c@{}}SQLite \\ (sqflite)\end{tabular}} & \textbf{Drift} & \textbf{Floor} \\
         \hline
-         & & & & & & \\
+        \begin{tabular}{@{}l@{}}Polubienia (pub.dev; \\ stan na 09.12.2025)\end{tabular} & \textbf{6,21 tys.} \cite{hive_pub} & 2,41 tys. \cite{isar_pub} & 1,52 tys. \cite{objectbox_pub} & 5,48 tys. \cite{sqflite_pub} & 2,27 tys. \cite{drift_pub} & 999 \cite{floor_pub} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Pobrania (pub.dev; \\ stan na 09.12.2025)\end{tabular} & 1,06 mln \cite{hive_pub} & 8,12 tys. \cite{isar_pub} & 101 tys. \cite{objectbox_pub} & \textbf{2,39 mln} \cite{sqflite_pub} & 472 tys. \cite{drift_pub} & 20,4 tys. \cite{floor_pub} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Popularność (Google Trends; \\ stan na 01.2025 w ujęciu \\ 31.01.2015 - 31.01.2025)\end{tabular} & \textbf{36} \cite{gtrends} & 6 \cite{gtrends} & 3 \cite{gtrends} & 7 \cite{gtrends} & 10 \cite{gtrends} & 16 \cite{gtrends} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Gwiazdki (GitHub; \\ stan na 09.12.2025)\end{tabular} & \textbf{4,4 tys.} \cite{hive_git} & 4 tys. \cite{isar_git} & 1,2 tys. \cite{objectbox_git} & 3 tys. \cite{sqflite_git} & 3,1 tys. \cite{drift_git} & 1 tys. \cite{floor_git} \\
+        \hline
+        \hline
+        Język & \textbf{Dart} & Dart+Rust & Dart+C & \textbf{Dart} & \textbf{Dart} & Dart+JS \\
+        \hline
+        Typ (Baza/ORM) & \textbf{Baza} & \textbf{Baza} & \textbf{Baza} & \textbf{Baza} & ORM & ORM \\
+        \hline
+        Format przechowywania & \textbf{Plikowy} &  \textbf{Plikowy} & \textbf{Plikowy} & SQLite & SQLite & SQLite \\
+        \hline
+        Model danych & \textbf{NoSQL} & \textbf{NoSQL} & \textbf{NoSQL} & Relacyjny & Relacyjny & Relacyjny \\
+        \hline
+        Język zapytań & \textbf{Dart} & \textbf{Dart} & \textbf{Dart} & SQL & Dart/SQL & SQL \\
+        \hline
+        Wydajność na małych danych & \textbf{Bardzo dobra} & \textbf{Bardzo dobra} & \textbf{Bardzo dobra} & Dobra & Dobra & Średnia \\
+        \hline
+        Czas inicjalizacji & \textbf{Błyskawiczny} & Szybki & Bardzo szybki & Umiarkowany & Umiarkowany & Wolniejszy \\
+        \hline
+        Narzut kodu konfiguracyjnego & \textbf{Niski} & Średni & Średni & Wysoki & Średni & Średni \\
+        \hline
+        Bezpieczeństwo typów & Częściowe & \textbf{Pełne} & \textbf{Pełne} & Brak & \textbf{Pełne} & \textbf{Pełne} \\
+        \hline
+        Migracja schematu & \textbf{Elastyczna} & Zaawansowana & \textbf{Automatyczna} & Trudna & Zaawansowana & \textbf{Automatyczna} \\
+        \hline
+        Wpływ na rozmiar APK & \textbf{Minimalny} & Wysoki & Wysoki & \textbf{Minimalny} & Średni & Średni \\
+        \hline
+        Złożoność zapytań & \textbf{Niska} & Wysoka & Wysoka & Wysoka & Wysoka & Średnia \\
         \hline
     \end{tabular}
     }
 \end{table}
+
+Analiza porównawcza wykazała istotne różnice w podejściu do trwałego zapisu danych. Rozwiązania oparte na SQL (SQLite, Drift, Floor) cechują się sztywnym schematem i wyższym narzutem konfiguracyjnym, podczas gdy bazy NoSQL (Hive, Isar, ObjectBox) oferują większą elastyczność i wydajność w specyficznych scenariuszach.
+
+\subsection{Architektura oparta na pamięci operacyjnej a wydajność}
+
+Kluczowym czynnikiem decyzyjnym dla projektu ReSpire stała się wydajność na małych zbiorach danych. Tradycyjne bazy relacyjne, takie jak Sqflite czy Drift, przy każdym zapytaniu muszą odwoływać się do dysku (lub systemowej pamięci podręcznej), parsować zapytanie SQL i deserializować wynik.
+
+Hive prezentuje odmienne podejście architektoniczne. Jest to baza klucz-wartość napisana całkowicie w języku Dart, która przy starcie aplikacji ładuje swoje indeksy (a w przypadku małych wolumenów danych - całą bazę) bezpośrednio do pamięci operacyjnej (RAM) urządzenia. Ponieważ ReSpire operuje na niewielkiej ilości informacji, cała baza danych mieści się w pamięci nawet na starszych urządzeniach. Dostęp do danych staje się więc operacją na pamięci RAM, co jest rzędami wielkości szybsze niż operacje dyskowe. Użytkownik końcowy odczuje to jako natychmiastową reakcję interfejsu podczas odtwarzania, eliminując konieczność stosowania asynchronicznych mechanizmów ładowania przy prostych odczytach.
+
+\subsection{Minimalizm implementacyjny}
+
+W kontekście małego zespołu deweloperskiego i ograniczonego czasu, złożoność implementacji ma krytyczne znaczenie.
+\begin{itemize}
+    \item \textbf{SQLite (sqflite):} Wymaga ręcznego pisania zapytań SQL oraz manualnego odwzorowywania wyników (Map<String, dynamic>) na obiekty Dart. Jest to proces podatny na błędy, które ujawniają się dopiero w trakcie działania aplikacji.
+    \item \textbf{Drift/Floor:} Choć oferują bezpieczeństwo typów, wprowadzają znaczny narzut związany z konfiguracją generatorów kodu i definicją tabel.
+    \item \textbf{Hive:} Eliminuje ten narzut, oferując proste API i nie wymagając warstwy translacji między obiektami a tabelami. Zapis obiektu sprowadza się do jednej linii kodu, co dla małego projektu oznacza oszczędność wielu godzin pracy.
+\end{itemize}
+
+\subsection{Elastyczność schematu i migracje}
+
+Aplikacje w fazie początkowej często zmieniają swoje wymagania. W bazach SQL (Drift, Floor) zmiana struktury danych, np. dodanie pola, wiąże się z koniecznością generowania migracji i podbijania wersji bazy. Hive jest w dużej mierze odporny na takie zmiany - dodanie nowego pola w klasie modelu Dart (jeśli jest opcjonalne lub posiada wartość domyślną) nie wymaga migracji. Baza po prostu zignoruje brakujące pole w starych rekordach, co pozwala na szybkie iteracje bez ryzyka uszkodzenia danych u użytkownika.
+
+\subsection{Wnioski}
+
+Przeprowadzona analiza porównawcza wskazuje, że \textbf{Hive} jest optymalnym wyborem dla aplikacji ReSpire. Łączy on w sobie dużą popularność z wydajnością idealnie dopasowaną do modelu priorytetyzującego użytkowanie offline. Hive zwycięża dzięki:
+\begin{enumerate}
+    \item \textbf{Wydajności:} Błyskawiczny dostęp do danych z pamięci RAM.
+    \item \textbf{Prostocie:} Minimalizacja kodu konfiguracyjnego i brak konieczności odwzorowywania ORM.
+    \item \textbf{Lekkości:} Czysty kod Dart bez natywnych zależności, co skutkuje mniejszym rozmiarem aplikacji i łatwiejszym procesem budowania.
+\end{enumerate}
+Choć rozwiązania takie jak Isar czy ObjectBox oferują wyższą wydajność dla ogromnych zbiorów danych, a Drift potęgę relacyjnego SQL, w kontekście małej aplikacji stanowiłyby one nieuzasadniony \textit{overengineering} (pol. nadmierny narzut technologiczny).
