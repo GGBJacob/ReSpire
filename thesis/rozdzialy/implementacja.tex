@@ -188,80 +188,43 @@ static Future<List<Training>?> importTrainings() async {
 
 \section{Przebieg treningu (\Hania)}
 \subsection{Klasa TrainingParser} \label{subsec:TrainingParser}
-Klasa \texttt{TrainingParser} powstała w celu przekształcenia hierarchicznych danych treningowych pobranych z lokalnej bazy danych \textit{Hive} w ciąg występujących po sobie faz, oparty na skonfigurowanym uprzednio przez użytkownika wzorcu oddychania. Jej zadaniem jest zwracanie kolejnych faz do obiektu \texttt{TrainingController}. Dzięki temu logika przełączania faz i powtórzeń jest odseparowana od interfejsu. 
+Klasa \texttt{TrainingParser} powstała w celu przekształcenia hierarchicznych danych treningowych pobranych z lokalnej bazy danych \textit{Hive} w ciąg występujących po sobie faz, oparty na skonfigurowanym uprzednio przez użytkownika wzorcu oddychania. Jej zadaniem jest zwracanie kolejnych faz do obiektu \texttt{TrainingController}. Dzięki temu logika przełączania faz i powtórzeń jest odseparowana od interfejsu. Konstruktor jako parametr przyjmuje obiekt klasy \texttt{Training} i zapisuje do zmiennej \textit{currentTrainingStage} pierwszy etap treningu. 
 
-Konstruktor jako parametr przyjmuje obiekt klasy \texttt{Training} i zapisuje do zmiennej \textit{currentTrainingStage} pierwszy etap treningu. Fragment realizujący tę funkcjonalność przedstawiono poniżej w listingu kodu~\ref{code/parser/constructor}.
+Zadaniem funkcji \texttt{nextInstruction}, której pseudokod przedstawiono w listingu \ref{code/parser/nextInstruction}, jest zwrócenie danych dotyczącej kolejnej fazy oddechowej w postaci mapy \texttt{Map<String, dynamic>} w przypadku zakończenia całego treningu. W pierwszej kolejności analizowany jest aktualny indeks fazy oddechowej. Jeżeli wskazuje on ostatnią fazę w bieżącym etapie, oznacza to zakończenie jednego pełnego cyklu etapu. W takim przypadku indeks fazy jest zerowany, a licznik wykonanych powtórzeń w etapie zwiększany jest o jeden. Następnie sprawdzana jest liczba wykonanych powtórzeń w odniesieniu do wartości zdefiniowanej w obiekcie etapu. W przypadku jej osiągnięcia następuje przejście do kolejnego etapu treningu poprzez inkrementację indeksu etapu. Jeżeli po tej operacji indeks ten osiągnie wartość równą liczbie wszystkich etapów w strukturze treningu, funkcja zwraca \textit{null}, sygnalizując zakończenie sesji. W przeciwnym razie wczytywany jest kolejny etap, a lokalny licznik powtórzeń zostaje zresetowany do zera. Gdy aktualna faza nie była ostatnią w cyklu, indeks faz jest jedynie zwiększany o jeden. Po ustaleniu poprawnego indeksu do zmiennej \textit{currentBreathingPhase} przypisywana jest odpowiadająca mu faza oddechowa. Kolejnym etapem jest obliczenie rzeczywistego czasu trwania fazy z uwzględnieniem mechanizmu progresji. 
 
 \begin{figure}[h]
 \centering
-\begin{lstlisting}[caption={TrainingParser --- konstruktor}, label={code/parser/constructor}]
-  Training training;
-  TrainingStage currentTrainingStage;
-  late breathing_phase.BreathingPhase currentBreathingPhase;
+\begin{lstlisting}[caption={TrainingParser --- algorytm pobrania następnej fazy}, label={code/parser/nextInstruction}]
+IF IdFazy == IdOstatniejFazyWEtapie THEN
+  IdFazy := 0
+  Powtorzenia := Powtorzenia + 1
 
-  TrainingParser({required this.training})
-      : currentTrainingStage = training.trainingStages[0];
+  IF Powtorzenia == LiczbaPowtorzenWEtapie THEN
+    IdEtapu := IdEtapu + 1
+
+    IF IdEtapu == LiczbaEtapowWTreningu THEN
+      RETURN null
+    ELSE
+      Etap := Trening.Etapy[IdEtapu]
+      Powtorzenia := 0
+    END IF
+  END IF
+
+ELSE
+  IdFazy := IdFazy + 1
+END IF  
 \end{lstlisting}
 \end{figure}
-
-Zadaniem funkcji \texttt{nextInstruction}, przedstawionej na listingu~\ref{code/parser/nextInstruction}, jest zwrócenie danych dotyczącej kolejnej fazy oddechowej w postaci mapy \texttt{Map<String, dynamic>} lub wartości \texttt{null} w~przypadku zakończenia całego treningu. 
-
-W pierwszej kolejności analizowany jest aktualny indeks fazy oddechowej (\textit{breathingPhaseID}). Jeżeli wskazuje on ostatnią fazę w bieżącym etapie, oznacza to zakończenie jednego pełnego cyklu etapu. W takim przypadku indeks fazy jest zerowany (\textit{breathingPhaseID = 0}), a licznik wykonanych powtórzeń w etapie (\textit{doneReps}) zwiększany jest o jeden. Następnie sprawdzana jest liczba wykonanych powtórzeń w odniesieniu do wartości zdefiniowanej w obiekcie etapu (\textit{currentTrainingStage.reps}). W przypadku jej osiągnięcia następuje przejście do kolejnego etapu treningu poprzez inkrementację indeksu \textit{trainingStageID}. Jeżeli po tej operacji indeks ten osiągnie wartość równą liczbie wszystkich etapów w strukturze treningu, funkcja zwraca \textit{null}, sygnalizując zakończenie sesji. W przeciwnym razie wczytywany jest nowy etap (\textit{currentTrainingStage = training.trainingStages[trainingStageID]}), a licznik \textit{doneReps} zostaje zresetowany do zera. Gdy aktualna faza nie była ostatnią w cyklu, indeks \textit{breathingPhaseID} jest jedynie zwiększany o jeden. Po ustaleniu poprawnego indeksu do zmiennej \textit{currentBreathingPhase} przypisywana jest odpowiadająca mu faza oddechowa. Kolejnym etapem jest obliczenie rzeczywistego czasu trwania fazy z uwzględnieniem mechanizmu progresji. 
-
-Na podstawie obliczonego czasu tworzona jest zmienna \textit{progressedBreathingPhase}, w której pole \textit{duration} przyjmuje wartość \textit{durationSeconds}, natomiast pozostałe atrybuty (\textit{breathingPhaseType}, \textit{breathType}, \textit{breathDepth}, \textit{sounds}) są kopiowane z obecnej fazy oddechowej.
 
 Funkcja zwraca mapę zawierającą następujące klucze:
 \begin{itemize}
-    \item \textit{breathingPhase} — pełny obiekt fazy,
-    \item \textit{remainingTime} — czas trwania fazy wyrażony w milisekundach,
-    \item \textit{trainingStageName} — nazwę aktualnego etapu treningu.
+    \item \textit{breathingPhase} --- pełny obiekt fazy,
+    \item \textit{remainingTime} --- czas trwania fazy wyrażony w milisekundach,
+    \item \textit{trainingStageName} --- nazwę aktualnego etapu treningu,
+    \item \textit{doneReps} --- obecny cykl etapu.
 \end{itemize}
 
 W ten sposób \textit{nextInstruction()} pełni rolę centralnego mechanizmu sterującego przebiegiem treningu oddechowego, zapewniając poprawne przechodzenie pomiędzy fazami i etapami oraz automatyczne zwiększanie trudności zgodnie z zaimplementowanym modelem progresji liniowej.
-
-\newpage
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={TrainingParser --- pobranie instrukcji}, label={code/parser/nextInstruction}]
-Map<String, dynamic>? nextInstruction() {
-  if (breathingPhaseID == currentTrainingStage.breathingPhases.length - 1) {
-    breathingPhaseID = 0;
-    doneReps++;
-
-    if (doneReps == currentTrainingStage.reps) {
-      trainingStageID++;
-      if (trainingStageID == training.trainingStages.length) {
-        return null;
-      } else {
-        currentTrainingStage = training.trainingStages[trainingStageID];
-        doneReps = 0;
-      }
-    }
-  } else {
-    breathingPhaseID++;
-  }
-
-  currentBreathingPhase = currentTrainingStage.breathingPhases[breathingPhaseID];
-
-  double durationSeconds = currentBreathingPhase.duration + (currentTrainingStage.increment * doneReps);
-
-  final progressedBreathingPhase = breathing_phase.BreathingPhase(
-    duration: durationSeconds,
-    breathingPhaseType: currentBreathingPhase.breathingPhaseType,
-    breathType: currentBreathingPhase.breathType,
-    breathDepth: currentBreathingPhase.breathDepth,
-    sounds: currentBreathingPhase.sounds,
-  );
-
-  return {
-    "breathingPhase": progressedBreathingPhase,
-    "remainingTime": (durationSeconds * 1000).truncate(),
-    "trainingStageName": currentTrainingStage.name,
-  };
-}
-\end{lstlisting}
-\end{figure}
-\newpage
 
 \subsection{Klasa TrainingController} \label{subsec:TrainingController}
 
@@ -321,376 +284,174 @@ Flaga rozpoczęcia fazy zakończenia \\
 \end{minipage}
 \newline
 
-Konstruktor przyjmuje jako parametr obiekt \texttt{TrainingParser} i zapisuje go do zmiennej \textit{parser}. Dodatkowo przy tworzeniu komponentu tworzone są obiekty \texttt{SoundManager}, \texttt{PlaylistManager} i \texttt{BinauralBeatGenerator} zajmujące się obsługą dźwięków. Wyłączane jest także wyświetlanie etykiet progresu treningu, dopóki nie zostanie on rozpoczęty. Następnie ustawiane są wartości początkowe, przygotowywana jest faza rozpoczęcia i pobierane są pierwsze fazy treningu. Konstruktor \texttt{TrainingController} przedstawiono w listingu~\ref{code/controller/constructor}.
+Konstruktor przyjmuje jako parametr obiekt \texttt{TrainingParser} (rozdział \ref{subsec:TrainingParser}) i zapisuje go do zmiennej \textit{parser}. Dodatkowo przy tworzeniu komponentu tworzone są obiekty \texttt{SoundManager}, \texttt{PlaylistManager} i \texttt{BinauralBeatGenerator} zajmujące się obsługą dźwięków (rozdział \ref{sec:Sounds}). Wyłączane jest także wyświetlanie etykiet progresu treningu, dopóki nie zostanie on rozpoczęty. Następnie ustawiane są wartości początkowe, przygotowywana jest faza rozpoczęcia i pobierane są pierwsze fazy treningu. 
 
-\begin{figure}[H]
-\centering
-\begin{lstlisting}[caption={TrainingController --- konstruktor}, label={code/controller/constructor}]
-TrainingController(this.parser) {
-  soundManager = SoundManager();
-  soundManager.stopAllSounds();
-  playlistManager = PlaylistManager();
-  binauralGenerator = BinauralBeatGenerator();
-  _sounds = parser.training.sounds;
-  _settings = parser.training.settings;
-  showLabels.value = false;
+Funkcja \texttt{\_preloadBreathingPhases} służy do inicjalizacji kolejki faz oddechowych w treningu. Na początku tworzona jest pusta faza z wartościami \textit{null}. Spowodowane jest to potrzebą symulacji fazy przygotowania, która nie posiada żadnych wspólnych cech z pozostałymi fazami poza czasem trwania. Przypisanie wartości \textit{null} pozwala na rozróżnienie jej od właściwego treningu w wizualizacji instrukcji użytkownika w klasie \texttt{InstructionSlider} (rozdział \ref{subsec:InstructionSlider}). Następnie dodawane są dwie pierwsze fazy oddechowe treningu.
 
-  if (parser.training.trainingStages.isNotEmpty) {
-    _currentTrainingStageId = parser.training.trainingStages[0].id;
-    totalStages.value = parser.training.trainingStages.length;
-    currentStageIndex.value = 1;
-    currentCycleIndex.value = 1;
-    totalCycles.value = parser.training.trainingStages[0].reps;
-  }
-  _preloadBreathingPhases();
-  _initializePreparationSound();
-  _loadEndingSoundDuration();
-}
-\end{lstlisting}
-\end{figure}
-
-Funkcja \texttt{\_preloadBreathingPhases} służy do inicjalizacji kolejki faz oddechowych w treningu. Na początku tworzona jest pusta faza z wartościami \textit{null}. Spowodowane jest to potrzebą symulacji fazy przygotowania, która nie posiada żadnych wspólnych cech z pozostałymi fazami poza czasem trwania. Przypisanie wartości \textit{null} pozwala na rozróżnienie jej od właściwego treningu w wizualizacji instrukcji użytkownika w klasie \texttt{InstructionSlider}. Następnie dodawane są~dwie pierwsze fazy oddechowe treningu. Funkcję przedstawiono w listingu kodu~\ref{code/controller/preload}.
-
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={TrainingController --- przygotowanie kolejki}, label={code/controller/preload}]
-void _preloadBreathingPhases() {
-  breathingPhasesQueue.value.add(null);
-  _trainingStageNameQueue.add(null);
-  _trainingStageIdQueue.add(null);
-  _updateCurrentTrainingStageLabel();
-  _fetchNextBreathingPhase();
-  _nextRemainingTime = _newBreathingPhaseRemainingTime;
-  _fetchNextBreathingPhase();
-}
-\end{lstlisting}
-\end{figure}
-
-\newpage
-Pobieranie kolejnych faz realizowane jest za pomocą metody \textit{\_fetchNextBreathingPhase}. Dane instrukcji w postaci mapy uzyskiwane są z obiektu \textit{parser}. W przypadku zwrócenia przez parser wartości \textit{null}, oznaczającej zakończenie pobierania danych treningowych, następuje oznaczenie zakończenia ładowania w zmiennej \textit{\_finishedLoadingBreathingPhases} oraz dodanie końcowej fazy \textit{null}, reprezentującej fazę zakończenia. W przeciwnym razie wartości fazy, nazwa etapu treningowego, identyfikator etapu oraz czas pozostały są zapisywane do odpowiednich kolejek, a czas trwania nowej fazy zapamiętywany jest w polu \textit{\_newBreathingPhaseRemainingTime}. Metodę przedstawiono w listingu~\ref{code/controller/fetch}.
+Pobieranie kolejnych faz realizowane jest za pomocą metody \textit{\_fetchNextBreathingPhase}. Dane instrukcji w postaci mapy uzyskiwane są z obiektu \textit{parser}. W przypadku zwrócenia przez parser wartości \textit{null}, oznaczającej zakończenie pobierania danych treningowych, następuje oznaczenie tej sytuacji w zmiennej oraz dodanie końcowej fazy \textit{null}, reprezentującej fazę zakończenia. W przeciwnym razie wartości fazy, nazwa etapu treningowego, identyfikator etapu oraz czas pozostały są zapisywane do odpowiednich kolejek, a czas trwania nowej fazy zapamiętywany jest w polu \textit{\_newBreathingPhaseRemainingTime}. Metodę przedstawiono w pseudokodzie w listingu~\ref{code/controller/fetch}.
 
 \begin{figure}[h]
 \centering
 \begin{lstlisting}[caption={TrainingController --- pobieranie fazy}, label={code/controller/fetch}]
-void _fetchNextBreathingPhase() {
-  var instructionData = parser.nextInstruction();
-  if (instructionData == null) {
-    _finishedLoadingBreathingPhases = true;
-    breathingPhasesQueue.value.add(null);
-    _trainingStageNameQueue.add(null);
-    _trainingStageIdQueue.add(null);
-    return;
-  }
+DaneInstrukcji := Parser.NastepnaInstrukcja() 
 
-  breathingPhasesQueue.value.add(
-    instructionData["breathingPhase"]);
-  _trainingStageNameQueue.add(_resolveTrainingStageName(
-      instructionData["trainingStageName"] as String?,
-      parser.trainingStageID));
+IF DaneInstrukcji == null THEN 
+  KoniecPobieraniaDanych := true 
+  KolejkaFaz.Dodaj(null) 
+  KolejkaEtapow.Dodaj(null) 
+  RETURN 
+END IF 
 
-  String? stageId;
-  if (parser.trainingStageID < parser.training.trainingStages.length) {
-    stageId = 
-    parser.training.trainingStages[parser.trainingStageID].id;
-  }
-  _trainingStageIdQueue.add(stageId);
-
-  _newBreathingPhaseRemainingTime = instructionData["remainingTime"];
-}
+KolejkaFaz.Dodaj(DaneInstrukcji[Faza]) 
+KolejkaEtapow.Dodaj(DaneInstrukcji[Etap]) 
+CzasTrwaniaFazy.Dodaj(DaneInstrukcji[CzasTrwaniaFazy])
 \end{lstlisting}
 \end{figure}
 
-Następnie wywoływana jest metoda \textit{start}, która odpowiada za cały przebieg treningu. Bazuje ona na obiekcie \texttt{Timer} z~pakietu \texttt{dart}, który cyklicznie wykonuje zdefiniowane zachowanie co zadany odcinek czasu zapisany w zmiennej \textit{\_updateInterval}. Ponieważ standardowy \texttt{Timer} okresowy nie gwarantuje idealnej precyzji i mogą występować opóźnienia, zastosowano mechanizm korekcji oparty na pomiarze rzeczywistego upływającego czasu. W tym celu wykorzystano zmienne \textit{lastTick} i \textit{now}, które pozwalają na bieżąco wyliczać faktycznie upłynięty czas pomiędzy kolejnymi wywołaniami i korygować ewentualne niedokładności zegara. Różnica ta zapisywana jest w zmiennej \textit{elapsed}. Fragment metody przedstawiono w listingu~\ref{code/controller/start}.
+Następnie wywoływana jest metoda \textit{start}, która odpowiada za cały przebieg treningu. Bazuje ona na obiekcie \texttt{Timer} z~pakietu \texttt{dart}, który cyklicznie wykonuje zdefiniowane zachowanie co zadany odcinek czasu. Ponieważ standardowy \texttt{Timer} okresowy nie gwarantuje idealnej precyzji i mogą występować opóźnienia, zastosowano mechanizm korekcji oparty na pomiarze rzeczywistego upływającego czasu. W tym celu wykorzystano zmienne, które pozwalają na bieżąco wyliczać faktycznie upłynięty czas pomiędzy kolejnymi wywołaniami i korygować ewentualne niedokładności zegara. 
 
-\begin{figure}[H]
-\centering
-\begin{lstlisting}[caption={TrainingController --- rozpoczęcie treningu}, label={code/controller/start}]
-void _start() {
-  int previousSecond = _remainingTime ~/ 1000;
-  DateTime lastTick = DateTime.now();
-  soundManager.playSound(_currentSound);
-  bool skipFirstCounting = false;
+W kolejnym etapie pętli sterującej realizowana jest precyzyjna logika zarządzania czasem pozostałym do zakończenia bieżącej fazy oddechowej oraz synchronizacja wydarzeń dźwiękowych z rzeczywistym przebiegiem treningu. Zmienna \textit{previousSecond} przechowuje wartość ostatniej wyświetlonej sekundy, natomiast \textit{second} służy do natychmiastowej aktualizacji interfejsu użytkownika. Również wtedy, w zależności od aktualnego etapu treningu i ustawień dźwiękowych wywoływana jest metoda \textit{\_playCountingSound}, odpowiedzialna za odtwarzanie sygnału odliczającego. Mechanizm ten jest aktywny wyłącznie wtedy, gdy nie zachodzi celowe pominięcie pierwszego odliczania oraz gdy w danej fazie użytkownik nie wybrał braku ścieżki dźwiękowej. 
 
-  _timer = Timer.periodic(Duration(
-    milliseconds: _updateInterval), (Timer timer) {
-    final now = DateTime.now();
-    final int elapsed = now.difference(lastTick).inMilliseconds;
-    lastTick = now; 
-\end{lstlisting}
-\end{figure}
-
-W kolejnym etapie pętli sterującej realizowana jest precyzyjna logika zarządzania czasem pozostałym do zakończenia bieżącej fazy oddechowej oraz synchronizacja wydarzeń dźwiękowych z rzeczywistym przebiegiem treningu. Zmienna \textit{previousSecond} przechowuje wartość ostatniej wyświetlonej sekundy, natomiast \textit{second} służy do natychmiastowej aktualizacji interfejsu użytkownika. Również wtedy, w zależności od aktualnego etapu treningu i ustawień dźwiękowych wywoływana jest metoda \textit{\_playCountingSound}, odpowiedzialna za odtwarzanie sygnału odliczającego. Mechanizm ten jest aktywny wyłącznie wtedy, gdy nie zachodzi celowe pominięcie pierwszego odliczania (zmienna \textit{skipFirstCounting}) oraz gdy w danej fazie użytkownik nie wybrał braku ścieżki dźwiękowej. Fragment przedstawiono w listingu kodu~\ref{code/controller/count}.
+Dalsza część algorytmu koncentruje się na zapewnieniu płynnego przejścia pomiędzy kolejnymi fazami oddechowymi z odpowiednim wyprzedzeniem dźwiękowym. Jeżeli w kolejce faz znajduje się co najmniej jedna kolejna faza, system monitoruje pozostały czas bieżącej fazy. Gdy osiągnie on wartość 100 ms lub mniej i sygnał zapowiadający zmianę fazy nie został jeszcze odtworzony, wywoływana jest metoda \textit{\_playPreBreathingPhaseSound} i jest on odtwarzany. Co więcej, przed końcem fazy inicjowana jest łagodna zmiana muzyki tła poprzez wywołanie metody \textit{\_handleBackgroundSoundChange}. Dzięki temu przejście między ścieżkami dźwiękowymi jest płynne i przyjemne dla użytkownika. Na końcu każdej iteracji pętli dokonywana jest aktualizacja licznika czasu pozostałego. Jeżeli jego wartość jest równa lub mniejsza od zmierzonej ilość upływającego czasu (\textit{elapsed}), ale nadal dodatnia, czas pozostały jest jawnie zerowany. Ten mechanizm korekcji jest kluczowy z punktu widzenia stabilności numerycznej algorytmu. Eliminuje on ryzyko uzyskania ujemnych wartości licznika na skutek drobnych niedokładności zegara systemowego lub opóźnień, zapobiegając tym samym pomijaniu faz lub ich nieprawidłowemu kolejkowaniu. Fragment funkcji start przedstawiono w listingu~\ref{code/controller/start}.
 
 \begin{figure}[h]
 \centering
-\begin{lstlisting}[caption={TrainingController --- odliczanie}, label={code/controller/count}]
-if (previousSecond > _remainingTime ~/ 1000 && !end) {
-  previousSecond = _remainingTime ~/ 1000;
-  second.value = previousSecond;
-  if(!skipFirstCounting && 
-  ((!_preparationPhaseCompleted && 
-  _sounds.preparationTrack.type == SoundType.none) || 
-    (_preparationPhaseCompleted && !_endingInitiated) ||
-    (_endingInitiated && _sounds.endingTrack.type == SoundType.none))){ 
-    _playCountingSound(previousSecond);
-  }else{
-    skipFirstCounting = false;
-  }
-}
+\begin{lstlisting}[caption={TrainingController --- początek funkcji start}, label={code/controller/start}]
+PoprzedniaSekunda := PozostalyCzas / 1000
+OstatniPomiar := PobierzObecnyCzas()
+ManadzerDzwiekow.Odtworz(AktualnyDzwiek)
+PominPierwszeOdwliczanie := false
+LicznikStopu := 2
+
+Timer(Interwal):
+  Teraz := PobierzObecnyCzas()
+  RoznicaCzasu := Teraz - OstatniPomiar
+  OstatniPomiar := Teraz
+
+  IF PoprzedniaSekunda > (PozostalyCzas / 1000) AND NOT Koniec THEN
+    PoprzedniaSekunda := PozostalyCzas / 1000
+    OdtworzDzwiekOdliczania(PoprzedniaSekunda)
+  END IF
+
+  IF PozostalyCzas > RoznicaCzasu THEN
+    PozostalyCzas := PozostalyCzas - RoznicaCzasu
+
+    IF KolejkaFaz.MaNastepnaFaze() THEN
+      NastepnaFaza := KolejkaFaz[1]
+      OdtworzDzwiekPrzedFaza(NastepnaFaza)
+      ZmienDzwiekTla(NastepnaFaza, 500)
+    END IF
+
+  ELSE IF PozostalyCzas > 0 THEN
+      PozostalyCzas := 0
+  END IF
 \end{lstlisting}
 \end{figure}
-Dalsza część algorytmu koncentruje się na zapewnieniu płynnego przejścia pomiędzy kolejnymi fazami oddechowymi z odpowiednim wyprzedzeniem dźwiękowym. Jeżeli w kolejce faz znajduje się co najmniej jedna kolejna faza, system monitoruje pozostały czas bieżącej fazy. Gdy osiągnie on wartość 100 ms lub mniej i sygnał zapowiadający zmianę fazy nie został jeszcze odtworzony, wywoływana jest metoda \textit{\_playPreBreathingPhaseSound} i jest on odtwarzany. Co~więcej, przed końcem fazy inicjowana jest łagodna zmiana muzyki tła poprzez wywołanie metody \textit{\_handleBackgroundSoundChange}. Dzięki temu przejście między ścieżkami dźwiękowymi jest płynne i przyjemne dla użytkownika. Na końcu każdej iteracji pętli dokonywana jest aktualizacja licznika czasu pozostałego. Jeżeli jego wartość jest równa lub mniejsza od zmierzonej ilość upływającego czasu (\textit{elapsed}), ale nadal dodatnia, czas pozostały jest jawnie zerowany. Ten mechanizm korekcji jest kluczowy z punktu widzenia stabilności numerycznej algorytmu. Eliminuje on ryzyko uzyskania ujemnych wartości licznika na skutek drobnych niedokładności zegara systemowego lub opóźnień, zapobiegając tym samym pomijaniu faz lub ich nieprawidłowemu kolejkowaniu. Fragment przedstawiono w listingu~\ref{code/controller/sounds}.
+
+Po osiągnięciu zera przez licznik czasu bieżącej fazy następuje przejście do kolejnej fazy oddechowej. W przypadku pierwszej fazy treningu właściwego, jeżeli użytkownik włączył dudnienia różnicowe, obliczana jest całkowita długość części głównej treningu, a następnie uruchamiany jest generator dudnień różnicowych z zadanymi częstotliwościami lewego i prawego kanału. Równolegle, przy pierwszym przejściu z fazy przygotowawczej do treningu właściwego, zatrzymywany jest aktualnie odtwarzany dźwięk przygotowawczy i faza przygotowawcza oznaczana jest jako zakończona. Aktywowane jest również wyświetlanie etykiet w interfejsie. Następnie, w zależności od ustawiono globalny zakres muzyki tła, aktywowany zostaje tryb odtwarzania playlisty. Natomiast, jeśli ustawiony jest zakres dla etapu, wywoływana jest metoda \textit{\_switchToStagePlaylist}, która inicjuje odtwarzanie playlisty przypisanej do danego etapu. 
+
+Po osiągnięciu zera przez licznik bieżącej fazy realizowana jest logika zakończenia danej fazy oraz ewentualnego przejścia do fazy końcowej lub całkowitego zakończenia treningu. Gdy wszystkie fazy zostały wczytane, z kolejki faz usuwana jest właśnie zakończona faza, a na jej miejsce dodawana jest wartość \textit{null}, reprezentująca fazę końcową.  Licznik \textit{\_stopTimer} określa, ile faz pozostało do momentu uruchomienia sekwencji zakończenia treningu. Jeżeli osiągnie zero, inicjowana jest faza końcowa. Jednocześnie aktywowana flaga \textit{skipFirstCounting}, aby uniknąć niepożądanego odtworzenia dźwięku odliczającego w fazie końcowej. W przypadku aktywnej playlisty treningowej wywoływana jest metoda \textit{completePlaylist()}, która zapewnia kontrolowane zakończenie odtwarzania i zwolnienie zasobów. Etykiety w interfejsie użytkownika są ukrywane, a metoda \textit{\_playEndingSound} uruchamia właściwą ścieżkę dźwiękową. W przeciwnym razie, gdy \textit{\_stopTimer} nie osiągnął zera, następuje przejście do kolejnej fazy treningu właściwego. Jeśli faza końcowa jest już aktywna i właśnie dobiegła końca, ustawiana jest flaga \textit{end}, sygnalizująca zakończenie treningu, a ekran zostaje zamknięty, kończąc całą sesję. 
+
+Gdy zakończenie bieżącej fazy nie powoduje jeszcze uruchomienia sekwencji końcowej, realizowane jest przejście do kolejnej fazy treningu właściwego. W tym celu z kolejki faz usuwana jest właśnie zakończona faza, a wartość pozostałego czasu zostaje ustawiona na wcześniej obliczony czas trwania kolejnej fazy. Bezpośrednio potem wywoływana jest metoda \textit{\_fetchNextBreathingPhase()}, która asynchronicznie wczytuje i przygotowuje dane kolejnej fazy, umożliwiając ciągłe wyprzedzenie w przetwarzaniu.  Na koniec wywoływana jest metoda \textit{\_updateCurrentTrainingStageLabel()}, zapewniająca natychmiastowe odświeżenie etykiety aktualnego etapu w interfejsie użytkownika. Fragment przedstawiono w listingu~\ref{code/controller/end}.
 
 \begin{figure}[h]
 \centering
-\begin{lstlisting}[caption={TrainingController --- dźwięki treningu}, label={code/controller/sounds}]
-if (previousSecond > _remainingTime ~/ 1000 && !end) {
-  previousSecond = _remainingTime ~/ 1000;
-  second.value = previousSecond;
-  if(!skipFirstCounting && 
-  ((!_preparationPhaseCompleted && 
-  _sounds.preparationTrack.type == SoundType.none) || 
-    (_preparationPhaseCompleted && !_endingInitiated) ||
-    (_endingInitiated && _sounds.endingTrack.type == SoundType.none))){ 
-    _playCountingSound(previousSecond);
-  }else{
-    skipFirstCounting = false;
-  }
-}
+\begin{lstlisting}[caption={TrainingController --- zakończenie funkcji start}, label={code/controller/end}]
+  IF PozostalyCzas == 0 THEN
+    LicznikFaz := LicznikFaz + 1
 
-if (_remainingTime > elapsed) {
-  _remainingTime -= elapsed;
+    IF LicznikFaz == 1 AND DzwiekiBinauralne THEN
+        RozpocznijBinauralne(ObliczCzasTreningu())
+    END IF
 
-  if (breathingPhasesQueue.value.length > 1 &&
-    breathingPhasesQueue.value.elementAt(1) != null) {
-    final nextPhase = breathingPhasesQueue.value.elementAt(1)!;
-    if(!_nextPhaseSoundPlayed && _remainingTime <= 100) {
-      _playPreBreathingPhaseSound(nextPhase);
-      _nextPhaseSoundPlayed = true;
-    } 
-    
-    if (_remainingTime <= 300 && _remainingTime > 200) {
-      breathing_phase.BreathingPhase breathingPhase =
-          breathingPhasesQueue.value.elementAt(1)!;
-      _handleBackgroundSoundChange(
-          breathingPhase.sounds.background.name, 500);
-    }
-  }
-} else if (_remainingTime > 0) {
-  _remainingTime = 0;
-}
+    IF LicznikFaz == 1 AND NOT FazaPrzygotowaniaZakonczona THEN
+      Odtwarzacz.Stop()
+      AktualnyDzwiek := null
+      FazaPrzygotowaniaZakonczona := true
+      PokazEtykiety := true
+      ObsluzDzwiekTla()
+    END IF
+
+    ZaktualizujEtykieteEtapu()
+
+    IF PozostalyCzas == 0 THEN
+      IF KoniecTreningu THEN
+        Koniec := true
+        ZamknijEkran()
+      END IF
+
+      IF WczytywanieZakonczone THEN
+        AktualizujLicznikEtapow()
+        UsunPierwszaFaze()
+        KolejkaFaz.Dodaj(null)
+        LicznikStopu := LicznikStopu - 1
+
+        IF LicznikStopu == 0 THEN
+          KoniecTreningu := true
+          Odtwarzacz.Stop()
+          OdtworzKrotkiDzwiek(ZmianaEtapu)
+          PozostalyCzas := CzasZakonczenia
+          AktualnyDzwiek := DzwiekZakonczenia
+          PoprzedniaSekunda := PozostalyCzas / 1000
+          PominPierwszeOdwliczanie := true
+          UkryjEtykiety()
+          OdtworzDzwiekZakonczenia(500)
+        ELSE
+          PozostalyCzas := PozostalyCzasNastepnejFazy
+          PoprzedniaSekunda := (PozostalyCzas / 1000) + 1
+          PominPierwszeOdwliczanie := true
+        END IF
+
+      ELSE
+        AktualizujLicznikEtapow()
+        UsunPierwszaFaze()
+        PozostalyCzas := PozostalyCzasNastepnejFazy
+        UsunNazweEtapu()
+        UstawNastepnyCzasFazy()
+        PoprzedniaSekunda := PozostalyCzas / 1000
+        PominPierwszeOdwliczanie := true
+        PobierzNastepnaFaze()
+        ZaktualizujEtykieteEtapu()
+      END IF
+    END IF
+  END IF
+END TIMER
 \end{lstlisting}
 \end{figure}
-
-\newpage
-Po osiągnięciu zera przez licznik czasu bieżącej fazy następuje przejście do kolejnej fazy oddechowej. W przypadku pierwszej fazy treningu właściwego, jeżeli użytkownik włączył dudnienia różnicowe, obliczana jest całkowita długość części głównej treningu, a następnie uruchamiany jest generator dudnienień różnicowych z zadanymi częstotliwościami lewego i prawego kanału. Równolegle, przy pierwszym przejściu z fazy przygotowawczej do treningu właściwego, zatrzymywany jest aktualnie odtwarzany dźwięk przygotowawczy i faza przygotowawcza oznaczana jest jako zakończona. Aktywowane jest również wyświetlanie etykiet w interfejsie (\textit{showLabels}). Następnie, w zależności od ustawiono globalny zakres muzyki tła, aktywowany zostaje tryb odtwarzania playlisty. Natomiast, jeśli ustawiony jest zakres dla etapu, wywoływana jest metoda \textit{\_switchToStagePlaylist}, która inicjuje odtwarzanie playlisty przypisanej do danego etapu. Fragment przedstawiono w listingu~\ref{code/controller/playlist}.
-
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={TrainingController --- inne dźwięki}, label={code/controller/playlist}]
-if (_remainingTime == 0) {
-  breathingPhasesCount.value++;
-
-  if (breathingPhasesCount.value == 1 && _settings.binauralBeatsEnabled) {
-    final trainingDuration =
-        parser.calculateTrainingDurationWithoutPreparation();
-  
-    binauralGenerator.start(
-      _settings.binauralLeftFrequency,
-      _settings.binauralRightFrequency,
-      durationSeconds: trainingDuration,
-    );
-  }
-
-  if (breathingPhasesCount.value == 1 && !_preparationPhaseCompleted) {
-    soundManager.stopSound(_currentSound);
-    _currentSound = null;
-    _preparationPhaseCompleted = true;
-    showLabels.value = true;
-    if (_sounds.backgroundSoundScope == SoundScope.global &&
-        _sounds.trainingBackgroundPlaylist.isNotEmpty) {
-      _isUsingPlaylist = true;
-      playlistManager.playPlaylist(
-          _sounds.trainingBackgroundPlaylist.map((s) => s.name).toList());
-    } else if (_sounds.backgroundSoundScope == SoundScope.perStage &&
-        _currentTrainingStageId != null) {
-      _switchToStagePlaylist(_currentTrainingStageId!);
-    }
-  }
-\end{lstlisting}
-\end{figure}
-
-Po osiągnięciu zera przez licznik bieżącej fazy realizowana jest logika zakończenia danej fazy oraz ewentualnego przejścia do fazy końcowej lub całkowitego zakończenia treningu. Gdy wszystkie fazy zostały wczytane, z kolejki faz usuwana jest właśnie zakończona faza, a na jej miejsce dodawana jest wartość \textit{null}, reprezentująca fazę końcową.  Licznik \textit{\_stopTimer} określa, ile faz pozostało do momentu uruchomienia sekwencji zakończenia treningu. Jeżeli \textit{\_stopTimer} osiągnie zero, inicjowana jest faza końcowa. Jednocześnie aktywowana flaga \textit{skipFirstCounting}, aby uniknąć niepożądanego odtworzenia dźwięku odliczającego w fazie końcowej. W przypadku aktywnej playlisty treningowej wywoływana jest metoda \textit{completePlaylist()}, która zapewnia kontrolowane zakończenie odtwarzania i zwolnienie zasobów. Etykiety w interfejsie użytkownika są~ukrywane, a metoda \textit{\_playEndingSound} uruchamia właściwą ścieżkę dźwiękową. W przeciwnym razie, gdy \textit{\_stopTimer} nie osiągnął zera, następuje przejście do kolejnej fazy treningu właściwego. Jeśli faza końcowa jest już aktywna (\textit{\_endingInitiated}) i właśnie dobiegła końca, ustawiana jest flaga \textit{end}, sygnalizująca zakończenie treningu, a ekran zostaje zamknięty, kończąc całą sesję. Fragment przedstawiono w listingu kodu~\ref{code/controller/end}.
-
-\begin{figure}[H]
-\centering
-\begin{lstlisting}[caption={TrainingController --- koniec treningu}, label={code/controller/end}]
-if (_remainingTime == 0) {
-  if (_endingInitiated){
-    second.value = 0;
-    end = true;
-    Navigator.pop(_context);
-  }
-  if (_finishedLoadingBreathingPhases) {
-    tryUpdateStageCounter();
-    final removedPhase = breathingPhasesQueue.value.removeFirst();
-    breathingPhasesQueue.value.add(null);
-    breathingPhasesQueue.value =
-        Queue<breathing_phase.BreathingPhase?>.from(
-            breathingPhasesQueue.value);
-    _stopTimer--;
-
-    if (_stopTimer == 0) {
-      
-      _endingInitiated = true;
-      soundManager.stopSound(_currentSound);
-      _playShortSound(
-        parser.training.sounds.stageChangeSound.name);
-      _remainingTime = _endingDuration;
-      _currentSound = _sounds.endingTrack.name;
-      previousSecond = (_remainingTime ~/ 1000)+1;
-      skipFirstCounting = true;
-
-      if (_isUsingPlaylist) {
-        playlistManager.completePlaylist();
-        _isUsingPlaylist = false;
-      }
-
-      showLabels.value = false;
-      _playEndingSound(_sounds.endingTrack.name, 500);
-      
-    } else {
-      _remainingTime = _nextRemainingTime;
-      previousSecond = (_remainingTime ~/ 1000)+1;
-      skipFirstCounting = true;
-    }
-  }
-\end{lstlisting}
-\end{figure}
-
-\newpage
-Gdy zakończenie bieżącej fazy nie powoduje jeszcze uruchomienia sekwencji końcowej, realizowane jest przejście do kolejnej fazy treningu właściwego. W tym celu z kolejki faz usuwana jest właśnie zakończona faza, a wartość pozostałego czasu zostaje ustawiona na wcześniej obliczony czas trwania kolejnej fazy. Bezpośrednio potem wywoływana jest metoda \textit{\_fetchNextBreathingPhase()}, która asynchronicznie wczytuje i przygotowuje dane kolejnej fazy, umożliwiając ciągłe wyprzedzenie w przetwarzaniu.  Na koniec wywoływana jest metoda \textit{\_updateCurrentTrainingStageLabel()}, zapewniająca natychmiastowe odświeżenie etykiety aktualnego etapu w interfejsie użytkownika. Fragment przedstawiono w listingu~\ref{code/controller/load}.
-
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={TrainingController --- rozpoczęcie treningu}, label={code/controller/load}]
-else {
-  tryUpdateStageCounter(); 
-  final removedPhase = breathingPhasesQueue.value.removeFirst();
-  _remainingTime = _nextRemainingTime;
-  if (_trainingStageNameQueue.isNotEmpty) {
-    _trainingStageNameQueue.removeFirst();
-  }
-  if (_trainingStageIdQueue.isNotEmpty) {
-    _trainingStageIdQueue.removeFirst();
-  }
-
-  _nextRemainingTime = _newBreathingPhaseRemainingTime;
-  previousSecond = (_remainingTime ~/ 1000)+1;
-  skipFirstCounting = true;
-  _fetchNextBreathingPhase();
-  _nextPhaseSoundPlayed = false;
-  breathingPhasesQueue.value =
-      Queue<breathing_phase.BreathingPhase?>.from(
-          breathingPhasesQueue.value);
-  _updateCurrentTrainingStageLabel();
-}
-
-\end{lstlisting}
-\end{figure}
-
 
 \subsection{Klasa AnimatedCircle} \label{subsec:AnimatedCircle}
 Komponent \texttt{AnimatedCircle} odpowiada za wizualizację przebiegu fazy oddechowej w postaci animowanego koła. Wdech powoduje zwiększanie jego promienia, wydech --- zmniejszanie, natomiast fazy retencji i regeneracji utrzymują stały rozmiar.
 
-Obiekt przyjmuje dwa parametry — obiekt typu \texttt{BreathingPhase?}, który reprezentuje aktualną fazę oddechową bądź wartość null w przypadku zakończenia treningu oraz obiekt typu \texttt{bool} \textit{isPaused}, reprezentujący stan wstrzymania treningu. Framgment tworzenia klasy przedstawiony został w listingu~\ref{code/circle/constructor}.
+Obiekt przyjmuje dwa parametry --- obiekt typu \texttt{BreathingPhase?}, który reprezentuje aktualną fazę oddechową bądź wartość \textit{null} w przypadku zakończenia treningu oraz obiekt typu \texttt{bool} \textit{isPaused}, reprezentujący stan wstrzymania treningu. 
 
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={AnimatedCircle --- konstruktor}, label={code/circle/constructor}]
-  final breathing_phase.BreathingPhase? breathingPhase;
-  final bool isPaused;
+Po utworzeniu obiektu na początku zostaje obliczona wartość początkowa czasu trwania animacji, która zapisywana jest w zmiennej na podstawie czasu trwania danej fazy. Następnie inicjowany jest kontroler animacji oraz animacja zmiany promienia koła. Kontroler ustawiany jest na stan początkowy. Jeżeli trening nie jest wstrzymany i dostępna jest faza oddechowa, uruchamiana jest odpowiednia animacja — rosnąca dla wdechu lub malejąca dla wydechu. 
 
-  const AnimatedCircle({super.key, required this.breathingPhase, required this.isPaused});
-\end{lstlisting}
-\end{figure}
-
-Po utworzeniu obiektu na początku zostaje obliczona wartość początkowa czasu trwania animacji, która zapisywana jest w zmiennej \textit{duration} na podstawie czasu trwania danej fazy. Następnie inicjowany jest kontroler animacji \textit{controller} oraz animacja zmiany promienia koła \textit{circleAnimation}. Kontroler ustawiany jest na stan początkowy (\textit{controller.value=0.0}). Jeżeli trening nie jest wstrzymany i dostępna jest faza oddechowa, uruchamiana jest odpowiednia animacja — rosnąca dla wdechu lub malejąca dla wydechu. Fragment funkcji init przedstawiono w listingu~\ref{code/circle/init}.
-
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={AnimatedCircle --- fragment funkcji init}, label={code/circle/init}]
-  @override
-  void initState() {
-    super.initState();
-
-    duration = widget.breathingPhase == null ? 0 : (widget.breathingPhase!.duration * 1000).toInt();
-
-    _controller = AnimationController(
-      duration: Duration(milliseconds: duration),
-      vsync: this,
-    );
-
-    _circleAnimation = Tween<double>(begin: 125.0, end: 300.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _controller.duration = Duration(milliseconds: duration);
-
-    _controller.value = 0.0;
-
-    if (!widget.isPaused && widget.breathingPhase != null) {
-      if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.inhale) {
-        _controller.forward(from: 0.0);
-      } else if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.exhale) {
-        _controller.reverse(from: 1.0);
-      }
-    }
-  }
-\end{lstlisting}
-\end{figure}
-
-Zachowanie koła zależne jest od jego poprzedniego stanu i zmiany parametrów wejściowych. Jeżeli faza oddechowa się zmieniła, względem ostatniego stanu następuje reakcja zmiany animacji. Ponownie obliczany jest czas trwania animacji (zmienna \textit{duration}) i ustawiane zostaje poprawne zachowanie — wzrost promienia dla wdechu i jego zmniejszenie dla wydechu. Aktualizację stanu przedstawiono w listingu~\ref{code/circle/update}
+Zachowanie koła zależne jest od jego poprzedniego stanu i zmiany parametrów wejściowych. Jeżeli faza oddechowa się zmieniła, względem ostatniego stanu następuje reakcja zmiany animacji. Ponownie obliczany jest czas trwania animacji i ustawiane zostaje poprawne zachowanie --- wzrost promienia dla wdechu i jego zmniejszenie dla wydechu. Aktualizację stanu przedstawiono w listingu~\ref{code/circle/update}
 
 \begin{figure}[h]
 \centering
 \begin{lstlisting}[caption={AnimatedCircle --- aktualizacja stanu}, label={code/circle/update}]
-    if (widget.breathingPhase != oldWidget.breathingPhase && widget.breathingPhase != null) {
-      log("${widget.breathingPhase?.breathingPhaseType.name}");
+IF StanKomponentu != PoprzedniStanKomponentu THEN
+  IF Faza == null THEN
+    CzasTrwaniaAnimacji := 0
+  ELSE
+    CzasTrwaniaAnimacji := CzasTrwaniaFazy
+  END IF
 
-      duration = widget.breathingPhase == null ? 0 : (widget.breathingPhase!.duration * 1000).toInt();
-      _controller.duration = Duration(milliseconds: duration);
-
-      if (!widget.isPaused && widget.breathingPhase != null) {
-        if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.inhale) {
-          _controller.forward(from: 0.0);
-        } else if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.exhale) {
-          _controller.reverse(from: 1.0);
-        }
-      } else {
-        _controller.stop();
-      }
-    }
+  IF TreningZapauzowany AND Faza != null THEN
+    IF Faza.Typ == Wdech THEN
+      KoloRosnie()
+    ELSE IF Faza.Typ == Wydech THEN
+      KoloMaleje()
+    END IF
+  ELSE
+    Kontroler.stop()
+  END IF
+END IF
 \end{lstlisting}
 \end{figure}
 
 Koło \texttt{AnimatedCircle} reaguje również na zmianę parametru \textit{isPaused}, która określa czy trening został zatrzymany. Jeśli tak, animacja zostaje wstrzymana, w innym wypadku, jeśli trening był zatrzymany i został wznowiony, animacja zostaje kontynuowana w kierunku wynikającym z~bieżącej fazy. Fragment ten przedstawiono w listingu~\ref{code/circle/pause}.
-
-\begin{figure}[h]
-\centering
-\begin{lstlisting}[caption={AnimatedCircle --- reakcja na pauzę i wznowienie}, label={code/circle/pause}]
-if (widget.isPaused && !oldWidget.isPaused) {
-      _controller.stop();
-    } else if (!widget.isPaused && oldWidget.isPaused) {
-      if (widget.breathingPhase != null) {
-        if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.inhale) {
-          _controller.forward();
-        } else if (widget.breathingPhase!.breathingPhaseType == breathing_phase.BreathingPhaseType.exhale) {
-          _controller.reverse();
-        }
-      }
-    }
-\end{lstlisting}
-\end{figure}
 
 Dodatkowo utworzony został obiekt łączący \texttt{AnimatedCircle} oraz dwa koła statyczne typu \texttt{Container} wizualizujące maksymalną i minimalną wartość promienia koła \texttt{AnimatedCircle}, by umożliwić użytkownikowi lepiej ocenić przebieg wdechu i wydechu.
 
@@ -703,77 +464,13 @@ Dodatkowo utworzony został obiekt łączący \texttt{AnimatedCircle} oraz dwa k
 \end{itemize}
 Gdy zachodzi zmiana fazy, cała lista przesuwa się w lewo, a na końcu pojawia się nowy kafelek z~kolejną instrukcją.
 
-Obiekt przyjmuje trzy parametry — \textit{preparationTime}, czyli czas trwania fazy przygotowania przed treningiem, kolejkę \textit{breathingPhasesQueue}, która jest ciągiem faz oddechowych w treningu oraz \textit{change}, która jest wyznacznikiem zmiany obecnie trwającej fazy. Fragment tworzenia klasy przedstawiony został w listingu~\ref{code/slider/constructor}.
+Obiekt przyjmuje trzy parametry — czas trwania fazy przygotowania przed treningiem, kolejkę faz oddechowych w treningu oraz flagę zmiany obecnie trwającej fazy.
 
-\begin{figure}[h] 
-\centering
-\begin{lstlisting}[caption={InstructionSlider --- konstruktor}, label={code/slider/constructor}]
-double preparationTime;
-Queue<breathing_phase.BreathingPhase?> breathingPhasesQueue = Queue<breathing_phase.BreathingPhase?>();
-int change; 
+Podczas inicjalizacji obiekt tworzy pierwszy kafelek reprezentujący fazę przygotowania. Następnie dodawane są dwie fazy z kolejki faz treningu w tej samej formie. Każdy kafelek przechowuje tekst w postaci instrukcji dla użytkownika i informację, na której pozycji ma się znaleźć.
 
-InstructionSlider({super.key,required this.preparationTime,  required this.breathingPhasesQueue, required this.change});
-\end{lstlisting}
-\end{figure}
+\texttt{InstructionSlider} korzysta z \texttt{AnimationController}, który przy każdej zmianie fazy przesuwa wszystkie kafelki o jedną pozycję w lewo. Każdy kafelek ma przypisaną pozycję z przedziału od -2 do 2. Wartości skrajne (-2 oraz 2) znajdują się poza obszarem widocznym dla użytkownika i służą jedynie do zapewnienia płynniejszej i estetyczniejszej animacji. W centrum ekranu znajdują się trzy środkowe pozycje: -1 odpowiada fazie poprzedniej, 0 fazie bieżącej, a 1 fazie nadchodzącej. Gdy kafelek na pozycji -2 i ma zostać przesunięty, zostaje usunięty w celach optymalizacyjnych.Dodatkowo wykorzystywany jest mechanizm skalowania środkowego kafelka w celu wizualnego podkreślenia aktualnie trwającej fazy.
 
-Podczas inicjalizacji obiekt tworzy pierwszy kafelek reprezentujący fazę przygotowania. Następnie dodawane są dwie fazy z kolejki faz treningu w tej samej formie. Każdy kafelek przechowuje tekst w postaci instrukcji dla użytkownika i informację, na której pozycji ma się znaleźć. Fragment dodawania obiektów przedstawiono w listingu~\ref{code/slider/init}.
-
-\begin{figure}[h] 
-\centering
-\begin{lstlisting}[caption={InstructionSlider --- fragment funkcji init}, label={code/slider/init}]
-_blocks.add(
-  InstructionBlock(
-    text: translationProvider.getTranslation(
-      "BreathingPage.InstructionSlider.get_ready_block_text") + "\n${widget.preparationTime} s", 
-    position: 0.0)
-);
-
-addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(1));
-addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(2));
-\end{lstlisting}
-\end{figure}
-
-\texttt{InstructionSlider} korzysta z \texttt{AnimationController}, który przy każdej zmianie fazy przesuwa wszystkie kafelki o jedną pozycję w lewo. Każdy kafelek ma przypisaną pozycję z przedziału od -2 do 2. Wartości skrajne (-2 oraz 2) znajdują się poza obszarem widocznym dla użytkownika i służą jedynie do zapewnienia płynniejszej i estetyczniejszej animacji. W centrum ekranu znajdują się trzy środkowe pozycje: -1 odpowiada fazie poprzedniej, 0 fazie bieżącej, a 1 fazie nadchodzącej. Gdy kafelek na pozycji -2 i ma zostać przesunięty, zostaje usunięty w celach optymalizacyjnych. Dokładną implementację animacji przedstawiono w listingu~\ref{code/slider/animation}. Dodatkowo wykorzystywany jest mechanizm skalowania środkowego kafelka w celu wizualnego podkreślenia aktualnie trwającej fazy.
-
-\begin{figure}[h] 
-\centering
-\begin{lstlisting}[caption={InstructionSlider --- animacja}, label={code/slider/animation}]
-_controller = AnimationController(vsync: this, duration: duration);
-_animation = Tween<double>(begin: 0.0, end: -1.0).animate(
-  CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-);
-_controller.addStatusListener((status) {
-  if (status == AnimationStatus.completed) {
-    _controller.reset();
-    setState(() {
-      final removed = _blocks.where((b) => b.position <= -2).toList();
-      _blocks.removeWhere((b) => b.position <= -2);
-      _blocks.forEach((b) => b.position += _animation.value); 
-      _blocks.forEach((b) => b.position -= 1);
-    });
-  }
-});
-\end{lstlisting}
-\end{figure}
-
-Każda zmiana fazy powoduje uruchomienie aktualizacji stanu komponentu. Mechanizm opiera się na porównaniu poprzedniej i bieżącej wartości parametru \textit{change}. Dzięki temu komponent wykrywa moment rozpoczęcia nowej fazy. Obliczany jest wtedy czas trwania nowej fazy, wywoływana jest animacja oraz dodawany nowy kafelek z instrukcją. Funkcję aktualizacji przedstawiono w listingu kodu~\ref{code/slider/update}.
-
-\begin{figure}[h] 
-\centering
-\begin{lstlisting}[caption={InstructionSlider --- aktualizacja stanu}, label={code/slider/update}]
-if(oldWidget.change != widget.change) {
-  final int phaseDuration = (widget.breathingPhasesQueue.elementAt(0)?.duration.toInt() != null)
-    ? (widget.breathingPhasesQueue.elementAt(0)!.duration * 1000).toInt() - 50 
-    : 400;
-  _controller.duration = Duration(milliseconds: min(phaseDuration,400));
-  _controller.forward();
-  if(_blocks.last.text!=translationProvider.getTranslation(
-    "BreathingPage.InstructionSlider.ending_tile_text")) {
-    addNewBreathingPhase(widget.breathingPhasesQueue.elementAt(2));
-  }
-}
-\end{lstlisting}
-\end{figure}
+Każda zmiana fazy powoduje uruchomienie aktualizacji stanu komponentu. Mechanizm opiera się na porównaniu poprzedniej i bieżącej wartości parametru \textit{change}. Dzięki temu komponent wykrywa moment rozpoczęcia nowej fazy. Obliczany jest wtedy czas trwania nowej fazy, wywoływana jest animacja oraz dodawany nowy kafelek z instrukcją.
 
 \section{Dźwięki (\Jakub)} \label{sec:Sounds}
 
