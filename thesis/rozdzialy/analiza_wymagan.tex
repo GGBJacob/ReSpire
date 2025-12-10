@@ -1,0 +1,206 @@
+\chapter{Analiza wymagań (\Hania,\ \Ola)}
+
+W niniejszym rozdziale przedstawione zostały wymagania projektowanej aplikacji. Użyto w~tym celu trzech modeli --- przypadków użycia, klas oraz sterowania dźwiękami.
+
+\section{Model przypadków użycia (\Ola)}
+Celem modelu jest określenie głównych funkcji aplikacji, aktorów oraz relacji między nimi. W jego zakres wchodzą wszystkie funkcje dostępne dla użytkownika końcowego. Wyróżnionych zostało czterech aktorów, w tym jeden ożwiony: osoba korzystająca z aplikacji oraz trzech nieożywionych: lokalna baza danych, syntezator mowy oraz odtwarzacz dźwięków. Ze względu na~czytelność, diagram przypadków użycia został podzielony na trzy mniejsze części, gdzie zgrupowane są przypadki ze sobą powiązane. 
+
+Pierwszy z diagramów został przedstawiony na rysunku \ref{img/przypadki_uzycia_1}. Zawiera podstawowe przypadki użycia, takie jak: wyświetlanie strony treningu (opis przypadku w tabeli \ref{tab:wyswietlenie_strony_treningu}) lub ustawień, usuwanie (tabela \ref{tab:usuwanie_treningu}), eksport (tabela \ref{tab:eksport_treningu}), import (tabela \ref{tab:import_treningu}), edycję (tabela \ref{tab:edycja_treningu}), dodawanie (tabela \ref{tab:dodawanie_treningu}), odtwarzanie (tabela \ref{tab:odtwarzanie_treningu}) lub wyświetlanie listy albo szczegółów treningów oddechowych. Relacje include (pol. zawierania) i extend (pol. rozszerzenia) powiązane z przypadkami dodawania, edycji oraz odtwarzania zostały przedstawione na kolejnych, odrębnych diagramach.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.17]{obrazki/analiza_wymagan/przypadki_uzycia_1.jpg}
+\caption{Główne przypadki użycia dla aplikacji ReSpire}
+\label{img/przypadki_uzycia_1}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie listy treningów} (opisany w tabeli\ref{tab:wyswietlenie_strony_treningu}).\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie wyświetlenia strony wybranego treningu.\\
+& 2. System wyświetla stronę zgodnie z żądaniem.\\
+& 3. Użytkownik może zgłosić żądanie edycji (opisanej w tabeli \ref{tab:edycja_treningu}), usunięcia (tabela \ref{tab:usuwanie_treningu}), eksportu (tabela \ref{tab:eksport_treningu}) lub odtworzenia treningu (tabela \ref{tab:odtwarzanie_treningu}). \\ \hline
+\textbf{Przebieg alternatywny} & brak \\ \hline
+\textbf{Warunki końcowe} & brak \\ \hline
+\end{tabular}
+\caption{Wyświetlenie strony treningu}
+\label{tab:wyswietlenie_strony_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie strony treningu} (opisany w tabeli \ref{tab:wyswietlenie_strony_treningu}).\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie usunięcia treningu.\\
+& 2. System wyświetla okno z prośbą o potwierdzenie akcji.\\
+& 3. Użytkownik potwierdza żądanie.\\
+& 4. Użytkownik zgłasza żądanie opuszczenia strony edycji. \\
+& 5. System usuwa trening z bazy.\\\hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik nie zgłasza żadnego żądania modyfikacji treningu. \\ 
+& 3a1. Użytkownik zgłasza żądanie opuszczenia strony edycji.\\
+& 3a2. Przypadek użycia zostaje przerwany. \\ \hline
+\textbf{Warunki końcowe} & Trening jest poprawnie usunięty i nie wyświetla się na liście. \\ \hline
+\end{tabular}
+\caption{Usuwanie treningu}
+\label{tab:usuwanie_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Użytkownik znajduje się na stronie głównej.\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie importu treningu.\\
+& 2. System wyświetla okno z eksploratorem plików.\\
+& 3. Użytkownik wybiera plik w formacie JSON do importu.\\
+& 4. System wyświetla potwierdzenie o udanej akcji.\\ \hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik wybiera plik o błędnym rozszerzeniu, złej strukturze lub przerywa akcję. \\ 
+& 3a1. Przypadek użycia zostaje przerwany, system wyświetla odpowiedni komunikat. \\ \hline
+\textbf{Warunki końcowe} & Trening lub treningi zostają poprawnie zaimportowane i pojawiają się na~liście. \\ \hline
+\end{tabular}
+\caption{Import treningu}
+\label{tab:import_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie strony treningu} (opisany w tabeli \ref{tab:wyswietlenie_strony_treningu}) lub otwarta jest strona główna.\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie eksportu treningu (lub treningów).\\
+& 2. System wyświetla okno eksploratora plików.\\
+& 3. Użytkownik wybiera tytuł pliku oraz jego lokalizację i potwierdza żądanie zapisu. \\
+& 4. System wyświetla potwierdzenie zapisu.\\\hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik przerywa akcję zapisu. \\ 
+& 3a1. Przypadek użycia zostaje przerwany, system wyświetla odpowiedni komunikat. \\ \hline
+\textbf{Warunki końcowe} & Trening w formacie JSON zostaje zapisany na urządzeniu użytkownika. \\ \hline
+\end{tabular}
+\caption{Eksport treningu}
+\label{tab:eksport_treningu}
+\end{table}
+
+
+Drugi diagram został przedstawiony na rysunku \ref{img/przypadki_uzycia_2}. Przedstawia wspomniane wcześniej: edycję treningu (opisaną w tabeli \ref{tab:edycja_treningu}) oraz dodawnie treningu (tabela \ref{tab:dodawanie_treningu}) wraz z powiązanymi z~nim przypadkami.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.20]{obrazki/analiza_wymagan/przypadki_uzycia_2.jpg}
+\caption{Przypadki użycia dla aplikacji ReSpire --- edycja treningu}
+\label{img/przypadki_uzycia_2}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, widok ze szczegółami treningu jest otwarty.  \\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie edycji treningu.\\
+& 2. System przenosi użytkownika na stronę edytora.\\
+& 3. Użytkownik może zgłosić żądania: edycji opisu, tytułu, dźwięków w~tle lub zmiany, dodania czy usunięcia etapu (wraz z fazami).\\
+& 4. Użytkownik zgłasza żądanie opuszczenia strony edytora. \\
+& 5. System dokonuje aktualizacji treningu o wprowadzone zmiany\\ \hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik nie zgłasza żadnego żądania modyfikacji treningu. \\ 
+& 3a1. Użytkownik zgłasza żądanie opuszczenia strony edytora.\\
+& 3a2. Przypadek użycia zostaje przerwany. \\ \hline
+\textbf{Warunki końcowe} & Trening jest poprawnie zaktualizowany o wprowadzone zmiany. \\ \hline
+\end{tabular}
+\caption{Edycja treningu}
+\label{tab:edycja_treningu}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening,wykonano przypadek użycia \textit{Wyświetlenie strony treningu} (opisany w tabeli \ref{tab:wyswietlenie_strony_treningu}). \\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie dodania treningu.\\
+& 2. System przenosi użytkownika na stronę edytora.\\
+& 3. Użytkownik zgłasza żądania dodania etapów wraz z fazami. \\
+& 4. Użytkownik może także zgłosić żądania: edycji opisu, tytułu, dźwięków w tle lub usunięcia etapów/faz.\\
+& 5. Użytkownik zgłasza żądanie opuszczenia strony edytora.\\
+& 6. System dokonuje aktualizacji listy treningów.\\ \hline
+\textbf{Przebieg alternatywny} 
+& 3a. Użytkownik nie zgłasza żądania dodania żadnego elementu treningu.\\ 
+& 3a1. Użytkownik zgłasza żądanie opuszczenia strony edytora.\\
+& 3a2. System wyświetla komunikat o pustym treningu.\\
+& 3a3. Użytkownik potwierdza chęć przerwania dodawania treningu i~przypadek użycia zostaje przerwany lub wraca do punktu 3.\\ 
+& 3b. Użytkownik zgłasza żądanie dodania etapów bez dodania faz.\\ 
+& 3b1. System wyświetla komunikat o niepełnym treningu.\\
+& 3b2. Użytkownik uzupełnia trening o brakujące elementy, a następnie wraca~do punktu 4 lub rezygnuje z dodania treningu i~przypadek użycia zostaje przerwany.\\ \hline
+\textbf{Warunki końcowe} & Trening został dodany do listy. \\ \hline
+\end{tabular}
+\caption{Dodawanie treningu}
+\label{tab:dodawanie_treningu}
+\end{table}
+
+
+Ostatni, trzeci diagram został przedstawiony na rysunku \ref{img/przypadki_uzycia_3}.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{obrazki/analiza_wymagan/przypadki_uzycia_3.png}
+\caption{Przypadki użycia dla aplikacji ReSpire --- odtwarzanie treningu}
+\label{img/przypadki_uzycia_3}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+\textbf{Warunki początkowe} & Istnieje co najmniej jeden trening, wykonano przypadek użycia \textit{Wyświetlenie strony treningu} (opisany w tabeli \ref{tab:wyswietlenie_strony_treningu}).\\ \hline
+\textbf{Przebieg} & 
+1. Użytkownik zgłasza żądanie odtworzenia treningu.\\
+& 2. System odtwarza trening z wizualizacją.\\
+& 3. Jeśli zostały ustwione odpowiednie parametry w edytorze syntezator mowy może zażądać odtworzenia instrukcji głosowych, a odtwarzacz dźwięków --- odtwarzania dźwięków lub wybranych częstotliwości. \\
+& 4. Użytkownik może zażądać wstrzymania treningu.\\
+& 5. System zakańcza odtwarzanie treningu po upływie określonego czasu. \\ \hline
+\textbf{Przebieg alternatywny} 
+& 2a. Użytkownik zgłasza żądanie opuszczenia treningu. \\ 
+& 3a1. System wyświetla okno z zapytaniem o potwierdzenie akcji.\\
+& 3a2. Użytkownik potwierdza żądanie opuszczenia treningu i przypadek użycia zostaje przerwany lub anuluje akcje i wraca do~punktu 2. \\ \hline
+\textbf{Warunki końcowe} & Następuje powrót na stronę szczegółów treningu. \\ \hline
+\end{tabular}
+\caption{Odtwarzanie treningu}
+\label{tab:odtwarzanie_treningu}
+\end{table}
+
+\newpage
+\section{Model sterowania dźwiękami (\Hania)}
+
+W celu zobrazowania logiki sterowania warstwą dźwiękową i dostępnych strategii organizacji dźwięków w opracowanej aplikacji treningu oddechowego przygotowano dwa diagramy --- sterowania muzyką w tle i dźwiękami w etapie. Przyjęto jednolitą konwencję graficzną, w której prostokąty z przerywaną ramką oznaczają ścieżki dźwiękowe, natomiast prostokąty z ciągłą ramką reprezentują struktury logiczne aplikacji, takie jak etapy, cykle i fazy oddechowe. Identyczny kolor wypełnienia wskazuje na tę samą ścieżkę dźwiękową, a strzałka pozioma symbolizuje oś~czasu. Warto wspomnieć, iż każdy dźwięk przedstawiony w poniższych diagramach może również zostać wyłączony, jeśli użytkownik preferuje wykonywać ćwiczenia w ciszy.
+
+Diagram sterowania muzyką w tle przedstawiony został na rysunku \ref{img/dzwieki_w_tle}. Prezentuje on~cztery dostępne tryby konfiguracji warstwy muzycznej całej sesji treningowej. We wszystkich trybach występują muzyka rozpoczęcia i muzyka zakończenia. Pierwszy tryb przewiduje jedną, wspólną ścieżkę muzyczną odtwarzaną przez cały czas trwania głównej części treningu. Drugi tryb umożliwia przypisanie osobnej muzyki do każdego etapu treningu, dzięki czemu zmiana utworu wyraźnie sygnalizuje przejście do kolejnej sekwencji faz. Trzeci tryb uzależnia wybór muzyki wyłącznie od~rodzaju fazy oddechowej (wdech, retencja, wydech, regeneracja), co oznacza, że ta sama faza w~różnych etapach korzysta z identycznej ścieżki. Najbardziej elastyczny, czwarty tryb łączy zależności opcji drugiej i trzeciej --- muzyka zależy jednocześnie od etapu i rodzaju fazy, pozwalając na przykład na zróżnicowanie charakteru wszystkich wdechów w etapie pierwszym od wdechów w etapie drugim.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{obrazki/analiza_wymagan/dzwieki_w_tle.jpg}
+\caption{Diagram sterowania muzyką w tle}
+\label{img/dzwieki_w_tle}
+\end{figure}
+
+Diagram sterowania krótkimi dźwiękami w etapie przedstawiony został na rysunku \ref{img/dzwieki_w_etapie}. Ilustruje on sposób wyzwalania dźwięków sygnalizujących zmiany oraz odliczanie czasu w fazach. Zaprojektowano dwa wzajemnie wykluczające się warianty --- dźwięk zmiany etapu, odtwarzany wyłącznie na początku pierwszego cyklu nowego etapu, oraz dźwięk zmiany cyklu, pojawiający się na starcie każdego kolejnego cyklu w obrębie tego samego etapu. Po sygnale zmiany następuje właściwy cykl oddechowy, w którym na początku każdej fazy odtwarzany jest krótki sygnał informujący o jej rozpoczęciu. Następnie w fazach odtwarzana jest sekwencja odliczająca, reprezentowana przez bloki \textit{3}, \textit{2} i \textit{1}. Rozwiązanie to zapewnia precyzyjne prowadzenie użytkownika w~czasie rzeczywistym.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{obrazki/analiza_wymagan/dzwieki_w_etapie.jpg}
+\caption{Diagram sterowania dźwiękami w etapie}
+\label{img/dzwieki_w_etapie}
+\end{figure}

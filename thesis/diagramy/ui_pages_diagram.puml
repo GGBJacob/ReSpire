@@ -1,0 +1,141 @@
+@startuml
+set namespaceSeparator ::
+
+class "respire::pages::BreathingPage.dart::BreathingPage" {
+  +Training training
+  +State<StatefulWidget> createState()
+}
+
+"respire::pages::BreathingPage.dart::BreathingPage" o-- "respire::components::Global::Training.dart::Training"
+
+class "respire::pages::BreathingPage.dart::_BreathingPageState" {
+  +TrainingParser parser
+  +TrainingController? controller
+  +int second
+  +int breathingPhases
+  +TranslationProvider translationProvider
+  -bool _isPreloading
+  -double _preloadProgress
+  -int _loadedCount
+  -int _totalCount
+  -String? _currentlyLoading
+  +void initState()
+  +void didChangeAppLifecycleState()
+  -dynamic _preloadAudio()
+  +void dispose()
+  -void _showConfirmationDialog()
+  +Widget textInCircle()
+  +Widget build()
+}
+
+"respire::pages::BreathingPage.dart::_BreathingPageState" o-- "respire::components::BreathingPage::TrainingParser.dart::TrainingParser"
+"respire::pages::BreathingPage.dart::_BreathingPageState" o-- "respire::services::TrainingController.dart::TrainingController"
+"respire::pages::BreathingPage.dart::_BreathingPageState" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+
+class "respire::pages::HomePage.dart::HomePage" {
+  +State<HomePage> createState()
+}
+
+class "respire::pages::HomePage.dart::_HomePageState" {
+  +PresetDataBase db
+  +int breathCount
+  +int inhaleTime
+  +int exhaleTime
+  +int retentionTime
+  +TranslationProvider translationProvider
+  -bool _isSelectionMode
+  -Set<int> _selectedIndices
+  +void initState()
+  +void dispose()
+  +void loadValues()
+  -void _toggleSelectionMode()
+  -void _toggleSelection()
+  -void _selectAll()
+  -void _deselectAll()
+  -dynamic _exportSelected()
+  -dynamic _refreshPresets()
+  +dynamic importTraining()
+  +Widget build()
+}
+
+"respire::pages::HomePage.dart::_HomePageState" o-- "respire::services::PresetDataBase.dart::PresetDataBase"
+"respire::pages::HomePage.dart::_HomePageState" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+
+class "respire::pages::SettingsPage.dart::SettingsPage" {
+  +State<StatefulWidget> createState()
+}
+
+class "respire::pages::SettingsPage.dart::_SettingsPageState" {
+  +TranslationProvider translationProvider
+  +bool photoAdded
+  -Widget _firstBox()
+  +Widget build()
+}
+
+"respire::pages::SettingsPage.dart::_SettingsPageState" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+
+class "respire::pages::TrainingEditorPage.dart::TrainingEditorPage" {
+  +Training training
+  +_TrainingEditorPageState createState()
+}
+
+"respire::pages::TrainingEditorPage.dart::TrainingEditorPage" o-- "respire::components::Global::Training.dart::Training"
+
+class "respire::pages::TrainingEditorPage.dart::_TrainingEditorPageState" {
+  +List<TrainingStage> trainingStages
+  +Settings settings
+  -int _selectedTab
+  -Sounds _sounds
+  +int titleMaxLength
+  +TranslationProvider translationProvider
+  -SoundScope _previousBackgroundScope
+  +void initState()
+  +void addTrainingStage()
+  +void removeTrainingStage()
+  +void reorderTrainingStage()
+  +void dispose()
+  +void showEditTitleDialog()
+  -void _showAlert()
+  +Widget build()
+  +void toggleBinauralBeats()
+  +List<Widget> buildPhaseSoundRows()
+}
+
+"respire::pages::TrainingEditorPage.dart::_TrainingEditorPageState" o-- "respire::components::Global::Settings.dart::Settings"
+"respire::pages::TrainingEditorPage.dart::_TrainingEditorPageState" o-- "respire::components::Global::Sounds.dart::Sounds"
+"respire::pages::TrainingEditorPage.dart::_TrainingEditorPageState" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+"respire::pages::TrainingEditorPage.dart::_TrainingEditorPageState" o-- "respire::components::Global::SoundScope.dart::SoundScope"
+
+class "respire::pages::TrainingPage.dart::TrainingPage" {
+  +int index
+  +PresetDataBase db
+  +_TrainingPageState createState()
+}
+
+"respire::pages::TrainingPage.dart::TrainingPage" o-- "respire::services::PresetDataBase.dart::PresetDataBase"
+
+class "respire::pages::TrainingPage.dart::_TrainingPageState" {
+  +Training training
+  +List<TrainingStage> trainingStages
+  -bool _expanded
+  +TranslationProvider translationProvider
+  +void initState()
+  +Widget shareButton()
+  +Widget editButton()
+  +Widget deleteButton()
+  +Widget descriptionBox()
+  +Widget startTrainingButton()
+  +Widget trainingOverviewHeader()
+  +Widget trainingOverviewInsides()
+  -String _trainingStageDisplayName()
+  +Widget trainingOverview()
+  +Widget build()
+  +dynamic removeTraining()
+  +dynamic exportTraining()
+}
+
+"respire::pages::TrainingPage.dart::_TrainingPageState" o-- "respire::components::Global::Training.dart::Training"
+"respire::pages::TrainingPage.dart::_TrainingPageState" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+
+
+@enduml

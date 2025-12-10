@@ -1,0 +1,215 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+
+\ProvidesPackage{listing}
+
+\RequirePackage{tikz} 			% Pakiet do rysowania schematów blokowych
+\RequirePackage{textcomp}		% Pakiet pomocniczy do tikz
+\usetikzlibrary{shapes,arrows}  % Pakiet pomocniczy do tikz
+\RequirePackage{listings} 	% do prezentowania listingu kodu
+\RequirePackage{float}      % do sztywnego ustawiania figur (zdjęć)
+\RequirePackage{csquotes}
+\RequirePackage{todonotes}
+
+%------------------------------------------------------------
+% Konfiguracja listingów - zdefiniować można także dodatkowe
+% style dla nowych języków, według zapotrzebowania
+%------------------------------------------------------------
+
+% Definicje kolorów dla listingów
+\definecolor{WhitePG}{RGB}{250, 250, 250}
+\definecolor{BluePG}{RGB}{10, 55,100}
+\definecolor{RedPG}{RGB}{227,27,35}
+\definecolor{GreenPG}{RGB}{0,153,0}
+
+\definecolor{codebg}{RGB}{250,250,250}
+\definecolor{keyword}{RGB}{33,77,177}      % ładniejszy niebieski
+\definecolor{string}{RGB}{186,33,33}
+\definecolor{comment}{RGB}{0,128,0}
+\definecolor{flutter}{RGB}{111,66,193}     % fiolet Fluttera
+
+% === OFICJALNA DEFINICJA JĘZYKA DART (z listings 2024/2025) ===
+\lstdefinelanguage{Dart}{
+  morekeywords={abstract,as,assert,async,await,break,case,catch,class,const,continue,
+    covariant,default,deferred,do,dynamic,else,enum,export,extends,extension,external,
+    factory,false,final,finally,for,Function,get,hide,if,implements,import,in,is,
+    library,mixin,new,null,on,operator,part,patch,rethrow,return,set,show,static,
+    super,switch,sync,this,throw,true,try,typedef,var,void,while,with,yield},
+  morecomment=[l]{//}, morecomment=[s]{/*}{*/},
+  morestring=[b]", morestring=[b]',
+  sensitive=true
+}
+\lstdefinestyle{matlab}{
+  backgroundcolor=\color{WhitePG},         % kolor tła dla listingu
+  basicstyle=\linespread{1}\footnotesize,  % rozmiar czcionki dla kodu w listingu
+  breakatwhitespace=false,                 % ustawienie białej spacji
+  breaklines=true,                         % automatyczne łamanie linii
+  captionpos=b,                            % opis listingu pod ramką
+  commentstyle=\color{GreenPG},            % ustawienia komentarzy, (kolor)
+  deletekeywords={...},                    % usuwane słowa kluczowe z danego języka
+  escapeinside={\%*}{*)},                  % znaki pozwalające zamieścić kod LaTeX w listingu
+  extendedchars=true,                      % używanie znaków non-ASCII
+  firstnumber=1,                           % początkowy numer linii
+  frame=single,	                         % styl ramki wokół kodu
+  keepspaces=true,                         % zachowywanie sformatowania kodu w listingu
+  keywordstyle=\color{BluePG}\bfseries,    % ustawienia dla wyglądu słów kluczowych w kodzie (kolor)
+  language=Matlab,                 % wybór języka kodu w listingu
+  morekeywords={*,...},            % dodatkowe słowa kluczowe dla danego języka
+  numbers=left,                    % umiejscowienie numeracji linii kodu (po lewej, prawej)
+  numbersep=5pt,                   % odległość numeracji linii od ramki
+  numberstyle=\tiny\color{black},  % ustawienia rozmiaru itp, dla numeracji linii
+  rulecolor=\color{black},         % zmiana koloru ramki przy łamaniu wiersza
+  showspaces=false,                % 
+  showstringspaces=false,          % 
+  showtabs=false,                  % 
+  stepnumber=1,                    % odstęp pomiędzy liniami listingu
+  stringstyle=\color{RedPG},       % ustawienie wyglądu dla łańcuchów znaków
+  tabsize=2,	                     % ustawienie rozmiaru tabulatora
+  title=\lstname                   % tytuł listingu na podstawie nazwy pliku kodu
+}
+
+
+\lstdefinestyle{cpp}{
+  backgroundcolor=\color{WhitePG},         % kolor tła dla listingu
+  basicstyle=\linespread{1}\footnotesize,  % rozmiar czcionki dla kodu w listingu
+  breakatwhitespace=false,                 % ustawienie białej spacji
+  breaklines=true,                         % automatyczne łamanie linii
+  captionpos=b,                            % opis listingu pod ramką
+  commentstyle=\color{GreenPG},            % ustawienia komentarzy, (kolor)
+  deletekeywords={...},                    % usuwane słowa kluczowe z danego języka
+  escapeinside={\%*}{*)},                  % znaki pozwalające zamieścić kod LaTeX w listingu
+  extendedchars=true,                      % używanie znaków non-ASCII
+  firstnumber=1,                           % początkowy numer linii
+  frame=single,	                         % styl ramki wokół kodu
+  keepspaces=true,                         % zachowywanie sformatowania kodu w listingu
+  keywordstyle=\color{BluePG}\bfseries,    % ustawienia dla wyglądu słów kluczowych w kodzie (kolor)
+  language=C++,                    % wybór języka kodu w listingu
+  morekeywords={*,...},            % dodatkowe słowa kluczowe dla danego języka
+  numbers=left,                    % umiejscowienie numeracji linii kodu (po lewej, prawie)
+  numbersep=5pt,                   % odległość numeracji linii od ramki
+  numberstyle=\tiny\color{black},  % ustawienia rozmiaru itp, dla numeracji linii
+  rulecolor=\color{black},         % zmiana koloru ramki przy łamaniu wiersza
+  showspaces=false,                % 
+  showstringspaces=false,          % 
+  showtabs=false,                  % 
+  stepnumber=1,                    % odstęp pomiędzy liniami listingu
+  stringstyle=\color{RedPG},       % ustawienie wyglądu dla łańcuchów znaków
+  tabsize=2,	                     % ustawienie rozmiaru tabulatora
+  title=\lstname                   % tytuł listingu na podstawie nazwy pliku kodu
+}
+
+\lstdefinestyle{java}{
+  backgroundcolor=\color{WhitePG},         % kolor tła dla listingu
+  basicstyle=\linespread{1}\footnotesize,  % rozmiar czcionki dla kodu w listingu
+  breakatwhitespace=false,                 % ustawienie białej spacji
+  breaklines=true,                         % automatyczne łamanie linii
+  captionpos=b,                            % opis listingu pod ramką
+  commentstyle=\color{GreenPG},            % ustawienia komentarzy, (kolor)
+  deletekeywords={...},                    % usuwane słowa kluczowe z danego jêzyka
+  escapeinside={\%*}{*)},                  % znaki pozwalające zamieścić kod LaTeX w listingu
+  extendedchars=true,                      % używanie znaków non-ASCII
+  firstnumber=1,                           % początkowy numer linii
+  frame=single,	                         % styl ramki wokół kodu
+  keepspaces=true,                         % zachowywanie sformatowania kodu w listingu
+  keywordstyle=\color{BluePG}\bfseries,    % ustawienia dla wyglądu słów kluczowych w kodzie (kolor)
+  language=Java,                   % wybór języka kodu w listingu
+  morekeywords={*,...},            % dodatkowe słowa kluczowe dla danego języka
+  numbers=left,                    % umiejscowienie numeracji linii kodu (po lewej, prawie)
+  numbersep=5pt,                   % odległość numeracji linii od ramki
+  numberstyle=\tiny\color{black},  % ustawienia rozmiaru itp, dla numeracji linii
+  rulecolor=\color{black},         % zmiana koloru ramki przy łamaniu wiersza
+  showspaces=false,                % 
+  showstringspaces=false,          % 
+  showtabs=false,                  % 
+  stepnumber=1,                    % odstęp pomiędzy liniami listingu
+  stringstyle=\color{RedPG},       % ustawienie wyglądu dla łańcuchów znaków
+  tabsize=2,	                     % ustawienie rozmiaru tabulatora
+  title=\lstname                   % tytuł listingu na podstawie nazwy pliku kodu
+}
+
+\lstdefinestyle{vhdl}{
+backgroundcolor=\color{WhitePG},            % kolor tła dla listingu
+  basicstyle=\linespread{1}\footnotesize,   % rozmiar czcionki dla kodu w listingu
+  breakatwhitespace=false,                  % ustawienie białej spacji
+  breaklines=true,                          % automatyczne łamanie linii
+  captionpos=b,                             % opis listingu pod ramką
+  commentstyle=\color{GreenPG},             % ustawienia komentarzy, (kolor)
+  deletekeywords={...},                     % usuwane słowa kluczowe z danego języka
+  escapeinside={\%*}{*)},                   % znaki pozwalające zamieścić kod LaTeX w listingu
+  extendedchars=true,                       % używanie znaków non-ASCII
+  firstnumber=1,                            % początkowy numer linii
+  frame=single,	                          % styl ramki wokół kodu
+  keepspaces=true,                          % zachowywanie sformatowania kodu w listingu
+  keywordstyle=\color{BluePG}\bfseries,     % ustawienia dla wyglądu słów kluczowych w kodzie (kolor)
+  language=VHDL,                   % wybór języka kodu w listingu
+  morekeywords={*,...},            % dodatkowe słowa kluczowe dla danego języka
+  numbers=left,                    % umiejscowienie numeracji linii kodu (po lewej, prawie)
+  numbersep=5pt,                   % odległość numeracji linii od ramki
+  numberstyle=\tiny\color{black},  % ustawienia rozmiaru itp, dla numeracji linii
+  rulecolor=\color{black},         % zmiana koloru ramki przy łamaniu wiersza
+  showspaces=false,                % 
+  showstringspaces=false,          % 
+  showtabs=false,                  % 
+  stepnumber=1,                    % odstęp pomiêdzy liniami listingu
+  stringstyle=\color{RedPG},       % ustawienie wyglądu dla łańcuchów znaków
+  tabsize=2,	                     % ustawienie rozmiaru tabulatora
+  title=\lstname                   % tytuł listingu na podstawie nazwy pliku kodu
+}
+
+
+\lstdefinestyle{python}{
+  backgroundcolor=\color{WhitePG},          % kolor tła dla listingu
+  basicstyle=\linespread{1}\footnotesize,   % rozmiar czcionki dla kodu w listingu
+  breakatwhitespace=false,                  % ustawienie białej spacji
+  breaklines=true,                          % automatyczne łamanie linii
+  captionpos=b,                             % opis listingu pod ramką
+  commentstyle=\color{GreenPG},             % ustawienia komentarzy, (kolor)
+  deletekeywords={...},                     % usuwane słowa kluczowe z danego języka
+  escapeinside={\%*}{*)},                   % znaki pozwalające zamieścić kod LaTeX w listingu
+  extendedchars=true,                       % używanie znaków non-ASCII
+  firstnumber=1,                            % początkowy numer linii
+  frame=single,	                          % styl ramki wokół kodu
+  keepspaces=true,                          % zachowywanie sformatowania kodu w listingu
+  keywordstyle=\color{BluePG}\bfseries,     % ustawienia dla wyglądu słów kluczowych w kodzie (kolor)
+  language=Python,                 % wybór języka kodu w listingu
+  morekeywords={*,...},            % dodatkowe słowa kluczowe dla danego języka
+  numbers=left,                    % umiejscowienie numeracji linii kodu (po lewej, po prawej)
+  numbersep=5pt,                   % odległość numeracji linii od ramki
+  numberstyle=\tiny\color{black},  % ustawienia rozmiaru itp, dla numeracji linii
+  rulecolor=\color{black},         % zmiana koloru ramki przy łamaniu wiersza
+  showspaces=false,                % 
+  showstringspaces=false,          % 
+  showtabs=false,                  % 
+  stepnumber=1,                    % odstęp pomiędzy liniami listingu
+  stringstyle=\color{RedPG},       % ustawienie wyglądu dla łańcuchów znaków
+  tabsize=2,	                     % ustawienie rozmiaru tabulatora
+  title=\lstname                   % tytuł listingu na podstawie nazwy pliku kodu
+}
+
+\lstdefinestyle{dart}{
+    language=Dart,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{keyword}\bfseries,
+    keywordstyle=[2]\color{flutter}\bfseries,
+    stringstyle=\color{string},
+    commentstyle=\color{comment}\itshape,
+    identifierstyle=\color{black},
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{gray!50},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    tabsize=2,
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    showtabs=false,
+    captionpos=b,
+    abovecaptionskip=10pt,
+    belowcaptionskip=10pt,
+    xleftmargin=10pt,
+    escapeinside={(*@}{@*)}
+}
+\lstset{style=dart}
+
+\endinput

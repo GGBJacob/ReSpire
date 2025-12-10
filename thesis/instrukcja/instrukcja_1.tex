@@ -1,0 +1,553 @@
+\chapter{Krótka instrukcja obsługi}
+
+\begin{flushright}
+  \small{
+        \parbox{8cm}{
+                {\small
+                        \textit{Do what you think is interesting,
+                        do something that you think is fun and worthwhile,
+                        because otherwise you won't do it well anyway.}
+                }
+                \vspace{.5cm}\hfill{---Brian W. Kernighan}
+        }
+ }
+\end{flushright}
+
+Pakiet \verb|SzablonPG| powstał, aby ułatwić pisanie prac dyplomowych na Politechnice Gdańskiej. Ułatwienie to ma polegać na podaniu
+szablonu \LaTeX'owego pracy dyplomowej, który będzie maksymalnie zgodny z wytycznymi dla autorów
+podanych w Zarządzeniu Rektora 22/2018 z 20 czerwca 2018 roku. W ten sposób zamiast ,,walczyć'' z \LaTeX'em lub starać się
+złożyć pracę w MS Word można skupić się na treści. Korzystanie z \LaTeX'a szczególnie w przypadku prac
+matematycznych wydaje się być wskazane z uwagi na łatwość składania i jakość złożonych formuł
+matematycznych.
+
+
+\section{Jak użyć szablonu}
+
+Szablon dostarcza klasy \verb|SzablonPG|, którą należy użyć zamiast standardowych klas np.:
+\verb|article|, \verb|report|. Plik \verb|szablonPG.cls| \textbf{musi być} umieszczony w tym samym
+katalogu, co główny plik pracy. Na początku głównego pliku pracy piszemy
+\begin{verbatim}
+    \documentclass{szablonPG}   % zamiast standardowych klas np.: article
+\end{verbatim}
+Plik \verb|SzablonPracyPG_main.tex| pokazuje jak może wyglądać praca złożona z użyciem tej klasy.
+
+\section{Pisanie w \LaTeX'u}
+
+Aby wygodnie pisać w \LaTeX'u potrzebujemy:
+\begin{enumerate}
+ \item dystrybucji \TeX'a np.: MikTeX lub TeXLive (Linux)
+ \item edytora np.: LED, WinEdit, Kile (Linux)
+\end{enumerate}
+
+Podstawowym źródłem wiedzy o programowaniu jest dostarczana z każdą dystrybucją dokumentacja:
+\begin{enumerate}
+ \item A Gentle Introduction to TEX,
+ \item The Not So Short Introduction to LATEX
+\end{enumerate}
+
+Internet jest pełen wprowadzeń, tutoriali i przykładów. Nieocenionym źródłem wiedzy są strony:
+\begin{verbatim}
+http://google.com/
+http://faq.gust.org.pl/
+http://tex.stackexchange.com/
+\end{verbatim}
+
+\section{Organizacja projektu}
+
+Pisanie w jednym pliku dużego projektu, powoduje, że w pewnym momencie ciężko odszukać wśród setek
+linii kodu tą właściwą. System \LaTeX umożliwia podzielenie kodu źródłowego na osobne pliki, służą
+do tego polecenia \verb|\input| oraz \verb|\include|. Opiszemy sposób korzystania z tego drugiego
+polecenia.
+
+Na początek dzielimy naszą pracę na logiczne fragmenty. W przypadku pracy dyplomowej mogą to być
+np.: rozdziały. Następnie tworzymy osobne pliki \TeX'owe dla każdego rozdziału i~jeden plik główny.
+
+W pliku głównym umieszczamy wszystkie deklaracje, dołączamy pakiety, których chcemy użyć i sekwencję
+\verb|\begin{document} ... \end{document}|. W tej sekwencji za pomocą polecenia \verb|\include|
+dołączamy pliki rozdziałów. W plikach rozdziałów piszemy \textbf{tylko kod rozdziału}.
+
+Załóżmy, że nasza praca składa się ze \textit{Wstępu, Rozdziału 1 i Rozdziału 2}. Tworzymy wtedy
+pliki (nazwy plików przykładowe): \verb|praca_glowny.tex|, \verb|praca_wstep.tex|,
+\verb|praca_rozdzial1.tex|, \verb|praca_rozdzial2.tex|. UWAGA! \LaTeX\ nie lubi spacji w nazwach
+plików. Przykładowo, pliki mogłyby wyglądać tak:
+\begin{multicols}{2}
+\begin{verbatim}
+% praca_glowny.tex
+\documentclass{SzablonPracyPG}
+%inne pakiety, definicje itp.
+\begin{document}
+\tableofcontents
+  \include{praca_wstep}
+  \include{praca_rozdzial1}
+  \include{praca_rozdzial2}
+% bibilografia etc.
+\end{document}
+%EOF
+\end{verbatim}
+\columnbreak
+\begin{verbatim}
+% praca_wstep.tex
+\chapter*{Wstęp}
+
+To jest wstęp.
+\end{verbatim}
+\begin{verbatim}
+% praca_rozdzial1.tex
+\chapter{Tytuł pierwszego rozdziału}
+
+Treśc pierwszego rozdziału.
+\end{verbatim}
+\begin{verbatim}
+% praca_rozdzial2.tex
+\chapter{Tytuł drugie rozdziału}
+
+Treść drugiego rozdziału.
+\end{verbatim}
+\end{multicols}
+
+Pliki nie muszą być umieszczone w tym samy katalogu co plik główny, trzeba wtedy poprzedzić
+nazwę pliku ścieżką do katalogu w którym znajduje się plik. Przykładowo można w tym celu użyć następującego polecenia: \verb|\input{rozdzialy/praca_rozdzial1.tex|. Wszystkie edytory \TeX'owe wspierają
+tworzenie projektów, czyli prace w ten sposób, pomagając w ten sposób zapanować nad strukturą pracy.
+Dla długich projektów przydatne jest także polecenie \verb|\includeonly|. 
+
+\section{Strona tytułowa i oświadczenie}
+
+
+Najprościej - umieszczamy w katalogu \textbf{meta} pliki oświadczenia oraz strony tytułowej wygenerowane z serwisu MojaPG, zapisane po uzupełnieniu danych w formacie pdf. Następnie w głównym pliku pracy dyplomowej dodajemy pliki do całego dokumentu przy użyciu poleceń:
+\begin{verbatim}
+%------------------------------------------------------------
+%  Dodanie strony tytułowej wygenerowanej z MojaPG oraz 
+%  						oświadczenia
+\includepdf{meta/strona_tytulowa.pdf}
+\includepdf{meta/oswiadczenie.pdf}
+%------------------------------------------------------------
+\end{verbatim}
+
+Polecenia te znajdują się już w przykładowym pliku głównym pracy \verb|SzablonPracyPG_main.tex|.
+
+\section{Język polski i kodowanie}
+
+W przypadku, gdy:
+\begin{enumerate}
+ \item plik \verb|SzablonPracyPG_main.tex| nie chce się kompilować,
+ \item kod źródłowy tego przykładu zawiera ,,krzaczki'',
+ \item widoczny po skompilowaniu tekst: nie zawiera polskich liter,
+ \item zamiast polskich liter wyświetla ,,krzaczki'',
+\end{enumerate}
+to jedną z przyczyn może być niewłaściwe kodowanie polskich znaków. Domyślnie przyjmujemy kodowanie
+windowsowe: \verb|cp1250|. Zmiana jest możliwa
+poprzez ręczną edycje linii
+\begin{center}
+\verb|\RequirePackage[cp1250]{inputenc}|
+\end{center}
+Możliwe wartości to:
+\begin{enumerate}
+ \item \verb|\RequirePackage[utf8]{inputenc}| (dla kodowania utf8)
+ \item \verb|\RequirePackage[latin2]{inputenc}| (dla kodowania iso8859-2)
+\end{enumerate}
+Inną możliwością jest zmiana kodowania pliku w używanym edytorze.
+
+\subsection{Kilka słów wyjaśnienia}
+
+Jedną z wielkich bolączek typografii komputerowej jest/był brak jednolitego formatu kodowania
+polskich znaków (lub ogólniej znaków innych niż występujących w angielskich tekstach). We wczesnych
+latach pojawiło się \textbf{bardzo dużo} niezgodnych ze sobą systemów. Pewną standaryzacje
+wprowadziły DOS i Windows (strony kodowe cpXXXX) i upowszechnienie WWW (warianty isoXXXX-X).
+Obecnie coraz powszechniejsze jest kodowanie w standardzie utfX.
+
+\section{Matematyka}
+
+\subsection{Środowiska twierdzeń}
+W klasie zdefiniowane są następujące środowiska matematyczne;
+
+\begin{itemize}
+  \item Definicja
+\begin{definicja}
+\label{def:pierwsza}
+Liczbę naturalną, nazywamy liczbą pierwszą, jeżeli jej jedynymi dzielnikami jest $1$ i ona sama.
+\end{definicja}
+\begin{verbatim}
+\begin{definicja}
+Liczbę naturalną, nazywamy liczbą pierwszą, jeżeli jej jedynymi dzielnikami
+jest $1$ i ona sama.
+\end{definicja}
+\end{verbatim}
+
+  \item Lemat
+\begin{lemat}
+Niech $p$ będzie liczbą pierwszą. Jeżeli $p|ab$, to $p|a$ lub $p|b$.
+\end{lemat}
+\begin{verbatim}
+\begin{lemat}
+Niech $p$ będzie liczbą pierwszą. Jeżeli $p|ab$, to $p|a$ lub $p|b$.
+\end{lemat}
+\end{verbatim}
+
+  \item Twierdzenie
+\begin{twierdzenie}
+\label{tw:ilepierwszych}
+Liczb pierwszych jest nieskończenie wiele.
+\end{twierdzenie}
+
+\begin{verbatim}
+\begin{twierdzenie}
+Liczb pierwszych jest nieskończenie wiele.
+\end{twierdzenie}
+\end{verbatim}
+
+  \item Wniosek
+\begin{wniosek}
+Ciąg liczb pierwszych jest nieograniczony.
+\end{wniosek}
+
+\begin{verbatim}
+\begin{wniosek}
+Ciąg liczb pierwszych jest nieograniczony.
+\end{wniosek}
+\end{verbatim}
+
+\item Przykład
+\begin{przyklad}
+
+\end{przyklad}
+
+\end{itemize}
+
+
+Prowadzona numeracja środowisk jest jest ciągła, aby ułatwić odnajdywanie numerów w tekście.
+Wszystkie środowiska złożone są w ten sam sposób, modyfikacja jest możliwa poprzez utworzenie
+własnego stylu i zadeklarowanie jego użycia przed zdefiniowaniem środowiska (patrz.
+dokumentacja pakietów \verb|ams*| i plik klasy).
+
+Do twierdzeń, definicji itd. możemy odwoływać się korzystając z konstrukcji \verb|\label| --
+\verb|\ref|, np.; Definicja \ref{def:pierwsza} jest bardzo ważna. Twierdzenie
+\ref{tw:ilepierwszych} było znane już Euklidesowi.
+\begin{verbatim}
+Definicja \ref{def:pierwsza} jest bardzo ważna.
+Twierdzenie \ref{tw:ilepierwszych} było znane juz Euklidesowi.
+\end{verbatim}
+
+
+\section{Wyliczenia}
+
+Wyliczenia numerowane tworzymy za pomocą następującego polecenia:
+\begin{verbatim}
+\begin{enumerate}
+    \item Jeżeli $2|n$, to $n$ jest liczbą parzystą.
+    \item Liczb parzystych jet nieskończenie wiele.
+    \item Istnieje dokładnie jedna parzysta liczba pierwsza.
+\end{enumerate}
+\end{verbatim}
+
+    \begin{enumerate}
+        \item Jeżeli $2|n$, to $n$ jest liczbą parzystą.
+        \item Liczb parzystych jet nieskończenie wiele.
+        \item Istnieje dokładnie jedna parzysta liczba pierwsza.
+    \end{enumerate}
+
+Jeżeli chcemy uniknąć wcięcia akapitowego bezpośrednio po wyliczeniu należy zastosować polecenie
+\verb|\noindent|. Do list numerowanych można dodać dodatkowy parametr \verb|label=|, np.:
+
+\begin{verbatim}
+\begin{definicja}
+\emph{Grupą} nazywamy parę $(G,\circ)$, jeżeli spełnione są następujące aksjomaty:
+\begin{enumerate}[label=(G$_\arabic*$),leftmargin=*]
+ \item działanie $\circ$ jest łączne,
+ \item działanie $\circ$ posiada element neutralny,
+ \item każdy element posiada element odwrotny.
+\end{enumerate}
+\end{definicja}
+\end{verbatim}
+
+\begin{definicja}
+\emph{Grupą} nazywamy parę $(G,\circ)$, jeżeli spełnione są następujące aksjomaty:
+\begin{enumerate}[label=(G$_\arabic*$),leftmargin=*]
+ \item działanie $\circ$ jest łączne,
+ \item działanie $\circ$ posiada element neutralny,
+ \item każdy element posiada element odwrotny.
+\end{enumerate}
+\end{definicja}
+
+\noindent Wyliczenia nienumerowane tworzymy następująco:
+
+\begin{verbatim}
+\begin{itemize}
+    \item Jeżeli $2|n$, to $n$ jest liczbą parzystą.
+    \item Liczb parzystych jet nieskończenie wiele.
+    \item Istnieje dokładnie jedna parzysta liczba pierwsza.
+\end{itemize}
+\end{verbatim}
+
+    \begin{itemize}
+        \item Jeżeli $2|n$, to $n$ jest liczbą parzystą.
+        \item Liczb parzystych jet nieskończenie wiele.
+        \item Istnieje dokładnie jedna parzysta liczba pierwsza.
+    \end{itemize}
+
+\section{Obrazki}
+
+
+Temat umieszczenia obrazków w \LaTeX'u jest zagadnieniem troszkę skomplikowanym, szczególnie jeżeli
+chcemy na obrazkach umieścić formuły i symbole matematyczne. Istnieją wyspecjalizowane pakiety do
+tworzenia obrazków: \verb|pstricks| oraz \verb|tikz|. Jednak ich użycie może wymagać sporo
+dodatkowej nauki.
+
+Do utworzenia obrazków może służyć dowolny program graficzny z możliwością
+eksportu do formatu \verb|*.eps| lub \verb|*.pdf|. Polecane programy posiadające możliwością
+eksportu do wspomnianych formatów i umieszczania formuł \TeX'owych:
+\begin{itemize}
+    \item LATEXDraw
+    \item Inkscape
+\end{itemize}
+
+\begin{figure*}[!b]
+  % wyśrodkowanie zawartości pola obrazka
+  \begin{center}
+    % okienko skalujące:
+    %  pierwszy argument szerokość, drugi wysokość,
+    %  jeden z nich może być zastąpiony ! - zachowanie proporcji obrazka
+    %  w taki sposób możemy skalować także inne obiekty np. tekst
+    \resizebox{0.5\textwidth}{!}{
+      % wstawienie obrazka
+      \includegraphics{Rysunki/KulaEuklidesowa}
+    }
+    % opis obrazka
+    \caption[Skrócony opis do spisu obrazków]{Opis pod obrazkiem. Może być bardzo długi
+i zawierać wiele istotnych informacji. Może mówić co przedstawia obrazek, podawać parametry, wzory
+itp.}
+    % etykieta
+    \label{kula_eulidesowa}
+  \end{center}
+\end{figure*}
+
+
+\noindent Po tworzeniu obrazków możemy je dołączyć w taki sposób:
+\begin{verbatim}
+\begin{figure*}[!h]
+  % wyśrodkowanie zawartości pola obrazka
+  \begin{center}
+    % okienko skalujące:
+    %  pierwszy argument szerokość, drugi wysokość,
+    %  jeden z nich może być zastąpiony ! - zachowanie proporcji obrazka
+    %  w taki sposób możemy skalować także inne obiekty np. tekst
+    \resizebox{0.5\textwidth}{!}{
+      % wstawienie obrazka
+      \includegraphics{Rysunki/KulaEuklidesowa}
+    }
+    % opis obrazka
+    \caption[Skrócony opis do spisu obrazków]{Opis pod obrazkiem. Może być bardzo długi
+i zawierać wiele istotnych informacji. Może mówić co przedstawia obrazek, podawać parametry, wzory
+itp.}
+    % etykieta
+    \label{etykietka_obrazka}
+  \end{center}
+\end{figure*}
+\end{verbatim}
+
+Proponowanym rozwiązaniem jest także umieszczenie obrazków w odrębnym katalogu znajdującym się w głównym folderze pracy dyplomowej. Przykładowo w niniejszym szablonie utworzono katalog \verb|rysunki|, z którego dołączyć można obrazek za pomocą standardowego sposobu pokazanego powyżej, dodając ścieżkę dostępu do obrazka np. : 
+\begin{verbatim}
+\includegraphics[scale=0.5]{rysunki/obrazek1.jpg}
+\end{verbatim}
+
+
+Do obrazków możemy odwoływać się używając konstrukcji \verb|\label| -- \verb|\ref|, np.: Rysunek
+\ref{kula_eulidesowa} przedstawia kulę w metryce euklidesowej.
+
+\begin{verbatim}
+Rysunek \ref{kula_eulidesowa} przedstawia kulę w metryce euklidesowej.
+\end{verbatim}
+
+Spis obrazków dołączamy do pracy za pomocą polecenia \verb|\listoffigures|. Sporym problemem może
+być umieszczenie obrazka w konkretnym miejscu na stronie. Jeżeli \LaTeX nie potrafi umieścić
+obrazka tam gdzie chcemy, to może go przenieść na następną stronę lub na koniec pliku. Prostym
+rozwiązaniem jest zmiana wielkości obrazka. W tym wypadku najlepiej spytać Google. Ogólna porada
+jest taka: pozycjonowanie obrazków należy wykonać dopiero po napisani całego tekstu, gdyż dodanie
+jednej linii tekstu może całkowicie zmienić pozycję obrazka.
+
+Możliwe jest także umieszczenie kilku obrazków na jednym rysunku.
+
+\begin{figure*}[!h]
+\centering
+\subfloat[$X=\mathbb{R}^2$, metryka taksówkowa]
+{
+    \resizebox{0.3\textwidth}{!}{
+      \includegraphics{Rysunki/KulaEuklidesowa}
+    }
+}
+\subfloat[$X=\mathbb{R}^2$, metryka taksówkowa]
+{
+    \resizebox{0.3\textwidth}{!}{
+      \includegraphics{Rysunki/KulaTaksowkowa}
+    }
+}
+\subfloat[$X=\mathbb{R}^2$, metryka maksimum]
+{
+    \resizebox{0.3\textwidth}{!}{
+      \includegraphics{Rysunki/KulaMaksimum}
+    }
+}
+\caption{Kule w różnych metrykach}
+\end{figure*}
+
+\begin{verbatim}
+\begin{figure*}[!b]
+\centering
+\subfloat[$X=\mathbb{R}^2$, metryka taksówkowa]
+{
+    \resizebox{0.3\textwidth}{!}{
+      \includegraphics{Rysunki/KulaEuklidesowa}
+    }
+}
+\subfloat[$X=\mathbb{R}^2$, metryka taksówkowa]
+{
+    \resizebox{0.3\textwidth}{!}{
+      \includegraphics{Rysunki/KulaTaksowkowa}
+    }
+}
+\subfloat[$X=\mathbb{R}^2$, metryka maksimum]
+{
+    \resizebox{0.3\textwidth}{!}{
+      \includegraphics{Rysunki/KulaMaksimum}
+    }
+}
+\caption{Kule w różnych metrykach}
+\end{figure*}
+\end{verbatim}
+
+
+\section{Dodawanie listingu kodu}
+
+W razie potrzeby zamieszczenia listingu kodu omawianego w pracy dyplomowej lub krótkich fragmentów tzw. pseudokodu, można wykorzystać pakiet \verb|listings|. Pakiet ten zawarto w dołączonym do szablonu pakiecie \verb|listing_schemat.sty| który znajduje się w głównym katalogu. Pakiet ten dodaje się przez odkometowanie poniższego polecenia na początku pliku głównego \textbf{SzablonPracyPG\_main.tex}:
+\begin{verbatim}
+%-------------------- Dodatkowe pakiety ---------------------
+\usepackage{listing_schemat}
+%------------------------------------------------------------
+\end{verbatim}
+
+Przykład  zamieszczenia listingu kodu w pracy przedstawiono poniżej.
+\begin{verbatim}
+\lstset{style=python}
+\begin{lstlisting}[caption={Przykładowy listing w języku Python}, label=pyton]
+%%%%%%% KOD ŹRÓDŁOWY %%%%%%%
+#importing the time module
+import time
+#welcoming the user
+name = raw_input("What is your name? ")
+print "Hello, " + name, "Time to play hangman!"
+#wait for 1 second
+time.sleep(1)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{lstlisting}
+\end{verbatim}
+
+Po skompilowaniu, otrzymuje się listing w postaci przedstawionej poniżej.
+\lstset{style=python}
+\begin{lstlisting}[caption={Przykładowy listing w języku Python}, label=pyton]
+#importing the time module
+import time
+#welcoming the user
+name = raw_input("What is your name? ")
+print "Hello, " + name, "Time to play hangman!"
+#wait for 1 second
+time.sleep(1)
+\end{lstlisting}
+
+Wstawienie listingu rozpoczyna się poleceniem \verb|\lstset{style=NAZWA_JĘZYKA}|, które ustawia określony sposób formatowania listingu zależnie od wybranego języka. Nazwę języka należy wpisać małymi literami. Opracowane formaty języków znajdują się w pliku pakietu \textbf{listing\_schemat}. Następnie do polecenia \verb|\begin{listings}| podaje się argumenty wejściowe w kwadratowych nawiasach, co przedstawione zostało poniżej. 
+\begin{verbatim}
+\begin{lstlisting}[caption={Podpis wstawianego listingu}, label=Odnośnik do listingu]
+\end{lstlisting}
+\end{verbatim}
+Podanie wymienionych argumentów wejściowych umożliwia podpisywanie poszczególnych listingów oraz odwoływanie się do nich w tekście przy użyciu polecenia \verb|\ref{}|.
+
+Istnieje także możliwość dołączania kodu źródłowego, który został zapisany w osobnym pliku. W tym celu należy użyć poniższego polecenia.
+\begin{verbatim}
+\begin{lstlisting}[caption={Podpis wstawianego listingu}, label=Odnośnik do listingu]
+\lstinputlisting[language=Python, firstline=10, lastline=20]{plik_zrodlowy.py}
+\end{lstlisting}
+
+\end{verbatim}
+
+W pliku pakietu \textbf{listing\_schemat.sty} można zdefiniować własny styl formatowania listingu, zgodny z używanym językiem programowania. Parametry stylu formatowania zostały opisane w pliku, co umożliwia również ewentualną zmianę kolorów składni kodu lub innych atrybutów.
+
+Do pakietu dołączono również środowisko \verb|tikz|, które umożliwia generowanie przejrzystych schematów blokowych, grafów, diagramów oraz wykresów. Tworzenie diagramów poprzez opracowanie kodu w edytorze tekstu może być uciążliwe, jednak istnieją graficzne generatory kodu np. \textbf{TikzEdt} dostępny pod adresem: \textbf{http://www.tikzedt.org/}.
+
+\section{Dodawanie bibliografii}
+
+Bibliografię dodajemy za pomocą następujących poleceń
+
+\begin{verbatim}
+\bibliographystyle{plain}                       % styl bibliografii
+\begin{thebibliography}{3}                      % początek środowiska
+\addcontentsline{toc}{chapter}{Bibliografia}    % dodaje bibliografię do spisu treści
+\small              % spisy i bibliografie składamy mniejszym stopniem pisma
+% przykładowy wpis
+    \bibitem{Duda}      % \bibitem{etykieta}
+A. Duda,\emph{Wprowadzenie do topologii}, PWN, Warszawa 1986
+% następna pozycja
+    \bibitem{EngeSiek}
+R. Engelking, K. Sieklucki, \emph{Geometria i topologia. Część II. Topologia}, PWN, Warszawa 1980
+% następna pozycja
+    \bibitem{Patk}
+H. Patkowska, \emph{Wstęp do topologii}, PWN, Warszawa 1979
+% następna pozycja
+    \bibitem{Siek}
+K. Sieklucki, \emph{Geometria i topologia. Część I. Geometria}, PWN, Warszawa 1979
+% następna pozycja
+    \bibitem{Rutkowski}
+Rutkowski J., \emph{Algebra Abstrakcyjna w zadaniach},  Wydawnictwo Naukowe PWN, Warszawa 2005
+\end{thebibliography}                           % koniec środowiska
+\end{verbatim}
+
+Do pozycji bibliograficznych możemy odwoływać się w tekście korzystając z polecenia \verb|\cite|,
+np.: Głównym źródłem jest książka A. Dudy \cite{Duda}. Przykłady podane w tym rozdziale pochodzą z
+książki \cite{Rutkowski}.
+
+\begin{verbatim}
+Głównym źródłem jest książka A. Dudy \cite{Duda}.
+Przykłady podane w tym rozdziale pochodzą z książki \cite{Rutkowski}.
+\end{verbatim}
+
+\section{Uwagi o typografii}
+
+W polskiej typografii (i nie tylko w polskiej) przyjęło się stosować następujące zasady:
+\begin{itemize}
+    \item na końcu wiersza nie mogą zostać słowa jednoliterowe (dwu-, trzy-) (tzw. sierota)
+    \item akapit nie może kończyć się bardzo krótkim wierszem: pojedyncze słowo, przeniesiona
+część słowa lub krótkich słów, orientacyjnie, mniej niż 3 długości wcięcia akapitowego (tzw. wdowa)
+\tiny{<-- wdowa}\normalsize
+    \item strona nie może kończyć się pojedynczym wierszem nowego akapitu (tzw. szewc)
+    \item strona nie może zaczynać się ostatnim wierszem poprzedniego akapitu (tzw. bękart)
+    \item unikać podwójnych wyróżnień, nie należy wyróżnianego fragmentu tekstu wyróżniać więcej niż
+jedną metodą naraz (np.: \textbf{\textit{podwójne wyróżnienie}})
+\begin{verbatim}
+https://pl.wikipedia.org/wiki/Zasada_unikania_podwójnych_wyróżnień
+\end{verbatim}
+\end{itemize}
+
+Niestosowanie się do tych zasad nie umniejsza wartości pracy, jednak zmniejsza jej estetykę a w
+przypadku pojedynczych wierszy utrudnia czytanie. W tym dokumencie można znaleźć przykłady takich
+sytuacji.
+
+
+Aby usunąć wspomniane błędy zwykle wystarczy zmienić szyk zdania lub użyć innego słowa. W
+ostateczności(!) można dodać pusty wiersz. Aby usunąć pojedyncze litery na końcu wiersza można
+dodać tzw. twardą spację, umieszczając pomiędzy wyrazami znak tyldy \textasciitilde.
+
+\begin{przyklad}
+długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i
+długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i
+\end{przyklad}
+
+\begin{przyklad}
+długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i~krótkie i
+długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i długiesłowo i krótkie i
+\end{przyklad}
+
+
+Podobnie jak w przypadku obrazków, poprawki typograficzne powinny być wprowadzane po zakończeniu
+pisania pracy, gdyż nawet najmniejsza zmiana w poprzednim wierszu może skutkować poważnymi
+przesunięciami całego tekstu.
+
+
+Jako ciekawostka: norma PN-83/P-55366 (nieobowiązująca od kilku lat) podaje serię wskazówek i
+zaleceń typograficznych.

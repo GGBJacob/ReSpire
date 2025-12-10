@@ -1,0 +1,97 @@
+\documentclass[nostrict]{szablonPG}
+
+%-------------------- Dodatkowe pakiety ---------------------
+\usepackage{listing}
+\usepackage{dirtree}
+\usepackage[x11names]{xcolor} % colorful text with the most amount of colors enabled (x11names)
+\usepackage[backend=biber,
+            style=ieee,
+            language=polish,
+            giveninits=true,
+            sorting=none,
+            url=true,
+            doi=false,
+            isbn=false]{biblatex} % pakiet pozwalający na konfigurację bibliografi   
+\addbibresource{refs.bib}
+%------------------------------------------------------------
+%------------------Definicja własnych komend-----------------
+\DeclareRobustCommand{\Hania}[0]{\small{Hanna Banasiak}}
+\DeclareRobustCommand{\Jakub}[0]{\small{Jakub Romanowski}}
+\DeclareRobustCommand{\Karol}[0]{\small{Karol Zwierz}}
+\DeclareRobustCommand{\Ola}[0]{\small{Aleksandra Bujny}}
+
+\newcommand{\todoHania}[1]{\todo[color=SlateBlue1!35]{Hania: #1}}
+\newcommand{\todoKarol}[1]{\todo[color=Tan1!50]{Karol: #1}}
+\newcommand{\todoJakub}[1]{\todo[color=green!50]{Jakub: #1}}
+\newcommand{\todoOla}[1]{\todo[color=Maroon1!50]{Ola: #1}}
+%------------------------------------------------------------
+%------------------------------------------------------------
+%			      Początek pracy dyplomowej  
+%------------------------------------------------------------
+
+\begin{document}
+
+%------------------------------------------------------------
+%  Dodanie strony tytułowej wygenerowanej z MojaPG oraz oświadczenia
+
+\includepdf[pages=-]{meta/StronaTytulowa_193603.pdf}
+%\includepdf{meta/oswiadczenie.pdf}
+
+%------------------------------------------------------------
+%  Dodanie streszczenia i abstract
+%  						
+
+\input{meta/streszczenie.tex}
+\input{meta/abstract.tex}
+
+%------------------------------------------------------------
+%   Lista komentarzy
+% \listoftodos
+
+%------------------------------------------------------------
+%	Utworzenie spisu treści pracy dyplomowej
+\tableofcontents
+
+%------------------------------------------------------------
+%	Dodanie rozdziałów pracy dyplomowej 
+
+\input{rozdzialy/wstep_cel_pracy.tex}
+\input{rozdzialy/istniejace_rozwiazania.tex}
+\input{rozdzialy/zalozenia_projektowe.tex}
+\input{rozdzialy/analiza_wymagan.tex}
+\input{rozdzialy/projekt_rozwiazania.tex}
+\input{rozdzialy/implementacja.tex}
+\input{rozdzialy/testowanie.tex}
+\input{rozdzialy/podsumowanie.tex}
+
+% ---------------------- Bibliografia -----------------------
+\nocite{*} % dodajemy całą zawartość refs.bib
+\printbibliography[heading=bibintoc,title={Bibliografia}]
+% -----------------------------------------------------------
+
+%------------------------------------------------------------
+%	Dodanie wykazu rysunków oraz tabeli
+
+% \renewcommand{\baselinestretch}{1.0}\normalsize	% interlinia w sekcji wykazów
+% \addcontentsline{toc}{chapter}{\listfigurename}	% dodanie wykazu rysunków do spisu treści
+% \listoffigures									% generacja wykazu rysunków
+
+% \addcontentsline{toc}{chapter}{\listtablename}	% dodanie wykazu tabel do spisu treści
+% \listoftables									% generacja wykazu tabel
+% \renewcommand{\baselinestretch}{1.3}\normalsize	% powrót do interlinii 1.5
+
+
+% ---------------------- DODATKI -----------------------\
+\appendix
+%\addcontentsline{toc}{chapter}{Dodatek A}
+% Zależnie od dodatku, zaleca się dodawnie dodatków jako
+% dokumenty PDF
+% \includepdf{dodatki/dodatek1.pdf}
+\include{dodatki/instrukcja_uzytkowania}
+\include{dodatki/repozytorium}
+
+% -----------------------------------------------------------
+\end{document}
+%------------------------------------------------------------
+			 	%	Koniec pracy dyplomowej  %
+%------------------------------------------------------------

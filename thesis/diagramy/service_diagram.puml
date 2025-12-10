@@ -1,0 +1,315 @@
+@startuml
+!pragma useIntermediatePackages false
+set namespaceSeparator ::
+' WORK IN PROGRESS
+class "respire::services::BinauralBeatGenerator.dart::BinauralBeatGenerator" {
+  {static} -BinauralBeatGenerator _instance
+  -AudioPlayer? _leftPlayer
+  -AudioPlayer? _rightPlayer
+  -bool _isPlaying
+  -StreamController<Uint8List>? _leftStreamController
+  -StreamController<Uint8List>? _rightStreamController
+  {static} +int sampleRate
+  {static} +int bufferSize
+  {static} +double amplitude
+  +bool isPlaying
+  +dynamic start()
+  -Uint8List _generateTone()
+  -Uint8List _createWavFile()
+  +dynamic pause()
+  +dynamic resume()
+  +dynamic stop()
+}
+
+class "respire::services::PresetDataBase.dart::PresetDataBase" {
+  +TranslationProvider translationProvider
+  +List<Training> presetList
+  {static} -PresetDataBase _instance
+  -Box<dynamic> _box
+  +void initialize()
+  -void _migrateSounds()
+  +void createInitialData()
+  +void deletePreset()
+  +void loadData()
+  +void updateDataBase()
+  +void clearUserSound()
+}
+
+"respire::services::PresetDataBase.dart::PresetDataBase" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+
+class "respire::services::SettingsProvider.dart::SettingsProvider" {
+  {static} -SettingsProvider _instance
+  +AppLanguage currentLanguage
+  +dynamic init()
+  +dynamic setVoiceType()
+  +dynamic setLanguage()
+  +String getVoiceCode()
+}
+
+"respire::services::SettingsProvider.dart::SettingsProvider" o-- "respire::services::TranslationProvider::AppLanguage.dart::AppLanguage"
+
+
+class "respire::services::SoundManagers::AudioPlayerPool.dart::AudioPlayerPool" {
+  -List<AudioPlayer> _items
+  -int _cursor
+  +AudioPlayer next
+  +int length
+  +void dispose()
+}
+
+
+
+abstract class "respire::services::SoundManagers::ISoundManager.dart::ISoundManager" {
+  +Map<String, SoundAsset> getSounds()
+  +dynamic loadSound()
+  +List<String> getLoadedSounds()
+  +List<String> getAvailableSounds()
+  +dynamic playSound()
+  +dynamic playSoundFadeIn()
+  +dynamic pauseSound()
+  +dynamic stopSound()
+  +dynamic pauseSoundFadeOut()
+  +void stopAllSounds()
+}
+
+class "respire::services::SoundManagers::ISoundManager.dart::SoundListType" {
+
+  {static} +List<SoundListType> values
+  {static} +SoundListType longSounds
+  {static} +SoundListType shortSounds
+  {static} +SoundListType countingSounds
+}
+
+class "respire::services::SoundManagers::PlaylistManager.dart::PlaylistManager" {
+  -SingleSoundManager _delegate
+
+  -bool _paused
+  -bool _stopped
+  -bool _isPlaying
+  -Completer<void> _playlistCompleter
+  -List<String> _playlist
+  +dynamic playPlaylist()
+  +dynamic resumePlaylist()
+  -void _playNextSound()
+  +dynamic pausePlaylist()
+  +void completePlaylist()
+}
+
+"respire::services::SoundManagers::PlaylistManager.dart::PlaylistManager" o-- "respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager"
+
+
+class "respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager" {
+  -SoundManager _delegate
+  +ValueNotifier<String?> currentlyPlaying
+  +dynamic playSound()
+  +dynamic playSoundFadeIn()
+  +dynamic pauseSound()
+  +dynamic pauseSoundFadeOut()
+  +void stopAllSounds()
+  -void _setupSinglePlayAudioPlayer()
+  +void removeUserSound()
+  +dynamic stopSound()
+  +List<String> getAvailableSounds()
+  +List<String> getLoadedSounds()
+  +Map<String, SoundAsset> getSounds()
+  +dynamic loadSound()
+  +AudioPlayer? getPlayer()
+}
+
+"respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager" o-- "respire::services::SoundManagers::SoundManager.dart::SoundManager"
+
+"respire::services::SoundManagers::ISoundManager.dart::ISoundManager" <|-- "respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager"
+
+class "respire::services::SoundManagers::SoundManager.dart::SoundManager" {
+  {static} -SoundManager _instance
+  {static} +Map<String, SoundAsset> longSounds
+  {static} +Map<String, SoundAsset> shortSounds
+  {static} +Map<String, SoundAsset> countingSounds
+  {static} -Map<String, SoundAsset> _availableSounds
+  -HashMap<String, AudioPlayer> _audioPlayers
+  -Map<String, AudioPlayerPool> _pools
+  -int _maxPoolSizePerSound
+  +Map<String, SoundAsset> getSounds()
+  +AudioPlayer? getPlayer()
+  +SoundAsset? getAsset()
+  +bool isUserMusic()
+  +dynamic loadSound()
+  -void _commonAudioPlayerSetup()
+  +void setupLowLatencyAudioPlayer()
+  +List<String> getLoadedSounds()
+  +List<String> getAvailableSounds()
+  +dynamic playSound()
+  -dynamic _playShortSound()
+  -Source _getSourceForAsset()
+  +dynamic playSoundFadeIn()
+  +dynamic pauseSound()
+  +dynamic stopSound()
+  +dynamic fadeOut()
+  +dynamic pauseSoundFadeOut()
+  +void stopAllSounds()
+  +void refreshSoundsList()
+  +void removeUserSound()
+  +dynamic getSoundDuration()
+  +void dispose()
+}
+
+"respire::services::SoundManagers::ISoundManager.dart::ISoundManager" <|-- "respire::services::SoundManagers::SoundManager.dart::SoundManager"
+
+class "respire::services::TextToSpeechService.dart::TextToSpeechService" {
+  {static} -TextToSpeechService _instance
+  -FlutterTts _flutterTts
+  +dynamic init()
+  +dynamic getVoices()
+  +dynamic readNumber()
+  +dynamic speak()
+  +void stopSpeaking()
+}
+
+class "respire::services::TrainingController.dart::TrainingController" {
+  -Timer? _timer
+  +TrainingParser parser
+  +ValueNotifier<Queue<BreathingPhase?>> breathingPhasesQueue
+  -Queue<String?> _trainingStageNameQueue
+  -Queue<String?> _trainingStageIdQueue
+  +ValueNotifier<int> second
+  +ValueNotifier<bool> isPaused
+  +ValueNotifier<int> breathingPhasesCount
+  +ValueNotifier<String> currentTrainingStageName
+  +ValueNotifier<int> currentStageIndex
+  +ValueNotifier<int> totalStages
+  +ValueNotifier<int> currentCycleIndex
+  +ValueNotifier<bool> playCycleSound
+  +ValueNotifier<int> totalCycles
+  +ValueNotifier<bool> showLabels
+  -int _updateInterval
+  -int _remainingTime
+  -int _nextRemainingTime
+  -int _newBreathingPhaseRemainingTime
+  -int _endingDuration
+  +bool end
+  -bool _finishedLoadingBreathingPhases
+  -bool _nextPhaseSoundPlayed
+  -int _stopTimer
+  -Sounds _sounds
+  -Settings _settings
+  -String? _currentSound
+  -String? _currentTrainingStageId
+  +SoundManager soundManager
+  +PlaylistManager playlistManager
+  +BinauralBeatGenerator binauralGenerator
+  -bool _isUsingPlaylist
+  -bool _preparationPhaseCompleted
+  -bool _endingInitiated
+  -BuildContext _context
+  +TranslationProvider translationProvider
+  +List<String> longSoundNames
+  +bool triggered
+  +void setContext()
+  -void _initializePreparationSound()
+  -void _loadEndingSoundDuration()
+  -void _preloadBreathingPhases()
+  -void _fetchNextBreathingPhase()
+  -void _logQueue()
+  +void pause()
+  +void resume()
+  -void _playCountingSound()
+  -dynamic _playEndingSound()
+  -void _playShortSound()
+  -void _playPreBreathingPhaseSound()
+  -void _switchToStagePlaylist()
+  -dynamic _handleBackgroundSoundChange()
+  -void _start()
+  +void tryUpdateStageCounter()
+  +void dispose()
+  -String _resolveTrainingStageName()
+  -void _updateCurrentTrainingStageLabel()
+  -String _defaultStageName()
+}
+
+
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::components::BreathingPage::TrainingParser.dart::TrainingParser"
+
+
+
+
+
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::components::Global::Sounds.dart::Sounds"
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::components::Global::Settings.dart::Settings"
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::services::SoundManagers::SoundManager.dart::SoundManager"
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::services::SoundManagers::PlaylistManager.dart::PlaylistManager"
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::services::BinauralBeatGenerator.dart::BinauralBeatGenerator"
+
+"respire::services::TrainingController.dart::TrainingController" o-- "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider"
+
+class "respire::services::TrainingImportExportService.dart::TrainingImportExportService" {
+  {static} +dynamic exportTraining()
+  {static} +dynamic exportMultipleTrainings()
+  {static} +dynamic importTraining()
+  {static} +dynamic importTrainings()
+  {static} +dynamic importTrainingFromPath()
+}
+
+class "respire::services::TrainingJsonConverter.dart::TrainingJsonConverter" {
+  {static} -Map<String, String> _stageUuidMap
+  {static} +String toJson()
+  {static} +String toJsonMultiple()
+  {static} +Training fromJson()
+  {static} +List<Training> fromJsonMultiple()
+  {static} -Map<String, dynamic> _trainingToMap()
+  {static} -Training _trainingFromMap()
+  {static} -Map<String, dynamic> _ensureMap()
+  {static} -Map<String, dynamic> _stageToJson()
+  {static} -TrainingStage _stageFromJson()
+  {static} -Map<String, dynamic> _phaseToJson()
+  {static} -BreathingPhase _phaseFromJson()
+  {static} -Map<String, dynamic> _settingsToJson()
+  {static} -Settings _settingsFromJson()
+  {static} -BreathingPhaseType _parseBreathingPhaseType()
+  {static} -BreathingPhaseIncrementType _parseIncrementType()
+  {static} -String _changeSoundToString()
+  {static} -String _changeScopeToString()
+  {static} -Map<String, dynamic> _soundsToJson()
+  {static} -SoundAsset _soundAssetFromString()
+  {static} -Sounds _soundsFromJson()
+  {static} -SoundScope _parseSoundScopeType()
+}
+
+class "respire::services::TranslationProvider::AppLanguage.dart::AppLanguage" {
+  +String code
+  +String localeCode
+  +String name
+  {static} +AppLanguage polish
+  {static} +AppLanguage english
+  {static} +List<AppLanguage> supportedLanguages
+  {static} +AppLanguage fromCode()
+}
+
+class "respire::services::TranslationProvider::TranslationProvider.dart::TranslationProvider" {
+  {static} -TranslationProvider _instance
+  -Map<String, dynamic> _translations
+  +List<AppLanguage> supportedLanguages
+  +dynamic loadLanguage()
+  +String getTranslation()
+}
+
+class "respire::services::UserSoundsDataBase.dart::UserSoundsDatabase" {
+  {static} -UserSoundsDatabase _instance
+  -Box<dynamic> _shortBox
+  -Box<dynamic> _longBox
+  -Box<dynamic> _countingBox
+  -Map<String, SoundAsset> _userShortSounds
+  -Map<String, SoundAsset> _userLongSounds
+  -Map<String, SoundAsset> _userCountingSounds
+  +Map<String, SoundAsset> userShortSounds
+  +Map<String, SoundAsset> userLongSounds
+  +Map<String, SoundAsset> userCountingSounds
+  +void loadData()
+  +void addShortSound()
+  +void addLongSound()
+  +void addCountingSound()
+  +void removeSound()
+  +void postRemoveSound()
+  +void updateDatabase()
+}
+
+@enduml

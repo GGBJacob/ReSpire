@@ -1,0 +1,29 @@
+\chapter{Założenia projektowe (\Ola,\ \Karol)}
+
+\section{Dostarczane korzyści (\Karol)}
+
+Celem projektu jest stworzenie intuicyjnej i funkcjonalnej aplikacji mobilnej, umożliwiającej użytkownikom skuteczny trening oddechowy, która ma pomagać w poprawie kontroli oddechu, redukcji stresu oraz zwiększeniu świadomości oddechowej. W ramach prac zostanie zaprojektowany i zaimplementowany interfejs użytkownika, który umożliwi łatwe zarządzanie sesjami treningu oddechowego. Kluczowym aspektem aplikacji będzie szeroka personalizacja poprzez wybór parametrów takich jak typ fazy (wdech, retencja, wydech, regeneracja), długość fazy, inkrementacja czy powtórzenia. Służyć ma ona jak najlepszemu dopasowaniu treningów do wizji użytkowników, zapewniając dużą elastyczność i swobodę. Oferując przykładowe treningi, jednocześnie zaspokaja również potrzeby tych osób, które wolą skorzystać z gotowych, prostszych treningów oddechowych. Projekt zakłada również opracowanie mechanizmów interaktywnych, takich jak wizualizacje wspomagające kontrolę oddechu. Ponadto oferować będzie zarówno język polski, jak i angielski, co umożliwi dostępność wśród użytkowników w Polsce i za granicą.
+
+\section{Główne funkcje aplikacji (\Karol)}
+
+Główne funkcjonalności aplikacji ReSpire zostały zaprojektowane tak, aby zapewnić użytkownikowi pełną kontrolę nad procesem treningowym oraz wysoką jakość doświadczenia audiowizualnego. Do kluczowych punktów realizacji systemu należą:
+
+\begin{itemize}
+    \item \textbf{Zaawansowany edytor treningów}: Narzędzie umożliwiające tworzenie złożonych, wieloetapowych i wielofazowych sesji treningowych. System pozwala na definiowanie konfigurowalnych etapów składających się z faz różnego typu. Kluczową funkcjonalnością jest obsługa iteracji sekwencji objętych danym etapem z inkrementacja czasu trwania faz w kolejnych cyklach, co umożliwia realizację treningów progresywnych (np. stopniowe wydłużanie faz).
+    
+    \item \textbf{Wielopoziomowy system audio}: Złożony mechanizm konfigurowania dźwięku, pozwalający na przypisywanie tła akustycznego, wskazówek audio, etc. na trzech poziomach hierarchii: globalnym (cały trening), etapu oraz fazy (unikalne dźwięki dla wdechu, wydechu, wstrzymania, regeneracji). System obsługuje komunikaty głosowe zrealizowane za pomocą generowania audio na podstawie tekstu. Umożliwiałoby to wykonywanie treningu bez patrzenia w ekran telefonu.
+    
+    \item \textbf{Generator dudnień różnicowych}: Funkcjonalność emitująca w czasie rzeczywistym dźwięki o różnej częstotliwości dla lewego i prawego kanału audio. Wywołuje to odczucie słyszenia jedynie małej różnicy częstotliwości między częstotliwościami kanałów. Generowanie odbywa się dynamicznie na podstawie zadanych parametrów częstotliwości obu kanałów, bez konieczności dostarczania gotowych plików.
+    
+    \item \textbf{Silnik wykonywania treningu}: Moduł odpowiedzialny za odtworzenie sesji w czasie rzeczywistym. Precyzyjnie synchronizuje timer, animacje interfejsu oraz warstwę audio, zapewniając płynne działanie nawet przy skomplikowanych strukturach treningowych. Zarządza również specjalnymi fazami przygotowania oraz zakończenia treningu.
+    
+    \item \textbf{Trwały zapis i udostępnianie treningów}: Możliwość zapisu stworzonych treningów i ustawień w lokalnej, wydajnej bazie danych na urządzeniu, co pozwala na pełną funkcjonalność w trybie offline. Dodatkowo system umożliwia import i eksport zrzutów danych treningów w~przenośnym formacie, co ułatwia dzielenie się nimi między użytkownikami.
+\end{itemize}
+
+\section{Przewidziani użytkownicy (\Karol)}
+Ze względu na specyfikę aplikacji przewidujemy podział użytkowników na dwie główne grupy:
+
+\begin{itemize}
+    \item Użytkownicy początkujący --- osoby o bardzo zróżnicowanym profilu będące nowicjuszami w dziedzinie treningów oddechowych. Wymagają oni jedynie możliwości zaimportowania oraz odtworzenia gotowego treningu. Nie chcą oni nadmiernie ingerować w strukturę swoich treningów.
+    \item Użytkownicy zaawansowani --- osoby zainteresowane szczegółową personalizacją ze względu na swoją głęboką znajomość praktyk treningów oddechowych. Wymagają oni wysoce wyszukanych możliwości konfiguracji każdego aspektu sekwencji treningowej. 
+\end{itemize}

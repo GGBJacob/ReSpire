@@ -1,0 +1,105 @@
+@startuml
+!pragma useIntermediatePackages false
+set namespaceSeparator ::
+
+class "respire::services::SoundManagers::AudioPlayerPool.dart::AudioPlayerPool" {
+  -List<AudioPlayer> _items
+  -int _cursor
+  +AudioPlayer next
+  +int length
+  +void dispose()
+}
+
+"respire::services::SoundManagers::AudioPlayerPool.dart::AudioPlayerPool" --* "respire::services::SoundManagers::SoundManager.dart::SoundManager"
+
+abstract class "respire::services::SoundManagers::ISoundManager.dart::ISoundManager" {
+  +Map<String, SoundAsset> getSounds()
+  +dynamic loadSound()
+  +List<String> getLoadedSounds()
+  +List<String> getAvailableSounds()
+  +dynamic playSound()
+  +dynamic playSoundFadeIn()
+  +dynamic pauseSound()
+  +dynamic stopSound()
+  +dynamic pauseSoundFadeOut()
+  +void stopAllSounds()
+}
+
+
+class "respire::services::SoundManagers::PlaylistManager.dart::PlaylistManager" {
+  -SingleSoundManager _delegate
+  -int _currentIndex
+  -bool _paused
+  -bool _stopped
+  -bool _isPlaying
+  -Completer<void> _playlistCompleter
+  -List<String> _playlist
+  +dynamic playPlaylist()
+  +dynamic resumePlaylist()
+  -void _playNextSound()
+  +dynamic pausePlaylist()
+  +void completePlaylist()
+}
+
+"respire::services::SoundManagers::PlaylistManager.dart::PlaylistManager" <-- "respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager"
+
+
+class "respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager" {
+  -SoundManager _delegate
+  +ValueNotifier<String?> currentlyPlaying
+  +dynamic playSound()
+  +dynamic playSoundFadeIn()
+  +dynamic pauseSound()
+  +dynamic pauseSoundFadeOut()
+  +void stopAllSounds()
+  -void _setupSinglePlayAudioPlayer()
+  +void removeUserSound()
+  +dynamic stopSound()
+  +List<String> getAvailableSounds()
+  +List<String> getLoadedSounds()
+  +Map<String, SoundAsset> getSounds()
+  +dynamic loadSound()
+  +AudioPlayer? getPlayer()
+}
+
+"respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager" <-right- "respire::services::SoundManagers::SoundManager.dart::SoundManager"
+
+"respire::services::SoundManagers::ISoundManager.dart::ISoundManager" <|-- "respire::services::SoundManagers::SingleSoundManager.dart::SingleSoundManager"
+
+class "respire::services::SoundManagers::SoundManager.dart::SoundManager" {
+  {static} -SoundManager _instance
+  {static} +Map<String, SoundAsset> longSounds
+  {static} +Map<String, SoundAsset> shortSounds
+  {static} +Map<String, SoundAsset> countingSounds
+  {static} -Map<String, SoundAsset> _availableSounds
+  -HashMap<String, AudioPlayer> _audioPlayers
+  -Map<String, AudioPlayerPool> _pools
+  -int _maxPoolSizePerSound
+  +Map<String, SoundAsset> getSounds()
+  +AudioPlayer? getPlayer()
+  +SoundAsset? getAsset()
+  +bool isUserMusic()
+  +dynamic loadSound()
+  -void _commonAudioPlayerSetup()
+  +void setupLowLatencyAudioPlayer()
+  +List<String> getLoadedSounds()
+  +List<String> getAvailableSounds()
+  +dynamic playSound()
+  -dynamic _playShortSound()
+  -Source _getSourceForAsset()
+  +dynamic playSoundFadeIn()
+  +dynamic pauseSound()
+  +dynamic stopSound()
+  +dynamic fadeOut()
+  +dynamic pauseSoundFadeOut()
+  +void stopAllSounds()
+  +void refreshSoundsList()
+  +void removeUserSound()
+  +dynamic getSoundDuration()
+  +void dispose()
+}
+
+"respire::services::SoundManagers::ISoundManager.dart::ISoundManager" <|-- "respire::services::SoundManagers::SoundManager.dart::SoundManager"
+
+
+@enduml

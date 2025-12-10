@@ -1,0 +1,354 @@
+\chapter{Projekt rozwiązania (\Hania,\ \Ola,\ \Jakub)}
+
+\section{Projekt architektury systemu (\Ola, \Jakub)}
+Przy projektowaniu architektury aplikacji wzięte pod uwagę zostały dobre praktyki i koncepty proponowane w dokumentacji Fluttera \cite{flutter_architecture}, a także wzorce projektowe. Celem było stworzenie struktury, która będzie łatwa w utrzymaniu i rozwoju, ale równocześnie stabilna i wydajna.
+
+\subsection{Architektura warstwowa}
+Aplikacja została zaprojektowana zgodnie z architekturą warstwową, zgodnie z wytycznymi Fluttera. Składa się z trzech głównych warstw: prezentacji, logiki oraz danych. Zostały one przedstawione na rysunku \ref{img/warstwy}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.12]{obrazki/projekt_rozwiazania/architektura_warstwowa.jpg}
+    \caption{Architektura warstwowa aplikacji ReSpire}
+    \label{img/warstwy} 
+\end{figure}
+Warstwy komunikują się jedynie z warstwami bezpośrednio nad lub pod nimi --- oznacza to, że warstwa prezentacji nie powinna wiedzieć o istnieniu warstwy danych i na odwrót.
+
+Warstwy aplikacji i ich rola:
+\begin{itemize}
+    \item \textit{Warstwa prezentacji} --- wyświetla dane otrzymane poprzez warstwę logiki użytkownikowi i~obsługuje żądania użytkownika. W ReSpire jest reprezentowana przez strony oraz komponenty je tworzące.
+    \item \textit{Warstwa logiki} --- implementuje logikę biznesową i jest pośrednikiem między dwoma pozostałymi warstwami. Klasy stanowiące tę warstwę znajdują się w folderze \textit{service/} (pol. serwis) i obsługują różne funkcjonalności w aplikacji, takie jak na przykład tłumaczenie aplikacji, zarządzanie i odtwarzanie dźwięków, kontrola przebiegu treningu czy zamiana tekstu na~mowę.
+    \item \textit{Warstwa danych} --- odpowiada za interakcje z bazą danych i przekazywanie danych do warstwy logiki. W aplikacji dane przechowywane są w lekkiej bazie \textit{Hive} i z niej są pobierane.
+\end{itemize}
+
+\subsection{Architektura monolityczna}
+ReSpire to aplikacja monolityczna --- nie posiada podziału na mikroserwisy ani inne niezależne usługi. Wszystkie funkcje i komponenty są zintegrowane w jednym kodzie źródłowym. Ułatwia to zarządzanie projektem i redukuje niedogodności związane z komunikacją między usługami, z którymi muszą się mierzyć systemy rozproszone. Aplikacja działa lokalnie, nie komunikuje się z zewnętrznym serwerem --- posiada lekką, wbudowaną bazę danych. Nie jest przeznaczona dla bardzo dużego grona odbiorców, więc nie musi cechować się wyjątkową wydajnością. Cała logika biznesowa, interfejs użytkownika i zarządzanie danymi są zawarte w jednej aplikacji. Do~zalet monolitu należą szybkość implementacji, łatwość zaprojektowania oraz zrozumienia. Architektura ta może natomiast powodować potencjalne problemy ze skalowalnością i elastycznością aplikacji w przyszłości. Obecne wymagania sprawiają jednak, że architektura monolityczna jest odpowiednia dla tego projektu i jej zalety przewyższają wady.
+
+\subsection{Modularny podział aplikacji}
+System oparty jest na modularnym podziale, czyli składa się z mniejszych komponentów. Zaletą tego podejścia jest możliwość niezależnego rozwijania i testowania poszczególnych klas. Korzyścią jest także prostsze utrzymywanie poszczególnych modułów oraz umożliwienie wielokrotnego wykorzystania. W efekcie zastosowania modułów kod projektu oraz architektura systemu są bardziej uporządkowane. W ReSpire poszczególne elementy warstwy prezentacji zostały wydzielone z widoków --- na przykład strona treningu oddechowego posiada karuzelę z instrukcjami oraz animowane koło jako osobne komponenty. Odpowiada to zasadzie \textit{Separation of concerns} (pol. podział zagadnień), gdzie każdy moduł skupia się na innym, określonym obszarze funkcjonalnym. Zmiany w jednym komponencie nie wpływają na pozostałe, co ułatwia zarządzanie nimi oraz wprowadzanie poprawek.
+
+\subsection{Model obiektów stron}
+Widoki aplikacji zostały zamodelowane zgodnie z \textit{Page Object Model} (pol. model obiektów stron), który określa, że strony powinny być osobnymi klasami. Dostępne jest pięć widoków: strona główna, szczegółów treningu, treningu oddechowego, ustawień oraz edytora. Każdy z nich jest oddzielną klasą umieszczoną w osobnym pliku (w folderze \textit{pages/}). Skutkuje to czytelnością i łatwiejszym zarządzaniem kodem.
+
+\subsection{Stan aplikacji i warstwa prezentacji}
+Zgodnie z zasadą Fluttera \textit{UI is a function of state} (pol. warstwa widoku jest funkcją stanu), warstwa prezentacji jest bezpośrednio powiązana ze stanem aplikacji. Dzięki deklaratywnemu podejściu zmiany w danych automatycznie odzwierciedlane są w interfejsie użytkownika, co~zapewnia spójność i aktualność prezentowanych informacji. Dane są trwałe i niemodyfikowalne --- po ich utworzeniu nie można ich zmienić, a jedynie stworzyć nowe na ich podstawie. Ułatwia to zarządzanie stanem aplikacji i~minimalizuje ryzyko błędów wynikających z nieoczekiwanych zmian danych. Widoki aplikacji są sterowane danymi i zawierają minimalną logikę biznesową, skupiając się głównie na prezentacji informacji i interakcji z użytkownikiem. Jest to osiągane między innymi poprzez stosowanie klasy \texttt{ChangeNotifier} i jej pochodnych, która powiadamia widoki o zmianach stanu. Flutter udostępnia także dwa typy widgetów: \texttt{StatelessWidget} (niemodyfikowalny) i \texttt{StatefulWidget} (modyfikowalny), które zapewniają efektywne i wydajne działanie. W aplikacji ReSpire wykorzystywane są oba typy, w zależności od potrzeb danego widoku.
+\subsection{Model serwisów}
+
+Warstwa logiczna aplikacji została zaprojektowana na podstawie architektury modułowej, obejmującej łącznie 12 wyspecjalizowanych serwisów. Każdy z komponentów realizuje odrębną domenę funkcjonalną, co pozwala na skuteczną separację logiki biznesowej od warstwy prezentacji. Zależności oraz relacje między kluczowymi modułami przedstawiono na rysunku~\ref{img/ServiceDiagram}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{diagramy/service_diagram_clean.png}
+    \caption{Uproszczony model architektury serwisów}
+    \label{img/ServiceDiagram}
+\end{figure}
+
+\noindent
+Poniżej przedstawiono krótki opis głównych odpowiedzialności poszczególnych komponentów:
+
+
+\begin{itemize}
+    \item \texttt{TrainingController} --- centralny moduł aplikacji, koordynujący przebieg sesji treningowej. Odpowiada za zarządzanie stanem ćwiczenia, odliczanie czasu oraz synchronizację warstwy audio z wizualizacją. Jego szczegółowa budowa została omówiona w dedykowanym rozdziale~\ref{subsec:TrainingController}.
+    
+    \item \texttt{SoundManager} --- globalny zarządca zasobów dźwiękowych. Odpowiada za ładowanie plików do pamięci, zarządzanie pulami odtwarzaczy oraz emisję sygnałów audio. Został dokładnie opisany wraz z innymi serwisami audio w rozdziale~\ref{sec:Sounds}.
+    
+    \item \texttt{SingleSoundManager} --- zarządca odtwarzania pojedynczych ścieżek, zapewniający obsługę zdarzeń zakończenia utworu.
+
+    \item \texttt{PlaylistManager} --- moduł sterujący sekwencyjnym odtwarzaniem utworów, delegujący zadania wykonawcze do niższych warstw systemu audio.
+    
+    \item \texttt{BinauralBeatGenerator} --- serwis odpowiedzialny za syntezę dudnień różnicowych w czasie rzeczywistym.
+    
+    \item \texttt{TextToSpeechService} --- moduł wykorzystujący bibliotekę \texttt{flutter\_tts} do odczytywania liczb i nazw faz oddechowych przez syntezator mowy.
+
+    \item \texttt{SettingsProvider} --- komponent zarządzający trwałym zapisem konfiguracji użytkownika (np. wybór języka, lektora).
+    
+    \item \texttt{TranslationProvider} --- serwis dostarczający tłumaczenia interfejsu w zależności od wybranego języka. Logika komponentu została szczegółowo opisana w rozdziale~\ref{sec:Languages}.
+    
+    \item \texttt{PresetDataBase} --- klasa odpowiedzialna za zarządzanie bazą danych treningów zapisanych na urządzeniu użytkownika.
+    
+    \item \texttt{TrainingImportExportService} --- moduł odpowiedzialny za operacje wejścia/wyjścia oraz wymianę danych z zewnętrznym systemem plików. Umożliwia trwały zapis treningów oraz ich udostępnianie pomiędzy różnymi urządzeniami. Proces importu i eksportu danych omówiono szerzej w sekcji~\ref{sec:Import}.
+    
+    \item \texttt{TrainingJsonConverter} --- warstwa transformacji danych, realizująca proces serializacji oraz deserializacji. Zapewnia standaryzację struktury plików treningowych, gwarantując ich poprawną interpretację podczas importu.
+    
+\end{itemize}
+
+\subsection{Model treningu} \label{subsec:TrainingModel}
+
+W celu zapewnienia elastyczności konfiguracji, model danych treningu został poddany dekompozycji i zgodnie z założeniami projektowymi, architektura opiera się na trzech głównych filarach. Uzupełnieniem tego modelu jest dziewięć klas pomocniczych, realizujących specyficzne, mniejsze zadania lub pełniących funkcję kontenerów danych. Taki podział zapewnia czytelność kodu oraz znacząco usprawnił implementację kolejnych funkcjonalności. Końcową architekturę przedstawia rysunek~\ref{img/class_diagram}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{diagramy/class_diagram.png}
+    \caption{Diagram klas treningowych}
+    \label{img/class_diagram}
+\end{figure}
+
+\noindent
+Rdzeń modelu danych stanowią trzy kluczowe klasy tworzące strukturę hierarchiczną: \texttt{Trening}, \texttt{TrainingStage} oraz \texttt{BreathingPhase}. Relacja między nimi opiera się na kompozycji: obiekt nadrzędny (\texttt{Trening}) agreguje kolekcję etapów (\texttt{TrainingStage}), które z kolei zawierają listy faz oddechowych (\texttt{BreathingPhase}). Uzupełnione są one o następujące klasy pomocnicze:
+
+\begin{itemize}
+    \item \texttt{Sounds} --- klasa kontenerowa agregująca konfigurację dźwięków zdefiniowaną przez użytkownika, uwzględniająca ich zakresy obowiązywania (zdefiniowane przez \texttt{SoundScope}).
+    
+    \item \texttt{SoundScope} --- typ wyliczeniowy określający zasięg odtwarzania przypisanego dźwięku. Dostępne warianty to: brak (\texttt{None}), globalny (\texttt{global}), dla etapu (\texttt{perStage}), dla fazy (\texttt{perPhase}) oraz cykliczny dla każdej fazy w etapie (\texttt{perEveryPhaseInEveryStage}).
+    
+    \item \texttt{SoundAsset} --- struktura danych reprezentująca pojedynczy zasób audio. Przechowuje metadane pliku, takie jak nazwa wyświetlana oraz ścieżka dostępu do zasobu w systemie plików.
+    
+    \item \texttt{SoundType} --- typ wyliczeniowy kategoryzujący rodzaje sygnałów dźwiękowych. Zbiór wartości obejmuje: brak (\texttt{None}), głos lektora (\texttt{Voice}), melodię tła (\texttt{Melody}), sygnał dźwiękowy (\texttt{Cue}) oraz odliczanie (\texttt{Counting}).
+    
+    \item \texttt{BreathingPhaseSounds} --- klasa konfigurująca oprawę audio dla pojedynczej fazy oddechowej. Umożliwia zdefiniowanie ścieżki tła oraz sygnału poprzedzającego rozpoczęcie danej fazy.
+    
+    \item \texttt{BreathingPhaseType} --- typ wyliczeniowy definiujący rodzaj czynności oddechowej. Wartości obejmują: wdech (\texttt{inhale}), wydech (\texttt{exhale}), zatrzymanie powietrza (\texttt{retention}) oraz regenerację (\texttt{recovery}).
+    
+    \item \texttt{BreathingPhaseIncrement} --- struktura definiująca parametr progresji czasu trwania fazy. Określa wartość (wyrażoną w sekundach), o którą wydłużana jest faza w każdym kolejnym cyklu treningowym.
+    
+    \item \texttt{BreathingPhaseIncrementType} --- typ wyliczeniowy określający jednostkę przyrostu czasu (obecnie obsługiwane są sekundy). Struktura ta została zachowana w celu zapewnienia elastyczności modelu pod kątem przyszłej implementacji inkrementacji procentowej.
+    
+    \item \texttt{Settings} --- klasa agregująca globalne parametry sesji treningowej. Przechowuje konfigurację czasów przygotowania (\texttt{preparationDuration}) i zakończenia (\texttt{endingDuration}), a~także ustawienia generatora dudnień różnicowych (status aktywacji oraz częstotliwość fali).
+\end{itemize}
+
+\section{Projekt interfejsu użytkownika (\Hania,\ \Ola,\ \Karol)}
+Podrozdział ten poświęcony jest projektowaniu interfejsu użytkownika opracowanej aplikacji mobilnej. Głównym celem było stworzenie intuicyjnej, wizualnie estetycznej oraz w pełni responsywnej warstwy użytkownika, zapewniającego pozytywne doświadczenia przy jednoczesnym spełnieniu wcześniej zdefiniowanych wymagań funkcjonalnych i niefunkcjonalnych.
+Do~kluczowych wymagań funkcjonalnych interfejsu należały:
+\begin{itemize}
+    \item przeglądanie i zarządzanie listą treningów,
+    \item przebieg treningu oddechowego z licznikiem czasu i wyświetlanymi instrukcjami,
+    \item zaawansowane tworzenie oraz edycja treningów oddechowych.
+\end{itemize}
+Spośród wymagań niefunkcjonalnych szczególnie uwzględniono:
+\begin{itemize}
+    \item pełną responsywność projektu oraz podejście \textit{mobile-first},
+    \item wsparcie dla dwóch wersji językowych (polski i angielski),
+    \item wysoką czytelność i estetykę wizualną,
+    \item częściową zgodność z wytycznymi dostępności \textit{WCAG~2.1} na poziomie~\textit{AA}.
+\end{itemize}
+
+Przy projektowaniu świadomie kierowano się wytycznymi dostępności \textit{WCAG~2.1} jako punktem odniesienia. Większość kluczowych zaleceń tego standardu --- w tym odpowiedni kontrast tekstu (minimum 4.5:1), widoczny wskaźnik aktywnej klawiatury czy tekstowe alternatywy dla elementów nietekstowych --- została zastosowana. Ze względu na prototypowy charakter projektu wykonanego w narzędziu Figma, pełna zgodność z \textit{WCAG~2.1~AA} nie była celem, a jedynie wskazówką projektową.
+
+Proces projektowania oparto na następujących metodykach i podejściach:
+\begin{itemize}
+    \item \textit{Mobile-first} --- projekt został stworzony skupiając się w pierwszej kolejności na użytkownikach urządzeń mobilnych,
+    \item \textit{Design System} --- zbudowano spójny system projektowy obejmujący paletę kolorów, typografię i komponenty, gwarantując jednolity wygląd i zachowanie aplikacji,
+    \item \textit{Atomic Design} --- interfejs skonstruowano w oparcie o hierarchię komponentów.
+\end{itemize}
+
+\subsection{Projekt w narzędziu Figma} \label{subsec:Figma}
+Do zaprojektowania interfejsu użytkownika wybrano narzędzie Figma, które oferuje zaawansowane prototypowanie, w tym reakcję zmiany widoków po kliknięciu w dany obiekt. Dodatkowo narzędzie zostało wybrane również ze względu na jego znajomość przez członków zespołu, możliwość współpracy i łatwego udostępniania gotowego projektu.
+
+W pierwotnej wersji ekran główny aplikacji stanowiła lista treningów oddechowych prezentowana w formie kafelków. Dodawanie nowego treningu realizowane było za pomocą przycisku pływającego, umieszczonego pod kafelkami. Dostępne były również opcje w prawym górnym rogu. Każdy kafelek treningu obsługiwał gesty przesunięcia w lewo, dając możliwość jego usunięcia, i w prawo --- dając możliwość jego edycji. Projekt można zobaczyć na rysunku \ref{img/respire_home}. 
+Mechanizm przesuwalnych kafelków okazał się jednak nieintuicyjny dla użytkowników i postanowiono z niego zrezygnować. W finalnej wersji aplikacji każdy kafelek treningu po kliknięciu przenosi użytkownika na dedykowany ekran szczegółów treningu, na którym w wyraźny sposób udostępniono przyciski do edycji, usunięcia i włączenia treningu.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.35]{obrazki/projekt_rozwiazania/figma_home.png}
+\caption{Pierwszy projekt aplikacji ReSpire --- Strona Główna}
+\label{img/respire_home}
+\end{figure}
+
+Przebieg treningu oddechowego w prototypie aplikacji ReSpire zaprojektowano w sposób maksymalnie intuicyjny i czytelny dla użytkownika. W centralnej części ekranu znajduje się element animowany w postaci koła, które płynnie zmienia swój promień i wyświetla pozostały czas do końca obecnej fazy oddechowej. Bezpośrednio nad nim znajduje się komponent wyświetlający instrukcje w postaci trzech kafelków, przedstawiających kolejno od lewej fazę poprzednią, obecną i następną. Dodatkowo w tym samym obszarze prezentowany był globalny postęp treningu --- liczba ukończonych cykli w stosunku do zaplanowanej liczby wszystkich cykli. Kliknięcie w~centralne koło miało powodować natychmiastowe wstrzymanie treningu, a ponowne jego kliknięcie wznawiało sesję od miejsca przerwania. Przy próbie opuszczenia ekranu treningu aplikacja miała wyświetlać potwierdzenie z informacją, iż bieżąca sesja zostanie przerwana i jej postęp nie zostanie zapisany. Projekt przebiegu treningu przedstawiono na rysunku \ref{img/respire_training}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.45]{obrazki/projekt_rozwiazania/figma_training.png}
+\caption{Pierwszy projekt aplikacji ReSpire --- przebieg treningu}
+\label{img/respire_training}
+\end{figure}
+
+Ekran edycji treningu w pierwotnym projekcie zawiera w górnej części tytuł, a w dolnej przycisk zapisu \textit{Save}, z którego w wersji ostatecznej zrezygnowano, ze względu na wprowadzenie mechanizmu automatycznego zapisu zmian. Główną część ekranu stanowi panel z trzema zakładkami:
+\begin{itemize}
+    \item \textit{Training} --- sekcja służąca do tworzenia i edycji własnych schematów oddechowych,
+    \item \textit{Sound} --- ustawienia muzyki i sygnałów dźwiękowych,
+    \item \textit{Other} --- pozostałe preferencje dotyczące treningu.
+\end{itemize}
+Wstępny projekt nie zakładał opisu treningu, który został dodany dopiero na późniejszych etapach rozwoju aplikacji. Prototyp przedstawiono na rysunku \ref{img/respire_settings}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.42]{obrazki/projekt_rozwiazania/figma_settings.png}
+\caption{Pierwszy projekt aplikacji ReSpire --- edycja treningu}
+\label{img/respire_settings}
+\end{figure}
+
+\subsection{Zrealizowany wygląd interfejsu użytkownika aplikacji}
+Finalnie zrealizowany projekt graficznego interfejsu użytkownika składa się z ośmiu głównych, pełnoekranowych widoków oraz \textit{splash screen'a} (pol. ekranu powitalnego) z dodatkowymi wyskakującymi oknami dialogowymi.
+Na rysunku \ref{img/view_transitions} przedstawiono diagram przejść między widokami. Strzałki obrazują nawigację, która odbywa się poprzez interakcję z elementami interfejsu (głównie przyciskami).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{obrazki/projekt_rozwiazania/view-transitions.png}
+    \caption{Możliwe przejścia między widokami w trakcie użytkowania aplikacji.}
+    \label{img/view_transitions}
+\end{figure}
+
+Wejściowym punktem aplikacji jest widok \texttt{HomePage}, do którego użytkownik trafia po wyświetleniu \textit{SplashScreen} w momencie uruchomienia aplikacji. Z poziomu ekranu głównego użytkownik ma dostęp do przejścia do widoku wybranego treningu (\texttt{TrainingPage}) poprzez kliknięcie w odpowiadający mu kafelek (\texttt{PresetTile}) lub przejście do strony ustawień aplikacji (\texttt{SettingsPage}) za pomocą przycisku koła zębatego w prawym górnym rogu ekranu. Z poziomu widoku danego treningu użytkownik ma możliwość uruchomienia treningu poprzez kliknięcie przycisku "Rozpocznij trening". Użytkownik przenoszony jest wówczas na chwilę na ekran ładowania (\texttt{PreloadingScreen}), by następnie zostać przekierowanym przez aplikację do odtwarzacza zadanego treningu \linebreak(\texttt{BreathingPage}). Po naciśnięciu przycisku edycji na ekranie treningu (\texttt{TrainingPage}) użytkownik przenosi się do edytora (\texttt{TrainingEditorPage}), a konkretniej do panelu edycji struktury treningu. Za pomocą górnej kontrolki \texttt{CustomSlidingSegmentedControl} (zachowującej się jak \textit{radio button} (pol. przycisk opcji)) użytkownik może przełączać między aktualnymi aspektami edycji treningu (między strukturą, dźwiękami a zakładką "Inne").
+
+Powrót do poprzedniego widoku realizowany jest standardowo poprzez przycisk wstecz w~lewym górnym rogu ekranu lub gest systemowy.
+
+\subsection{Identyfikacja wizualna aplikacji}
+W celu zapewnienia spójności wyglądu oraz estetyki aplikacji ReSpire przygotowana została identyfikacja wizualna obejmująca logo, kolory oraz czcionkę.
+
+Logo aplikacji zostało zaprojektowane w narzędziu \textit{Canva}, a część jego elementów była narysowana w edytorze graficznym \textit{AdobeFresco}. Połączenie dwóch różnych czcionek o odmiennych grubościach oraz dodatek grafiki podmuchu i detalu symbolizującego cząsteczkę powietrza nad literą \textit{i} oddaje ducha ReSpire. Logo używane w ekranie ładowania aplikacji oraz ikonie posiada napis umieszczony w dwóch liniach, jak przedstawiono na rysunku \ref{img/respire_logo}. Pomysł umieszczenia go na pasku na ekranie głównym spowodował, że powstała także druga wersja, w której całość mieści się w jednej linii, co pokazano na rysunku \ref{img/logo_w_jednej_linii}.
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.45]{obrazki/projekt_rozwiazania/logo_biale_tlo.png}
+        \caption{Logo ReSpire w oryginalnej wersji}
+        \label{img/respire_logo}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.45]{obrazki/projekt_rozwiazania/logo_poziom.png}
+        \caption{Logo przystosowane do użycia na ekranie głównym aplikacji}
+        \label{img/logo_w_jednej_linii}
+    \end{minipage}
+\end{figure}
+
+
+Na podstawie kolorystyki elementów w logo zostały wybrane trzy główne kolory aplikacji. Są to~odcienie niebieskiego. Kolor ten jest kojarzony z poczuciem spokoju i bezpieczeństwa \cite{blue}. Dzięki temu aplikacja jest spójna kolorystycznie, a także wywołuje przyjemne odczucia w użytkowniku, zapewniając wyciszenie i harmonię. 
+Poniżej przedstawiono listę kolorów zapisanych w~dwóch powszechnie stosowanych systemach zapisu barw oraz ich wizualizację:
+\definecolor{colA}{HTML}{1A93A8}
+\definecolor{colB}{HTML}{32B7CF}
+\definecolor{colC}{HTML}{7BDEF0}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{l l l}
+        
+        \colorbox{colA}{\phantom{XXXX}} & \textbf{HEX:} \#1A93A8 & \textbf{RGB:} (26, 147, 168) \\[6pt]
+        \colorbox{colB}{\phantom{XXXX}} & \textbf{HEX:} \#32B7CF & \textbf{RGB:} (50, 183, 207) \\[6pt]
+        \colorbox{colC}{\phantom{XXXX}} & \textbf{HEX:} \#7BDEF0 & \textbf{RGB:} (123, 222, 240)
+        
+    \end{tabular}
+    
+    \caption{Paleta kolorów głównych aplikacji}
+    \label{fig:color_palette}
+\end{figure}
+
+Jedna z dwóch czcionek użytych w logo --- \textit{Glacial Indifference} \cite{font} --- została również wykorzystana w~aplikacji, zapewniając jej unikatowy charakter. Jest to darmowy, otwartoźródłowy krój pisma zaprojektowany przez \textit{Hanken Design Co.} z~licencją \textit{SIL OPEN FONT LICENSE Version 1.1} \cite{font_license} pozwalającą na użytek zarówno prywatny, jak i komercyjny. Przykładowy tekst oraz znaki zapisane użytą czcionką przedstawione zostały na rysunku \ref{img/czcionki}. Wykorzystana została także domyślna czcionka \textit{Fluttera} dla aplikacji na systemie \textit{Android} --- \textit{Roboto}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/czcionka_pogrubiona.jpg}
+    \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/czcionka_regularna_tekst.jpg}
+    \caption{Czcionka \textit{Glacial Indifference} użyta w logo oraz aplikacji --- po lewej w wersji pogrubionej, a~po~prawej w standardowej}
+    \label{img/czcionki}
+\end{figure}
+
+Elementy charakterystyczne dla wyglądu ReSpire przedstawione zostały na rysunku \ref{img/kafelek_i_przycisk}. Białe kafelki z nazwami treningów na stronie głównej z asymetrycznymi zaokrągleniami oraz symbolami podmuchu stanowią prosty, ale modernistyczny element aplikacji. Przycisk dodawania własnego treningu nawiązuje do detalu cząstki powietrza w logo, czyniąc aplikację wyjątkową. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.25]{obrazki/projekt_rozwiazania/Kafelek_i_przycisk.png}
+    \caption{Kafelek z nazwą treningu oraz przycisk dodawania nowego poniżej}
+    \label{img/kafelek_i_przycisk}
+\end{figure}
+
+
+Wszytskie ikony używane w aplikacji pochodzą z otwartoźródłowej biblioteki \textit{Material Icons} \cite{icons} należącej do \textit{Google}. Są intuicyjne i minimalistyczne, dzięki czemu wygląd aplikacji jest spójny oraz przejrzysty dla użytkownika. Można je wykorzystywać na podstawie licencji \textit{Apache License, Version 2.0} \cite{font_license}. Przykładowe ikony przedstawiono na rysunku \ref{img/ikony}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{obrazki/projekt_rozwiazania/ikony.png}
+    \caption{Przykładowe ikony z biblioteki \textit{Material Icons}}
+    \label{img/ikony}
+\end{figure}
+
+W aplikacji zastosowano lekkie, łatwo skalowalne animacje w formacie Lottie \cite{animations}. Umożliwia on zapis w formie plików JSON, są bazowane na grafice wektorowej i idealnie nadaje się do~aplikacji mobilnych, zapewniając wysoką płynność i niskie wykorzystanie zasobów. Wykorzystane zostały dwie darmowe animacje --- fala \cite{wave_animation} wykonana przez \textit{CosmoYo} oraz łódka \cite{boat_animation}, której autorem jest \textit{Sergey Riznyk} na podstawie licencji \textit{Lottie Simple License (FL 9.13.21)} \cite{animations_license}. Zostały one dostosowane do potrzeb aplikacji poprzez między innymi: zmianę kolorów, usunięcie niektórych elementów, spowolnienie tempa odtwarzania czy zmianę orientacji. Animacje ożywiają warstwę prezentacji, dopełniając przestrzenie ekranu głównego i strony ze szczegółami treningu. Dzięki powolnemu tempu wprowadzają spokój.
+
+
+\section{Projekt struktury danych (\Jakub)}
+
+Model danych oparto na strukturze hierarchicznej, której fundament stanowią trzy kluczowe klasy: \texttt{Trening}, \texttt{EtapTreningu} oraz \texttt{FazaOddechowa}. Główna encja, \texttt{Trening}, składa się z co~najmniej jednego \texttt{EtapuTreningu} (relacja jeden do wielu). Każdy etap charakteryzuje się zdefiniowaną liczbą cykli (powtórzeń) oraz parametrem przyrostu czasu. Na najniższym poziomie hierarchii znajduje się \texttt{FazaOddechowa}. Etapy składają się z sekwencji faz o określonym czasie trwania oraz typie, wybieranym ze zbioru zdefiniowanych wartości: wdech, wydech, regeneracja lub~wstrzymanie. Opisywany projekt przedstawia rysunek~\ref{img/training_structure}, natomiast rozwinięcie i implementację tej struktury danych opisano w sekcji~\ref{subsec:TrainingModel}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{obrazki/projekt_rozwiazania/Struktura_treningu.jpg}
+    \caption{Struktura treningu}
+    \label{img/training_structure}
+\end{figure}
+
+\newpage
+\section{Wybór lokalnej bazy danych (\Karol)}
+
+W dynamicznie ewoluującym świecie wytwarzania oprogramowania mobilnego wybór odpowiedniej warstwy przechowywania danych stanowi jedną z najbardziej fundamentalnych decyzji architektonicznych. W związku z potrzebą zapewnienia trwałości informacji między uruchomieniami aplikacji ReSpire --- w szczególności w celu przechowywania danych treningów i ustawień użytkownika --- konieczne było przeprowadzenie kompleksowej ewaluacji dostępnych technologii trwałego zapisu danych.
+
+Specyfika pierwotnej wersji projektu ReSpire, jaką jest lokalne przechowywanie danych małego rozmiaru, stała się kluczowym filtrem, przez który analizowano potencjalne rozwiązania. W~przeciwieństwie do systemów klasy korporacyjnej wymagających synchronizacji w czasie rzeczywistym, priorytetami dla ReSpire są: szybkość uruchamiania, minimalizacja narzutu kodu oraz wydajność ładowania danych.
+
+Do analizy zakwalifikowano sześć wiodących rozwiązań kompatybilnych ze środowiskiem Flutter: Hive, Isar, ObjectBox, SQLite (sqflite), Drift oraz Floor.
+
+\subsection{Kryteria oceny i analiza porównawcza}
+
+Jako parametry porównawcze przyjęto zestaw metryk obejmujący zarówno wskaźniki popularności, jak i aspekty ściśle techniczne: język implementacji, typ bazy, sposób przechowywania danych, język zapytań, wydajność na małych zbiorach danych, czas inicjalizacji, narzut kody konfiguracyjnego, bezpieczeństwo typów, łatwość migracji schematu, wpływ na rozmiar zbudowanej aplikacji oraz złożoność zapytań. Tabela \ref{tab:db_comparison} reprezentuje zestawienie ilościowe i jakościowe analizowanych technologii.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{|l|c|c|c|c|c|c|}
+        \hline
+        \textbf{Parametr porównawczy} & \textbf{Hive} & \textbf{Isar} & \textbf{ObjectBox} & \textbf{\begin{tabular}{@{}c@{}}SQLite \\ (sqflite)\end{tabular}} & \textbf{Drift} & \textbf{Floor} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Polubienia (pub.dev; \\ stan na 09.12.2025)\end{tabular} & \textbf{6,21 tys.} \cite{hive_pub} & 2,41 tys. \cite{isar_pub} & 1,52 tys. \cite{objectbox_pub} & 5,48 tys. \cite{sqflite_pub} & 2,27 tys. \cite{drift_pub} & 999 \cite{floor_pub} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Pobrania (pub.dev; \\ stan na 09.12.2025)\end{tabular} & 1,06 mln \cite{hive_pub} & 8,12 tys. \cite{isar_pub} & 101 tys. \cite{objectbox_pub} & \textbf{2,39 mln} \cite{sqflite_pub} & 472 tys. \cite{drift_pub} & 20,4 tys. \cite{floor_pub} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Popularność (Google Trends; \\ stan na 01.2025 w ujęciu \\ 31.01.2015 - 31.01.2025)\end{tabular} & \textbf{36} \cite{gtrends} & 6 \cite{gtrends} & 3 \cite{gtrends} & 7 \cite{gtrends} & 10 \cite{gtrends} & 16 \cite{gtrends} \\
+        \hline
+        \begin{tabular}{@{}l@{}}Gwiazdki (GitHub; \\ stan na 09.12.2025)\end{tabular} & \textbf{4,4 tys.} \cite{hive_git} & 4 tys. \cite{isar_git} & 1,2 tys. \cite{objectbox_git} & 3 tys. \cite{sqflite_git} & 3,1 tys. \cite{drift_git} & 1 tys. \cite{floor_git} \\
+        \hline
+        \hline
+        Język & \textbf{Dart} & Dart+Rust & Dart+C & \textbf{Dart} & \textbf{Dart} & Dart+JS \\
+        \hline
+        Typ (Baza/ORM) & \textbf{Baza} & \textbf{Baza} & \textbf{Baza} & \textbf{Baza} & ORM & ORM \\
+        \hline
+        Sposób przechowywania & \textbf{Plikowy} &  \textbf{Plikowy} & \textbf{Plikowy} & SQLite & SQLite & SQLite \\
+        \hline
+        Model danych & \textbf{NoSQL} & \textbf{NoSQL} & \textbf{NoSQL} & Relacyjny & Relacyjny & Relacyjny \\
+        \hline
+        Język zapytań & \textbf{Dart} & \textbf{Dart} & \textbf{Dart} & SQL & Dart/SQL & SQL \\
+        \hline
+        Wydajność na małych danych & \textbf{Bardzo dobra} & \textbf{Bardzo dobra} & \textbf{Bardzo dobra} & Dobra & Dobra & Średnia \\
+        \hline
+        Czas inicjalizacji & \textbf{Błyskawiczny} & Szybki & Bardzo szybki & Umiarkowany & Umiarkowany & Wolniejszy \\
+        \hline
+        Narzut kodu konfiguracyjnego & \textbf{Niski} & Średni & Średni & Wysoki & Średni & Średni \\
+        \hline
+        Bezpieczeństwo typów & Częściowe & \textbf{Pełne} & \textbf{Pełne} & Brak & \textbf{Pełne} & \textbf{Pełne} \\
+        \hline
+        Migracja schematu & \textbf{Elastyczna} & Zaawansowana & \textbf{Automatyczna} & Trudna & Zaawansowana & \textbf{Automatyczna} \\
+        \hline
+        Wpływ na rozmiar APK & \textbf{Minimalny} & Wysoki & Wysoki & \textbf{Minimalny} & Średni & Średni \\
+        \hline
+        Złożoność zapytań & \textbf{Niska} & Wysoka & Wysoka & Wysoka & Wysoka & Średnia \\
+        \hline
+    \end{tabular}
+    }
+    \caption{Porównanie wybranych baz danych}
+    \label{tab:db_comparison}
+\end{table}
+
+Analiza porównawcza wykazała istotne różnice w podejściu do trwałego zapisu danych. Rozwiązania oparte na SQL (SQLite, Drift, Floor) cechują się sztywnym schematem i wyższym narzutem konfiguracyjnym, podczas gdy bazy NoSQL (Hive, Isar, ObjectBox) oferują większą elastyczność i wydajność w specyficznych scenariuszach.
+
+\subsection{Architektura oparta na pamięci operacyjnej a wydajność}
+
+Kluczowym czynnikiem decyzyjnym dla projektu ReSpire stała się wydajność na małych zbiorach danych. Tradycyjne bazy relacyjne, takie jak Sqflite czy Drift, przy każdym zapytaniu muszą odwoływać się do dysku (lub systemowej pamięci podręcznej), parsować zapytanie SQL i~deserializować wynik.
+
+Hive prezentuje odmienne podejście architektoniczne. Jest to baza par klucz-wartość napisana całkowicie w języku Dart, która przy starcie aplikacji ładuje swoje indeksy (a w przypadku małych wolumenów danych - całą bazę) bezpośrednio do pamięci operacyjnej (RAM) urządzenia. Ponieważ ReSpire operuje na niewielkiej ilości informacji, cała baza danych mieści się w pamięci nawet na starszych urządzeniach. Dostęp do danych staje się więc operacją na pamięci RAM, co~jest rzędami wielkości szybsze niż operacje dyskowe.
+
+\subsection{Minimalizm implementacyjny}
+
+W kontekście małego zespołu deweloperskiego i ograniczonego czasu, złożoność implementacji ma kluczowe znaczenie.
+\begin{itemize}
+    \item \textbf{SQLite (sqflite):} Wymaga ręcznego pisania zapytań SQL oraz manualnego odwzorowywania wyników (\texttt{Map<String, dynamic>}) na obiekty Dart. Jest to proces podatny na błędy, które ujawniają się dopiero w trakcie działania aplikacji.
+    \item \textbf{Drift/Floor:} Choć oferują bezpieczeństwo typów, wprowadzają znaczny narzut związany z~konfiguracją generatorów kodu i definicją tabel.
+    \item \textbf{Hive:} Eliminuje ten narzut, oferując proste API i nie wymagając warstwy translacji między obiektami a tabelami. Zapis obiektu sprowadza się do jednej, prostej linii kodu, co dla małego projektu oznacza oszczędność wielu godzin pracy.
+\end{itemize}
+
+\subsection{Elastyczność schematu i migracje}
+
+Aplikacje w fazie początkowej często zmieniają swoje wymagania. W bazach SQL (Drift, Floor) zmiana struktury danych, np. dodanie pola, wiąże się z koniecznością generowania migracji i podbijania wersji bazy. Hive jest w dużej mierze odporny na takie zmiany - dodanie nowego pola w klasie modelu Dart (jeśli jest opcjonalne lub posiada wartość domyślną) nie wymaga migracji. Baza po prostu zignoruje brakujące pole w starych rekordach, co pozwala na szybkie iteracje bez ryzyka uszkodzenia danych u użytkownika.
+
+\subsection{Wnioski}
+
+Przeprowadzona analiza porównawcza wskazuje, że \textbf{Hive} jest optymalnym wyborem dla aplikacji ReSpire. Łączy on w sobie dużą popularność z wydajnością idealnie dopasowaną do~modelu priorytetyzującego użytkowanie małych zbiorów danych offline. Hive zwycięża dzięki:
+\begin{enumerate}
+    \item \textbf{Wydajności:} Błyskawiczny dostęp do danych z pamięci RAM.
+    \item \textbf{Prostocie:} Minimalizacja kodu konfiguracyjnego i brak konieczności odwzorowywania ORM.
+    \item \textbf{Lekkości:} Czysty kod Dart bez skomplikowanych zależności, co skutkuje mniejszym rozmiarem aplikacji i łatwiejszym procesem budowania.
+\end{enumerate}
+Choć rozwiązania takie jak Isar czy ObjectBox oferują wyższą wydajność dla dużych zbiorów danych, a Drift potęgę relacyjnego SQL, w kontekście małej aplikacji stanowiłyby one nieuzasadniony \textit{overengineering} (pol. nadmierny narzut technologiczny).

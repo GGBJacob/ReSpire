@@ -1,0 +1,746 @@
+\chapter[Implementacja aplikacji mobilnej ReSpire \\(\Hania,\ \Ola,\ \Jakub,\ \Karol)]
+{Implementacja aplikacji mobilnej ReSpire \\[-10pt](\Hania,\ \Ola,\ \Jakub,\ \Karol)}
+Projekt został wykonany w środowisku Flutter za pomocą zestawu narzędzi dla programistów Flutter w wersji \textit{3.27.2} wspierającego język Dart w wersji \textit{3.6.1}. Ten zestaw narzędzi dla programistów umożliwia tworzenie aplikacji na platformy Android, iOS, Linux, macOS oraz Windows z wykorzystaniem jednej bazy kodu źródłowego. Porównując go z innymi popularnymi platformami służącymi do tworzenia aplikacji mobilnych, takimi jak React Native czy Kotlin Multiplatform, wyróżnia się szerokim wyborem konfigurowalnych komponentów oraz wysoką wydajnością i~płynnością działania. Czynnikiem decydującym o odrzuceniu Reacta była niższa efektywność. Kotlin natomiast cechuje się długim czasem kompilacji i nie posiada przydatnej funkcjonalności hot reload (pol. szybkie przeładowanie), która wspiera produktywność, dzięki szybkiej widoczności wprowadzanych zmian. Na wybór Fluttera wpłynęło również doświadczenie zespołu w pracy z~tą technologią, które eliminowało konieczność nauki nowego języka programowania, występującą w innych rozwiązaniach oraz jakościowa, przystępna dokumentacja. Zapewnienie trwałości danych między uruchomieniami zostało zrealizowane przy użyciu lokalnej, nierelacyjnej bazy danych Hive w wersji \textit{2.2.3}, przygotowanej pod środowisko Flutter oraz obiektowy język programowania Dart.
+
+\section{Schemat plików/klas/modułów (\Ola,\ \Jakub)}
+Aplikacja ReSpire charakteryzuje się modułową budową, na którą składają się łącznie 63 pliki źródłowe w języku Dart. Projekt obejmuje 80 klas oraz ponad 400 metod realizujących logikę biznesową i interfejs użytkownika. Całkowity rozmiar projektu wynosi nieco ponad 10~KLOC (~\textit{Thousands (kilo) Lines of Code} -- pol. tysięcy linii kodu), z czego blisko 8900 stanowi tzw. czysty kod, określany jako SLOC (\textit{Source Lines of Code} -- pol. źródłowe linie kodu). Ze względu na taką złożoność struktury, diagramy klas i architektury zostały w niniejszej dokumentacji podzielone na~logiczne fragmenty, aby zachować ich czytelność.
+
+Kod aplikacji składa się z wielu folderów, gdzie struktura i zawartość większości z nich została automatycznie wygenerowana przy tworzeniu projektu za pomocą zestawu narzędzi \textit{Flutter}, zapewniając elementy niezbędne do uruchomienia aplikacji na różnych platformach. Zostały one pokazane na rysunku \ref{fig:drzewko_glowne}. 
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{3cm}
+    \large
+    \dirtree{%
+    .1 ReSpire/.
+    .2 dart\_tool/....
+    .2 idea/....
+    .2 android/....
+    .2 assets/....
+    .2 build/....
+    .2 ios/....
+    .2 lib/....
+    .2 linux/....
+    .2 macos/....
+    .2 scripts/....
+    .2 web/....
+    .2 windows/....
+    .2 ....
+    } 
+  \end{minipage}
+  \caption{Struktura plików projektu --- główne foldery}
+  \label{fig:drzewko_glowne} 
+\end{figure}
+
+Foldery \textit{android/} i \textit{ios/} zawierają natywne projekty dla platform mobilnych, natomiast  \textit{macos/}, \textit{windows/} oraz \textit{linux/} --- dla systemów operacyjnych. W katalogu \textit{.idea/} umieszczone są~pliki konfiguracji dla \textit{Android Studio}, natomiast zawartość folderu \textit{build/} jest automatycznie generowana przy budowie aplikacji. Główny kod źródłowy, który został napisany podczas tworzenia aplikacji, znajduje się w~folderze \textit{lib/}.
+
+Konstrukcja folderu \textit{lib/} została przedstawiona na rysunku \ref{fig:drzewko_plikow}. Podział na podfoldery zgodnie ze ścisłą strukturą ułatwił organizację projektu oraz umożliwił zachowanie porządku w obszernym kodzie projektu. W folderze \textit{components/} zostały umieszczone pliki zawierające bazę danych oraz elementy używane do budowania widoków aplikacji, które są natomiast zawarte w~katalogu \textit{pages/}. Na tym samym poziomie zagłębienia utworzony został folder \textit{services/}, który przechowuje wszystkie serwisy i kontrolery, w tym dwa podfoldery \textit{SoundManagers} oraz \textit{TranslationProvider} dedykowane odpowiednio klasom zarządzającym dźwiękami w treningu oraz zmianą języka aplikacji. Pozostałe foldery --- \textit{theme/} oraz \textit{utils/} zawierają natomiast pliki dotyczące kolorów używanych w aplikacji oraz funkcje służące do formatowania tekstu czy jednostek czasowych. Jedynym plikiem umieszczonym poza podkatalogami jest \textit{main.dart}, który stanowi punkt wejścia do aplikacji.
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{6cm} 
+    \large
+    \dirtree{%
+    .1 lib/.
+    .2 components/.
+    .3 BreathingPage/....
+    .3 Global/....
+    .3 HomePage/....
+    .3 Settings/....
+    .3 TrainingEditorPage/....
+    .2 pages/....
+    .2 services/.
+    .3 SoundManagers/....
+    .3 TranslationProvider/....
+    .3 ....
+    .2 theme/.
+    .3 Colors.dart.
+    .2 utils/.
+    .3 DurationFormatter.dart.
+    .3 TextUtils.dart.
+    .2 main.dart.
+    }
+  \end{minipage}
+\caption{Struktura plików projektu --- kod źródłowy} 
+\label{fig:drzewko_plikow} 
+\end{figure}
+
+Zasoby dostarczane do aplikacji umieszczone zostały w folderze \textit{assets/} znajdującym się na tym samym poziomie zagłębienia, co opisany wyżej \textit{lib/}. Schemat katalogu przedstawiony został na rysunku \ref{fig:drzewko_zasobow}. Zasoby złożone są z: animacji przechowywanych w katalogu \textit{animations/}, plików JSON, będących słownikami używanymi do tłumaczenia aplikacji, w folderze \textit{languages/} oraz dźwięków w katalogu \textit{sounds/}. Został on podzielony na trzy podfoldery dla różnych typów plików dźwiękowych - \textit{counting/}, \textit{long/} oraz \textit{short/}. W katalogu znajduje się także plik \textit{generator.dart} służący do automatyzacji tworzenia map dźwięków. Do~zasobów należą również pliki graficzne logo umieszczone bezpośrednio w~opisywanym folderze.
+\begin{figure}[H] 
+  \centering
+  \begin{minipage}{4cm}
+    \large
+    \dirtree{%
+    .1 assets/.
+    .2 animations/....
+    .2 languages/....
+    .2 sounds/.
+    .3 counting/....
+    .3 long/....
+    .3 short/....
+    .3 generator.dart.
+    .2 ....
+    }
+  \end{minipage}
+\caption{Struktura plików projektu --- pliki zasobów} 
+\label{fig:drzewko_zasobow} 
+\end{figure}
+
+\section{Edytor treningów (\Karol)}
+
+Edytor treningów został wykonany jako dedykowany widok \texttt{TrainingEditorPage}, który operuje bezpośrednio na przekazanym mu przez referencję konkretnym obiekcie \texttt{Training}. Struktura treningu przechowywana jest w odpowiednich obiektach klas (\texttt{TrainingStage}, \texttt{BreathingPhase}, \texttt{Sounds}, \texttt{Settings}), dzięki czemu każda modyfikacja wprowadzona w interfejsie natychmiast zostaje zapisana w pamięci, a następnie po przejściu do poprzedniego etapu zostaje przekazana do~zapisu stałego w bazie danych. 
+
+Obsługa edytora została podzielona na trzy logiczne panele. Aktualnie wyświetlaną zakładkę można wybrać poprzez komponent \texttt{CustomSlidingSegmentedControl} inspirowany obecnym w komponencie \texttt{segmented} z systemu Apple iOS. Pozwoliło to oddzielić edycję przebiegu treningu, konfigurację dźwięków oraz ustawienia uzupełniające, utrzymując jednocześnie wspólną nawigację i kontrolę zapisów. 
+
+\subsection{Menu --- trening}
+Pierwsza zakładka \texttt{Trening} odpowiada za~logiczny układ hierarchicznej sesji oddechowej. Reprezentowana jest przez listę o zmiennym porządku --- \texttt{ReorderableListView}, w której wyświetlane są kolejne etapy treningu (\texttt{TrainingStageTile}). Każdy kafelek etapu treningu umożliwia zmianę jego nazwy, liczby powtórzeń i iteracyjnego przyrostu czasów, a także usunięcie całego etapu treningu za potwierdzeniem w wyskakującym oknie dialogowym zaimplementowanym za pomocą \texttt{AlertDialog}. Wewnątrz każdego kafelka etapu treningu umieszczona jest lista faz oddechu reprezentowana przez sekwencję komponentów \texttt{BreathingPhaseTile} zagnieżdżonych w kolejnej \texttt{ReorderableListView}. Dzięki temu zarówno etapy treningu w obrębie całego treningu, jak i fazy oddechu w obrębie etapu można uporządkować w kolejności zgodnej z upodobaniem użytkownika w trybie "przeciągnij za kontrolkę i upuść". Pola numeryczne panelu edycji etapu treningu (liczba powtórzeń, przyrost) oraz fazy oddechu (czas trwania) wykorzystują \texttt{TextEditingController} oraz \texttt{FocusNode}, aby zatwierdzać zmienione wartości dopiero po utracie skupienia na danym elemencie wprowadzania danych, a dodatkowe przyciski +/- umożliwiają inkrementalne korekty w krokach od 0{,}1 do 0{,}5 s. Dodawanie nowych faz i etapów wywołuje przewinięcie listy oraz zdejmuje skupienie z aktywnych pól, co zostało wprowadzone w celu zapobiegania konfliktom z klawiaturą ekranową. Przy próbie opuszczenia ekranu edycji treningu komponent opakowujący \texttt{WillPopScope} sprawdza, czy wszystkie etapy treningu zawierają przynajmniej jedną fazę, i w razie potrzeby wyświetla komunikat z możliwością wyboru automatycznego usunięcia pustych etapów treningu lub powrotu do edycji treningu oddechowego.
+
+\subsection{Menu --- dźwięki}
+Druga zakładka służy do zarządzania warstwą dźwiękową. Korzysta w tym celu ze współdzielonego obiektu klasy \texttt{Sounds}. Sprowadza się ona do przypisywania plików dźwiękowych do~konkretnych sytuacji w treningu. Zakładka ta dzieli się na 3 grupy. 
+
+W \texttt{Dźwiękach treningu} użytkownik może ustawić sygnał odliczania, sposób odtwarzania komunikatów o nadejściu kolejnej fazy (brak, per faza, globalnie --- wybierane z listy rozwijalnej) i~wybrać wskazówki audio zmiany etapu oraz cyklu. 
+
+W grupie \texttt{Muzyka treningu} może zdefiniować tło muzyczne w jednym z pięciu zakresów wybieranych z listy rozwijalnej: brak, globalnie, per etap, per faza, per faza w danym etapie. W trybie globalnym oraz trybie per etap wykorzystywane są komponenty edycji list odtwarzania. W zakresie globalnym jest to \texttt{PlaylistEditor}, który obsługuje listy odtwarzania poprzez przeciąganie pozycji, usuwanie oraz dodawanie nowych ścieżek z okna \texttt{AudioSelectionPopup}. Dla wariantu per etap zastosowano \texttt{StagePlaylistsEditor} (korzystający z \texttt{PlaylistEditor}), przyporządkowujący listy odtwarzania na identyfikatory etapów (\texttt{TrainingStage.id}). We wszystkich miejscach obsługiwanych przez \texttt{AudioSelectionPopup} użytkownik może także zaimportować własne pliki audio poprzez \texttt{file\_picker}; pliki są zapisywane w lokalnym systemie plików aplikacji i natychmiast dostępne. Ponadto wszystkie dźwięki w \texttt{AudioSelectionPopup} można odsłuchiwać dzięki \texttt{SingleSoundManager}. Dodatkowo przewidziano osobne pola wyboru dla muzyki odtwarzanej podczas specjalnych faz przygotowawczej i końcowej. 
+
+W trzeciej grupie zatytułowanej \texttt{Dźwięki Binauralne} aplikacja umożliwia wyłączenie muzyki w tle i zamiast niej włączenie odtwarzania tzw. dudnień binauralnych z regulacją częstotliwościami składowymi tychże dźwięków.
+
+Istotnym aspektem edytora jest również zaawansowana konfiguracja listy odtwarzania dla każdego etapu. Widget \texttt{PlaylistEditor} umożliwia użytkownikom nie tylko wybór plików dźwiękowych, ale także ich intuicyjne porządkowanie. Do jego implementacji wykorzystano między innymi komponent \texttt{ReorderableListView}, który obsługuje gesty przeciągania elementów. Co więcej, przy każdym elemencie listy dynamicznie doczytywany i wyświetlany jest czas trwania pliku. Zastosowanie asynchroniczności w tym procesie zapobiega "zamrażaniu" interfejsu podczas przetwarzania metadanych audio.
+
+\subsection{Menu --- inne}
+Zakładka "Inne" umożliwia edycję atrybutów obiektu klasy \texttt{Settings}. Interfejs obejmuje pole tekstowe (\texttt{TextField}) przeznaczone na opis treningu, a także dedykowane komponenty do konfiguracji czasu trwania fazy przygotowawczej oraz końcowej. Zastosowano w nich niestandardowe formatowanie wartości liczbowych oraz walidację danych wejściowych, która uniemożliwia wprowadzenie wartości ujemnych.
+
+
+\section{Importowanie oraz eksportowanie treningów (\Karol)} \label{sec:Import}
+
+Funkcje importu oraz eksportu treningów w aplikacji zostały zaimplementowane w celu zapewnienia użytkownikom łatwej wymiany konfiguracji treningowych pomiędzy różnymi urządzeniami, oraz tworzenia kopii zapasowych swoich ustawień pod nieobecność systemu scentralizowanego serwera do trwałego zapisu i synchronizacji danych.
+
+Rozwiązanie jest realizowane przez dedykowany serwis {TrainingImportExportService}. Odgrywa on rolę fasady dla operacji wejścia--wyjścia związanych z plikami treningowymi, lecz sam nie zajmuje się logiką biznesową. Logikę biznesową wykonuje na żądanie wcześniej wymienionego serwisu klasa pomocnicza \texttt{TrainingJsonConverter}, która zajmuje się operacjami serializacji obiektów treningów i deseralizacji zrzutów danych. W celu wywołania natywnych, systemowych okien dialogowych wyboru i zapisu plików została wykorzystana biblioteka \texttt{file\_picker} zapewniająca spójne doświadczenie użytkowników niezależnie od platformy (Android/iOS).
+
+Eksport danych możemy wykonać z dwóch miejsc w aplikacji. Pierwszą możliwością jest naciśnięcie przycisku udostępniania dostępnego z poziomu widoku szczegółów treningu \linebreak(\texttt{TrainingPage}). Można w ten sposób wyeksportować pojedynczy trening okraszony dynamicznie wygenerowaną na podstawie tytułu treningu nazwą pliku. Drugim punktem wywołania eksportu jest zaimplementowany na ekranie głównym (\texttt{HomePage}), przycisk umożliwiający masowy eksport wielu treningów jednocześnie. Niezależnie od wybranego punktu dostępu, za realizację operacji odpowiada ta sama metoda serwisowa, której implementację przedstawiono na listingu~\ref{code/import_export/export}. Użytkownik, korzystając z trybu wyboru, zaznacza poprzez dotknięcie interesujące go pozycje, które następnie są pakowane w zbiorczą strukturę JSON. Proces wybierania został zaprojektowany w sposób zbliżony do zaznaczania plików w managerach plików systemów mobilnych. Plik wynikowy otrzymuje nazwę zawierającą znacznik czasu, co ułatwia katalogowanie kopii zapasowych. 
+
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Pseudokod metody eksportu treningu}, label={code/import_export/export}]
+TRY
+  IF NazwaPliku == null THEN
+    TytulSanityzowany := OczyscTekst(Trening.Tytul)
+    DomyslnaNazwa := TytulSanityzowany + "_training.json"
+  ELSE
+    DomyslnaNazwa := NazwaPliku
+  END IF
+
+  TekstJson := KonwerterJson.NaJson(Trening)
+  DaneBinarne := KodujUTF8(TekstJson)
+  TytulOkna := Tlumacz.Pobierz("FilePicker.save_training")
+
+  SciezkaWyjsciowa := System.ZapiszPlik(
+    Tytul: TytulOkna,
+    Nazwa: DomyslnaNazwa,
+    Typ: "json",
+    Dane: DaneBinarne
+  )
+
+  RETURN SciezkaWyjsciowa != null
+
+CATCH Blad
+  RETURN false
+END TRY
+\end{lstlisting}
+\end{figure}
+
+Struktura wyeksportowanego pliku JSON jest kompletnym odzwierciedleniem modelu danych aplikacji. Zawiera ona metadane (tytuł, opis), pełną hierarchię etapów (\texttt{TrainingStage}) wraz z fazami oddechowymi (\texttt{BreathingPhase}) i ich parametrami czasowymi, a także szczegółową konfigurację ustawień (\texttt{Settings}) oraz zależności dźwięków (\texttt{Sounds}). Dzięki temu wyeksportowany plik jest samowystarczalną jednostką informacji, możliwą do osadzenia w dowolnej innej instancji aplikacji.
+
+Metody parsujące w klasie pomocniczej \texttt{TrainingJsonConverter} zostały zaprojektowane tak, aby rozpoznawać i poprawnie przetwarzać zarówno pojedyncze obiekty treningów, jak i listy obiektów lub struktury opakowane (używane przy eksporcie masowym). Po wczytaniu danych następuje proces walidacji oraz integracji, w ramach którego odtwarzane są powiązania do zasobów dźwiękowych metodą \texttt{updateSounds()}. Poprawnie zweryfikowane treningi są następnie dodawane do lokalnej bazy danych Hive, a interfejs użytkownika jest natychmiastowo odświeżany. Implementację metody realizującej ten proces przedstawiono na listingu~\ref{code/import_export/import}.
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Pseudokod metody importu treningow}, label={code/import_export/import}]
+TRY
+  Wynik := System.WybierzPlik(
+    Typ: "plik",
+    Rozszerzenia: ["json"],
+    WielePlikow: false
+  )
+
+  IF Wynik == null OR Wynik.JestPusty() THEN
+    RETURN null
+  END IF
+
+  Plik := Wynik.PobierzPierwszyPlik()
+
+  IF Plik.PosiadaDaneBinarne() THEN
+    TrescJson := DekodujUTF8(Plik.Dane)
+  ELSE IF Plik.PosiadaSciezke() THEN
+    TrescJson := Plik.CzytajJakoTekst()
+  END IF
+
+  IF TrescJson == null THEN
+    RETURN null
+  END IF
+
+  RETURN KonwerterJson.ZJsonWiele(TrescJson)
+
+CATCH Blad
+  RETURN null
+END TRY
+\end{lstlisting}
+\end{figure}
+
+\section{Przebieg treningu (\Hania)}
+\subsection{Klasa TrainingParser} \label{subsec:TrainingParser}
+Klasa \texttt{TrainingParser} powstała w celu przekształcenia hierarchicznych danych treningowych pobranych z lokalnej bazy danych \textit{Hive} w ciąg występujących po sobie faz, oparty na skonfigurowanym uprzednio przez użytkownika wzorcu oddychania. Jej zadaniem jest zwracanie kolejnych faz do obiektu \texttt{TrainingController}. Dzięki temu logika przełączania faz i powtórzeń jest odseparowana od interfejsu. Konstruktor jako parametr przyjmuje obiekt klasy \texttt{Training} i zapisuje do zmiennej \textit{currentTrainingStage} pierwszy etap treningu. 
+
+Zadaniem funkcji \texttt{nextInstruction}, której pseudokod przedstawiono w listingu \ref{code/parser/nextInstruction}, jest zwrócenie danych dotyczącej kolejnej fazy oddechowej w postaci mapy \texttt{Map<String, dynamic>} w~przypadku zakończenia całego treningu. W pierwszej kolejności analizowany jest aktualny indeks fazy oddechowej. Jeżeli wskazuje on ostatnią fazę w bieżącym etapie, oznacza to zakończenie jednego pełnego cyklu etapu. W takim przypadku indeks fazy jest zerowany, a licznik wykonanych powtórzeń w etapie zwiększany jest o jeden. Następnie sprawdzana jest liczba wykonanych powtórzeń w odniesieniu do wartości zdefiniowanej w obiekcie etapu. W przypadku jej osiągnięcia następuje przejście do kolejnego etapu treningu poprzez inkrementację indeksu etapu. Jeżeli po~tej operacji indeks ten osiągnie wartość równą liczbie wszystkich etapów w strukturze treningu, funkcja zwraca \textit{null}, sygnalizując zakończenie sesji. W przeciwnym razie wczytywany jest kolejny etap, a lokalny licznik powtórzeń zostaje wyzerowany. Gdy aktualna faza nie była ostatnią w cyklu, indeks faz jest jedynie zwiększany o jeden. Po ustaleniu poprawnego indeksu do zmiennej \textit{currentBreathingPhase} przypisywana jest odpowiadająca mu faza oddechowa. Kolejnym etapem jest obliczenie rzeczywistego czasu trwania fazy z uwzględnieniem mechanizmu progresji. 
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={TrainingParser --- algorytm pobrania następnej fazy}, label={code/parser/nextInstruction}]
+IF IdFazy == IdOstatniejFazyWEtapie THEN
+  IdFazy := 0
+  Powtorzenia := Powtorzenia + 1
+
+  IF Powtorzenia == LiczbaPowtorzenWEtapie THEN
+    IdEtapu := IdEtapu + 1
+
+    IF IdEtapu == LiczbaEtapowWTreningu THEN
+      RETURN null
+    ELSE
+      Etap := Trening.Etapy[IdEtapu]
+      Powtorzenia := 0
+    END IF
+  END IF
+
+ELSE
+  IdFazy := IdFazy + 1
+END IF  
+\end{lstlisting}
+\end{figure}
+\newpage
+Funkcja zwraca mapę zawierającą następujące klucze:
+\begin{itemize}
+    \item \textit{breathingPhase} --- pełny obiekt fazy,
+    \item \textit{remainingTime} --- czas trwania fazy wyrażony w milisekundach,
+    \item \textit{trainingStageName} --- nazwę aktualnego etapu treningu,
+    \item \textit{doneReps} --- obecny cykl etapu.
+\end{itemize}
+
+W ten sposób \textit{nextInstruction()} pełni rolę centralnego mechanizmu sterującego przebiegiem treningu oddechowego, zapewniając poprawne przechodzenie pomiędzy fazami i etapami oraz automatyczne zwiększanie trudności zgodnie z zaimplementowanym modelem progresji liniowej.
+
+\subsection{Klasa TrainingController} \label{subsec:TrainingController}
+
+\texttt{TrainingController} jest centralnym kontrolerem sesji treningu w aplikacji. Odpowiada~za precyzyjne, milisekundowe sterowanie czasem, płynne przechodzenie między fazami oddechowymi i inteligentne zarządzanie wszystkimi warstwami dźwiękowymi --- muzyka w tle, playlisty, odliczanie, zapowiedzi i dudnienia różnicowe. Zapewnia również poprawne przeprowadzenie użytkownika przez trzy główne etapy --- przygotowanie, właściwy trening i fazę końcową. Komponent zarządza wieloma zmiennymi, które zostały przedstawione w tabeli \ref{tab/controller}.
+\newline
+
+\noindent\begin{minipage}{\textwidth}
+\centering
+\small
+\begin{tabular}{|p{0.31\textwidth}|p{0.64\textwidth}|}
+\hline
+\textbf{Pole} & \textbf{Znaczenie} \\
+\hline
+\texttt{\_trainingStageIdQueue} &
+Równoległa kolejka ID etapów treningu. Pozwala wykryć zmianę etapu przed rozpoczęciem pierwszej fazy nowego etapu, co jest kluczowe dla natychmiastowego przełączenia playlisty i dźwięku zmiany etapu. \\
+\hline
+\texttt{breathingPhasesQueue} &
+Nasłuchiwana przez obiekt \texttt{InstructionSlider} kolejka faz oddechowych. Zawsze zawiera trzy elementy, które mogą również przyjąć wartość \texttt{null}. Pod indeksem 0 znajduje się obecnie trwająca faza, a na kolejnych dwie przyszłe. Mechanizm umożliwia wcześniejsze odtwarzanie zapowiedzi i płynną zmianę dźwięku tła i animacji. \\
+\hline
+\texttt{\_remainingTime} &
+Pozostały czas fazy bieżącej w milisekundach. \\
+\hline
+\texttt{\_nextRemainingTime} &
+Czas następnej fazy wczytany z wyprzedzeniem. \\
+\hline
+\texttt{second} &
+Zmienna typu \texttt{ValueNotifier<int>}, nasłuchiwana przez elementy interfejsu użytkownika do dynamicznego wyświetlania pozostałego czasu do końca fazy. \\
+\hline
+\texttt{isPaused} &
+Nasłuchiwana przez kontroler flaga stanu pauzy. \\
+\hline
+\texttt{end} &
+Flaga całkowitego zakończenia sesji. \\
+\hline
+\texttt{currentStageIndex} &
+Nasłuchiwany licznik  numeru aktualnego etapu wyświetlany w~interfejsie użytkownika. \\
+\hline
+\texttt{currentCycleIndex} &
+Nasłuchiwany licznik  numeru aktualnego cyklu w etapie wyświetlany w interfejsie użytkownika. \\
+\hline
+\texttt{totalStages} &
+Łączna liczba etapów \\
+\hline
+\texttt{totalCycles} &
+Łączna liczba powtórzeń w bieżącym etapie. \\
+\hline
+\texttt{\_preparationPhaseCompleted} &
+Flaga zakończenia fazy przygotowania \\
+\hline
+\texttt{\_endingInitiated} &
+Flaga rozpoczęcia fazy zakończenia \\
+\hline
+\end{tabular}
+\par\smallskip
+{Tabela 6.5.2.} Główne zmienne w klasie \texttt{TrainingController}.
+\label{tab/controller}
+\end{minipage}
+\newline
+\newpage
+Konstruktor przyjmuje jako parametr obiekt \texttt{TrainingParser} (rozdział \ref{subsec:TrainingParser}) i zapisuje \linebreak go do zmiennej \textit{parser}. Dodatkowo przy tworzeniu komponentu tworzone są obiekty \linebreak \texttt{SoundManager}, \texttt{PlaylistManager} i \texttt{BinauralBeatGenerator} zajmujące się obsługą dźwięków (rozdział \ref{sec:Sounds}). Wyłączane jest także wyświetlanie etykiet progresu treningu, dopóki nie zostanie on~rozpoczęty. Następnie ustawiane są wartości początkowe, przygotowywana jest faza rozpoczęcia i pobierane są pierwsze fazy treningu. 
+
+Funkcja \texttt{\_preloadBreathingPhases} służy do inicjalizacji kolejki faz oddechowych w treningu. Na początku tworzona jest pusta faza z wartościami \textit{null}. Spowodowane jest to potrzebą symulacji fazy przygotowania, która nie posiada żadnych wspólnych cech z pozostałymi fazami poza czasem trwania. Przypisanie wartości \textit{null} pozwala na rozróżnienie jej od właściwego treningu w wizualizacji instrukcji użytkownika w klasie \texttt{InstructionSlider} (rozdział \ref{subsec:InstructionSlider}). Następnie dodawane są dwie pierwsze fazy oddechowe treningu.
+
+Pobieranie kolejnych faz realizowane jest za pomocą metody \textit{\_fetchNextBreathingPhase}. Dane instrukcji w postaci mapy uzyskiwane są z obiektu \textit{parser}. W przypadku zwrócenia przez parser wartości \textit{null}, oznaczającej zakończenie pobierania danych treningowych, następuje oznaczenie tej sytuacji w zmiennej oraz dodanie końcowej fazy \textit{null}, reprezentującej fazę zakończenia. W przeciwnym razie wartości fazy, nazwa etapu treningowego, identyfikator etapu oraz czas pozostały są zapisywane do odpowiednich kolejek, a czas trwania nowej fazy zapamiętywany jest w~polu \textit{\_newBreathingPhaseRemainingTime}. Metodę przedstawiono w pseudokodzie \linebreak w listingu~\ref{code/controller/fetch}.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={TrainingController --- pobieranie fazy}, label={code/controller/fetch}]
+DaneInstrukcji := Parser.NastepnaInstrukcja() 
+
+IF DaneInstrukcji == null THEN 
+  KoniecPobieraniaDanych := true 
+  KolejkaFaz.Dodaj(null) 
+  KolejkaEtapow.Dodaj(null) 
+  RETURN 
+END IF 
+
+KolejkaFaz.Dodaj(DaneInstrukcji[Faza]) 
+KolejkaEtapow.Dodaj(DaneInstrukcji[Etap]) 
+CzasTrwaniaFazy.Dodaj(DaneInstrukcji[CzasTrwaniaFazy])
+\end{lstlisting}
+\end{figure}
+
+Następnie wywoływana jest metoda \textit{start}, która odpowiada za cały przebieg treningu. Bazuje ona na obiekcie \texttt{Timer} z~pakietu \texttt{dart}, który cyklicznie wykonuje zdefiniowane zachowanie co~zadany odcinek czasu. Ponieważ standardowy \texttt{Timer} okresowy nie gwarantuje idealnej precyzji i mogą występować opóźnienia, zastosowano mechanizm korekcji oparty na pomiarze rzeczywistego upływającego czasu. W tym celu wykorzystano zmienne, które pozwalają na bieżąco wyliczać faktycznie upłynięty czas pomiędzy kolejnymi wywołaniami i korygować ewentualne niedokładności zegara. 
+
+W kolejnym etapie pętli sterującej realizowana jest precyzyjna logika zarządzania czasem pozostałym do zakończenia bieżącej fazy oddechowej oraz synchronizacja wydarzeń dźwiękowych z rzeczywistym przebiegiem treningu. Zmienna \textit{previousSecond} przechowuje wartość ostatniej wyświetlonej sekundy, natomiast \textit{second} służy do natychmiastowej aktualizacji interfejsu użytkownika. Również wtedy, w zależności od aktualnego etapu treningu i ustawień dźwiękowych wywoływana jest metoda \textit{\_playCountingSound}, odpowiedzialna za odtwarzanie sygnału odliczającego. Mechanizm ten jest aktywny wyłącznie wtedy, gdy nie zachodzi celowe pominięcie pierwszego odliczania oraz gdy w danej fazie użytkownik nie wybrał braku ścieżki dźwiękowej. 
+
+Dalsza część algorytmu koncentruje się na zapewnieniu płynnego przejścia pomiędzy kolejnymi fazami oddechowymi z odpowiednim wyprzedzeniem dźwiękowym. Jeżeli w kolejce faz znajduje się co najmniej jedna kolejna faza, system monitoruje pozostały czas bieżącej fazy. Gdy osiągnie on wartość 100 ms lub mniej i sygnał zapowiadający zmianę fazy nie został jeszcze odtworzony, wywoływana jest metoda \textit{\_playPreBreathingPhaseSound} i jest on odtwarzany. \linebreak Co więcej, przed końcem fazy inicjowana jest łagodna zmiana muzyki tła poprzez wywołanie metody \textit{\_handleBackgroundSoundChange}. Dzięki temu przejście między ścieżkami dźwiękowymi jest płynne i przyjemne dla użytkownika. Na końcu każdej iteracji pętli dokonywana jest aktualizacja licznika czasu pozostałego. Jeżeli jego wartość jest równa lub mniejsza od zmierzonej ilość upływającego czasu (\textit{elapsed}), ale nadal dodatnia, czas pozostały jest jawnie zerowany. Ten mechanizm korekcji jest kluczowy z punktu widzenia stabilności numerycznej algorytmu. Eliminuje on ryzyko uzyskania ujemnych wartości licznika na skutek drobnych niedokładności zegara systemowego lub opóźnień, zapobiegając tym samym pomijaniu faz lub ich nieprawidłowemu kolejkowaniu. Fragment funkcji start przedstawiono w listingu~\ref{code/controller/start}.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={TrainingController --- początek funkcji start}, label={code/controller/start}]
+PoprzedniaSekunda := PozostalyCzas / 1000
+OstatniPomiar := PobierzObecnyCzas()
+ManadzerDzwiekow.Odtworz(AktualnyDzwiek)
+PominPierwszeOdwliczanie := false
+LicznikStopu := 2
+
+Timer(Interwal):
+  Teraz := PobierzObecnyCzas()
+  RoznicaCzasu := Teraz - OstatniPomiar
+  OstatniPomiar := Teraz
+
+  IF PoprzedniaSekunda > (PozostalyCzas / 1000) AND NOT Koniec THEN
+    PoprzedniaSekunda := PozostalyCzas / 1000
+    OdtworzDzwiekOdliczania(PoprzedniaSekunda)
+  END IF
+
+  IF PozostalyCzas > RoznicaCzasu THEN
+    PozostalyCzas := PozostalyCzas - RoznicaCzasu
+
+    IF KolejkaFaz.MaNastepnaFaze() THEN
+      NastepnaFaza := KolejkaFaz[1]
+      OdtworzDzwiekPrzedFaza(NastepnaFaza)
+      ZmienDzwiekTla(NastepnaFaza, 500)
+    END IF
+
+  ELSE IF PozostalyCzas > 0 THEN
+      PozostalyCzas := 0
+  END IF
+\end{lstlisting}
+\end{figure}
+\newpage
+Po osiągnięciu zera przez licznik czasu bieżącej fazy następuje przejście do kolejnej fazy oddechowej. W przypadku pierwszej fazy treningu właściwego, jeżeli użytkownik włączył dudnienia różnicowe, obliczana jest całkowita długość części głównej treningu, a następnie uruchamiany jest generator dudnień różnicowych z zadanymi częstotliwościami lewego i prawego kanału. Równolegle, przy pierwszym przejściu z fazy przygotowawczej do treningu właściwego, zatrzymywany jest aktualnie odtwarzany dźwięk przygotowawczy i faza przygotowawcza oznaczana jest jako zakończona. Aktywowane jest również wyświetlanie etykiet w interfejsie. Następnie, jeśli ustawiono globalny zakres muzyki tła, aktywowany zostaje tryb odtwarzania playlisty. Natomiast, jeśli ustawiono zakres dla etapu, wywoływana jest metoda \textit{\_switchToStagePlaylist}, która inicjuje odtwarzanie playlisty przypisanej do danego etapu. 
+
+Po osiągnięciu zera przez licznik bieżącej fazy realizowana jest logika zakończenia danej fazy oraz ewentualnego przejścia do fazy końcowej lub całkowitego zakończenia treningu. Gdy wszystkie fazy zostały wczytane, z kolejki faz usuwana jest właśnie zakończona faza,\linebreak a na jej miejsce dodawana jest wartość \textit{null}, reprezentująca fazę końcową.  Licznik \textit{\_stopTimer} określa, ile faz pozostało do momentu uruchomienia sekwencji zakończenia treningu. Jeżeli osiągnie zero, inicjowana jest faza końcowa. Jednocześnie aktywowana flaga \textit{skipFirstCounting}, aby uniknąć niepożądanego odtworzenia dźwięku odliczającego w fazie końcowej. W przypadku aktywnej playlisty treningowej wywoływana jest metoda \textit{completePlaylist()}, która zapewnia kontrolowane zakończenie odtwarzania i zwolnienie zasobów. Etykiety w interfejsie użytkownika są ukrywane, a metoda \textit{\_playEndingSound} uruchamia właściwą ścieżkę dźwiękową. W przeciwnym razie, gdy \textit{\_stopTimer} nie osiągnął zera, następuje przejście do kolejnej fazy treningu właściwego. Jeśli faza końcowa jest już aktywna i właśnie dobiegła końca, ustawiana jest flaga \textit{end}, sygnalizująca zakończenie treningu, a ekran zostaje zamknięty, kończąc całą sesję. 
+
+Gdy zakończenie bieżącej fazy nie powoduje jeszcze uruchomienia sekwencji końcowej, realizowane jest przejście do kolejnej fazy treningu właściwego. W tym celu z kolejki faz usuwana jest właśnie zakończona faza, a wartość pozostałego czasu zostaje ustawiona na wcześniej obliczony czas trwania kolejnej fazy. Bezpośrednio potem wywoływana jest metoda \textit{\_fetchNextBreathingPhase()}, która asynchronicznie wczytuje i przygotowuje dane kolejnej fazy, umożliwiając ciągłe wyprzedzenie w przetwarzaniu.  Na koniec wywoływana jest metoda \textit{\_updateCurrentTrainingStageLabel()}, zapewniająca natychmiastowe odświeżenie etykiety aktualnego etapu w interfejsie użytkownika. Fragment przedstawiono w listingu~\ref{code/controller/end}.
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={TrainingController --- zakończenie funkcji start}, label={code/controller/end}]
+IF LicznikFaz == 1 AND NOT FazaPrzygotowaniaZakonczona THEN
+  Odtwarzacz.Stop()
+  AktualnyDzwiek := null
+  FazaPrzygotowaniaZakonczona := true
+  PokazEtykiety := true
+  ObsluzDzwiekTla()
+END IF
+
+IF PozostalyCzas == 0 THEN
+  IF KoniecTreningu THEN
+    Koniec := true
+    ZamknijEkran()
+  END IF
+
+  IF WczytywanieZakonczone THEN
+    UsunPierwszaFaze()
+    KolejkaFaz.Dodaj(null)
+    LicznikStopu := LicznikStopu - 1
+
+    IF LicznikStopu == 0 THEN
+      KoniecTreningu := true
+      Odtwarzacz.Stop()
+      OdtworzKrotkiDzwiek(ZmianaEtapu)
+      PozostalyCzas := CzasZakonczenia
+      AktualnyDzwiek := DzwiekZakonczenia
+      PoprzedniaSekunda := PozostalyCzas / 1000
+      UkryjEtykiety()
+      OdtworzDzwiekZakonczenia(500)
+    ELSE
+      PozostalyCzas := PozostalyCzasNastepnejFazy
+      PoprzedniaSekunda := PozostalyCzas / 1000
+    END IF
+
+  ELSE
+    UsunPierwszaFaze()
+    PozostalyCzas := PozostalyCzasNastepnejFazy
+    PoprzedniaSekunda := PozostalyCzas / 1000
+    PobierzNastepnaFaze()
+  END IF
+END IF
+\end{lstlisting}
+\end{figure}
+
+\subsection{Klasa AnimatedCircle} \label{subsec:AnimatedCircle}
+Komponent \texttt{AnimatedCircle} odpowiada za wizualizację przebiegu fazy oddechowej w postaci animowanego koła. Wdech powoduje zwiększanie jego promienia, wydech --- zmniejszanie, natomiast fazy retencji i regeneracji utrzymują stały rozmiar.
+
+Obiekt przyjmuje dwa parametry --- obiekt typu \texttt{BreathingPhase?}, który reprezentuje aktualną fazę oddechową bądź wartość \textit{null} w przypadku zakończenia treningu oraz obiekt typu \texttt{bool} \textit{isPaused}, reprezentujący stan wstrzymania treningu. 
+
+Po utworzeniu obiektu na początku zostaje obliczona wartość początkowa czasu trwania animacji, która zapisywana jest w zmiennej na podstawie czasu trwania danej fazy. Następnie inicjowany jest kontroler animacji oraz animacja zmiany promienia koła. Kontroler ustawiany jest na~stan początkowy. Jeżeli trening nie jest wstrzymany i dostępna jest faza oddechowa, uruchamiana jest odpowiednia animacja — rosnąca dla wdechu lub malejąca dla wydechu. 
+
+Zachowanie koła zależne jest od jego poprzedniego stanu i zmiany parametrów wejściowych. Jeżeli faza oddechowa się zmieniła, względem ostatniego stanu następuje reakcja zmiany animacji. Ponownie obliczany jest czas trwania animacji i ustawiane zostaje poprawne zachowanie --- wzrost promienia dla wdechu i jego zmniejszenie dla wydechu. Aktualizację stanu przedstawiono w listingu~\ref{code/circle/update}
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[caption={AnimatedCircle --- aktualizacja stanu}, label={code/circle/update}]
+IF StanKomponentu != PoprzedniStanKomponentu THEN
+  IF Faza == null THEN
+    CzasTrwaniaAnimacji := 0
+  ELSE
+    CzasTrwaniaAnimacji := CzasTrwaniaFazy
+  END IF
+
+  IF TreningZapauzowany AND Faza != null THEN
+    IF Faza.Typ == Wdech THEN
+      KoloRosnie()
+    ELSE IF Faza.Typ == Wydech THEN
+      KoloMaleje()
+    END IF
+  ELSE
+    Kontroler.stop()
+  END IF
+END IF
+\end{lstlisting}
+\end{figure}
+
+Koło \texttt{AnimatedCircle} reaguje również na zmianę parametru \textit{isPaused}, która określa czy trening został zatrzymany. Jeśli tak, animacja zostaje wstrzymana, w innym wypadku, jeśli trening był zatrzymany i został wznowiony, animacja zostaje kontynuowana w kierunku wynikającym z~bieżącej fazy.
+
+Dodatkowo utworzony został obiekt łączący \texttt{AnimatedCircle} oraz dwa koła statyczne typu \texttt{Container} wizualizujące maksymalną i minimalną wartość promienia koła \texttt{AnimatedCircle}, by umożliwić użytkownikowi lepiej ocenić przebieg wdechu i wydechu.
+
+\newpage
+\subsection{Klasa InstructionSlider} \label{subsec:InstructionSlider}
+\texttt{InstructionSlider} to animowany komponent odpowiadający za wizualizację ciągu instrukcji dla użytkownika w postaci trzech kafelków reprezentujących:
+\begin{itemize}
+    \item poprzednią fazę oddechową,
+    \item obecną fazę oddechową,
+    \item nadchodzącą fazę oddechową.
+\end{itemize}
+Gdy zachodzi zmiana fazy, cała lista przesuwa się w lewo, a na końcu pojawia się nowy kafelek z~kolejną instrukcją.
+
+Obiekt przyjmuje trzy parametry — czas trwania fazy przygotowania przed treningiem, kolejkę faz oddechowych w treningu oraz flagę zmiany obecnie trwającej fazy.
+
+Podczas inicjalizacji obiekt tworzy pierwszy kafelek reprezentujący fazę przygotowania. Następnie dodawane są dwie fazy z kolejki faz treningu w tej samej formie. Każdy kafelek przechowuje tekst w postaci instrukcji dla użytkownika i informację, na której pozycji ma się znaleźć.
+
+\texttt{InstructionSlider} korzysta z \texttt{AnimationController}, który przy każdej zmianie fazy przesuwa wszystkie kafelki o jedną pozycję w lewo. Każdy kafelek ma przypisaną pozycję z przedziału od -2 do 2. Wartości skrajne (-2 oraz 2) znajdują się poza obszarem widocznym dla użytkownika i~służą jedynie do zapewnienia płynniejszej i estetyczniejszej animacji. W centrum ekranu znajdują się trzy środkowe pozycje: -1 odpowiada fazie poprzedniej, 0 fazie bieżącej, a 1 fazie nadchodzącej. Gdy kafelek na pozycji -2 i ma zostać przesunięty, zostaje usunięty w celach optymalizacyjnych. Dodatkowo wykorzystywany jest mechanizm skalowania środkowego kafelka w~celu wizualnego podkreślenia aktualnie trwającej fazy.
+
+Każda zmiana fazy powoduje uruchomienie aktualizacji stanu komponentu. Mechanizm opiera się na porównaniu poprzedniej i bieżącej wartości parametru \textit{change}. Dzięki temu komponent wykrywa moment rozpoczęcia nowej fazy. Obliczany jest wtedy czas trwania nowej fazy, wywoływana jest animacja oraz dodawany nowy kafelek z instrukcją.
+\newpage
+\section{Dźwięki (\Jakub)} \label{sec:Sounds}
+
+Wysoki stopień konfigurowalności warstwy audio przez użytkownika i chęć postępowania zgodnie z \textit{Single Responsibility Principle} (pol. zasadą pojedynczej odpowiedzialności), sformułowaną przez R. C. Martina~\cite{agile}, wymusiły dekompozycję logiki biznesowej aplikacji na klasy odpowiedzialne za poszczególne przypadki użycia. Podział ten reprezentuje rysunek \ref{img/soundManagers}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{diagramy/soundManagers_diagram.png}
+  \caption{Struktura klas obsługi dźwięków}
+  \label{img/soundManagers}
+\end{figure}
+
+\newpage
+\subsection{SoundManager} \label{subsec:SoundManager}
+Centralnym elementem modułu audio jest klasa \texttt{SoundManager}. Ze względu na konieczność zapewnienia globalnego punktu dostępu do listy załadowanych plików oraz potrzebę współdzielenia jednej instancji obiektu przez wiele komponentów aplikacji, zastosowano w niej wzorzec projektowy Singleton. Obiekt ten agreguje kluczowe struktury danych: mapy powiązań odtwarzaczy oraz zbiór dostępnych plików dźwiękowych. Ten ostatni został podzielony na dwie odrębne kolekcje dedykowane odpowiednio krótkim i długim formom audio.
+
+Rozróżnienie na typy dźwięków było niezbędne ze względu na odmienną logikę ładowania i odtwarzania plików. Krótkie efekty dźwiękowe wymagają minimalnej latencji (czasu reakcji) przy odtwarzaniu i częstych powtórzeń, natomiast długie ścieżki dźwiękowe charakteryzują się rzadszą rotacją i mniejszą dynamiką zmian, przez co nie podlegają tak rygorystycznym wymogom czasowym przy inicjalizacji. Do osiągnięcia tego wymagania należało zastosować oddzielne konfiguracje odtwarzaczy dźwięków (komponentów klasy \texttt{AudioPlayer}) --- \textit{low latency mode} (pol. tryb minimalnego czasu reakcji) lub \textit{media player mode} (pol. tryb odtwarzania media).
+
+Mimo zastosowania dedykowanych trybów, rozwiązanie to napotkało szereg barier technologicznych. Po pierwsze, tryb minimalnego czasu reakcji nie udostępniał mechanizmu zdarzeń, co uniemożliwiało detekcję momentu zakończenia odtwarzania. Z kolei własna implementacja powodowała wysoki narzut obliczeniowy, uniemożliwiając emisję sygnałów dźwiękowych z wymaganą precyzją. Ograniczenia te wymusiły wprowadzenie mechanizmu puli obiektów --- \texttt{AudioPlayerPool} opisanego w rozdziale~\ref{subsec:AudioPlayerPool}. 
+
+Kluczowym aspektem konfiguracji było również zapewnienie współbieżności emisji, umożliwiającej równoczesne odtwarzanie wielu nakładających się na siebie dźwięków. W połączeniu z~mechanizmem  płynnych przejść, który obejmuje obsługę efektów \textit{fade-in} (pol. stopniowego podgłaśniania przy rozpoczynaniu odtwarzania) oraz \textit{fade-out} (pol. wyciszania przy jego zatrzymywaniu), rozwiązanie to zapewnia profesjonalną i przyjemną w odbiorze warstwę audio.
+
+\subsection{SingleSoundManager} \label{subsec:SingleSoundManager}
+
+Klasa \texttt{SingleSoundManager} dedykowana jest do obsługi odtwarzania sygnałów w trybie wyłączności. W warstwie implementacyjnej deleguje ona zadania do globalnego \texttt{SoundManagera} opisanego w~rozdziale~\ref{subsec:SoundManager}, jednak w przeciwieństwie do niego, uniemożliwia współbieżne odtwarzanie wielu ścieżek --- w danym momencie odtwarzany może być tylko jeden plik.
+
+Informacja o aktywnym zasobie przechowywana jest w polu \texttt{currentlyPlaying}. Co istotne, odtwarzanie realizowane jest tutaj wyłącznie w trybie \textit{media player}. Pozwala to na nasłuchiwanie zdarzeń zakończenia emisji i automatyczne czyszczenie stanu zmiennej. Mechanizm ten znajduje zastosowanie m.in. podczas wyboru dźwięków w edytorze treningu (w dodatku A, rozdział~\ref{img/dzwieki_uzytkownika}), umożliwiając dynamiczną aktualizację interfejsu użytkownika w zależności od stanu odtwarzacza.
+
+\subsection{PlaylistManager} \label{subsec:PlaylistManager}
+
+Za obsługę sekwencyjnego odtwarzania zbiorów plików muzycznych w trakcie treningu odpowiada klasa \texttt{PlaylistManager}. Enkapsuluje ona stan procesu, przechowując flagi sterujące (typu logicznego, \texttt{boolean}), kursor bieżącego utworu oraz listę ścieżek. Istotnym elementem jest również obiekt typu \texttt{Completer}, pełniący rolę prymitywu synchronizacyjnego służącego do obsługi zdarzeń przerwania odtwarzania. 
+
+Do realizacji swoich funkcji klasa deleguje zadania do \texttt{SingleSoundManagera} (rozdział~\ref{subsec:SingleSoundManager}). Decyzja ta podyktowana jest koniecznością precyzyjnej detekcji momentu zakończenia utworu, co jest natywną funkcjonalnością wykorzystywanego modułu. Mechanizm przełączania ścieżek opiera się na asynchronicznym oczekiwaniu na pierwsze z dwóch zdarzeń: naturalne zakończenie odtwarzania przez odtwarzacz lub wymuszone przerwanie (jest ono sygnalizowane przez \texttt{\_playlistCompleter}). Logikę tę obrazuje pseudokod w listingu~\ref{code/PlaylistManager/await}.
+
+\begin{figure}[H] 
+\centering
+\begin{lstlisting}[caption={Pseudokod mechanizmu obsługi pętli odtwarzania playlisty}, label={code/PlaylistManager/await}]
+  WAIT FOR (Odtwarzacz.Zakonczono OR Odtwarzacz.Przerwano)
+
+  IF (jest_wstrzymane OR jest_zatrzymane) THEN
+      RETURN
+  END IF
+
+  IndeksBiezacy := IndeksBiezacy + 1
+  CALL OdtworzNastepnyDzwiek()
+\end{lstlisting}
+\end{figure}
+
+\subsection{AudioPlayerPool} \label{subsec:AudioPlayerPool}
+
+Implementacja klasy \texttt{AudioPlayerPool} wynika bezpośrednio ze zidentyfikowanych ograniczeń technicznych --- braku obsługi zdarzeń zakończenia odtwarzania w trybie minimalnego czasu reakcji. Celem tego modułu jest umożliwienie emisji krótkich sygnałów dźwiękowych o wysokiej częstotliwości (w odstępach rzędu 100 ms).
+
+Konstruktor klasy przyjmuje parametr całkowitoliczbowy, definiujący rozmiar bufora cyklicznego, w którym przechowywane są instancje odtwarzaczy. Mechanizm pobierania zasobu z puli realizuje strategię rotacji i odświeżania: obiekt znajdujący się pod bieżącym wskaźnikiem podlega zniszczeniu i na jego miejsce tworzony jest nowy. Podejście to jest kluczowe przy kolejnych obiegach listy, aby wyeliminować błędy wynikające z próby ponownego użycia odtwarzacza posiadającego zablokowany stan po poprzednim odtworzeniu. Logikę pobierania instancji przedstawia listing pseudokodu~\ref{code/AudioPlayerPool/next}.
+
+\begin{figure}[H] 
+\centering
+\begin{lstlisting}[caption={Pseudokod mechanizmu pobierania elementu z puli cyklicznej}, label={code/AudioPlayerPool/next}]
+  FUNCTION PobierzNastepny() : AudioPlayer
+      Kursor := Kursor + 1
+
+      IF Kursor >= RozmiarPuli THEN
+          Kursor := 0
+      END IF
+
+      CALL Pula[Kursor].ZwolnijZasoby()
+      Pula[Kursor] := NEW AudioPlayer()
+
+      RETURN Pula[Kursor]
+  END FUNCTION
+\end{lstlisting}
+\end{figure}
+
+\section{Języki (\Jakub)} \label{sec:Languages}
+
+Interfejs użytkownika został przystosowany do obsługi wielu wersji językowych, oferując obecnie pełne wsparcie dla języka polskiego oraz angielskiego. Zasoby tekstowe przechowywane są w zewnętrznych plikach formatu JSON, umieszczonych w katalogu \textit{assets/}. Przyjęta konwencja nazewnictwa plików opiera się na standardowych kodach lokalizacji (np. \texttt{pl\_PL.json}).
+
+Za warstwę logiczną odpowiada serwis \texttt{TranslationProvider}. Przechowuje on w pamięci operacyjnej stan wybranego języka oraz załadowany słownik tłumaczeń w strukturze \texttt{Map<String, dynamic>} zachowując pierwotną, hierarchiczną formę. Pobieranie fraz realizuje metoda \linebreak\texttt{getTranslation}, która interpretuje argument wejściowy jako ścieżkę nawigacji w strukturze JSON (gdzie poszczególne węzły rozdzielone są separatorem kropki, np. \texttt{"home.title"}). Algorytm dzieli przekazany klucz, a następnie przechodzi przez kolejne poziomy mapy w poszukiwaniu docelowego tekstu. Jeśli wskazana ścieżka jest poprawna, przypisana do niej wartość zostaje zwrócona. W przeciwnym razie (np. błędny klucz lub brak węzła) system zwraca pierwotny klucz, co~stanowi mechanizm zabezpieczający. Implementację tej logiki przedstawiono w listingu pseudokodu~\ref{code/TranslationProvider/getTranslation}, natomiast przykładową strukturę danych wykorzystywaną przez moduł tłumaczeń zaprezentowano w listingu~\ref{code/TranslationProvider/example}.
+
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Pseudokod algorytmu pobierania tłumaczenia z zagnieżdżonej struktury}, label={code/TranslationProvider/getTranslation}]
+  FUNCTION PobierzTlumaczenie(Klucz) : Tekst
+      IF SlownikTlumaczen JEST PUSTY THEN
+          RETURN Klucz
+      END IF
+
+      Segmenty := SPLIT(Klucz, separator=".")
+      ObecnyWezel := SlownikTlumaczen
+
+      FOR EACH Segment IN Segmenty DO
+          IF (ObecnyWezel JEST Mapa) AND (ObecnyWezel ZAWIERA Segment) THEN
+              ObecnyWezel := ObecnyWezel[Segment]
+          ELSE
+              RETURN Klucz
+          END IF
+      END FOR
+
+      IF ObecnyWezel JEST Tekstem THEN
+          RETURN ObecnyWezel
+      ELSE
+          RETURN Klucz
+      END IF
+  END FUNCTION
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{lstlisting}[caption={Fragment struktury pliku tłumaczeń (en\_EN.json)}, label={code/TranslationProvider/example}]
+{
+   "SoundsTab":{
+      "TrainingSounds":{
+        "title": "Training sounds",
+        "counting_sound": "Counting",
+        "NextBreathingPhaseSounds":{
+          "title":"Next breathing phase: ",
+          "none": "no sound",
+          "global":"Global phase change sound",
+          "voice":"lector",
+          "for_each_breathing_phase":"change sound for each phase"
+        },
+        "stage_change_sound": "End of stage",
+        "cycle_change_sound": "End of cycle"
+      },
+    }
+}
+\end{lstlisting}
+\end{figure}
+
+\section{Generator list dźwięków (\Ola)}
+W celu automatyzacji pracy i wyeliminowania ryzyka błędów z powodu ręcznego wprowadzania nazw oraz ścieżek do plików dźwiękowych, stworzony został prosty generator list dźwięków. Został on umieszczony w folderze \textit{assets/}, w podfolderze \textit{sounds/}, w pliku \textit{generator.dart}. Narzędzie to generuje plik \textit{Sounds\_lists.g.dart} zapisywany w folderze \textit{lib/} w podkatalogu \textit{components/Global}. Zawiera on klasę \texttt{ReSpireSounds}, w której znajdują się trzy mapy z kluczem będącym łańcuchem znaków reprezentującym nazwę dźwięku oraz wartością będącą typu \texttt{SoundAsset}. Ma on parametry takie jak nazwa, ścieżka do pliku oraz rodzaj dźwięku podawane w konstruktorze. Wyróżnione zostały trzy rodzaje dźwięków opisywane przez typ wyliczeniowy \texttt{SoundType}: krótkie efekty dźwiękowe (\texttt{SoundType.cue}), dłuższe nagrania (\texttt{SoundType.melody}) oraz dźwięki odliczania (\texttt{SoundType.counting}). Każda z trzech map grupuje dźwięki konkretnego typu.
+
+Uniknięcie powtarzalności kodu generatora zostało osiągnięte dzięki użyciu dodatkowej struktury --- klasy \texttt{SoundsInfo}. Zawiera ona trzy pola typu tekstowego: \textit{soundType} określające typ dźwięku, \textit{directory} przechowujące nazwę podfolderu zawierającego dźwięk danego typu oraz \textit{mapName} definiujące mapę dedykowaną temu typowi. Tworzona jest lista obiektów tej klasy, dzięki czemu  można wykonać jedną pętlę po trzech różnych typach dźwięków, zmieniając jedynie parametry.
+
+W celu wywołania generatora należy uruchomić w terminalu nastepujące polecenie: \texttt{dart run assets/sounds/generator.dart}, będąc w katalogu głównym projektu (folder \textit{ReSpire/}). Pliki dźwiękowe muszą być umieszczone w~odpowiednich podfolderach w~katalogu \textit{assets/sounds/}, aby zostały poprawnie wykryte przez generator. Są to kolejno: \textit{cues/} dla krótkich efektów dźwiękowych, \textit{melodies/} dla dłuższych nagrań oraz \textit{counting/} dla dźwięków odliczania, analogicznie jak w~przypadku struktury map w wygenerowanym pliku. Istotne jest, aby pliki miały odpowiednie nazwy --- są one później wykorzystywane jako nazwa tworzonego obiektu klasy \texttt{SoundAsset} oraz klucz w~mapie. Znaki \textit{-} oraz \textit{\_} w nazwach plików są automatycznie zamieniane na spacje, aby zapewnić czytelność nazw dźwięków w interfejsie użytkownika, a pierwsza litera nazwy jest zamieniana na wielką w razie potrzeby. Dokonuje tego funkcja \texttt{capitalizeAndRemoveTextSeparators()} pochodząca z klasy \texttt{TextUtils}. Linijki tworzące kolejne wpisy w mapie są zapisywane do bufora, a~następnie cały bufor jest zapisywany do pliku docelowego. 
+
+\newpage
+\section{Baza danych (\Karol)}
+W celu zapewnienia trwałego zapisu danych użytkownika w naszej aplikacji mobilnej zaimplementowaliśmy lokalną bazę danych. Zważywszy na wybrane wcześniej środowisko Flutter, wymaganie wspierania wielu platform oraz wysoką gęstość zapisu danych, wybraliśmy napisaną w~języku Dart nierelacyjną bazę Hive w wersji 2.2.3. Jest to lekka baza typu \textit{key-value store}, która przechowuje dane w formacie binarnym bezpośrednio na urządzeniu użytkownika, bez konieczności łączenia się z serwerem zewnętrznym.
+
+\subsection{Architektura i generowanie kodu}
+Hive wykorzystuje mechanizm generowania kodu adapterów zajmujących się niskopoziomowymi operacjami na plikach bazy danych. Dzięki bardzo dobrej integracji z językiem Dart umożliwia łatwe odwzorowanie klas w bazie danych poprzez dwie adnotacje: \texttt{@HiveType()} oraz \texttt{@HiveField()}. Adnotacja \texttt{@HiveType(typeId: n)} oznacza klasę jako typ możliwy do serializacji, gdzie \texttt{typeId} musi być unikalnym identyfikatorem liczbowym. Adnotacja \texttt{@HiveField(n)} oznacza poszczególne pola klasy, które mają być zapisywane do bazy.
+
+Listing~\ref{code/hive/settings} przedstawia przykładową klasę \texttt{Settings} z adnotacjami Hive:
+
+\begin{lstlisting}[caption={Klasa Settings z adnotacjami Hive}, label={code/hive/settings}]
+import 'package:hive_flutter/hive_flutter.dart';
+
+part 'Settings.g.dart';
+
+@HiveType(typeId: 8)
+class Settings {
+  
+  @HiveField(0)
+  int preparationDuration = 3;
+  
+  @HiveField(1)
+  int endingDuration = 5;
+
+  @HiveField(2)
+  bool binauralBeatsEnabled = false;
+  
+  @HiveField(3)
+  double binauralLeftFrequency = 200.0;
+  
+  @HiveField(4)
+  double binauralRightFrequency = 210.0;
+}
+\end{lstlisting}
+
+Po oznaczeniu klasy danych odpowiednimi adnotacjami i uruchomieniu polecenia \texttt{flutter pub run build\_runner build}, generator automatycznie tworzy pliki z rozszerzeniem \texttt{.g.dart} zawierające klasy \texttt{TypeAdapter}. Adaptery te implementują logikę serializacji i deserializacji obiektów do formatu binarnego:
+\begin{itemize}
+    \item metoda \texttt{read()} -- odczytuje dane binarne z bazy i odtwarza obiekt Dart,
+    \item metoda \texttt{write()} -- przetwarza obiekt Dart na ciąg bajtów do zapisu.
+\end{itemize}
+
+Listing~\ref{code/hive/adapter} przedstawia fragment automatycznie wygenerowanego adaptera dla klasy \texttt{Settings}:
+
+\begin{lstlisting}[caption={Wygenerowany SettingsAdapter}, label={code/hive/adapter}]
+part of 'Settings.dart';
+
+class SettingsAdapter extends TypeAdapter<Settings> {
+  @override
+  final int typeId = 8;
+
+  @override
+  Settings read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) 
+        reader.readByte(): reader.read(),
+    };
+    return Settings()
+      ..preparationDuration = fields[0] as int
+      ..endingDuration = fields[1] as int
+      ..binauralBeatsEnabled = fields[2] as bool
+      ..binauralLeftFrequency = fields[3] as double
+      ..binauralRightFrequency = fields[4] as double;
+  }
+
+  @override
+  void write(BinaryWriter writer, Settings obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.preparationDuration)
+      ..writeByte(1)
+      ..write(obj.endingDuration)
+      ..writeByte(2)
+      ..write(obj.binauralBeatsEnabled)
+      ..writeByte(3)
+      ..write(obj.binauralLeftFrequency)
+      ..writeByte(4)
+      ..write(obj.binauralRightFrequency);
+  }
+}
+\end{lstlisting}
+
+\subsection{Model danych}
+W aplikacji zdefiniowaliśmy następujące typy danych przechowywane w bazie Hive:
+\begin{itemize}
+    \item \texttt{Training} (typeId: 1) -- kompletny trening oddechowy zawierający tytuł, opis, listę etapów, ustawienia dźwięków oraz konfigurację,
+    \item \texttt{TrainingStage} (typeId: 2) -- pojedynczy etap treningu z liczbą powtórzeń, przyrostem czasowym oraz listą faz oddechowych,
+    \item \texttt{BreathingPhaseType} (typeId: 3) -- typ wyliczeniowy określający rodzaj fazy oddechowej (wdech, wydech, zatrzymanie, regeneracja),
+    \item \texttt{BreathingPhase} (typeId: 4) -- faza oddechowa z określonym czasem trwania, typem i przypisanymi dźwiękami,
+    \item \texttt{BreathingPhaseIncrementType} (typeId: 5) -- typ wyliczeniowy określający sposób inkrementacji czasu (procentowy lub stała wartość),
+    \item \texttt{BreathingPhaseIncrement} (typeId: 6) -- konfiguracja przyrostu czasowego dla poszczególnych faz,
+    \item \texttt{Sounds} (typeId: 7) -- kontener przechowujący kompletne ustawienia dźwiękowe dla treningu,
+    \item \texttt{Settings} (typeId: 8) -- globalne ustawienia treningu, w tym konfiguracja dudnień binauralnych,
+    \item \texttt{BreathingPhaseSounds} (typeId: 9) -- zestaw dźwięków przypisanych do konkretnej fazy oddechowej (dźwięk tła i wskazówka rozpoczęcia),
+    \item \texttt{SoundAsset} (typeId: 10) -- reprezentacja zasobu dźwiękowego z informacją o ścieżce pliku i jego typie,
+    \item \texttt{SoundType} (typeId: 11) -- typ wyliczeniowy kategoryzujący dźwięki (np. głos, melodia, sygnał),
+    \item \texttt{SoundScope} (typeId: 12) -- typ wyliczeniowy definiujący zakres obowiązywania tła muzycznego (np. globalnie, per etap).
+\end{itemize}
+
+\subsection{Organizacja danych w Box'ach}
+Hive organizuje dane w strukturach zwanych \textit{Box}'ami, które odpowiadają tabelom w bazach relacyjnych lub kolekcjom w bazach dokumentowych. Każdy Box przechowuje pary klucz-wartość i musi zostać otwarty przed użyciem. W naszej aplikacji zdefiniowaliśmy cztery Box'y:
+\begin{itemize}
+    \item \texttt{respire} -- główny Box przechowujący presety treningowe oraz ich wersję migracyjną,
+    \item \texttt{userShortSounds} -- Box na krótkie dźwięki dodane przez użytkownika,
+    \item \texttt{userLongSounds} -- Box na długie dźwięki tła dodane przez użytkownika,
+    \item \texttt{userCountingSounds} -- Box na dźwięki odliczania dodane przez użytkownika.
+\end{itemize}
+
+\subsection{Inicjalizacja bazy danych}
+Inicjalizacja bazy danych odbywa się w funkcji \texttt{initialize()} wywoływanej przy starcie aplikacji. Proces ten obejmuje:
+\begin{enumerate}
+    \item Inicjalizację silnika bazy danych -- \texttt{Hive.initFlutter()}
+    \item Rejestrację wszystkich adapterów typów -- \texttt{Hive.registerAdapter()}
+    \item Otwarcie wszystkich Box'ów -- \texttt{Hive.openBox()}.
+\end{enumerate}
+Została przedstawiona w listingu~\ref{code/hive/init}.
+
+\begin{lstlisting}[caption={Inicjalizacja bazy danych Hive}, label={code/hive/init}]
+Future<void> initialize() async {
+  await Hive.initFlutter();
+  
+  Hive.registerAdapter(BreathingPhaseAdapter());
+  Hive.registerAdapter(BreathingPhaseTypeAdapter());
+  Hive.registerAdapter(TrainingStageAdapter());
+  Hive.registerAdapter(TrainingAdapter());
+  Hive.registerAdapter(SoundAssetAdapter());
+  Hive.registerAdapter(SoundsAdapter());
+  Hive.registerAdapter(SettingsAdapter());
+  Hive.registerAdapter(BreathingPhaseSoundsAdapter());
+  
+  await Hive.openBox('respire');
+  await Hive.openBox('userShortSounds');
+  await Hive.openBox('userLongSounds');
+  await Hive.openBox('userCountingSounds');
+}
+\end{lstlisting}
+
+Operacje na danych wykonywane są poprzez metody Box'a: \texttt{put(key, value)} do zapisu, \texttt{get(key)} do odczytu oraz \texttt{delete(key)} do usuwania. Przykładowe operacje na danych --- w tym przypadku ładowania treningów i dodawanie ich do listy presetów - pokazano w listingu kodu~\ref{code/hive/operations}.
+
+\begin{lstlisting}[caption={Operacje na danych w Hive}, label={code/hive/operations}]
+final _box = Hive.box('respire');
+
+void loadData() {
+  final stored = _box.get('presets');
+  if (stored != null) {
+    presetList = List<Training>.from(stored);
+  }
+}
+
+void updateDataBase() {
+  _box.put('presets', presetList);
+}
+\end{lstlisting}
+
+Dzięki generowanym adapterom Hive automatycznie serializuje złożone obiekty wraz z ich zagnieżdżonymi strukturami, co umożliwia zapisanie całego drzewa obiektu \texttt{Training} wraz ze wszystkimi etapami, fazami i dźwiękami w jednej operacji.

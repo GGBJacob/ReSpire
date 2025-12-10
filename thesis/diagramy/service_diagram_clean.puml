@@ -1,0 +1,118 @@
+@startuml
+skinparam pageMargin 30
+skinparam groupInheritance 2
+
+package "Audio Services" {
+    abstract class ISoundManager {
+        +dynamic playSound()
+        +dynamic playSoundFadeIn()
+        +dynamic pauseSound()
+        +dynamic stopSound()
+        +dynamic pauseSoundFadeOut()
+        +void stopAllSounds()
+    }
+
+    class SoundManager {
+        {static} - _instance
+        {static} - Map<String, SoundAsset> _availableSounds
+        + {static} get instance
+    }
+
+    class SingleSoundManager {
+        - SoundManager _delegate
+        + ValueNotifier currentlyPlaying
+    }
+
+    class PlaylistManager {
+        - SingleSoundManager _delegate
+        - List<String> _playlist
+        - Completer _playlistCompleter
+        + playPlaylist()
+        + pausePlaylist()
+    }
+
+    class BinauralBeatGenerator {
+        {static} - _instance
+        + start()
+        + stop()
+        + isPlaying
+    }
+    
+    class TextToSpeechService {
+        {static} - _instance
+        + speak()
+        + stopSpeaking()
+    }
+}
+
+package "Data & Configuration" {
+    class PresetDataBase {
+        + List<Training> presetList
+        + loadData()
+        + updateDataBase()
+    }
+
+    class UserSoundsDatabase {
+        + Map userShortSounds
+        + Map userLongSounds
+        +void loadData()
+        +void addShortSound()
+        +void addLongSound()
+        +void addCountingSound()
+        +void removeSound()
+        +void postRemoveSound()
+        +void updateDatabase()
+    }
+    
+    class SettingsProvider {
+        + AppLanguage currentLanguage
+        + setLanguage()
+    }
+    
+    class TranslationProvider {
+        + getTranslation()
+    }
+}
+
+package "Training Logic" {
+    class TrainingController {
+        + TrainingParser parser 
+        + SoundManager soundManager 
+        + PlaylistManager playlistManager
+        + BinauralBeatGenerator binauralGenerator 
+        + start()
+        + pause()
+        + resume()
+        + dispose()
+        - _playCountingSound()
+        - _switchToStagePlaylist()
+    }
+    
+    class TrainingImportExportService {
+        {static} + exportTraining()
+        {static} + importTraining()
+    }
+    
+    class TrainingJsonConverter {
+        {static} + toJson()
+        {static} + fromJson()
+    }
+}
+
+ISoundManager <|-- SoundManager
+ISoundManager <|-- SingleSoundManager
+
+SingleSoundManager --> SoundManager
+
+PlaylistManager o-- SingleSoundManager
+
+TrainingController o-- SoundManager
+TrainingController o-- PlaylistManager
+TrainingController o-- BinauralBeatGenerator
+TrainingController o---- TextToSpeechService
+
+TrainingController --> SettingsProvider
+TrainingController ----> TranslationProvider
+PresetDataBase --> TranslationProvider
+
+@enduml
