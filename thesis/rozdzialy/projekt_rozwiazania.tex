@@ -263,24 +263,21 @@ Model danych oparto na strukturze hierarchicznej, której fundament stanowią tr
     \label{img/training_structure}
 \end{figure}
 
-\section{Wybór lokalnej bazy danych}
+\newpage
+\section{Wybór lokalnej bazy danych (\Karol)}
 
-W dynamicznie ewoluującym świecie wytwarzania oprogramowania mobilnego wybór odpowiedniej warstwy przechowywania danych stanowi jedną z najbardziej fundamentalnych decyzji architektonicznych. W związku z potrzebą zapewnienia trwałości informacji między uruchomieniami aplikacji ReSpire - w szczególności w celu przechowywania danych treningów i ustawień użytkownika - konieczne było przeprowadzenie kompleksowej ewaluacji dostępnych technologii trwałego zapisu danych.
+W dynamicznie ewoluującym świecie wytwarzania oprogramowania mobilnego wybór odpowiedniej warstwy przechowywania danych stanowi jedną z najbardziej fundamentalnych decyzji architektonicznych. W związku z potrzebą zapewnienia trwałości informacji między uruchomieniami aplikacji ReSpire --- w szczególności w celu przechowywania danych treningów i ustawień użytkownika --- konieczne było przeprowadzenie kompleksowej ewaluacji dostępnych technologii trwałego zapisu danych.
 
-Specyfika pierwotnej wersji projektu ReSpire, jaką jest lokalne przechowywanie danych małego rozmiaru, stała się kluczowym filtrem, przez który analizowano potencjalne rozwiązania. W przeciwieństwie do systemów klasy korporacyjnej wymagających synchronizacji w czasie rzeczywistym, priorytetami dla ReSpire są: szybkość uruchamiania, minimalizacja narzutu kodu oraz wydajność ładowania danych.
+Specyfika pierwotnej wersji projektu ReSpire, jaką jest lokalne przechowywanie danych małego rozmiaru, stała się kluczowym filtrem, przez który analizowano potencjalne rozwiązania. W~przeciwieństwie do systemów klasy korporacyjnej wymagających synchronizacji w czasie rzeczywistym, priorytetami dla ReSpire są: szybkość uruchamiania, minimalizacja narzutu kodu oraz wydajność ładowania danych.
 
 Do analizy zakwalifikowano sześć wiodących rozwiązań kompatybilnych ze środowiskiem Flutter: Hive, Isar, ObjectBox, SQLite (sqflite), Drift oraz Floor.
 
 \subsection{Kryteria oceny i analiza porównawcza}
 
-Jako parametry porównawcze przyjęto zestaw metryk obejmujący zarówno wskaźniki popularności, jak i aspekty ściśle techniczne: język implementacji, typ bazy, sposób przechowywania danych, język zapytań, wydajność na małych zbiorach danych, czas inicjalizacji, narzut kody konfiguracyjnego, bezpieczeństwo typów, łatwość migracji schematu, wpływ na rozmiar zbudowanej aplikacji oraz złożoność zapytań.
-
-Poniższa tabela (Tab. \ref{tab:db_comparison}) prezentuje zestawienie ilościowe i jakościowe analizowanych technologii.
+Jako parametry porównawcze przyjęto zestaw metryk obejmujący zarówno wskaźniki popularności, jak i aspekty ściśle techniczne: język implementacji, typ bazy, sposób przechowywania danych, język zapytań, wydajność na małych zbiorach danych, czas inicjalizacji, narzut kody konfiguracyjnego, bezpieczeństwo typów, łatwość migracji schematu, wpływ na rozmiar zbudowanej aplikacji oraz złożoność zapytań. Tabela \ref{tab:db_comparison} reprezentuje zestawienie ilościowe i jakościowe analizowanych technologii.
 
 \begin{table}[H]
     \centering
-    \caption{Porównanie wybranych baz danych}
-    \label{tab:db_comparison}
     \resizebox{\textwidth}{!}{
     \begin{tabular}{|l|c|c|c|c|c|c|}
         \hline
@@ -321,22 +318,24 @@ Poniższa tabela (Tab. \ref{tab:db_comparison}) prezentuje zestawienie ilościow
         \hline
     \end{tabular}
     }
+    \caption{Porównanie wybranych baz danych}
+    \label{tab:db_comparison}
 \end{table}
 
 Analiza porównawcza wykazała istotne różnice w podejściu do trwałego zapisu danych. Rozwiązania oparte na SQL (SQLite, Drift, Floor) cechują się sztywnym schematem i wyższym narzutem konfiguracyjnym, podczas gdy bazy NoSQL (Hive, Isar, ObjectBox) oferują większą elastyczność i wydajność w specyficznych scenariuszach.
 
 \subsection{Architektura oparta na pamięci operacyjnej a wydajność}
 
-Kluczowym czynnikiem decyzyjnym dla projektu ReSpire stała się wydajność na małych zbiorach danych. Tradycyjne bazy relacyjne, takie jak Sqflite czy Drift, przy każdym zapytaniu muszą odwoływać się do dysku (lub systemowej pamięci podręcznej), parsować zapytanie SQL i deserializować wynik.
+Kluczowym czynnikiem decyzyjnym dla projektu ReSpire stała się wydajność na małych zbiorach danych. Tradycyjne bazy relacyjne, takie jak Sqflite czy Drift, przy każdym zapytaniu muszą odwoływać się do dysku (lub systemowej pamięci podręcznej), parsować zapytanie SQL i~deserializować wynik.
 
-Hive prezentuje odmienne podejście architektoniczne. Jest to baza par klucz-wartość napisana całkowicie w języku Dart, która przy starcie aplikacji ładuje swoje indeksy (a w przypadku małych wolumenów danych - całą bazę) bezpośrednio do pamięci operacyjnej (RAM) urządzenia. Ponieważ ReSpire operuje na niewielkiej ilości informacji, cała baza danych mieści się w pamięci nawet na starszych urządzeniach. Dostęp do danych staje się więc operacją na pamięci RAM, co jest rzędami wielkości szybsze niż operacje dyskowe.
+Hive prezentuje odmienne podejście architektoniczne. Jest to baza par klucz-wartość napisana całkowicie w języku Dart, która przy starcie aplikacji ładuje swoje indeksy (a w przypadku małych wolumenów danych - całą bazę) bezpośrednio do pamięci operacyjnej (RAM) urządzenia. Ponieważ ReSpire operuje na niewielkiej ilości informacji, cała baza danych mieści się w pamięci nawet na starszych urządzeniach. Dostęp do danych staje się więc operacją na pamięci RAM, co~jest rzędami wielkości szybsze niż operacje dyskowe.
 
 \subsection{Minimalizm implementacyjny}
 
 W kontekście małego zespołu deweloperskiego i ograniczonego czasu, złożoność implementacji ma kluczowe znaczenie.
 \begin{itemize}
-    \item \textbf{SQLite (sqflite):} Wymaga ręcznego pisania zapytań SQL oraz manualnego odwzorowywania wyników (Map<String, dynamic>) na obiekty Dart. Jest to proces podatny na błędy, które ujawniają się dopiero w trakcie działania aplikacji.
-    \item \textbf{Drift/Floor:} Choć oferują bezpieczeństwo typów, wprowadzają znaczny narzut związany z konfiguracją generatorów kodu i definicją tabel.
+    \item \textbf{SQLite (sqflite):} Wymaga ręcznego pisania zapytań SQL oraz manualnego odwzorowywania wyników (\texttt{Map<String, dynamic>}) na obiekty Dart. Jest to proces podatny na błędy, które ujawniają się dopiero w trakcie działania aplikacji.
+    \item \textbf{Drift/Floor:} Choć oferują bezpieczeństwo typów, wprowadzają znaczny narzut związany z~konfiguracją generatorów kodu i definicją tabel.
     \item \textbf{Hive:} Eliminuje ten narzut, oferując proste API i nie wymagając warstwy translacji między obiektami a tabelami. Zapis obiektu sprowadza się do jednej, prostej linii kodu, co dla małego projektu oznacza oszczędność wielu godzin pracy.
 \end{itemize}
 
@@ -346,7 +345,7 @@ Aplikacje w fazie początkowej często zmieniają swoje wymagania. W bazach SQL 
 
 \subsection{Wnioski}
 
-Przeprowadzona analiza porównawcza wskazuje, że \textbf{Hive} jest optymalnym wyborem dla aplikacji ReSpire. Łączy on w sobie dużą popularność z wydajnością idealnie dopasowaną do modelu priorytetyzującego użytkowanie małych zbiorów danych offline. Hive zwycięża dzięki:
+Przeprowadzona analiza porównawcza wskazuje, że \textbf{Hive} jest optymalnym wyborem dla aplikacji ReSpire. Łączy on w sobie dużą popularność z wydajnością idealnie dopasowaną do~modelu priorytetyzującego użytkowanie małych zbiorów danych offline. Hive zwycięża dzięki:
 \begin{enumerate}
     \item \textbf{Wydajności:} Błyskawiczny dostęp do danych z pamięci RAM.
     \item \textbf{Prostocie:} Minimalizacja kodu konfiguracyjnego i brak konieczności odwzorowywania ORM.
